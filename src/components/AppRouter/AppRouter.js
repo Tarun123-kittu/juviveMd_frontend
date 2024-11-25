@@ -2,8 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "../AppLayout/AppLayout";
 import Login from "../../pages/Auth/Login/login"
 import ForgotPassword from "../../pages/Auth/forgotPassword/ForgotPassword"
-
-
+import Dashboard from "../../pages/Auth/Dashboard/Dashboard";
+import Staff from "../../pages/Staff/Staff";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -18,8 +18,16 @@ const AppRouter = () => {
                     path: "/forgot-password",
                     element: <ForgotPassword />
                 },
+                {
+                    path:"/dashboard",
+                    element:<Dashboard/>
+                },
+                {
+                    path:"/staff",
+                    element:<Staff/>
+                }
             ]
-        },
+        }
     ])
     return (
         <>
