@@ -4,10 +4,11 @@ import Table from "react-bootstrap/Table";
 import Form from 'react-bootstrap/Form';
 import Default_user from '../../Images/default_user.svg'
 import AddUsermodal from "../../components/Modals/AddUsermodal";
+import DataTable from "../../components/DataTable/DataTable";
 const Staff = () => {
   const [show, setShow] = useState(false);
 
- 
+  const columns=['User','Date','Phone Number','Gender','Status','Action']
   const handleShow = () => setShow(true);
   return (
     <div className="wrapper">
@@ -16,20 +17,8 @@ const Staff = () => {
             <h2>Users</h2> <button className="cmn_btn" onClick={handleShow}>+ Add User</button>
         </div>
         <div className="cmn_table dark_btn">
-         <Table>
-          <thead>
-            <tr>
-              <th> <Form.Check className="ms-2" aria-label="option 1" /></th>
-              <th>User</th>
-              <th>Date</th>
-              <th>Phone Number</th>
-              <th>Gender</th>
-              <th>Status</th>
-              <th><span  className="opacity-0">Action</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
+        <DataTable columns={columns} hasCheckbox={true}>
+        <tr>
               <td> <Form.Check className="ms-2" aria-label="option 1" /></td>
               <td>
                 <div className="d-flex align-items-center table_user">
@@ -74,8 +63,8 @@ const Staff = () => {
               </div>
               </td>
             </tr>
-           </tbody>
-        </Table>
+          </DataTable>
+      
         </div>
       </div>
       <AddUsermodal show={show} setShow={setShow}/>

@@ -66,17 +66,15 @@
         }
         button.btn_info {
             border: unset;
-            height: 22px;
-            padding: 0px  15px;
-            border-radius: 10px;
-            background: var(--primary-color);
-            color: var(--bs-white);
-            font-size: 12px;
-            line-height: 16.8px;
+            color: var(--primary-color);
+            font-size: 14px;
+            background: unset;
+            text-decoration: underline;
+            font-weight: 500;
         }
         
         button.btn_info.inactive {
-            background: #F21717;
+            color: #F21717;
         }
         .cmn_head h2 {
             font-size: 30px;
@@ -151,4 +149,17 @@
 
 .info_card.exercise-card .info_image{
     background: #E9FFE5;
+}
+
+@media(max-width:1440px){
+    .info_card h3 {
+        font-size: 18px;
+    }
+    .info_card h4 {
+        font-size: 20px;
+    }
+    .cmn_head h2 {
+        font-size: 22px;
+        margin: 0;
+    }
 }

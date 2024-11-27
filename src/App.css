@@ -48,3 +48,16 @@ li{
 .inner_wrapper{
   padding: 1.2rem;
 }
+
+.cmn_btn svg{
+  fill: var(--bs-black);  
+}
+.cmn_btn.fade_color{
+  background-color: var(--fade-color);
+}
+.cmn_btn.fade_color:hover{
+  background-color: var(--primary-color);
+}
+.cmn_btn.fade_color:hover svg{
+  fill: var(--bs-white);
+} 

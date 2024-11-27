@@ -2,8 +2,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "../AppLayout/AppLayout";
 import Login from "../../pages/Auth/Login/login"
 import ForgotPassword from "../../pages/Auth/forgotPassword/ForgotPassword"
-import Dashboard from "../../pages/Auth/Dashboard/Dashboard";
+import Dashboard from "../../pages/Dashboard/Dashboard";
 import Staff from "../../pages/Staff/Staff";
+import Patient from "../../pages/Patient/Patient";
+import PatientData from "../../pages/Patient/PatientData";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -25,6 +27,16 @@ const AppRouter = () => {
                 {
                     path:"/staff",
                     element:<Staff/>
+                },
+                {
+                    path:"/patient",
+                    element:<Patient/>,
+                    children:[
+                        {
+                            path:"/patient/patientData",
+                            element:<PatientData/>
+                        }
+                    ]
                 }
             ]
         }
