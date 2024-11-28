@@ -1,4 +1,7 @@
 import React from 'react'
+import Login from "../../../components/Auth/login/Login"
+
+
 import LoginComponent from '../../../components/UserAuth/LoginComponent'
 import LoginSide from '../../../components/StaticComponents/LoginSide'
 import { Col,Row } from 'react-bootstrap'

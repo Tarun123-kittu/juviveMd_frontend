@@ -2,18 +2,23 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import { unProtectedUrls } from "../Utils/constantData";
+import { useParams } from "react-router-dom";
 
 const AppLayout = () => {
-  const location = useLocation(); // React Router hook to get the current location
-console.log("unProtectedUrls==>>",unProtectedUrls)
- console.log(location.pathname)
+  const location = useLocation();
+  const pathname = location.pathname;
+  const params = useParams()
+  const {token} = params
+
+  const isProtectedRoute = pathname !== `/reset-password/${token}` && !unProtectedUrls.includes(pathname);
+
   return (
     <>
-      {/* Check if the current path is not in the list of unprotected URLs */}
-      {!unProtectedUrls.includes(location.pathname) ? (
-          <>
-        <Sidebar/>
-          <Outlet /></>
+      {isProtectedRoute ? (
+        <>
+          <Sidebar />
+          <Outlet />
+        </>
       ) : (
         <Outlet />
       )}
