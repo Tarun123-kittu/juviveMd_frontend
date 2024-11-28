@@ -27,24 +27,38 @@ const AppRouter = () => {
                     element: <ResetPassword />
                 },
                 {
-                    path:"/dashboard",
+                    path: "/dashboard",
                     element: (
                         <ProtectedRoute requiredRole="ADMIN">
-                          <Dashboard />
+                            <Dashboard />
                         </ProtectedRoute>
-                      ),
+                    ),
                 },
                 {
-                    path:"/staff",
-                    element:<Staff/>
+                    path: "/staff",
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <Staff />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
-                    path:"/patient",
-                    element:<Patient/>,
-                    children:[
+                    path: "/patient",
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <Patient />
+                        </ProtectedRoute>
+                    ),
+
+                    children: [
                         {
-                            path:"/patient/patientData",
-                            element:<PatientData/>
+                            path: "/patient/patientData",
+                            element: (
+                                <ProtectedRoute requiredRole="ADMIN">
+                                    <PatientData />
+                                </ProtectedRoute>
+                            )
+                            
                         }
                     ]
                 }
