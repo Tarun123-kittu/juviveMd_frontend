@@ -40,6 +40,7 @@ li{
   color: var(--text-color);
   border: transparent;
   background: var(--fade-color);
+  height: 45px;
 }
 .wrapper {
   padding-left: var(--sidebar-width);
@@ -54,9 +55,11 @@ li{
 }
 .cmn_btn.fade_color{
   background-color: var(--fade-color);
+  color: var(--bs-black);
 }
 .cmn_btn.fade_color:hover{
   background-color: var(--primary-color);
+  color: var(--bs-white);
 }
 .cmn_btn.fade_color:hover svg{
   fill: var(--bs-white);

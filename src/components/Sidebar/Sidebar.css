@@ -4,7 +4,7 @@
     background: var(--fade-color);
     width: calc(100% - var(--sidebar-width));
     right: 0;
-    padding: 1.4rem 3rem;
+    padding: 1.4rem 1.2rem;
 }
 
 .sidbar_inner {
@@ -67,4 +67,35 @@ ul.menu_items li a.sidebar_active {
 
 ul.menu_items li a.sidebar_active svg path {
     fill: var( --primary-color);
+}
+.notifications {
+    width: 53px;
+    height: 53px;
+    background: var(--primary-color);
+    border-radius: 50%;
+}
+
+span.notify_dot {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #F1867F;
+    border-radius: 50%;
+    top: 16px;
+    right: 15px;
+}
+li.log_out {
+    position: fixed;
+    bottom: 30px;
+    left: 40px;
+}
+
+li.log_out div {
+    background: var(--primary-color);
+    padding: 10px 20px;
+    gap: 10px;
+    border-radius: 4px;
+    color: var(--bs-white);
+    font-weight: 500;
+    cursor: pointer;
 }

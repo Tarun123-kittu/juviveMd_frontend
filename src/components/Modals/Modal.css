@@ -49,6 +49,7 @@ button.cmn_btn {
 
 span.remove_file {
     color: var(--bs-black);
+    cursor: pointer;
 }
 
 .modal_heading {
@@ -69,4 +70,26 @@ span.remove_file {
 
 .image_req {
     padding-left: 3rem;
+}
+
+.staff-user-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.staff-user-image {
+    overflow: hidden;
+}
+/* delete modal */
+.cmn_modal.deleteModal .modal-dialog {
+    max-width: 560px;
+}
+.deletmodal_heading {
+    color: var(--primary-color);
+    font-size: 26px;
+}
+.modal_logo img {
+    width: 153px;
 }

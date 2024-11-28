@@ -8,11 +8,12 @@ import validator from "validator";
 import toast from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import Logo from '../../../Images/juviveLogo.svg'
+import Spinner from 'react-bootstrap/Spinner';
+
 const ForgotPassword = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const forgot_password_state = useSelector((store) => store.FORGOT_PASSWORD);
-  console.log(forgot_password_state, "this isthe forgot password sate");
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
@@ -40,24 +41,26 @@ const ForgotPassword = () => {
   return (
     <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
       {!forgot_password_state?.isSuccess &&
-      !forgot_password_state?.message?.message ? (
+        !forgot_password_state?.message?.message ? (
         <div className="reset_form authWrapper ">
           <div className="text-center">
-        <img src={Logo} alt="logo" />
-        </div>
-        <h3 className="mb-1">Forgot Password</h3>
-        <h5>There is nothing to worry about, we'll send you a message to help you reset your password.</h5>
-        <Form.Group className="mb-2 pt-2" controlId="exampleForm.ControlInput1">
+            <img src={Logo} alt="logo" />
+          </div>
+          <h3 className="mb-1">Forgot Password</h3>
+          <h5>There is nothing to worry about, we'll send you a message to help you reset your password.</h5>
+          <Form.Group className="mb-2 pt-2" controlId="exampleForm.ControlInput1">
             <Form.Label>Email  or phone number</Form.Label>
-           <Form.Control
-           placeholder="Registered email or phone number"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <Form.Control
+              placeholder="Registered email or phone number"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Group>
           <div className="mt-3">
-          <button className="cmn_btn w-100" onClick={(e) => handleForgotPassword(e)}>Reset</button>
+            <button className="cmn_btn w-100" onClick={(e) => handleForgotPassword(e)}>{!forgot_password_state?.isLoading ? "Reset" : <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>}</button>
           </div>
         </div>
       ) : (
