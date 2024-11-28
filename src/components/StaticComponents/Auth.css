@@ -1,0 +1,57 @@
+.authWrapper label{
+    font-size: var(--label-size);
+    font-weight: 400;
+    color: var(--bs-black);
+}
+.authWrapper .form-control:focus, .authWrapper .form-select:focus {
+box-shadow: unset;
+border-color: var(--primary-color);
+}
+.authWrapper .form-control, .authWrapper .form-select {
+    border-radius: var(--input-radius);
+    font-size: 14px;
+    color: var(--input-color);
+    border-color: var(--border-color);
+    height: 40px;
+    font-weight: 400;
+}
+.authWrapper a{
+    font-size: var(--label-size);
+    color: var(--primary-color);
+    text-decoration: unset;
+}
+.remeberPass{
+    color: var(--bs-black);
+}
+.authWidth {
+    padding-left: 5rem;
+    max-width: 560px;
+    width: 100%;
+}
+
+.authImage  .authWidth {
+    max-width: 600px;
+    padding-left: 0;
+    margin-left: auto;
+    margin-right: unset;
+    padding-right: 2rem;
+}
+
+.authWrapper  img.img-fluid {
+    width: 170px;
+}
+.authWrapper h3 {
+    font-size: var(--heading-main);
+    color: var(--primary-color);
+    margin-bottom: 1.2rem;
+    margin-top: 2rem;
+}
+
+.authWrapper p {
+    font-size: var(--small-text);
+    color: #565656;
+}
+
+.authImage {
+    background: var(--fade-color);
+}

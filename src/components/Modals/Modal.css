@@ -1,0 +1,72 @@
+.fade.cmn_modal.modal {
+    background: #f9fafbd4;
+}
+.cmn_head h2 {
+    font-size: 24px;
+    margin: 0;
+}
+.modal_head svg {
+    width: 15px;
+}
+button.cmn_btn {
+    background: var(--primary-color);
+    color: var(--bs-white);
+    font-weight: 500;
+    padding: 0px 0.8rem;
+    font-size: 14px;
+}
+
+.fade.cmn_modal.modal {
+    background: #f9fafbd4;
+}
+
+.cmn_modal .modal-dialog {
+    max-width: 796px;
+}
+
+.cmn_modal .modal-content {
+    padding: 2rem;
+    border: unset;
+    box-shadow: 0px 4px 20px rgba(0,0,0,8%);
+}
+.modal_head svg {
+    width: 15px;
+}
+
+.upload_file {
+    border: 2px solid var(--primary-color);
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 164px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--bs-black);
+}
+
+.upload_image {
+    text-align: center;
+}
+
+span.remove_file {
+    color: var(--bs-black);
+}
+
+.modal_heading {
+    font-size: 18px;
+    font-weight: 600;
+    color: #21272A;
+}
+.image_req span {
+    font-size: 14px;
+}
+
+.image_req p {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--bs-black);
+    margin-bottom: 4px;
+}
+
+.image_req {
+    padding-left: 3rem;
+}
