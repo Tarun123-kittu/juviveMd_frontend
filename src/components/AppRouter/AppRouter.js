@@ -2,10 +2,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "../AppLayout/AppLayout";
 import Login from "../../pages/Auth/Login/login"
 import ForgotPassword from "../../pages/Auth/forgotPassword/ForgotPassword"
+import ResetPassword from "../../pages/Auth/resetPassword/ResetPassword";
 import Dashboard from "../../pages/Dashboard/Dashboard";
 import Staff from "../../pages/Staff/Staff";
 import Patient from "../../pages/Patient/Patient";
 import PatientData from "../../pages/Patient/PatientData";
+import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -21,8 +23,16 @@ const AppRouter = () => {
                     element: <ForgotPassword />
                 },
                 {
+                    path: "/reset-password/:token",
+                    element: <ResetPassword />
+                },
+                {
                     path:"/dashboard",
-                    element:<Dashboard/>
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                          <Dashboard />
+                        </ProtectedRoute>
+                      ),
                 },
                 {
                     path:"/staff",

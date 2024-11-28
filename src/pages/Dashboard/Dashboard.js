@@ -19,6 +19,7 @@ const Dashboard = () => {
     "Status",
     "Action",
   ];
+
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
