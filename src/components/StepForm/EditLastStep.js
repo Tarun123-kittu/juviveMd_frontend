@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
-const LastStep = ({setStep}) => {
+const EditLastStep = ({setStep}) => {
   return (
     <div>
         <h5 className="step_heading pt-3">Additional Information (Optional )</h5>
@@ -11,11 +11,11 @@ const LastStep = ({setStep}) => {
       </Form.Group>
       <div className='d-flex gap-3 justify-content-center mt-4'>
                 <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
-                <button onClick={() => alert("Done")} className='cmn_btn ps-4 pe-4'>Next</button>
+                <button onClick={() => alert("done")} className='cmn_btn ps-4 pe-4'>Next</button>
           </div>
         </div>
     </div>
   )
 }
 
-export default LastStep
+export default EditLastStep

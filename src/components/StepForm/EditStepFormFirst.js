@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 
-const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
+const EditStepFormFirst = ({ gender, goal, trainers_list,setStep }) => {
   // Validation schema
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -248,4 +248,4 @@ const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
   );
 };
 
-export default StepFormFirst;
+export default EditStepFormFirst;

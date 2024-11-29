@@ -6,6 +6,8 @@ import createStaffAPI from "./slices/staffSlice/createStaffSlice"
 import getAllStaffAPI from "./slices/staffSlice/getAllUsers"
 import getSingleStaffAPI from "./slices/staffSlice/getStaffByIdSlice"
 import updateStaffAPI from "./slices/staffSlice/updateStaffSlice"
+import commonDataAPI from "./slices/commonDataSlice/commonDataDlice"
+import getTrainersAPI from "./slices/commonDataSlice/getTrainersSlice"
 
 const AppStore = configureStore({
   reducer: {
@@ -14,8 +16,10 @@ const AppStore = configureStore({
     RESET_PASSWORD: ResetPassword,
     CREATE_STAFF: createStaffAPI,
     ALL_STAFF: getAllStaffAPI,
-    STAFF_DETAIL : getSingleStaffAPI,
-    UPDATE_STAFF : updateStaffAPI
+    STAFF_DETAIL: getSingleStaffAPI,
+    UPDATE_STAFF: updateStaffAPI,
+    COMMON_DATA: commonDataAPI,
+    TRAINERS_LIST: getTrainersAPI
   },
 })
 

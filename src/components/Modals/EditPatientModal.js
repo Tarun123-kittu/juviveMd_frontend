@@ -2,15 +2,22 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Logo from '../../Images/juviveLogo.svg'
-import StepFormFirst from "../StepForm/StepFormFirst";
-import StepFormSecond from "../StepForm/StepFormSecond";
-import StepFormThird from "../StepForm/StepFormThird";
-import LastStep from "../StepForm/LastStep";
+
+import EditStepFormFirst from "../StepForm/EditStepFormFirst";
+import EditStepFormSecond from "../StepForm/EditStepFormSecond";
+import EditStepFormThird from "../StepForm/EditStepFormThird";
+import EditLastStep from "../StepForm/EditLastStep"
+
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
-const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
+
+
+
+
+const EditpatientModal = ({ showPateintModal, setshowPateintModal }) => {
+
     const dispatch = useDispatch()
 
     const [equipments, setEquipments] = useState([])
@@ -79,14 +86,14 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                         <li className="step d-flex align-items-center justify-content-center">4</li>
                     </ul>
                     {/* <h5 className="step_heading pt-3">Personal Details</h5> */}
-                    {step === 1 && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep}/>}
-                    {step === 2 && <StepFormSecond health_issue={health_issue} setStep={setStep}/>}
-                    {step === 3 && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep}/>}
-                    {step === 4 && <LastStep setStep={setStep}/>}
+                    {step === 1 && <EditStepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep}/>}
+                    {step === 2 && <EditStepFormSecond health_issue={health_issue} setStep={setStep}/>}
+                    {step === 3 && <EditStepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep}/>}
+                    {step === 4 && <EditLastStep setStep={setStep}/>}
                 </Modal.Body>
             </Modal>
         </div>
     );
 };
 
-export default AddpatientModal;
+export default EditpatientModal;
