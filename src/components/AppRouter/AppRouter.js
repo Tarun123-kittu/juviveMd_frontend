@@ -8,6 +8,7 @@ import Staff from "../../pages/Staff/Staff";
 import Patient from "../../pages/Patient/Patient";
 import PatientData from "../../pages/Patient/PatientData";
 import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
+import Receptionist from "../../pages/Receptionist/Receptionist";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -40,6 +41,12 @@ const AppRouter = () => {
                         <ProtectedRoute requiredRole="ADMIN">
                             <Staff />
                         </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/receptionist",
+                    element: (
+                       <Receptionist/>
                     ),
                 },
                 {

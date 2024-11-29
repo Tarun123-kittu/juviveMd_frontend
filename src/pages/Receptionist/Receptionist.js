@@ -1,11 +1,17 @@
-import React from 'react'
+
+import React,{useState} from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import { TiArrowRight } from "react-icons/ti";
 import Dropdown from 'react-bootstrap/Dropdown';
-import './Patient.css'
-
-const Patient = () => {
+import './Receptionist.css'
+import AddpatientModal from '../../components/Modals/AddPatientModal';
+const Receptionist = () => {
+    const[showFilter, setShowFilter] =useState(false)
+   const [ showPateintModal, setshowPateintModal] = useState(false)
+    const handelShowFilter =() =>{
+        setShowFilter(!showFilter)
+    }
   const columns = [
     "User Name",
     "Date",
@@ -20,43 +26,26 @@ const Patient = () => {
   return (
     <div className='wrapper'>
         <div className='inner_wrapper'>
-        <div className="cmn_head d-flex justify-content-between align-items-center mb-3 position-relative">
-            <h2>Patient List</h2> <button className="cmn_btn px-4">Filter</button>
-            <div className='patient_filter'>
-            <span className='filter_heading'>Filter</span>
+        <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
+            <h2 className='flex-grow-1'>Patient List</h2> 
+           </div>
+        <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
+            <ul className='static_tabs flex-grow-1 d-flex mb-0'>
+                <li className='active'>Active</li>
+                <li>Health Issues</li>
+                <li>Payment Pending </li>
+                </ul>
+            <button onClick={()=>setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button> <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button> 
+          {showFilter &&  <div className='patient_filter'>
+                <span className='filter_heading'>Filter</span>
                 <div className='filter_list w-100'>
                   <div className='label'>
-                    <span>Exercise</span>
+                    <span>Age</span>
                     </div>
                     <input type="text" placeholder='Exercise Name' className='form-control' />
                 </div>
             
-                <div className='patient_dropdown w-100'>
-                <Dropdown>
-                <Dropdown.Toggle variant="unset" >
-                Assign Trainer <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12.2143 3.7041H11.1253C11.0513 3.7041 10.9816 3.7404 10.938 3.79993L6.81303 9.48579L2.68802 3.79993C2.64446 3.7404 2.57477 3.7041 2.50072 3.7041H1.41175C1.31737 3.7041 1.2622 3.81155 1.31737 3.8885L6.43697 10.9465C6.62282 11.202 7.00323 11.202 7.18763 10.9465L12.3072 3.8885C12.3639 3.81155 12.3087 3.7041 12.2143 3.7041V3.7041Z" fill="black" fill-opacity="0.25"/>
-                                </svg>
-
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                <ul>
-                  <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li>
-                  <li>Deepak Rawat</li> 
-                  <li>Sahil</li>
-                  <li>Aman</li>
-                </ul>
-                </Dropdown.Menu>
-              </Dropdown>
-                </div>
-                <div className='filter_list w-100'>
-                  <div className='label'>
-                    <span>Date</span>
-                    </div>
-                    <input type="date" placeholder='Exercise Name' className='form-control' />
-                </div>
-                <div className='patient_dropdown w-100'>
+                 <div className='patient_dropdown w-100'>
                 <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
               Gender 
@@ -75,9 +64,16 @@ const Patient = () => {
                 </Dropdown.Menu>
               </Dropdown> 
                 </div>
+                <div className='filter_list w-100'>
+                  <div className='label'>
+                    <span>Date</span>
+                    </div>
+                    <input type="date" placeholder='Exercise Name' className='form-control' />
+                </div>
+              
                 <button className='cmn_btn'>Search</button>
                 <button className='cmn_btn fade_color'>Clean</button>
-            </div>
+            </div>}
         </div>
         <DataTable columns={columns}>
             <tr>
@@ -104,8 +100,9 @@ const Patient = () => {
             </tr>
           </DataTable>
         </div>
+        <AddpatientModal showPateintModal={showPateintModal} setshowPateintModal={setshowPateintModal} />
     </div>
   )
 }
 
-export default Patient
+export default Receptionist
