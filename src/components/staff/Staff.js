@@ -49,7 +49,7 @@ const StaffComponent = () => {
                 </div>
                 <div className="cmn_table dark_btn">
                     <DataTable columns={columns} hasCheckbox={true}>
-                        {staff_data?.isLoading ? <Loader /> : staff_data?.isSuccess && Array?.isArray(staff_data?.data?.data?.items) && staff_data?.data?.data?.items?.map((staff, i) => {
+                        {staff_data?.isLoading  ? <tr><td colSpan={5}> <Loader /></td> </tr> : staff_data?.isSuccess && Array?.isArray(staff_data?.data?.data?.items) && staff_data?.data?.data?.items?.map((staff, i) => {
                             return (
                                 <tr key={i}>
                                     {/* <td> <Form.Check className="ms-2" aria-label="option 1" /></td> */}

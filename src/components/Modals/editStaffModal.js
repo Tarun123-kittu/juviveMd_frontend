@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { get_single_staff, clear_single_staff_state } from "../../redux/slices/staffSlice/getStaffByIdSlice";
 import { update_staff, clear_update_staff_state } from "../../redux/slices/staffSlice/updateStaffSlice";
 import { get_all_staff, clear_staff_data } from "../../redux/slices/staffSlice/getAllUsers";
+import Loader from "../../common/Loader/Loader"
 
 const EditStaffmodal = ({ show, setShow, staffId, page }) => {
     const dispatch = useDispatch();
@@ -26,9 +27,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
     const [gender, setGender] = useState("")
     const [imageError, setImageError] = useState(false)
     const [hasImage, setHasImage] = useState(false)
-    console.log(firstName, "this is the first name")
-    console.log(image, "this is image")
-    console.log(imageView, "this is imageView")
 
     const selected_staff_detail = useSelector((store) => store.STAFF_DETAIL);
     const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
@@ -146,7 +144,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                 >
                 </svg>
             </div>
-            <Modal.Body className="p-0">
+            {selected_staff_detail?.isLoading ? <Loader />  :<Modal.Body className="p-0">
                 <h5 className="mb-3 modal_heading">Profile Photo</h5>
                 <Row className="border-bottom pb-4 m-0">
                     <Col lg={6} className="border-end">
@@ -307,7 +305,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                         </FormikForm>
                     )}
                 </Formik>
-            </Modal.Body>
+            </Modal.Body>}
         </Modal>
     );
 };

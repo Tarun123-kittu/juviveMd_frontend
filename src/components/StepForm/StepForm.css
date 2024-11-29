@@ -37,3 +37,9 @@ button.cmn_btn.border-btn {
     border: 1px solid;
     height: 44px;
 }
+ol.consolt_final li {
+    list-style: nu;
+    margin-bottom: 23px;
+    font-size: 16px;
+    color: var(--bs-black);
+}

@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 
-const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
+const StepFormFirst = ({ gender, goal, trainers_list,setStep,setFullData}) => {
   // Validation schema
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -48,6 +48,8 @@ const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
     validationSchema,
     onSubmit: (values) => {
       console.log("Form values", values);
+      setStep(2)
+      setFullData(values)
     },
   });
 
@@ -208,7 +210,7 @@ const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
                 />
                 <button className="form_btn">kg</button>
               </div>
-              <button className="ms-2">lb</button>
+              <button className="form_btn">lb</button>
             </div>
             <Form.Control.Feedback type="invalid">
               {formik.errors.weight}
@@ -239,7 +241,7 @@ const StepFormFirst = ({ gender, goal, trainers_list,setStep}) => {
           </Form.Group>
         </Col>
         <Col lg={12} className="text-center mt-4">
-          <button onClick={() => setStep(2)} type="submit" className="cmn_btn ps-5 pe-5">
+          <button type="submit" className="cmn_btn ps-5 pe-5">
             Next
           </button>
         </Col>

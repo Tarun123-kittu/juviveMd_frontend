@@ -10,6 +10,7 @@ import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDl
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
+import ConfirmForm from "../StepForm/ConfirmForm";
 const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const dispatch = useDispatch()
 
@@ -26,6 +27,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const [workout_type, setWorkout_type] = useState([])
     const [trainers_list, setTrainers_list] = useState([])
     const [step, setStep] = useState(1)
+    const [fullData,setFullData] = useState()
 
     const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
@@ -79,10 +81,11 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                         <li className="step d-flex align-items-center justify-content-center">4</li>
                     </ul>
                     {/* <h5 className="step_heading pt-3">Personal Details</h5> */}
-                    {step === 1 && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep}/>}
+                    {step === 1 && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} setFullData={setFullData}/>}
                     {step === 2 && <StepFormSecond health_issue={health_issue} setStep={setStep}/>}
                     {step === 3 && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep}/>}
                     {step === 4 && <LastStep setStep={setStep}/>}
+                    {/* <ConfirmForm/> */}
                 </Modal.Body>
             </Modal>
         </div>

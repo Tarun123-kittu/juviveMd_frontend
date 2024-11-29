@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import { TiArrowRight } from "react-icons/ti";
@@ -6,6 +6,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import './Patient.css'
 
 const Patient = () => {
+  const [toggleFilter,setToggleFilter] = useState(false)
   const columns = [
     "User Name",
     "Date",
@@ -21,8 +22,8 @@ const Patient = () => {
     <div className='wrapper'>
         <div className='inner_wrapper'>
         <div className="cmn_head d-flex justify-content-between align-items-center mb-3 position-relative">
-            <h2>Patient List</h2> <button className="cmn_btn px-4">Filter</button>
-            <div className='patient_filter'>
+            <h2>Patient List</h2> <button className="cmn_btn px-4" onClick={() => setToggleFilter(!toggleFilter)}>Filter</button>
+            {toggleFilter &&<div className='patient_filter'>
             <span className='filter_heading'>Filter</span>
                 <div className='filter_list w-100'>
                   <div className='label'>
@@ -77,7 +78,7 @@ const Patient = () => {
                 </div>
                 <button className='cmn_btn'>Search</button>
                 <button className='cmn_btn fade_color'>Clean</button>
-            </div>
+            </div>}
         </div>
         <DataTable columns={columns}>
             <tr>

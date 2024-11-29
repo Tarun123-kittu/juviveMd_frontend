@@ -64,3 +64,44 @@ li{
 .cmn_btn.fade_color:hover svg{
   fill: var(--bs-white);
 } 
+.loader_img img {
+  width: 60px;
+}
+
+.loader_img {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+li.previous.disabled a {
+  color: #697077;
+}
+
+ul.pagination li a {text-decoration: unset;}
+
+ul.pagination {
+  align-items: center;
+  gap: 10px;
+  justify-content: center; 
+  width: 100%;
+}
+
+ul.pagination li a {
+  min-width: 40px;
+  text-align: center;
+  border: unset;
+  color: var(--bs-black);
+}
+
+ul.pagination li.active {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
+
+
+
+li.page-item.active a.page-link {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
