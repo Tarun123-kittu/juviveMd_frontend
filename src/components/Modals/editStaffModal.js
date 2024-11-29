@@ -6,19 +6,40 @@ import Default_women from "../../Images/default_women.svg";
 import "./Modal.css";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { create_staff_api, clear_create_staff_state } from "../../redux/slices/staffSlice/createStaffSlice";
 import Spinner from 'react-bootstrap/Spinner';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from "formik";
 import * as Yup from "yup";
+import { get_single_staff, clear_single_staff_state } from "../../redux/slices/staffSlice/getStaffByIdSlice";
+import { update_staff, clear_update_staff_state } from "../../redux/slices/staffSlice/updateStaffSlice";
+import { get_all_staff, clear_staff_data } from "../../redux/slices/staffSlice/getAllUsers";
 
-const EditStaffmodal = ({ show, setShow }) => {
+const EditStaffmodal = ({ show, setShow, staffId, page }) => {
     const dispatch = useDispatch();
-    const [imageData, setImageData] = useState({
-        image: "",
-        imageView: "",
-    });
+    const [image, setImage] = useState("")
+    const [imageView, setImageView] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [phone, setPhone] = useState("")
+    const [email, setEmail] = useState("")
+    const [address, setAddress] = useState("")
+    const [role, setRole] = useState("")
+    const [gender, setGender] = useState("")
+    const [imageError, setImageError] = useState(false)
+    const [hasImage, setHasImage] = useState(false)
+    console.log(firstName, "this is the first name")
+    console.log(image, "this is image")
+    console.log(imageView, "this is imageView")
 
-    const is_staff_created = useSelector((store) => store.CREATE_STAFF);
+    const selected_staff_detail = useSelector((store) => store.STAFF_DETAIL);
+    const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
+    console.log(is_staff_updated, "this is the updated staff value")
+
+    useEffect(() => {
+        if (staffId) {
+            dispatch(get_single_staff({ staffId }))
+        }
+
+    }, [staffId])
 
     const handleClose = () => setShow(false);
 
@@ -31,53 +52,86 @@ const EditStaffmodal = ({ show, setShow }) => {
         email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
+        gender: Yup.string().required("Gender is required"),
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+        setHasImage(true)
         if (file) {
             const fileType = file.type;
             const fileSize = file.size;
 
             if (!fileType.includes("image/png") && !fileType.includes("image/jpeg")) {
                 toast.error("Only PNG and JPG images are allowed.");
-                setImageData({ image: "", imageView: "" });
+                setImage("")
+                setImageView("")
                 return;
             }
             if (fileSize > 2 * 1024 * 1024) {
                 toast.error("File size must be less than 2MB.");
-                setImageData({ image: "", imageView: "" });
+                setImage("")
+                setImageView("")
                 return;
             }
 
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImageData({
-                    image: file,
-                    imageView: reader.result,
-                });
+                setImage(file)
+                setImageView(reader.result)
             };
             reader.readAsDataURL(file);
         }
     };
 
     const handleRemoveImage = () => {
-        setImageData({ image: "", imageView: "" });
+        setImage("")
+        setImageView("")
+
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput) {
+            fileInput.value = "";
+        }
     };
 
     useEffect(() => {
-        if (is_staff_created?.isSuccess) {
-            toast.success(is_staff_created?.message?.message);
-            dispatch(clear_create_staff_state());
-            handleClose();
+        if (selected_staff_detail?.isSuccess) {
+            setFirstName(selected_staff_detail?.data?.data?.firstName)
+            setLastName(selected_staff_detail?.data?.data?.lastName)
+            setPhone(selected_staff_detail?.data?.data?.phone)
+            setEmail(selected_staff_detail?.data?.data?.email)
+            setAddress(selected_staff_detail?.data?.data?.address)
+            setRole(selected_staff_detail?.data?.data?.role)
+            setGender(selected_staff_detail?.data?.data?.gender)
+            setImageView(selected_staff_detail?.data?.data?.image)
+            setImage(selected_staff_detail?.data?.data?.image)
         }
-        if (is_staff_created?.isError) {
-            toast.error(is_staff_created?.error?.message);
-            dispatch(clear_create_staff_state());
+        if (selected_staff_detail?.isError) {
+            toast.error(selected_staff_detail?.error?.message);
         }
-    }, [is_staff_created]);
+    }, [selected_staff_detail]);
+
+    useEffect(() => {
+        if (image) {
+            setImageError(false)
+        }
+    }, [image])
+
+    useEffect(() => {
+        if (is_staff_updated?.isSuccess) {
+            toast.success("Staff Updated Successfully")
+            dispatch(get_all_staff({ page }))
+            dispatch(clear_single_staff_state())
+            dispatch(clear_update_staff_state())
+            handleClose()
+        }
+        if (is_staff_updated?.isError) {
+            toast.error(is_staff_updated?.error?.message)
+            dispatch(clear_update_staff_state())
+        }
+    }, [is_staff_updated])
 
     return (
         <Modal show={show} onHide={handleClose} className="cmn_modal" centered>
@@ -98,11 +152,16 @@ const EditStaffmodal = ({ show, setShow }) => {
                     <Col lg={6} className="border-end">
                         <div className="d-flex gap-4 align-items-center">
                             <div className="staff-user-image">
-                                <img src={imageData.imageView || Default_women} alt="user" className="staff-user-image" />
+                                <img
+                                    src={imageView || Default_women}
+                                    alt="user"
+                                    className="staff-user-image"
+                                />
                             </div>
                             <div className="upload_image">
                                 <div className="upload_file position-relative">
                                     <Form.Control
+                                        id="fileInput"
                                         className="opacity-0 position-absolute p-0"
                                         type="file"
                                         accept="image/png, image/jpeg"
@@ -110,8 +169,11 @@ const EditStaffmodal = ({ show, setShow }) => {
                                     />
                                     Upload Photo
                                 </div>
-                                {imageData.image && (
-                                    <span className="remove_file" onClick={handleRemoveImage}>Remove</span>
+                                {imageError && <span className="text-danger">Image is required</span>}
+                                {image && (
+                                    <span className="remove_file" onClick={handleRemoveImage}>
+                                        Remove
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -125,24 +187,26 @@ const EditStaffmodal = ({ show, setShow }) => {
                 </Row>
                 <h5 className="mb-3 modal_heading mt-3">User Details</h5>
                 <Formik
+                    enableReinitialize
                     initialValues={{
-                        firstName: "",
-                        lastName: "",
-                        phone: "",
-                        email: "",
-                        address: "",
-                        role: "",
+                        firstName,
+                        lastName,
+                        phone,
+                        gender,
+                        email,
+                        address,
+                        role,
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
-                        if (!imageData.image) {
+                        if (!image) {
                             toast.error("Image is required");
                             return;
                         }
-                        dispatch(create_staff_api({ data: { ...values, image: imageData.image } }));
+                        dispatch(update_staff({ data: { ...values, image: image, hasImage }, id: staffId }));
                     }}
                 >
-                    {() => (
+                    {({ values, handleChange }) => (
                         <FormikForm>
                             <Row className="authWrapper">
                                 <Col lg={6}>
@@ -169,7 +233,7 @@ const EditStaffmodal = ({ show, setShow }) => {
                                         <ErrorMessage name="lastName" component="div" className="text-danger" />
                                     </Form.Group>
                                 </Col>
-                                <Col lg={12}>
+                                <Col lg={6}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
                                         <Field
@@ -179,6 +243,17 @@ const EditStaffmodal = ({ show, setShow }) => {
                                             className="form-control"
                                         />
                                         <ErrorMessage name="phone" component="div" className="text-danger" />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={6}>
+                                    <Form.Group className="mb-2">
+                                        <Form.Label>Gender</Form.Label>
+                                        <Field as="select" value={values?.gender} name="gender" className="form-control">
+                                            <option value="">Select Gender</option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                        </Field>
+                                        <ErrorMessage name="gender" component="div" className="text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>
@@ -208,11 +283,10 @@ const EditStaffmodal = ({ show, setShow }) => {
                                 <Col lg={12}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Role</Form.Label>
-                                        <Field as="select" name="role" className="form-control">
+                                        <Field as="select" value={values?.role} name="role" className="form-control">
                                             <option value="">Select Role</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="staff">Staff</option>
-                                            <option value="user">User</option>
+                                            <option value="RECEPTIONIST">Receptionist</option>
+                                            <option value="TRAINER">Trainer</option>
                                         </Field>
                                         <ErrorMessage name="role" component="div" className="text-danger" />
                                     </Form.Group>
@@ -220,7 +294,7 @@ const EditStaffmodal = ({ show, setShow }) => {
                                 <Col lg={12}>
                                     <div className="text-end mt-1">
                                         <button type="submit" className="cmn_btn px-4">
-                                            {!is_staff_created?.isLoading ? "Add User" :
+                                            {!is_staff_updated?.isLoading ? "Update User" :
                                                 <Spinner animation="border" role="status">
                                                     <span className="visually-hidden">Loading...</span>
                                                 </Spinner>

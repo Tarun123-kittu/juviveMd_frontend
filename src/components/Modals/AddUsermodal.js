@@ -10,6 +10,7 @@ import { create_staff_api, clear_create_staff_state } from "../../redux/slices/s
 import Spinner from 'react-bootstrap/Spinner';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from "formik";
 import * as Yup from "yup";
+import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
 
 const AddUserModal = ({ show, setShow }) => {
     const dispatch = useDispatch();
@@ -17,12 +18,13 @@ const AddUserModal = ({ show, setShow }) => {
         image: "",
         imageView: "",
     });
+    const [imageError, setImageError] = useState(false)
 
     const is_staff_created = useSelector((store) => store.CREATE_STAFF);
+    console.log(is_staff_created, "this is is staff created")
 
     const handleClose = () => setShow(false);
 
-    // Validation schema using Yup
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required("First name is required"),
         lastName: Yup.string().required("Last name is required"),
@@ -32,6 +34,7 @@ const AddUserModal = ({ show, setShow }) => {
         email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
+        gender: Yup.string().required("Gender is required"),
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
@@ -66,19 +69,33 @@ const AddUserModal = ({ show, setShow }) => {
 
     const handleRemoveImage = () => {
         setImageData({ image: "", imageView: "" });
+
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput) {
+            fileInput.value = "";
+        }
     };
 
+
     useEffect(() => {
-        if (is_staff_created?.isSuccess) {
-            toast.success(is_staff_created?.message?.message);
-            dispatch(clear_create_staff_state());
-            handleClose();
-        }
-        if (is_staff_created?.isError) {
-            toast.error(is_staff_created?.error?.message);
-            dispatch(clear_create_staff_state());
-        }
+            if (is_staff_created?.isSuccess) {
+                toast.success(is_staff_created?.message?.message);
+                dispatch(get_all_staff({ page: 1 }));
+                dispatch(clear_create_staff_state());
+                handleClose();
+            }
+            if (is_staff_created?.isError) {
+                toast.error(is_staff_created?.error?.message);
+                dispatch(clear_create_staff_state());
+            }
     }, [is_staff_created]);
+
+
+    useEffect(() => {
+        if (imageData?.image) {
+            setImageError(false)
+        }
+    }, [imageData])
 
     return (
         <Modal show={show} onHide={handleClose} className="cmn_modal" centered>
@@ -99,11 +116,16 @@ const AddUserModal = ({ show, setShow }) => {
                     <Col lg={6} className="border-end">
                         <div className="d-flex gap-4 align-items-center">
                             <div className="staff-user-image">
-                                <img src={imageData.imageView || Default_women} alt="user" className="staff-user-image" />
+                                <img
+                                    src={imageData.imageView || Default_women}
+                                    alt="user"
+                                    className="staff-user-image"
+                                />
                             </div>
                             <div className="upload_image">
                                 <div className="upload_file position-relative">
                                     <Form.Control
+                                        id="fileInput"
                                         className="opacity-0 position-absolute p-0"
                                         type="file"
                                         accept="image/png, image/jpeg"
@@ -111,12 +133,16 @@ const AddUserModal = ({ show, setShow }) => {
                                     />
                                     Upload Photo
                                 </div>
+                                {imageError && <span className="text-danger">Image is required</span>}
                                 {imageData.image && (
-                                    <span className="remove_file" onClick={handleRemoveImage}>Remove</span>
+                                    <span className="remove_file" onClick={handleRemoveImage}>
+                                        Remove
+                                    </span>
                                 )}
                             </div>
                         </div>
                     </Col>
+
                     <Col lg={6}>
                         <div className="image_req">
                             <p>Image requirements:</p>
@@ -130,6 +156,7 @@ const AddUserModal = ({ show, setShow }) => {
                         firstName: "",
                         lastName: "",
                         phone: "",
+                        gender: "",
                         email: "",
                         address: "",
                         role: "",
@@ -137,7 +164,7 @@ const AddUserModal = ({ show, setShow }) => {
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
                         if (!imageData.image) {
-                            toast.error("Image is required");
+                            setImageError(true)
                             return;
                         }
                         dispatch(create_staff_api({ data: { ...values, image: imageData.image } }));
@@ -170,7 +197,7 @@ const AddUserModal = ({ show, setShow }) => {
                                         <ErrorMessage name="lastName" component="div" className="text-danger" />
                                     </Form.Group>
                                 </Col>
-                                <Col lg={12}>
+                                <Col lg={6}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
                                         <Field
@@ -180,6 +207,17 @@ const AddUserModal = ({ show, setShow }) => {
                                             className="form-control"
                                         />
                                         <ErrorMessage name="phone" component="div" className="text-danger" />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={6}>
+                                    <Form.Group className="mb-2">
+                                        <Form.Label>Gender</Form.Label>
+                                        <Field as="select" name="gender" className="form-control">
+                                            <option value="">Select Gender</option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                        </Field>
+                                        <ErrorMessage name="gender" component="div" className="text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>

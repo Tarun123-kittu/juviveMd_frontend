@@ -16,6 +16,7 @@ const Sidebar = () => {
 
     const handleLogout = () => {
       Cookies.remove('authToken');
+      localStorage.clear()
       navigate("/")
       toast.success("Logout Successful")
     }

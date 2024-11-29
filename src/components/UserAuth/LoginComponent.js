@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 import { user_login, clear_login_state } from "../../redux/slices/authSlice/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 import { authMiddleware } from "../../middleware/authMiddleware/AuthMiddleware";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { jwtDecode } from 'jwt-decode';
+import Cookies from "js-cookie";
 
 // Validation Schema using Yup
 const validationSchema = Yup.object({
@@ -28,32 +29,49 @@ const LoginComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user_details = useSelector((Store) => Store.LOGIN_STATE);
+  const [rememberMe, setRememberMe] = useState(false)
+  const [email, setEmail] = useState("")
+  const remember = false;
+  const Useremail = "";
+
 
   // Handle form submission
   const handleLogin = (values) => {
     const { email, password } = values;
+    setEmail(email)
     dispatch(user_login({ email, password }));
   };
 
   useEffect(() => {
+    const isRemembered = localStorage.getItem("phloii_remember_me") === "true";
+    const rememberedEmail = localStorage.getItem("phloii_user_email");
+
+    if (isRemembered && rememberedEmail && token) {
+      authMiddleware(navigate);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     if (user_details?.isSuccess) {
       const token = user_details?.data?.data;
+
+      if (rememberMe) {
+        localStorage.setItem("phloii_user_email", email);
+        localStorage.setItem("phloii_remember_me", "true");
+      }
       Cookies.set("authToken", token);
       authMiddleware(navigate);
       toast.success("Login Successful");
       dispatch(clear_login_state());
     }
+
     if (user_details?.isError) {
       toast.error(user_details?.error?.message);
       dispatch(clear_login_state());
     }
-  }, [user_details]);
+  }, [user_details, remember, Useremail, navigate, dispatch]);
 
-  useEffect(() => {
-    if (token) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [token, navigate]);
+
 
   return (
     <div className="authWrapper min-vh-100 d-flex align-items-center">
@@ -120,9 +138,10 @@ const LoginComponent = () => {
                   className="remeberPass"
                   inline
                   type="checkbox"
-                  id="rememberMe"
                   label="Remember me"
                   aria-label="Remember me"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <Link to="/forgot-password">Forgot Password?</Link>
               </div>

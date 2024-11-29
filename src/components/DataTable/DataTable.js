@@ -8,11 +8,11 @@ const DataTable = ({ children, columns, hideAction,hasCheckbox }) => {
       <Table>
         <thead>
           <tr>
-        {hasCheckbox && (
+        {/* {hasCheckbox && (
               <th className="ps-3">
                <Form.Check className="ms-2" aria-label="option 1" />
               </th>
-            )}
+            )} */}
             {columns.map((col, index) => (
               <th key={index}>{col === "Action" ? "" : col}</th>
             ))}
