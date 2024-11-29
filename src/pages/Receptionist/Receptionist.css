@@ -1,0 +1,16 @@
+
+ul.static_tabs {
+    border-bottom: 1.2px solid #EAEAEA;
+    background-color: #F6FDFD;
+}
+
+ul.static_tabs li {
+    padding: 10px;
+    font-weight: 500;
+    color: #666666;
+}
+
+ul.static_tabs li.active {
+    border-bottom: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}

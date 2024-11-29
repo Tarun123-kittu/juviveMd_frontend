@@ -1,0 +1,39 @@
+
+h5.step_heading {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.volumeInput {
+    display: flex;
+}
+.volumeInput button {
+    border: 1px solid #D7D7D7;
+    font-size: 12px;
+    border-radius: 3px;
+    min-width: 41px;
+}
+.volumeInput  button.form_btn {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    height: 38px;
+    background: var(--primary-color);
+    color: var(--bs-white);
+    border: unset;
+}
+p.tagLine {
+    font-size: 14px;
+}
+
+p.tagLine {
+    font-size: 14px;
+}
+
+button.cmn_btn.border-btn {
+    background: var(--bs-white);
+    color: #1A1A1A;
+    border-color: var(--primary-color);
+    border: 1px solid;
+    height: 44px;
+}

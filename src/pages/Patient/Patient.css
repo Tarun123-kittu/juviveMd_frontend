@@ -26,3 +26,114 @@ ul {}
     border-radius: 5px;
 }
 /*patient data css ends here */
+.patient_filter {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.patient_filter button.cmn_btn {
+    height: 37px;
+}
+span.filter_heading {
+    position: absolute;
+    top: -27px;
+    left: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+}
+.filter_list {
+   display: flex;
+   border: 1px solid #D9D9D9;
+   border-radius: 3px;
+}
+
+.patient_filter {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    top: 64px;
+    padding: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
+    border-radius: 5px;background: #fff;
+}
+
+
+.patient_dropdown button.btn {
+    background: transparent;
+    width: 100%;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border:1px solid #D9D9D9 !important;
+}
+
+.patient_dropdown button:hover {
+    background: unset;
+    color: #000;
+  border: unset;
+}
+
+.patient_dropdown 
+ button:active {
+    background: unset;
+}
+
+.patient_dropdown button:active {
+    border: unset;
+}
+
+.patient_dropdown button:focus {
+    box-shadow: unset;
+    outline: unset;
+}
+
+.patient_filter .dropdown button::after {
+    display: none;
+}
+.filter_list input:focus {
+box-shadow: unset;
+}
+.filter_list input {
+    border: unset;
+    font-size: 15px;
+    color: #00000080;
+}
+
+.label {
+    padding: 6px 9px;
+    border-right: 1px solid #ddd;
+    background: #FAFAFA;
+    color: #000;
+    font-size: 15px;
+}
+
+.patient_filter::after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid #ffffff;
+    top: -15px;
+    right: 30px;
+}
+
+.patient_filter::before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid #00000059;
+    top: -16px;
+    right: 30px;
+}
