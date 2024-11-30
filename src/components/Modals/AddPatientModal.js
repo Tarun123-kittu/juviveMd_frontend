@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Logo from '../../Images/juviveLogo.svg'
 import StepFormFirst from "../StepForm/StepFormFirst";
 import StepFormSecond from "../StepForm/StepFormSecond";
 import StepFormThird from "../StepForm/StepFormThird";
@@ -11,9 +10,11 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
 import ConfirmForm from "../StepForm/ConfirmForm";
+import { patient_onboarding_api, clear_patient_onboarding_state } from "../../redux/slices/patientSlice/patientOnboardingSlice";
+import toast from "react-hot-toast";
+
 const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const dispatch = useDispatch()
-
     const [equipments, setEquipments] = useState([])
     const [activity_level, setActivity_level] = useState([])
     const [discomfort_issue, setDiscomfort_issue] = useState([])
@@ -27,11 +28,21 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const [workout_type, setWorkout_type] = useState([])
     const [trainers_list, setTrainers_list] = useState([])
     const [step, setStep] = useState(1)
-    const [fullData,setFullData] = useState()
+    const [step_form_open, setStep_form_open] = useState(true)
+    const [stepOnefullData, setStepOneFullData] = useState()
+    const [stepThreefullData, setStepThreeFullData] = useState()
+    const [is_health_issue, setIs_health_issue] = useState(false)
+    const [selected_health_issue, setSelected_health_issue] = useState("")
+    const [height_unit, setHeight_unit] = useState("cm")
+    const [weight_unit, setWeight_unit] = useState("kg")
+    const [third_step_weight_unit, setThird_step_Weight_unit] = useState("kg")
+    const [step_four_additional_information, setStep_four_additional_information] = useState("")
+    const [workout_frequency, setWorkout_frequency] = useState()
+    console.log(workout_frequency, "workout_frequency workout_frequency workout_frequency")
 
+    const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
     const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
-    console.log(trainers_list, "this is the trainer trainers_list")
     const handleClose = () => {
         setshowPateintModal(false)
     }
@@ -62,6 +73,48 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
         }
     }, [trainers_data])
 
+    const handleSubmit = () => {
+        dispatch(patient_onboarding_api({ step, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }))
+    }
+
+    useEffect(() => {
+        if (stepThreefullData?.workoutFrequency) {
+            console.log(stepThreefullData?.workoutFrequency);
+            const array = stepThreefullData?.workoutFrequency.split(',');
+            setWorkout_frequency(array)
+        }
+    }, [stepThreefullData]);
+
+
+    useEffect(() => {
+        if (onboarding_process?.isSuccess) {
+            if (step === 2) {
+                toast.success(onboarding_process?.message?.message)
+                setStep_form_open(false)
+                setIs_health_issue(true)
+                setStep(1)
+                setStepOneFullData()
+                setSelected_health_issue("")
+                dispatch(clear_patient_onboarding_state())
+            }
+            if (step === 4) {
+                toast.success(onboarding_process?.message?.message)
+                setStep_form_open(false)
+                setIs_health_issue(true)
+                setStep(1)
+                setStepOneFullData()
+                setSelected_health_issue("")
+                dispatch(clear_patient_onboarding_state())
+                handleClose()
+
+            }
+        }
+        if (onboarding_process?.isError) {
+            toast.error(onboarding_process?.error?.message)
+            dispatch(clear_patient_onboarding_state())
+        }
+    }, [onboarding_process])
+
     return (
         <div>
             <Modal show={showPateintModal} onHide={handleClose} className="cmn_modal addPatient" centered size="md">
@@ -71,7 +124,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                     </svg>
                 </div>
                 <Modal.Body className="p-0">
-                    <ul className="steps">
+                    {!is_health_issue && step !== 2 && <ul className="steps">
                         <li className="step d-flex align-items-center justify-content-center">1</li>
                         <li className="line_bar"></li>
                         <li className="step d-flex align-items-center justify-content-center">2</li>
@@ -79,13 +132,12 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                         <li className="step d-flex align-items-center justify-content-center">3</li>
                         <li className="line_bar"></li>
                         <li className="step d-flex align-items-center justify-content-center">4</li>
-                    </ul>
-                    {/* <h5 className="step_heading pt-3">Personal Details</h5> */}
-                    {step === 1 && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} setFullData={setFullData}/>}
-                    {step === 2 && <StepFormSecond health_issue={health_issue} setStep={setStep}/>}
-                    {step === 3 && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep}/>}
-                    {step === 4 && <LastStep setStep={setStep}/>}
-                    {/* <ConfirmForm/> */}
+                    </ul>}
+                    {step === 1 && step_form_open && <StepFormFirst gender={gender} stepOnefullData={stepOnefullData} goal={goal} trainers_list={trainers_list} setStep={setStep} setStepOneFullData={setStepOneFullData} setHeight_unit={setHeight_unit} height_unit={height_unit} setWeight_unit={setWeight_unit} weight_unit={weight_unit} />}
+                    {step === 2 && step_form_open && <StepFormSecond health_issue={health_issue} setStep={setStep} setIs_health_issue={setIs_health_issue} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} is_health_issue={is_health_issue} handleSubmit={handleSubmit} onboarding_process={onboarding_process} />}
+                    {step === 3 && step_form_open && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} setStepThreeFullData={setStepThreeFullData} stepThreefullData={stepThreefullData} setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} />}
+                    {step === 4 && step_form_open && <LastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleSubmit={handleSubmit} onboarding_process={onboarding_process} />}
+                    {is_health_issue && <ConfirmForm setIs_health_issue={setIs_health_issue} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} />}
                 </Modal.Body>
             </Modal>
         </div>

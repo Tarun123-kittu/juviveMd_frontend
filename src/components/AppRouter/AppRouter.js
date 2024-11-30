@@ -8,7 +8,8 @@ import Staff from "../../pages/Staff/Staff";
 import Patient from "../../pages/Patient/Patient";
 import PatientData from "../../pages/Patient/PatientData";
 import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
-import Receptionist from "../../pages/Receptionist/Receptionist";
+import Receptionist_patients from "../../pages/Receptionist/Receptionist_patientsa";
+import Reception_dashboard from "../../pages/Receptionist/Reception_dashboard";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -44,9 +45,15 @@ const AppRouter = () => {
                     ),
                 },
                 {
-                    path: "/receptionist",
+                    path: "/reception/patient",
                     element: (
-                       <Receptionist/>
+                        <Receptionist_patients />
+                    ),
+                },
+                {
+                    path: "/reception/dashboard",
+                    element: (
+                        <Reception_dashboard />
                     ),
                 },
                 {
@@ -65,7 +72,7 @@ const AppRouter = () => {
                                     <PatientData />
                                 </ProtectedRoute>
                             )
-                            
+
                         }
                     ]
                 }
