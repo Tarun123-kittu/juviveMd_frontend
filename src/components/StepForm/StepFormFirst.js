@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 
-const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData }) => {
+const StepFormFirst = ({ gender, goal, trainers_list,setStep,setFullData}) => {
   // Validation schema
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -20,8 +20,12 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       .max(new Date(), "Date of birth cannot be in the future")
       .required("Date of birth is required"),
     height: Yup.number()
+      .min(50, "Height must be at least 50 cm")
+      .max(300, "Height must be less than 300 cm")
       .required("Height is required"),
     weight: Yup.number()
+      .min(30, "Weight must be at least 30 kg")
+      .max(500, "Weight must be less than 500 kg")
       .required("Weight is required"),
     goal: Yup.string().required("Please select a goal"),
     gender: Yup.string().required("Please select a gender"),
@@ -30,23 +34,22 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
 
   // Formik setup
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: {
-      name: stepOnefullData?.name ?? "",
-      tel: stepOnefullData?.tel ?? "",
-      email: stepOnefullData?.email ?? "",
-      date: stepOnefullData?.date ?? "",
-      height: stepOnefullData?.height ?? "",
-      weight: stepOnefullData?.weight ?? "",
-      goal: stepOnefullData?.goal ?? "",
-      gender: stepOnefullData?.gender ?? "",
-      trainer: stepOnefullData?.trainer ?? "",
+      name: "",
+      tel: "",
+      email: "",
+      date: "",
+      height: "",
+      weight: "",
+      goal: "",
+      gender: "",
+      trainer: "",
     },
     validationSchema,
     onSubmit: (values) => {
       console.log("Form values", values);
       setStep(2)
-      setStepOneFullData(values)
+      setFullData(values)
     },
   });
 
@@ -172,7 +175,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
           <Form.Group className="mb-2">
             <Form.Label>Height</Form.Label>
             <div className="volumeInput">
-              <div className="position-relative d-flex align-items-center">
+              <div className="position-relative">
                 <Form.Control
                   type="text"
                   name="height"
@@ -181,35 +184,21 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.height && !!formik.errors.height}
-                  style={{ marginRight: '10px' }} // Add some space between input and buttons
                 />
-                <button
-                  type="button"
-                  onClick={() => setHeight_unit("cm")}
-                  className={`unit-btn ${height_unit === "cm" ? "active" : ""}`}
-                >
-                  Cm
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setHeight_unit("feet")}
-                  className={`unit-btn ${height_unit === "feet" ? "active" : ""}`}
-                >
-                  Feet
-                </button>
+                <button className="form_btn">Cm</button>
               </div>
+              <button className="ms-2">Feet</button>
             </div>
             <Form.Control.Feedback type="invalid">
               {formik.errors.height}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
-
         <Col lg={4}>
           <Form.Group className="mb-2">
             <Form.Label>Weight</Form.Label>
             <div className="volumeInput">
-              <div className="position-relative d-flex align-items-center">
+              <div className="position-relative">
                 <Form.Control
                   type="text"
                   name="weight"
@@ -218,27 +207,14 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.weight && !!formik.errors.weight}
-                  style={{ marginRight: '10px' }}
                 />
-                <button
-                  type="button"
-                  onClick={() => setWeight_unit("kg")}
-                  className={`unit-btn ${weight_unit === "kg" ? "active" : ""}`}
-                >
-                  kg
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setWeight_unit("lb")}
-                  className={`unit-btn ${weight_unit === "lb" ? "active" : ""}`}
-                >
-                  lb
-                </button>
+                <button className="form_btn">kg</button>
               </div>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.weight}
-              </Form.Control.Feedback>
+              <button className="ms-2">lb</button>
             </div>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.weight}
+            </Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col lg={4}>
