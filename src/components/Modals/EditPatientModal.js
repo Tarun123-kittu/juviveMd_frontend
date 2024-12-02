@@ -18,7 +18,7 @@ import { get_patients_list } from "../../redux/slices/patientSlice/getPatientLis
 
 
 
-const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientId, page }) => {
+const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientId, page, setPatientId }) => {
 
     const dispatch = useDispatch()
 
@@ -41,7 +41,6 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
     const [third_step_weight_unit, setThird_step_Weight_unit] = useState()
     const [stepOnefullData, setStepOneFullData] = useState()
     const [stepThreefullData, setStepThreeFullData] = useState()
-    console.log(stepThreefullData, "this is step three full data")
     const [step_four_additional_information, setStep_four_additional_information] = useState("")
     const [is_health_issue, setIs_health_issue] = useState(false)
     const [step_form_open, setStep_form_open] = useState(true)
@@ -55,6 +54,7 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
     const handleClose = () => {
         setshowPateintModal(false)
         dispatch(clear_selected_patient_state())
+        setStep(1)
     }
 
     useEffect(() => {
@@ -89,7 +89,7 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
             console.log(stepThreefullData?.workoutFrequency);
             const array = stepThreefullData?.workoutFrequency
                 .split(',')
-                .map(item => item.trim().charAt(0).toUpperCase() + item.trim().slice(1)); // Capitalize each item
+                .map(item => item.trim().charAt(0).toUpperCase() + item.trim().slice(1));
             setWorkout_frequency(array);
         }
     }, [stepThreefullData]);
@@ -114,10 +114,12 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
             toast.success(is_patient_updated?.message?.message)
             dispatch(get_patients_list({ page, tab }))
             setStep(1)
+            setPatientId(null)
             dispatch(clear_update_patient_state())
+            dispatch(clear_selected_patient_state())
             handleClose()
         }
-        if(is_patient_updated?.isError){
+        if (is_patient_updated?.isError) {
             toast.error(is_patient_updated?.error?.message)
             dispatch(clear_update_patient_state())
         }
@@ -145,7 +147,7 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
                     {step === 1 && <EditStepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} patient_all_data={patient_all_data} height_unit={height_unit} weight_unit={weight_unit} setHeight_unit={setHeight_unit} setWeight_unit={setWeight_unit} setStepOneFullData={setStepOneFullData} loading={patient_data?.isLoading} setTrainer_name={setTrainer_name} />}
                     {step === 2 && <EditStepFormSecond health_issue={health_issue} setStep={setStep} patient_all_data={patient_all_data} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} />}
                     {step === 3 && <EditStepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} patient_all_data={patient_all_data} setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} setStepThreeFullData={setStepThreeFullData} stepThreefullData={stepThreefullData} />}
-                    {step === 4 && <EditLastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleUpdate={handleUpdate} />}
+                    {step === 4 && <EditLastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleUpdate={handleUpdate} is_patient_updated={is_patient_updated} />}
                     {is_health_issue && <ConfirmForm setIs_health_issue={setIs_health_issue} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} />}
                 </Modal.Body>
             </Modal>

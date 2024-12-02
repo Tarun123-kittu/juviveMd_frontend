@@ -1,6 +1,8 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
-const EditLastStep = ({ setStep, setStep_four_additional_information, step_four_additional_information,handleUpdate }) => {
+import Spinner from "react-bootstrap/Spinner";
+
+const EditLastStep = ({ setStep, setStep_four_additional_information, step_four_additional_information, handleUpdate, is_patient_updated }) => {
   return (
     <div>
       <h5 className="step_heading pt-3">Additional Information (Optional )</h5>
@@ -11,7 +13,11 @@ const EditLastStep = ({ setStep, setStep_four_additional_information, step_four_
         </Form.Group>
         <div className='d-flex gap-3 justify-content-center mt-4'>
           <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
-          <button onClick={() => handleUpdate()} className='cmn_btn ps-4 pe-4'>Next</button>
+          {!is_patient_updated?.isLoading ? <button onClick={() => handleUpdate()} className='cmn_btn ps-4 pe-4'>Next</button>
+            :
+            <button className='cmn_btn ps-4 pe-4'><Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner></button>}
         </div>
       </div>
     </div>

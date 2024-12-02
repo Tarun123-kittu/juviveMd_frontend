@@ -35,12 +35,18 @@ const LoginComponent = () => {
   const Useremail = "";
 
 
-  // Handle form submission
-  const handleLogin = (values) => {
-    const { email, password } = values;
-    setEmail(email)
-    dispatch(user_login({ email, password }));
+  const handleLogin = async (values, { setSubmitting }) => {
+    try {
+      const { email, password } = values;
+      setEmail(email);
+      await dispatch(user_login({ email, password }));
+      setSubmitting(false);
+    } catch (error) {
+      setSubmitting(false);
+      console.error("Login failed", error);
+    }
   };
+
 
   useEffect(() => {
     const isRemembered = localStorage.getItem("phloii_remember_me") === "true";
@@ -84,7 +90,7 @@ const LoginComponent = () => {
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
-          onSubmit={handleLogin}
+          onSubmit={(values, { setSubmitting }) => handleLogin(values, { setSubmitting })}
         >
           {({
             values,
@@ -147,7 +153,11 @@ const LoginComponent = () => {
               </div>
               <div className="mt-3">
                 {!user_details?.isLoading ? (
-                  <button type="submit" className="cmn_btn w-100" disabled={isSubmitting}>
+                  <button
+                    type="submit"
+                    className="cmn_btn w-100"
+                    disabled={isSubmitting || user_details?.isLoading}
+                  >
                     Log In
                   </button>
                 ) : (

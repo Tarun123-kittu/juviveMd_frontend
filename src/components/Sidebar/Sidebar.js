@@ -43,11 +43,28 @@ const Sidebar = () => {
         </div>
         <ul className='menu_items d-flex flex-column'>
           {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-            return (
-              <li key={index}>
-                <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
-              </li>
-            )
+            if (menus.role === "ADMIN" && localStorage?.getItem("user_role") === "ADMIN") {
+              return (
+                <li key={index}>
+                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                </li>
+              )
+            }
+            if (menus.role === "TRAINER" && localStorage?.getItem("user_role") === "TRAINER") {
+              return (
+                <li key={index}>
+                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                </li>
+              )
+            }
+            if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
+              return (
+                <li key={index}>
+                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                </li>
+              )
+            }
+
           })}
           <li onClick={() => handleLogout()} className='log_out'>
             <div className='d-flex align-items-center '>

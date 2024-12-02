@@ -52,13 +52,17 @@ const AppRouter = () => {
                 {
                     path: "/reception/patient",
                     element: (
-                        <Receptionist_patients />
+                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                            <Receptionist_patients />
+                        </ProtectedRoute>
                     ),
                 },
                 {
                     path: "/reception/dashboard",
                     element: (
-                        <Reception_dashboard />
+                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                            <Reception_dashboard />
+                        </ProtectedRoute>
                     ),
                 },
                 {
@@ -87,21 +91,28 @@ const AppRouter = () => {
                         }
                     ]
                 },
-                {path:"/exercise",
+                {
+                    path: "/exercise",
 
-                    element:<Exercise/>
+                    element: <Exercise />
                 },
-                {path:"/exerciseView",
+                {
+                    path: "/exerciseView",
 
-                    element:<ExerciseView/>
+                    element: <ExerciseView />
                 },
-                {path:"/trainerDashboard",
-
-                    element:<TrainerDashboard/>
+                {
+                    path: "/trainer/dashboard",
+                    element: (
+                        <ProtectedRoute requiredRole="TRAINER">
+                            <TrainerDashboard />
+                        </ProtectedRoute>
+                    )
                 },
-                {path:"/trainerExercise",
+                {
+                    path: "/trainerExercise",
 
-                    element:<TrainerExercise/>
+                    element: <TrainerExercise />
                 },
             ]
         }

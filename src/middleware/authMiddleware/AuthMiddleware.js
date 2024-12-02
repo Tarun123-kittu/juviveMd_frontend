@@ -1,4 +1,4 @@
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 
 export const authMiddleware = (navigate) => {
@@ -7,10 +7,17 @@ export const authMiddleware = (navigate) => {
         try {
             const decodedToken = jwtDecode(token);
             const { user } = decodedToken;
-            console.log(user,"this is from the middleware")
+            localStorage.setItem("user_role", user?.role)
+            console.log(user, "this is from the middleware")
 
-            if(user?.role === "ADMIN"){
+            if (user?.role === "ADMIN") {
                 navigate("/dashboard")
+            }
+            else if (user.role === "TRAINER") {
+                navigate("/trainer/dashboard")
+            }
+            else if (user.role === "RECEPTIONIST") {
+                navigate("/reception/dashboard")
             }
         } catch (error) {
             console.error('Error decoding token:', error);
