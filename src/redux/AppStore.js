@@ -8,6 +8,7 @@ import getSingleStaffAPI from "./slices/staffSlice/getStaffByIdSlice"
 import updateStaffAPI from "./slices/staffSlice/updateStaffSlice"
 import commonDataAPI from "./slices/commonDataSlice/commonDataDlice"
 import getTrainersAPI from "./slices/commonDataSlice/getTrainersSlice"
+import patientOnboardingAPI from "./slices/patientSlice/patientOnboardingSlice"
 
 const AppStore = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ const AppStore = configureStore({
     STAFF_DETAIL: getSingleStaffAPI,
     UPDATE_STAFF: updateStaffAPI,
     COMMON_DATA: commonDataAPI,
-    TRAINERS_LIST: getTrainersAPI
+    TRAINERS_LIST: getTrainersAPI,
+    ONBOARD_PATIENT: patientOnboardingAPI
   },
 })
 

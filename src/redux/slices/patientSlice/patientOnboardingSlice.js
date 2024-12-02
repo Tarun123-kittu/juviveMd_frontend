@@ -1,55 +1,51 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ values }, thunkAPI) => {
-        const token = Cookies.get('authToken');
-
+export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ step, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }, thunkAPI) => {
+    const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNyZWF0ZWRfYXQiOiIyMDI0LTExLTI3VDExOjM4OjMzLjM5NVoiLCJsYXN0TmFtZSI6ImFkbWluIiwiYWRkcmVzcyI6ImFiYyIsImVtYWlsIjoidGFydW4uZ2F1dGFtQHVsdGl2aWMuY29tIiwiZmlyc3ROYW1lIjoiYWRtaW4iLCJyZXNldFRva2VuIjpudWxsLCJ1cGRhdGVkX2F0IjoiMjAyNC0xMS0yN1QxMTozODozMy4zOTVaIiwicGFzc3dvcmQiOiIkMmEkMTAkdW1ScVpvQ241SlU1SmJTMThmbTV6ZVhWNTE2bVF1VlJqQkVMNjYvQVczN3dOSjRBOFVuU3UiLCJyb2xlIjoiQURNSU4iLCJpbWFnZSI6bnVsbCwicmVzZXRfdG9rZW4iOiJkMTc1NzU4MDhhOTMzMjBlN2NmZWUzODI2YWY1NmU2NDUwZjg1N2E1NjA3M2EzYTM5YTNiNDg5ZDVmNDQ1YTA2IiwicmVzZXRfdG9rZW5fZXhwaXJlcyI6IjIwMjQtMTEtMjhUMDU6MDA6MTkuODcxWiIsImlkIjoiYjUxNGNiN2EtOWI0My00MTFhLTk0NjMtOTgzNGVjZDM5NjJiIiwicGhvbmUiOiI3ODMxMDIyMDAwIn0sImlhdCI6MTczMjc2OTU3Mn0.vWoUroS8fkJH_YNnoCclh-ko6z9govM8TeXgZnn5KPs");
+        myHeaders.append("Authorization", validToken);
 
         const raw = JSON.stringify({
-            "name": "ankush",
-            "phone": 7831040000,
-            "email": "tarun.gautam@ultivic.com",
-            "gender": "MALE",
+            "name": stepOnefullData?.name,
+            "phone": stepOnefullData?.tel,
+            "email": stepOnefullData?.email,
+            "gender": stepOnefullData?.gender,
             "height": {
-                "unit": "feet",
-                "value": 6
+                "unit": height_unit,
+                "value": stepOnefullData?.height
             },
             "weight": {
-                "unit": "kg",
-                "value": 84
+                "unit": weight_unit,
+                "value": stepOnefullData?.weight
             },
-            "goal": "Gain Muscle Mass",
-            "dob": "sds",
-            "trainerID": "anddkjfkdj",
-            "step": 3,
-            "health_issue_text": "",
+            "goal": stepOnefullData?.goal,
+            "dob": stepOnefullData?.date,
+            "trainerID": stepOnefullData?.trainer,
+            "step": step,
+            "health_issue_text": selected_health_issue,
             "optimal_weight": {
-                "unit": "lbs/kg",
-                "value": 84
+                "unit": third_step_weight_unit,
+                "value": stepThreefullData?.optimalWeight
             },
             "fat_percentage": {
                 "unit": "perc",
-                "value": 84
+                "value": stepThreefullData?.bodyFat
             },
-            "discomfort": "Shoulder",
-            "activity_level": "",
-            "sleep_rate": "",
-            "workout_types": "",
-            "workout_place": "",
-            "equipment": "",
-            "workout_time": "",
-            "exercise_perweek": [
-                "sunday",
-                "monday"
-            ],
-            "additional_information": "this is description"
+            "discomfort": stepThreefullData?.discomfort,
+            "activity_level": stepThreefullData?.activityLevel,
+            "sleep_rate": stepThreefullData?.sleepHours,
+            "workout_types": stepThreefullData?.workoutTypes,
+            "workout_place": stepThreefullData?.workoutPlace,
+            "equipment": stepThreefullData?.homeEquipment,
+            "workout_time": stepThreefullData?.workoutTime,
+            "exercise_perweek": workout_frequency,
+            "additional_information": step_four_additional_information
         });
-
+        console.log(raw, "this is the rwa")
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -57,12 +53,20 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
             redirect: "follow"
         };
 
-        fetch("https://1kgnwnst17.execute-api.us-east-1.amazonaws.com/prod/api/patient/create", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-    } catch (error) {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/patient/create`, requestOptions)
+        if (!response.ok) {
+            const errorMessage = await response.json();
+            if (errorMessage) {
+                throw new Error(errorMessage.message);
+            }
+        }
 
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        return thunkAPI.rejectWithValue({
+            message: error.message,
+        });
     }
 })
 

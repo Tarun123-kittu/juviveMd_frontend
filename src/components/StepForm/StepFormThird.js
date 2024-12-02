@@ -6,19 +6,20 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Select from "react-select";
 
-const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times,setStep }) => {
+const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, setStepThreeFullData, stepThreefullData, setThird_step_Weight_unit, third_step_weight_unit }) => {
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      optimalWeight: "",
-      bodyFat: "",
-      discomfort: "",
-      activityLevel: "",
-      sleepHours: "",
-      workoutTypes: "",
-      workoutPlace: "",
-      homeEquipment: "",
-      workoutTime: "",
-      workoutFrequency: "",
+      optimalWeight: stepThreefullData?.optimalWeight,
+      bodyFat: stepThreefullData?.bodyFat,
+      discomfort: stepThreefullData?.discomfort,
+      activityLevel: stepThreefullData?.activityLevel,
+      sleepHours: stepThreefullData?.sleepHours,
+      workoutTypes: stepThreefullData?.workoutTypes,
+      workoutPlace: stepThreefullData?.workoutPlace,
+      homeEquipment: stepThreefullData?.homeEquipment,
+      workoutTime: stepThreefullData?.workoutTime,
+      workoutFrequency: stepThreefullData?.workoutFrequency,
     },
     validationSchema: Yup.object({
       optimalWeight: Yup.number()
@@ -38,7 +39,8 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
       workoutFrequency: Yup.string().required("Please select workout frequency"),
     }),
     onSubmit: (values) => {
-      console.log("Form Data: ", values);
+      setStep(4)
+      setStepThreeFullData(values)
     },
   });
 
@@ -50,7 +52,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
           <Form.Group className="mb-2">
             <Form.Label>What is the optimal weight for you? in Lbs/Kg</Form.Label>
             <div className="volumeInput w-100">
-              <div className="position-relative w-100">
+              <div className="position-relative w-100 d-flex align-items-center">
                 <Form.Control
                   type="text"
                   name="optimalWeight"
@@ -58,10 +60,23 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.optimalWeight}
+                  style={{ marginRight: '10px' }}
                 />
-                <button className="form_btn">Kg</button>
+                <button
+                  type="button"
+                  onClick={() => setThird_step_Weight_unit("kg")}
+                  className={`unit-btn ${third_step_weight_unit === "kg" ? "active" : ""}`}
+                >
+                  kg
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setThird_step_Weight_unit("lb")}
+                  className={`unit-btn ${third_step_weight_unit === "lb" ? "active" : ""}`}
+                >
+                  lb
+                </button>
               </div>
-              <button className="ms-2">Lbs</button>
             </div>
             {formik.touched.optimalWeight && formik.errors.optimalWeight && (
               <div className="error text-danger">{formik.errors.optimalWeight}</div>
@@ -250,9 +265,8 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
               options={weekDays?.map((day) => ({ value: day, label: day }))}
               isMulti
               onChange={(selectedOptions) => {
-                // Convert selected options to a comma-separated string
                 const selectedValues = selectedOptions
-                  ? selectedOptions.map((option) => option.value)?.join(", ") // Join into a string
+                  ? selectedOptions.map((option) => option.value)?.join(",")
                   : "";
                 formik.setFieldValue("workoutFrequency", selectedValues);
               }}
@@ -263,7 +277,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
                     value,
                     label: value,
                   }))
-                  : [] // If there's no value, default to an empty array
+                  : []
               }
             />
             {formik.touched.workoutFrequency && formik.errors.workoutFrequency && (
@@ -274,7 +288,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
         <Col lg={12} className="text-center mt-4">
           <div className='d-flex gap-3 justify-content-center'>
             <button onClick={() => setStep(2)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
-            <button onClick={() => setStep(4)} type="submit" className='cmn_btn ps-4 pe-4'>Next</button>
+            <button type="submit" className='cmn_btn ps-4 pe-4'>Next</button>
           </div>
         </Col>
       </Row>
