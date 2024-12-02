@@ -107,7 +107,7 @@ box-shadow: unset;
 .patient_dropdown .dropdown-toggle::after{
     display: none;
 }
-table.table .patient_dropdown button.btn {
+.table .patient_dropdown button.btn {
     border: unset !important;
     width: unset;
     gap: 9px;

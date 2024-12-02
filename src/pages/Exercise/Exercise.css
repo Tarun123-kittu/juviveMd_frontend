@@ -1,3 +1,30 @@
 .exercise_tab .cmn_tabs {
     width: calc(100% - 90px);
 }
+.pose_image {
+    border: 1px solid #D9D9D9;
+    border-radius: 19px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.pose_image img {
+    width: 60%;
+    margin: auto;
+}
+
+.exercise_heading {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--bs-black);
+}
+.exercise_video iframe {
+    clip-path: inset(0 0 0 0 round 20px);
+}
+ul.exercise_status li {
+    display: flex;
+    justify-content: space-between;
+}
+ul.exercise_status button.btn {
+    padding-top: 0;
+}
