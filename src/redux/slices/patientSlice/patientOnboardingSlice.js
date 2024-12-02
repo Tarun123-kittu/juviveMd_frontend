@@ -45,7 +45,6 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
             "exercise_perweek": workout_frequency,
             "additional_information": step_four_additional_information
         });
-        console.log(raw, "this is the rwa")
         const requestOptions = {
             method: "POST",
             headers: myHeaders,

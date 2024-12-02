@@ -7,10 +7,21 @@ import { useParams } from "react-router-dom";
 const AppLayout = () => {
   const location = useLocation();
   const pathname = location.pathname;
-  const params = useParams()
-  const {token} = params
+  const params = useParams();
+  const { token } = params;
 
-  const isProtectedRoute = pathname !== `/reset-password/${token}` && !unProtectedUrls.includes(pathname);
+  // Check if the current route is unprotected
+  const isUnprotectedRoute = 
+    unProtectedUrls.some((url) => 
+      url.includes(":token") 
+        ? pathname === url.replace(":token", token || "") 
+        : pathname === url
+    );
+
+  // If the route is not unprotected, it's a protected route
+  const isProtectedRoute = !isUnprotectedRoute;
+
+  console.log({ isProtectedRoute, pathname });
 
   return (
     <>
@@ -27,3 +38,13 @@ const AppLayout = () => {
 };
 
 export default AppLayout;
+
+// // Unprotected URLs configuration
+// export const unProtectedUrls = [
+//   "/login",
+//   "/",
+//   "/sign-up",
+//   "/reset-password/:token",
+//   "/forgot-password",
+//   "/patient/reset-password/:token"
+// ];
