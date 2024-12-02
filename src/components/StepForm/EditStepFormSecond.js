@@ -8,17 +8,21 @@ const EditStepFormSecond = ({
   setSelected_health_issue,
   selected_health_issue,
 }) => {
-  // Initialize selected health issues from patient data on component mount
+  console.log(patient_all_data?.health_issue_text)
   useEffect(() => {
-    setSelected_health_issue(patient_all_data?.health_issue_text || []);
+    if (typeof patient_all_data?.health_issue_text === 'string') {
+      const issuesArray = patient_all_data.health_issue_text?.split(/\s+|,+/);
+      setSelected_health_issue(issuesArray);
+    } else {
+      setSelected_health_issue([]);
+    }
   }, [patient_all_data, setSelected_health_issue]);
 
-  // Toggle health issue selection
   const handleCheckboxChange = (issue) => {
     setSelected_health_issue((prevSelected) =>
       prevSelected.includes(issue)
-        ? prevSelected.filter((item) => item !== issue) // Remove if already selected
-        : [...prevSelected, issue] // Add if not selected
+        ? prevSelected.filter((item) => item !== issue) 
+        : [...prevSelected, issue] 
     );
   };
 
@@ -29,7 +33,6 @@ const EditStepFormSecond = ({
         If you select any checkbox, please consult a doctor before using the app.
       </p>
 
-      {/* Render health issues with checkboxes */}
       {health_issue?.map((issue, i) => (
         <Form.Group key={i} className="mb-3" controlId={`option-${i}`}>
           <Form.Check
@@ -43,7 +46,6 @@ const EditStepFormSecond = ({
         </Form.Group>
       ))}
 
-      {/* Navigation Buttons */}
       <div className="d-flex gap-3 justify-content-center">
         <button onClick={() => setStep(1)} className="cmn_btn border-btn ps-4 pe-4">
           Back

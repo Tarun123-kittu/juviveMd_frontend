@@ -6,21 +6,20 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Select from "react-select";
 
-const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, patient_all_data, setThird_step_Weight_unit, third_step_weight_unit,setStepThreeFullData }) => {
-  console.log(patient_all_data, "this is the patien all list from the third modal")
+const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, patient_all_data, setThird_step_Weight_unit, third_step_weight_unit, setStepThreeFullData, stepThreefullData }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      optimalWeight: patient_all_data?.optimal_weight?.value,
-      bodyFat: patient_all_data?.fat_percentage?.value,
-      discomfort: patient_all_data?.discomfort,
-      activityLevel: patient_all_data?.activity_level,
-      sleepHours: patient_all_data?.sleep_rate,
-      workoutTypes: patient_all_data?.workout_types,
-      workoutPlace: patient_all_data?.workout_place,
-      homeEquipment: patient_all_data?.equipment,
-      workoutTime: patient_all_data?.workout_time,
-      workoutFrequency: patient_all_data?.exercise_perweek?.join(","),
+      optimalWeight: patient_all_data?.optimal_weight?.value || stepThreefullData?.optimalWeight || "",
+      bodyFat: patient_all_data?.fat_percentage?.value || stepThreefullData?.bodyFat || "",
+      discomfort: patient_all_data?.discomfort || stepThreefullData?.discomfort || "",
+      activityLevel: patient_all_data?.activity_level || stepThreefullData?.activityLevel || "",
+      sleepHours: patient_all_data?.sleep_rate || stepThreefullData?.sleepHours || "",
+      workoutTypes: patient_all_data?.workout_types || stepThreefullData?.workoutTypes || "",
+      workoutPlace: patient_all_data?.workout_place || stepThreefullData?.workoutPlace || "",
+      homeEquipment: patient_all_data?.equipment || stepThreefullData?.homeEquipment || "",
+      workoutTime: patient_all_data?.workout_time || stepThreefullData?.workoutTime || "",
+      workoutFrequency: patient_all_data?.exercise_perweek?.join(",") || stepThreefullData?.workoutFrequency || "",
     },
     validationSchema: Yup.object({
       optimalWeight: Yup.number()
@@ -42,6 +41,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
     onSubmit: (values) => {
       console.log("Form Data: ", values);
       setStepThreeFullData(values)
+      setStep(4)
     },
   });
 
@@ -263,21 +263,23 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>How many times per week can you exercise?</Form.Label>
             <Select
               name="workoutFrequency"
-              options={weekDays?.map((day) => ({ value: day, label: day }))}
+              options={weekDays?.map((day) => ({
+                value: day.charAt(0).toUpperCase() + day.slice(1),
+                label: day.charAt(0).toUpperCase() + day.slice(1),
+              }))}
               isMulti
               onChange={(selectedOptions) => {
-                // Convert selected options to a comma-separated string
                 const selectedValues = selectedOptions
-                  ? selectedOptions.map((option) => option.value)?.join(",") // Join into a string
+                  ? selectedOptions.map((option) => option.value)?.join(",")
                   : "";
                 formik.setFieldValue("workoutFrequency", selectedValues);
               }}
               onBlur={() => formik.setFieldTouched("workoutFrequency", true)}
               value={
                 formik.values.workoutFrequency
-                  ? formik.values.workoutFrequency?.split(", ").map((value) => ({
-                    value,
-                    label: value,
+                  ? formik.values.workoutFrequency?.split(",").map((value) => ({
+                    value: value.charAt(0).toUpperCase() + value.slice(1),
+                    label: value.charAt(0).toUpperCase() + value.slice(1),
                   }))
                   : [] // If there's no value, default to an empty array
               }
@@ -287,10 +289,11 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             )}
           </Form.Group>
         </Col>
+
         <Col lg={12} className="text-center mt-4">
           <div className='d-flex gap-3 justify-content-center'>
             <button onClick={() => setStep(2)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
-            <button onClick={() => setStep(4)} type="submit" className='cmn_btn ps-4 pe-4'>Next</button>
+            <button type="submit" className='cmn_btn ps-4 pe-4'>Next</button>
           </div>
         </Col>
       </Row>

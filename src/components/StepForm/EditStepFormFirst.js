@@ -6,7 +6,7 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Loader from "../../common/Loader/Loader";
 
-const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading,setStepOneFullData }) => {
+const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, setTrainer_name }) => {
   console.log(patient_all_data, "this is the patient all data from the first modal")
   // Validation schema
   const validationSchema = Yup.object({
@@ -22,12 +22,8 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       .max(new Date(), "Date of birth cannot be in the future")
       .required("Date of birth is required"),
     height: Yup.number()
-      .min(50, "Height must be at least 50 cm")
-      .max(300, "Height must be less than 300 cm")
       .required("Height is required"),
     weight: Yup.number()
-      .min(30, "Weight must be at least 30 kg")
-      .max(500, "Weight must be less than 500 kg")
       .required("Weight is required"),
     goal: Yup.string().required("Please select a goal"),
     gender: Yup.string().required("Please select a gender"),
@@ -51,6 +47,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     validationSchema,
     onSubmit: (values) => {
       setStepOneFullData(values)
+      setStep(2)
     },
   });
 
@@ -249,25 +246,33 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
             <Form.Select
               name="trainer"
               value={formik.values.trainer}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const selectedTrainerId = e.target.value;
+                formik.handleChange(e); // Update formik's value
+                // Find the trainer name using the ID
+                const selectedTrainer = trainers_list?.find(trainer => trainer?.id === selectedTrainerId);
+                if (selectedTrainer) {
+                  setTrainer_name(selectedTrainer?.firstName); // Set the trainer's name
+                }
+              }}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.trainer && !!formik.errors.trainer}
             >
               <option value="">Select Trainer</option>
-              {trainers_list?.map((trainer) => {
-                return (
-
-                  <option value={trainer?.firstName}>{trainer?.firstName}</option>
-                )
-              })}
+              {trainers_list?.map((trainer) => (
+                <option key={trainer?.id} value={trainer?.id}>
+                  {trainer?.firstName}
+                </option>
+              ))}
             </Form.Select>
             <Form.Control.Feedback type="invalid">
               {formik.errors.trainer}
             </Form.Control.Feedback>
           </Form.Group>
         </Col>
+
         <Col lg={12} className="text-center mt-4">
-          <button onClick={() => setStep(2)} type="submit" className="cmn_btn ps-5 pe-5">
+          <button type="submit" className="cmn_btn ps-5 pe-5">
             Next
           </button>
         </Col>
