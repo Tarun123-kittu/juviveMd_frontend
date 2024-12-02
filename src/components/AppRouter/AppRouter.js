@@ -10,6 +10,7 @@ import PatientData from "../../pages/Patient/PatientData";
 import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
 import Receptionist_patients from "../../pages/Receptionist/Receptionist_patientsa";
 import Reception_dashboard from "../../pages/Receptionist/Reception_dashboard";
+import PatientResetPassword from "../reception/patientResetPassword";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -54,6 +55,12 @@ const AppRouter = () => {
                     path: "/reception/dashboard",
                     element: (
                         <Reception_dashboard />
+                    ),
+                },
+                {
+                    path: "/patient/reset-password/:token",
+                    element: (
+                        <PatientResetPassword />
                     ),
                 },
                 {
