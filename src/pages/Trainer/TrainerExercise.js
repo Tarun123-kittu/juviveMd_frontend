@@ -4,9 +4,11 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import ActiveExerciseTab from "../../components/Tabs/ExerciseTab/ActiveExerciseTab";
 import { Dropdown } from "react-bootstrap";
-import './Exercise.css'
-const Exercise = () => {
+import Nodata from "../../components/StaticComponents/Nodata";
+import AddExcercise from "../../components/Modals/AddExcercise";
+const TrainerExercise = () => {
     const[toggleFilter,setToggleFilter] = useState(false)
+    const [showAddExerciseModal, setshowAddExerciseModal ] = useState(false)
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -18,6 +20,7 @@ const Exercise = () => {
         </div>
         <div className="cmn_bg_wrapper exercise_tab">
      <div className="position-relative"> 
+        <button className="cmn_btn" onClick={()=>{setshowAddExerciseModal(true)}}>+ Create Exercise</button>
         <button className="cmn_btn px-4 position-absolute end-0" onClick={() => setToggleFilter(!toggleFilter)}>Filter</button>
 
         {toggleFilter &&<div className='patient_filter'>
@@ -85,7 +88,7 @@ const Exercise = () => {
            <ActiveExerciseTab/>
           </Tab>
           <Tab eventKey="approvalRequests" title="Approval Requests">
-            Tab content for Approval Requests
+           <Nodata/>
           </Tab>
           <Tab eventKey="rejected" title="Rejected" >
           Rejected
@@ -94,9 +97,10 @@ const Exercise = () => {
      </div>
         </div>
       </div>
+      <AddExcercise  showAddExerciseModal={showAddExerciseModal} setshowAddExerciseModal={setshowAddExerciseModal}/>
     </div>
   );
 };
 
-export default Exercise;
+export default TrainerExercise;
 
