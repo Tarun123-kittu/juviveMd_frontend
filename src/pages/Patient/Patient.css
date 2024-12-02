@@ -100,6 +100,27 @@ span.filter_heading {
 .filter_list input:focus {
 box-shadow: unset;
 }
+.patient_dropdown .dropdown-menu {
+    padding: 0;
+    width: 100%;
+}
+.patient_dropdown .dropdown-toggle::after{
+    display: none;
+}
+table.table .patient_dropdown button.btn {
+    border: unset !important;
+    width: unset;
+    gap: 9px;
+}
+.patient_dropdown .dropdown-menu li {
+    font-size: 14px;
+    padding: 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.patient_dropdown .dropdown-menu li:last-child {
+    border: unset;
+}
 .filter_list input {
     border: unset;
     font-size: 15px;
@@ -136,4 +157,16 @@ box-shadow: unset;
     border-bottom: 15px solid #00000059;
     top: -16px;
     right: 30px;
+}
+@media(max-width:1440px){
+    .filter_list input, .label,.patient_dropdown button.btn{
+        font-size: 13px;
+    }
+    .patient_filter button.cmn_btn {
+        height: 33px;
+    }
+    span.filter_heading {
+        top: -22px;
+        font-size: 14px;
+    }
 }
