@@ -141,3 +141,19 @@ h5.step_heading {
     font-size: 20px;
     color: var(--primary-color);
 }
+.cmn_modal.EmailSentModal .modal-dialog {
+    max-width: 450px;
+}
+
+.EmailSentModal  .deletmodal_heading {
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.EmailSentModal span {
+    text-decoration: underline;
+}
+
+.EmailSentModal .modal_logo img{
+    width: 103px;
+}

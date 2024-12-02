@@ -99,3 +99,24 @@ li.log_out div {
     font-weight: 500;
     cursor: pointer;
 }
+@media(max-width:1440px){
+    ul.menu_items {
+        gap: 12px;
+    }
+    ul.menu_items li a, li.log_out span{
+        font-size: 14px;
+    }
+    ul.menu_items li a svg {
+        flex: 0 0 20px;
+        height: 20px;
+    }
+    .user_info {
+        margin-top: 2rem;
+    }
+    .user_info h6 {
+        font-size: 18px;
+    }
+    .user_info p{
+        font-size: 14px;
+    }
+}

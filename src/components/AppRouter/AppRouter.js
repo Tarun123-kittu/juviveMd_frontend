@@ -10,6 +10,7 @@ import PatientData from "../../pages/Patient/PatientData";
 import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
 import Receptionist_patients from "../../pages/Receptionist/Receptionist_patientsa";
 import Reception_dashboard from "../../pages/Receptionist/Reception_dashboard";
+import Exercise from "../../pages/Exercise/Exercise";
 import PatientResetPassword from "../reception/patientResetPassword";
 const AppRouter = () => {
     const routes = createBrowserRouter([
@@ -65,11 +66,11 @@ const AppRouter = () => {
                 },
                 {
                     path: "/patient",
-                    element: (
-                        <ProtectedRoute requiredRole="ADMIN">
-                            <Patient />
-                        </ProtectedRoute>
-                    ),
+                    // element: (
+                    //     <ProtectedRoute requiredRole="ADMIN">
+                    //         <Patient />
+                    //     </ProtectedRoute>
+                    // ),
 
                     children: [
                         {
@@ -82,6 +83,10 @@ const AppRouter = () => {
 
                         }
                     ]
+                },
+                {path:"/exercise",
+
+                    element:<Exercise/>
                 }
             ]
         }

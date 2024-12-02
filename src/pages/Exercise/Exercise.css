@@ -1,0 +1,3 @@
+.exercise_tab .cmn_tabs {
+    width: calc(100% - 90px);
+}
