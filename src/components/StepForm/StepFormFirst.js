@@ -54,6 +54,8 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
   }
 
   return (
+    <>
+    <h5 className="step_heading pt-3">Essential Health Questions </h5>
     <Form className="authWrapper" onSubmit={formik.handleSubmit}>
       <Row>
         <Col lg={4}>
@@ -256,7 +258,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               {trainers_list?.map((trainer) => {
                 return (
 
-                  <option value={trainer?.id}>{trainer?.firstName}</option>
+                  <option value={trainer?.firstName}>{trainer?.firstName}</option>
                 )
               })}
             </Form.Select>
@@ -272,6 +274,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
         </Col>
       </Row>
     </Form>
+    </>
   );
 };
 

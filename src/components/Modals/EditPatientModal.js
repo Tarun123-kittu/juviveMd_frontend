@@ -1,22 +1,22 @@
 
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Logo from '../../Images/juviveLogo.svg'
-
 import EditStepFormFirst from "../StepForm/EditStepFormFirst";
 import EditStepFormSecond from "../StepForm/EditStepFormSecond";
 import EditStepFormThird from "../StepForm/EditStepFormThird";
 import EditLastStep from "../StepForm/EditLastStep"
 
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { get_selected_patient, clear_selected_patient_state } from "../../redux/slices/patientSlice/getSelectedPatientSlice";
+import ConfirmForm from "../StepForm/ConfirmForm";
+import { update_patient, clear_update_patient_state } from "../../redux/slices/patientSlice/updatePatientSlice";
 
 
 
 
-const EditpatientModal = ({ showPateintModal, setshowPateintModal }) => {
+const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientId }) => {
 
     const dispatch = useDispatch()
 
@@ -33,18 +33,32 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const [workout_type, setWorkout_type] = useState([])
     const [trainers_list, setTrainers_list] = useState([])
     const [step, setStep] = useState(1)
+    const [patient_all_data, setPatient_all_data] = useState()
+    const [height_unit, setHeight_unit] = useState()
+    const [weight_unit, setWeight_unit] = useState()
+    const [third_step_weight_unit, setThird_step_Weight_unit] = useState()
+    const [stepOnefullData, setStepOneFullData] = useState()
+    const [stepThreefullData, setStepThreeFullData] = useState()
+    const [step_four_additional_information, setStep_four_additional_information] = useState("")
+    const [is_health_issue, setIs_health_issue] = useState(false)
+    const [step_form_open, setStep_form_open] = useState(true)
+    const [selected_health_issue, setSelected_health_issue] = useState()
+    const [workout_frequency, setWorkout_frequency] = useState()
 
     const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
-    console.log(trainers_list, "this is the trainer trainers_list")
+    const patient_data = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
+    const is_patient_updated = useSelector((store) => store.UPDATE_PATIENT)
     const handleClose = () => {
         setshowPateintModal(false)
+        dispatch(clear_selected_patient_state())
     }
 
     useEffect(() => {
         dispatch(common_data_api())
         dispatch(get_trainers())
-    }, [])
+        patientId && dispatch(get_selected_patient({ id: patientId }))
+    }, [patientId])
 
     useEffect(() => {
         if (common_data?.isSuccess) {
@@ -67,6 +81,28 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal }) => {
         }
     }, [trainers_data])
 
+    useEffect(() => {
+        if (stepThreefullData?.workoutFrequency) {
+            console.log(stepThreefullData?.workoutFrequency);
+            const array = stepThreefullData?.workoutFrequency.split(',');
+            setWorkout_frequency(array)
+        }
+    }, [stepThreefullData]);
+
+    useEffect(() => {
+        if (patient_data?.isSuccess) {
+            setPatient_all_data(patient_data?.data?.data)
+            setHeight_unit(patient_data?.data?.data?.height?.unit)
+            setWeight_unit(patient_data?.data?.data?.weight?.unit)
+            setThird_step_Weight_unit(patient_data?.data?.data?.optimal_weight?.unit)
+            setStep_four_additional_information(patient_data?.data?.data?.additional_information)
+        }
+    }, [patient_data])
+
+    const handleUpdate = () => {
+        dispatch(update_patient({ id: patientId, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency,patient_details: patient_data?.data?.data }))
+    }
+
     return (
         <div>
             <Modal show={showPateintModal} onHide={handleClose} className="cmn_modal addPatient" centered size="md">
@@ -86,10 +122,11 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                         <li className="step d-flex align-items-center justify-content-center">4</li>
                     </ul>
                     {/* <h5 className="step_heading pt-3">Personal Details</h5> */}
-                    {step === 1 && <EditStepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep}/>}
-                    {step === 2 && <EditStepFormSecond health_issue={health_issue} setStep={setStep}/>}
-                    {step === 3 && <EditStepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep}/>}
-                    {step === 4 && <EditLastStep setStep={setStep}/>}
+                    {step === 1 && <EditStepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} patient_all_data={patient_all_data} height_unit={height_unit} weight_unit={weight_unit} setHeight_unit={setHeight_unit} setWeight_unit={setWeight_unit} setStepOneFullData={setStepOneFullData} loading={patient_data?.isLoading} />}
+                    {step === 2 && <EditStepFormSecond health_issue={health_issue} setStep={setStep} patient_all_data={patient_all_data} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} />}
+                    {step === 3 && <EditStepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} patient_all_data={patient_all_data} setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} setStepThreeFullData={setStepThreeFullData} />}
+                    {step === 4 && <EditLastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleUpdate={handleUpdate} />}
+                    {is_health_issue && <ConfirmForm setIs_health_issue={setIs_health_issue} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} />}
                 </Modal.Body>
             </Modal>
         </div>

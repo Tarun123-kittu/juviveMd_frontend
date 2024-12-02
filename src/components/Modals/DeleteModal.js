@@ -2,8 +2,9 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Logo from '../../Images/juviveLogo.svg'
+import Spinner from 'react-bootstrap/Spinner';
 
-const DeleteModal = ({ showDeleteModal, setshowDeleteModal, handleDelete }) => {
+const DeleteModal = ({ showDeleteModal, setshowDeleteModal, handleDelete, loading }) => {
     const handleClose = () => {
         setshowDeleteModal(false)
     }
@@ -22,7 +23,11 @@ const DeleteModal = ({ showDeleteModal, setshowDeleteModal, handleDelete }) => {
                     </div>
                     <h5 className="mb-3 deletmodal_heading mt-4">Are You Sure You Want to <br /> Delete This User?</h5>
                     <p>This account will be permanently deleted from your dashboard.</p>
-                    <button className="cmn_btn w-100" onClick={() => handleDelete()}>Delete</button>
+                    {!loading ? <button className="cmn_btn w-100" onClick={() => handleDelete()}>Delete</button>
+                        :
+                        <button className="cmn_btn w-100">  <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner></button>}
                     <button className="cmn_btn fade_color w-100 mt-3" onClick={() => handleClose()}>Cancel</button>
                 </Modal.Body>
             </Modal>

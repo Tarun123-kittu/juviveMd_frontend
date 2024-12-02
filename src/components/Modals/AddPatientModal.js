@@ -5,15 +5,16 @@ import StepFormFirst from "../StepForm/StepFormFirst";
 import StepFormSecond from "../StepForm/StepFormSecond";
 import StepFormThird from "../StepForm/StepFormThird";
 import LastStep from "../StepForm/LastStep";
-import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
+
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
 import ConfirmForm from "../StepForm/ConfirmForm";
 import { patient_onboarding_api, clear_patient_onboarding_state } from "../../redux/slices/patientSlice/patientOnboardingSlice";
 import toast from "react-hot-toast";
+import { get_patients_list } from "../../redux/slices/patientSlice/getPatientList";
 
-const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
+const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_data }) => {
     const dispatch = useDispatch()
     const [equipments, setEquipments] = useState([])
     const [activity_level, setActivity_level] = useState([])
@@ -38,17 +39,15 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
     const [third_step_weight_unit, setThird_step_Weight_unit] = useState("kg")
     const [step_four_additional_information, setStep_four_additional_information] = useState("")
     const [workout_frequency, setWorkout_frequency] = useState()
-    console.log(selected_health_issue, "selected_health_issue selected_health_issue selected_health_issue")
 
     const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
-    const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
     const handleClose = () => {
         setshowPateintModal(false)
     }
 
     useEffect(() => {
-        dispatch(common_data_api())
+
         dispatch(get_trainers())
     }, [])
 
@@ -95,7 +94,9 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                 setStep(1)
                 setStepOneFullData()
                 setSelected_health_issue("")
+                dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
+                handleClose()
             }
             if (step === 4) {
                 toast.success(onboarding_process?.message?.message)
@@ -104,6 +105,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal }) => {
                 setStep(1)
                 setStepOneFullData()
                 setSelected_health_issue("")
+                dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
                 handleClose()
 

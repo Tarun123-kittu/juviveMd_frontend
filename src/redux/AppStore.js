@@ -12,6 +12,9 @@ import patientOnboardingAPI from "./slices/patientSlice/patientOnboardingSlice"
 import deleteStffAPI from "./slices/staffSlice/deleteStaff"
 import patientResetPasswordAPI from "./slices/patientSlice/patientResetPasswordSlice"
 import getPatientListAPI from "./slices/patientSlice/getPatientList"
+import deletePatientAPI from "./slices/patientSlice/deletePatientSlice"
+import setSelectedPatientAPI from "./slices/patientSlice/getSelectedPatientSlice"
+import updatePatientAPI from "./slices/patientSlice/updatePatientSlice"
 
 const AppStore = configureStore({
   reducer: {
@@ -27,7 +30,10 @@ const AppStore = configureStore({
     ONBOARD_PATIENT: patientOnboardingAPI,
     DELETE_STAFF: deleteStffAPI,
     PATIENT_RESET_PASSWORD: patientResetPasswordAPI,
-    GET_PATIENT_LIST: getPatientListAPI
+    GET_PATIENT_LIST: getPatientListAPI,
+    DELETE_PATIENT: deletePatientAPI,
+    SELECTED_PATIENT_DETAILS: setSelectedPatientAPI,
+    UPDATE_PATIENT : updatePatientAPI
   },
 })
 
