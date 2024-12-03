@@ -15,6 +15,10 @@ import PatientResetPassword from "../reception/patientResetPassword";
 import ExerciseView from "../../pages/Exercise/ExerciseView";
 import TrainerDashboard from "../../pages/Trainer/TrainerDashboard";
 import TrainerExercise from "../../pages/Trainer/TrainerExercise";
+import Message from "../../pages/messages/Message";
+import TrainerMessages from "../Trainer/TrainerMessages";
+import Settings from "../../pages/settings/Settings";
+import TrainerPatients from "../Trainer/TrainerPatients";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -38,6 +42,22 @@ const AppRouter = () => {
                     element: (
                         <ProtectedRoute requiredRole="ADMIN">
                             <Dashboard />
+                        </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/settings",
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <Settings />
+                        </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/messages",
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <Message />
                         </ProtectedRoute>
                     ),
                 },
@@ -110,7 +130,23 @@ const AppRouter = () => {
                     )
                 },
                 {
-                    path: "/trainerExercise",
+                    path: "/trainer/messages",
+                    element: (
+                        <ProtectedRoute requiredRole="TRAINER">
+                            <TrainerMessages />
+                        </ProtectedRoute>
+                    )
+                },
+                {
+                    path: "/trainer/patient",
+                    element: (
+                        <ProtectedRoute requiredRole="TRAINER">
+                            <TrainerPatients />
+                        </ProtectedRoute>
+                    )
+                },
+                {
+                    path: "/trainer/exercise",
 
                     element: <TrainerExercise />
                 },
