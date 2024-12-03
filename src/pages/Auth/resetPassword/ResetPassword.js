@@ -93,7 +93,6 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   className="cmn_btn w-100"
-                  disabled={isSubmitting || resetPasswordState?.isLoading}
                 >
                   {!resetPasswordState?.isLoading ? (
                     "Change Password"

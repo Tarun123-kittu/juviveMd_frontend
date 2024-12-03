@@ -30,7 +30,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
 
     const selected_staff_detail = useSelector((store) => store.STAFF_DETAIL);
     const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
-    console.log(is_staff_updated, "this is the updated staff value")
 
     useEffect(() => {
         if (staffId) {

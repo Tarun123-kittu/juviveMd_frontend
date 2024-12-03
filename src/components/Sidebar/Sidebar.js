@@ -20,11 +20,25 @@ const Sidebar = () => {
     navigate("/")
     toast.success("Logout Successful")
   }
+
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+      return 'Good Morning';
+    } else if (currentHour < 16) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  };
+
+
   return (
     <div className='sidebar_wrapper'>
       <div className='header d-flex align-itmes-center'>
         <div className='flex-grow-1'>
-          <h4 className='mb-0'>Good Morning,JuvivedMD!</h4>
+          <h4 className='mb-0'>{getGreeting()},{localStorage.getItem('user_role')}</h4>
           <p className='quote mb-0'>Happiness is inside, let it out!</p>
         </div>
         <div className='notifications position-relative d-flex align-items-center justify-content-center'>
