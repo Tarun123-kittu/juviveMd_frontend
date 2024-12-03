@@ -6,7 +6,7 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Loader from "../../common/Loader/Loader";
 
-const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, setTrainer_name }) => {
+const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData,stepOnefullData, setTrainer_name }) => {
   console.log(patient_all_data, "this is the patient all data from the first modal")
   // Validation schema
   const validationSchema = Yup.object({
@@ -34,15 +34,15 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: patient_all_data?.name,
-      tel: patient_all_data?.phone,
-      email: patient_all_data?.email,
-      date: patient_all_data?.dob,
-      height: patient_all_data?.height?.value,
-      weight: patient_all_data?.weight?.value,
-      goal: patient_all_data?.goal,
-      gender: patient_all_data?.gender,
-      trainer: patient_all_data?.trainerID,
+      name: stepOnefullData || patient_all_data?.name || "",
+      tel: stepOnefullData || patient_all_data?.phone || "",
+      email: stepOnefullData || patient_all_data?.email || "",
+      date: stepOnefullData || patient_all_data?.dob || "",
+      height: stepOnefullData || patient_all_data?.height?.value || "",
+      weight: stepOnefullData || patient_all_data?.weight?.value || "",
+      goal: stepOnefullData || patient_all_data?.goal || "",
+      gender: stepOnefullData || patient_all_data?.gender || "",
+      trainer: stepOnefullData || patient_all_data?.trainerID || "",
     },
     validationSchema,
     onSubmit: (values) => {

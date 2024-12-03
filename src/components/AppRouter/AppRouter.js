@@ -19,6 +19,8 @@ import Message from "../../pages/messages/Message";
 import TrainerMessages from "../Trainer/TrainerMessages";
 import Settings from "../../pages/settings/Settings";
 import TrainerPatients from "../Trainer/TrainerPatients";
+import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
+import ReceptionMessages from "../reception/ReceptionMessages";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -82,6 +84,14 @@ const AppRouter = () => {
                     element: (
                         <ProtectedRoute requiredRole="RECEPTIONIST">
                             <Reception_dashboard />
+                        </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/reception/messages",
+                    element: (
+                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                            <ReceptionMessages />
                         </ProtectedRoute>
                     ),
                 },
@@ -151,6 +161,12 @@ const AppRouter = () => {
                         <ProtectedRoute requiredRole="TRAINER">
                             <TrainerExercise />
                         </ProtectedRoute>
+                    )
+                },
+                {
+                    path: "/not-authorized",
+                    element: (
+                            <NotAuthorised />
                     )
                 },
             ]
