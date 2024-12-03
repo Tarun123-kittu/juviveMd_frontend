@@ -17,6 +17,10 @@ import setSelectedPatientAPI from "./slices/patientSlice/getSelectedPatientSlice
 import updatePatientAPI from "./slices/patientSlice/updatePatientSlice"
 import updatePatientPaymentAPI from "./slices/patientSlice/updatePayment"
 import createExerciseAPI from "./slices/exerciseSlice/createExercise"
+import getExerciseAPI from "./slices/exerciseSlice/getExercise"
+import updateExerciseStatusAPI from "./slices/exerciseSlice/updateExerciseStatus"
+import getSingleExercise from "./slices/exerciseSlice/getSingleExercise"
+import updateExerciseAPI from "./slices/exerciseSlice/updateExercise"
 
 const AppStore = configureStore({
   reducer: {
@@ -37,7 +41,11 @@ const AppStore = configureStore({
     SELECTED_PATIENT_DETAILS: setSelectedPatientAPI,
     UPDATE_PATIENT: updatePatientAPI,
     UPDATE_PATIENT_PAYMENT: updatePatientPaymentAPI,
-    CREATE_EXERCISE : createExerciseAPI
+    CREATE_EXERCISE: createExerciseAPI,
+    ALL_EXERCISES: getExerciseAPI,
+    UPDATE_EXERCISE_STATUS: updateExerciseStatusAPI,
+    SINGLE_EXERCISE: getSingleExercise,
+    UPDATE_EXERCISE_DATA : updateExerciseAPI
   },
 })
 

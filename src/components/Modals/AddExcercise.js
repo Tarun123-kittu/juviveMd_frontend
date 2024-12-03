@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Row, Col, Form } from "react-bootstrap";
 import { Formik, Field, Form as FormikForm } from "formik";
-import * as Yup from "yup";
 import DefaultImage from "../../Images/file.png";
 import { create_exercise, clear_create_exercise_state } from "../../redux/slices/exerciseSlice/createExercise";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import Spinner from 'react-bootstrap/Spinner';
+import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 
-const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category }) => {
-  const dispatch = useDispatch()
+const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category,tab }) => {
+  const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(DefaultImage);
-  const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE)
-  console.log(is_exercise_created, "this is the exercise created")
+  const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE);
+  console.log(is_exercise_created, "this is the exercise created");
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -24,18 +25,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     exerciseDescription: "",
     exerciseImage: null,
   };
-
-  const validationSchema = Yup.object({
-    exerciseName: Yup.string().required("Exercise Name is required"),
-    exerciseType: Yup.string().required("Exercise Type is required"),
-    exerciseVideo: Yup.string().url("Invalid URL").required("Video Link is required"),
-    exerciseDescription: Yup.string().required("Description is required"),
-    exerciseImage: Yup.mixed()
-      .required("Image is required")
-      .test("fileType", "Unsupported file format", (value) => {
-        return value ? ["image/png", "image/jpg", "image/jpeg"].includes(value.type) : false;
-      }),
-  });
 
   const handleImageChange = (event, setFieldValue) => {
     const file = event.target.files[0];
@@ -50,31 +39,34 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSave = (values) => {
-    dispatch(create_exercise({
-      exercise_name: values.exerciseName,
-      category: values.exerciseType,
-      video_link: values.exerciseVideo,
-      image: values.exerciseImage,
-      description: values.exerciseDescription
-    }));
+    dispatch(
+      create_exercise({
+        exercise_name: values.exerciseName,
+        category: values.exerciseType,
+        video_link: values.exerciseVideo,
+        image: values.exerciseImage,
+        description: values.exerciseDescription,
+      })
+    );
   };
+
   const handleSubmit = (values) => {
     console.log(values);
-    handleSave(values); // Directly pass values to the save function
+    handleSave(values);
   };
 
   useEffect(() => {
     if (is_exercise_created?.isSuccess) {
-      toast.success(is_exercise_created?.message?.message)
-      dispatch(clear_create_exercise_state)
-      handleClose()
+      toast.success(is_exercise_created?.message?.message);
+      dispatch(clear_create_exercise_state);
+      dispatch(get_exercise({page:1,tab}))
+      handleClose();
     }
     if (is_exercise_created?.isError) {
-      toast.error(is_exercise_created?.error?.message)
-      dispatch(clear_create_exercise_state)
+      toast.error(is_exercise_created?.error?.message);
+      dispatch(clear_create_exercise_state);
     }
-  }, [is_exercise_created])
-
+  }, [is_exercise_created]);
 
   return (
     <Modal
@@ -103,12 +95,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading">Add Exercise Detail</h2>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ setFieldValue, errors, touched }) => (
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ setFieldValue }) => (
             <FormikForm>
               <Row>
                 <Col lg={4}>
@@ -121,14 +109,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     >
                       <option value="">Select exercise type</option>
                       {exercise_category?.map((data) => {
-                        return (
-                          <option value={data}>{data}</option>
-                        )
+                        return <option value={data}>{data}</option>;
                       })}
                     </Field>
-                    {errors.exerciseType && touched.exerciseType && (
-                      <small className="text-danger">{errors.exerciseType}</small>
-                    )}
                   </Form.Group>
                   <Form.Group className="mb-2">
                     <Form.Label>Exercise Image</Form.Label>
@@ -140,10 +123,15 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         onChange={(e) => handleImageChange(e, setFieldValue)}
                         className="form-control"
                       />
-                      <img src={imagePreview} alt="preview" style={{ width: "100%", maxHeight: "150px", marginTop: "10px" }} />
-                      {errors.exerciseImage && touched.exerciseImage && (
-                        <small className="text-danger">{errors.exerciseImage}</small>
-                      )}
+                      <img
+                        src={imagePreview}
+                        alt="preview"
+                        style={{
+                          width: "100%",
+                          maxHeight: "150px",
+                          marginTop: "10px",
+                        }}
+                      />
                       <h4>
                         Drop your image here, or <span>browse</span>
                       </h4>
@@ -162,9 +150,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           placeholder="Enter exercise name"
                           className="form-control"
                         />
-                        {errors.exerciseName && touched.exerciseName && (
-                          <small className="text-danger">{errors.exerciseName}</small>
-                        )}
                       </Form.Group>
                     </Col>
                     <Col lg={6}>
@@ -176,9 +161,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           placeholder="https://youtu.be"
                           className="form-control"
                         />
-                        {errors.exerciseVideo && touched.exerciseVideo && (
-                          <small className="text-danger">{errors.exerciseVideo}</small>
-                        )}
                       </Form.Group>
                     </Col>
                     <Col lg={12}>
@@ -191,18 +173,21 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           placeholder="Enter description"
                           className="form-control"
                         />
-                        {errors.exerciseDescription && touched.exerciseDescription && (
-                          <small className="text-danger">{errors.exerciseDescription}</small>
-                        )}
                       </Form.Group>
                     </Col>
                   </Row>
                 </Col>
               </Row>
               <div className="text-end mt-3">
-                <button type="submit" className="btn btn-primary">
+                {!is_exercise_created?.isLoading ? <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
+                  :
+                  <button type="submit" className="btn btn-primary">
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                  </button>}
               </div>
             </FormikForm>
           )}

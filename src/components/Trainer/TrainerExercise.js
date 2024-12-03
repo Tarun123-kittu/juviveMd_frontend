@@ -7,23 +7,54 @@ import Nodata from "../StaticComponents/Nodata";
 import AddExcercise from "../Modals/AddExcercise";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch, useSelector } from "react-redux";
+import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+
 const TrainerExercise = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [toggleFilter, setToggleFilter] = useState(false);
   const [showAddExerciseModal, setshowAddExerciseModal] = useState(false);
-  const [exercise_category, setExercise_category] = useState()
-  const common_data = useSelector((store) => store.COMMON_DATA)
-  console.log(common_data, "this is the common data")
+  const [exercise_category, setExercise_category] = useState();
+  const [activeTab, setActiveTab] = useState("active");
+  const [username, setUsername] = useState("")
+  const [category, setCategory] = useState("")
+  const [date, setDate] = useState("")
+
+  const common_data = useSelector((store) => store.COMMON_DATA);
 
   useEffect(() => {
-    dispatch(common_data_api())
-  }, [])
+    dispatch(common_data_api());
+  }, []);
 
   useEffect(() => {
     if (common_data?.isSuccess) {
-      setExercise_category(common_data?.data?.data?.exercise_category)
+      setExercise_category(common_data?.data?.data?.exercise_category);
     }
-  }, [common_data])
+  }, [common_data]);
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "active":
+        return <ActiveExerciseTab tab={"active"} exercise_category={exercise_category}/>;
+      case "approvalRequest":
+        return <ActiveExerciseTab tab={"approvalRequest"} exercise_category={exercise_category}/>;
+      case "draft":
+        return <ActiveExerciseTab tab={"draft"} exercise_category={exercise_category}/>;
+      default:
+        return null;
+    }
+  };
+
+  const handleSearch = () => {
+    dispatch(get_exercise({ page: 1, tab: activeTab, date, exercise: username, category }))
+  }
+
+  const handleClear = () => {
+    setUsername()
+    setCategory()
+    setDate()
+    dispatch(get_exercise({ page: 1, tab: activeTab}))
+  }
+
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -58,15 +89,17 @@ const TrainerExercise = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Exercise Name"
+                    placeholder="username"
                     className="form-control"
+                    value={username || ""}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
 
                 <div className="patient_dropdown w-100">
                   <Dropdown>
                     <Dropdown.Toggle variant="unset">
-                      Category
+                      {category ? category : "select Category"}
                       <svg
                         width="14"
                         height="14"
@@ -85,9 +118,11 @@ const TrainerExercise = () => {
                     <Dropdown.Menu>
                       <ul>
                         {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
-                        <li>Deepak Rawat</li>
-                        <li>Sahil</li>
-                        <li>Aman</li>
+                        {exercise_category?.map((category) => {
+                          return (
+                            <li type="button" onClick={() => setCategory(category)}>{category}</li>
+                          )
+                        })}
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>
@@ -100,55 +135,26 @@ const TrainerExercise = () => {
                     type="date"
                     placeholder="Exercise Name"
                     className="form-control"
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
-                <div className="patient_dropdown w-100">
-                  <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                      Status
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 14 14"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12.2143 3.7041H11.1253C11.0513 3.7041 10.9816 3.7404 10.938 3.79993L6.81303 9.48579L2.68802 3.79993C2.64446 3.7404 2.57477 3.7041 2.50072 3.7041H1.41175C1.31737 3.7041 1.2622 3.81155 1.31737 3.8885L6.43697 10.9465C6.62282 11.202 7.00323 11.202 7.18763 10.9465L12.3072 3.8885C12.3639 3.81155 12.3087 3.7041 12.2143 3.7041V3.7041Z"
-                          fill="black"
-                          fill-opacity="0.25"
-                        />
-                      </svg>
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <ul>
-                        <li>Men</li>
-                        <li>Women</li>
-                        <li>Non-Binary</li>
-                      </ul>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-                <button className="cmn_btn">Search</button>
-                <button className="cmn_btn fade_color">Clean</button>
+                <button className="cmn_btn" onClick={() => handleSearch()}>Search</button>
+                <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clean</button>
               </div>
             )}
             <Tabs
-              defaultActiveKey="active"
+              activeKey={activeTab} // Controlled active tab
+              onSelect={(key) => setActiveTab(key)} // Update active tab
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >
-              <Tab eventKey="active" title="Active">
-                <ActiveExerciseTab />
-              </Tab>
-              <Tab eventKey="approvalRequests" title="Approval Requests">
-                <Nodata />
-              </Tab>
-              <Tab eventKey="draft" title="Draft">
-                Rejected
-              </Tab>
+              <Tab eventKey="active" title="Active" />
+              <Tab eventKey="approvalRequest" title="Approval Requests" />
+              <Tab eventKey="draft" title="Draft" />
             </Tabs>
+
+            {/* Conditionally render content */}
+            {renderTabContent()}
           </div>
         </div>
       </div>
@@ -156,6 +162,7 @@ const TrainerExercise = () => {
         showAddExerciseModal={showAddExerciseModal}
         setshowAddExerciseModal={setshowAddExerciseModal}
         exercise_category={exercise_category}
+        tab={activeTab}
       />
     </div>
   );
