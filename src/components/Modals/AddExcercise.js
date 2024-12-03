@@ -2,6 +2,7 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
 import { Form } from "react-bootstrap";
+import DefaultImage  from '../../Images/file.png'
 const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal }) => {
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -31,10 +32,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal }) => {
           />
         </svg>
       </div>
-      <Modal.Body className="p-0 authWrapper">
-      
+      <Modal.Body className="p-0 authWrapper add_exercise">
+        <h2 className="deletmodal_heading ">Add Exercise Detail. </h2>
         <Row>
-            <Col lg={3}>
+            <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Exercise Name</Form.Label>
               <Form.Select aria-label="Default select example">
@@ -44,8 +45,18 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal }) => {
                 <option value="3">Three</option>
               </Form.Select>
             </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Exercise Name</Form.Label>
+              <div className="drag_file d-flex align-items-center justify-content-center flex-column">
+                <Form.Control type="file" placeholder="Running" />
+                <img src={DefaultImage} alt="file" />
+                <h4>Drop your image here, or <span>browse</span></h4>
+                <p className="m-0">Supports: PNG, JPG, JPEG,</p>
+              </div>
+
+            </Form.Group>
             </Col>
-            <Col lg={9}>
+            <Col lg={8}>
             <Row>
             <Col lg={6}>
             <Form.Group className="mb-2">
@@ -62,7 +73,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal }) => {
           <Col lg={12}>
           <Form.Group className="mb-2">
               <Form.Label>Exercise Video Link</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Control as="textarea" rows={8} />
             </Form.Group>
           </Col>
             </Row>

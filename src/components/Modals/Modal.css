@@ -157,3 +157,43 @@ h5.step_heading {
 .EmailSentModal .modal_logo img{
     width: 103px;
 }
+
+/* Add exercise */
+.drag_file {
+    position: relative;
+    height: 184px;
+    border: 1.11px dashed #B1BFD0;
+    border-radius: 5px;
+    
+}
+
+.drag_file h4 {
+    font-size: 13px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.drag_file p {
+    font-size: 12px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.drag_file h4 span {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.authWrapper .drag_file input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+}
+.authWrapper.add_exercise textarea.form-control {
+    height: unset;
+}

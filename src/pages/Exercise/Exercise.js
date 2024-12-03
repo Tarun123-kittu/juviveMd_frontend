@@ -11,7 +11,7 @@ const Exercise = () => {
     <div className="wrapper">
       <div className="inner_wrapper">
        
-        <div className="cmn_head mb-2 mt-4">
+        <div className="cmn_head mb-2 ">
           <h2>
           Exercise
                 </h2>

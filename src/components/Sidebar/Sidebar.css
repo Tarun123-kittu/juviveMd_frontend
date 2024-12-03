@@ -4,7 +4,7 @@
     background: var(--fade-color);
     width: calc(100% - var(--sidebar-width));
     right: 0;
-    padding: 1.4rem 1.2rem;
+    padding: 1rem 1.2rem;
 }
 
 .sidbar_inner {
@@ -69,8 +69,8 @@ ul.menu_items li a.sidebar_active svg path {
     fill: var( --primary-color);
 }
 .notifications {
-    width: 53px;
-    height: 53px;
+    width: 45px;
+    height: 45px;
     background: var(--primary-color);
     border-radius: 50%;
 }
@@ -81,8 +81,20 @@ span.notify_dot {
     height: 7px;
     background: #F1867F;
     border-radius: 50%;
-    top: 16px;
-    right: 15px;
+    top: 13px;
+    right: 14px;
+}
+.notifications svg {
+    width: 24px;
+}
+
+p.quote {
+    font-size: 14px;
+}
+
+.header h4 {
+    font-size: 18px;
+    font-weight: 600;
 }
 li.log_out {
     position: fixed;
@@ -101,7 +113,7 @@ li.log_out div {
 }
 @media(max-width:1440px){
     ul.menu_items {
-        gap: 12px;
+        gap: 10px;
     }
     ul.menu_items li a, li.log_out span{
         font-size: 14px;

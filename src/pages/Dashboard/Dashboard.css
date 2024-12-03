@@ -30,15 +30,18 @@
 .cmn_table table tbody tr{
     height: 73px;
 }
+.table>tbody tr td:last-child svg {
+    width: 18px;
+}
     .cmn_table table thead tr th:first-child, 
     .cmn_table table tbody tr td:first-child {
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
     }
     .cmn_table table thead tr th:last-child , 
     .cmn_table table tbody tr td:last-child 
-        {border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
+        {border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
         }
         .cmn_table table {
             border-collapse: separate;
@@ -120,7 +123,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    margin-bottom: 19px;
+    margin-bottom: 15px;
     
 }
 
