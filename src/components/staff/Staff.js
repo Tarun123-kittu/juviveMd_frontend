@@ -108,7 +108,7 @@ const StaffComponent = () => {
                     {staff_data?.isSuccess && staff_data?.data?.data?.totalPages > 1 && <Pagination totalPages={staff_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
                 </div>
             </div>
-            <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setshowDeleteModal} handleDelete={handleDelete} />
+            <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setshowDeleteModal} handleDelete={handleDelete} loading={is_staff_deleted?.isLoading}/>
             <AddUsermodal show={show} setShow={setShow} />
             <EditStaffmodal show={showEditModal} setShow={setShowEditModal} staffId={staffId} page={page} />
         </div>

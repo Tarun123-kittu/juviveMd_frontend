@@ -67,6 +67,12 @@ li{
 .loader_img img {
   width: 60px;
 }
+button.cmn_btn.border-btn {
+  background: var(--bs-white);
+  color: #1a1a1a;
+  border-color: var(--primary-color);
+  border: 1px solid;  
+}
 
 .loader_img {
   min-height: 300px;

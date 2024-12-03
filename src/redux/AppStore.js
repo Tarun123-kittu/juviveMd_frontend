@@ -15,6 +15,7 @@ import getPatientListAPI from "./slices/patientSlice/getPatientList"
 import deletePatientAPI from "./slices/patientSlice/deletePatientSlice"
 import setSelectedPatientAPI from "./slices/patientSlice/getSelectedPatientSlice"
 import updatePatientAPI from "./slices/patientSlice/updatePatientSlice"
+import updatePatientPaymentAPI from "./slices/patientSlice/updatePayment"
 
 const AppStore = configureStore({
   reducer: {
@@ -33,7 +34,8 @@ const AppStore = configureStore({
     GET_PATIENT_LIST: getPatientListAPI,
     DELETE_PATIENT: deletePatientAPI,
     SELECTED_PATIENT_DETAILS: setSelectedPatientAPI,
-    UPDATE_PATIENT : updatePatientAPI
+    UPDATE_PATIENT: updatePatientAPI,
+    UPDATE_PATIENT_PAYMENT: updatePatientPaymentAPI
   },
 })
 
