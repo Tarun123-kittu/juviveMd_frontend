@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react' 
+import PatientComponent from "../patientComponent/patientListComponent"
 
 const TrainerPatients = () => {
   return (
-    <div>TrainerPatients</div>
+    <div><PatientComponent /></div>
   )
 }
 

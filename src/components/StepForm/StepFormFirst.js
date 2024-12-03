@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 
-const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData }) => {
+const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name }) => {
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(3, "Name must be at least 3 characters")
@@ -251,17 +251,24 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               <Form.Select
                 name="trainer"
                 value={formik.values.trainer}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  const selectedTrainerId = e.target.value;
+                  formik.handleChange(e); // Update formik's value
+                  // Find the trainer name using the ID
+                  const selectedTrainer = trainers_list?.find(trainer => trainer?.id === selectedTrainerId);
+                  if (selectedTrainer) {
+                    setTrainer_name(selectedTrainer?.firstName); // Set the trainer's name
+                  }
+                }}
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.trainer && !!formik.errors.trainer}
               >
                 <option value="">Select Trainer</option>
-                {trainers_list?.map((trainer) => {
-                  return (
-
-                    <option value={trainer?.firstName}>{trainer?.firstName}</option>
-                  )
-                })}
+                {trainers_list?.map((trainer) => (
+                  <option key={trainer?.id} value={trainer?.id}>
+                    {trainer?.firstName}
+                  </option>
+                ))}
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {formik.errors.trainer}

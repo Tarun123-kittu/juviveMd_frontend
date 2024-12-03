@@ -180,7 +180,7 @@ const PatientListComponent = () => {
                                     <button className="btn_info active">{list?.status === 0 ? "Inactive" : "Active"}</button>
                                 </td>
                                 <td className='text-center'>
-                                    <button className='cmn_btn fade_color px-0 pe-1'><TiArrowRight size={40} /> </button>
+                                    <button className='cmn_btn fade_color px-0  px-3'><TiArrowRight size={40} /> </button>
                                 </td>
                             </tr>
                         )

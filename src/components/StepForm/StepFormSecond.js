@@ -10,7 +10,8 @@ const StepFormSecond = ({
   selected_health_issue,
   is_health_issue,
   handleSubmit,
-  onboarding_process
+  onboarding_process,
+  setStep_form_open
 }) => {
 
   const handleCheckboxChange = (issue) => {
@@ -22,6 +23,11 @@ const StepFormSecond = ({
       }
     });
   };
+
+  const handleClose = () => {
+    setIs_health_issue(true)
+    setStep_form_open(false)
+  }
 
   return (
     <div>
@@ -44,7 +50,7 @@ const StepFormSecond = ({
         {!onboarding_process?.isLoading ? (
           <button 
             onClick={() => { 
-              selected_health_issue.length > 0 ? handleSubmit() : setStep(3); 
+              selected_health_issue.length > 0 ? handleClose() : setStep(3); 
             }} 
             className='cmn_btn ps-4 pe-4'>
             Next

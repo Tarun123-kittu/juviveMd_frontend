@@ -24,7 +24,8 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
     validationSchema: Yup.object({
       optimalWeight: Yup.number()
         .required("Optimal weight is required")
-        .positive("Weight must be a positive number"),
+        .positive("Weight must be a positive number")
+        .min(1,"Weight should be greater than 0"),
       bodyFat: Yup.number()
         .nullable()
         .positive("Body fat percentage must be a positive number")

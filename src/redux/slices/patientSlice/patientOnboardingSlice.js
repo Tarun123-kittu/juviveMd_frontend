@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ step, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }, thunkAPI) => {
+export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ step, stepOnefullData, selected_health_issue,trainer_name, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -25,6 +25,7 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
             "goal": stepOnefullData?.goal,
             "dob": stepOnefullData?.date,
             "trainerID": stepOnefullData?.trainer,
+            "trainerName" :trainer_name,
             "step": step,
             "health_issue_text": selected_health_issue,
             "optimal_weight": {

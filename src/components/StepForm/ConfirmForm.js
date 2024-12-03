@@ -1,6 +1,12 @@
 import React from 'react'
+import Spinner from "react-bootstrap/Spinner";
 
-const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModal }) => {
+const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModal, handleSubmit, setStep, onboarding_process }) => {
+  const handleBack = () => {
+    setIs_health_issue(false)
+    setStep_form_open(true)
+    setStep(1)
+  }
   return (
     <div>
       <h5 className="step_heading pt-3 text-center">Consult Your Doctor Before Increasing Activity</h5>
@@ -11,8 +17,12 @@ const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModa
         <li>Find out which community 	programs are safe and helpful to you.</li>
       </ol>
       <div className='d-flex gap-3 justify-content-center'>
-        <button className='cmn_btn border-btn ps-5 pe-5'>back</button>
-        <button type="submit" className='cmn_btn ps-5 pe-5' onClick={() => { setIs_health_issue(false); setStep_form_open(true); setshowPateintModal(false) }}>Save</button>
+        <button className='cmn_btn border-btn ps-5 pe-5' onClick={() => handleBack()}>back</button>
+        {!onboarding_process?.isLoading ? <button type="submit" className='cmn_btn ps-5 pe-5' onClick={() => handleSubmit()}>Save</button>
+          :
+          <button type="submit" className='cmn_btn ps-5 pe-5'><Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner></button>}
       </div>
     </div>
   )
