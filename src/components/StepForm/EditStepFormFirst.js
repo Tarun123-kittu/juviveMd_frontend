@@ -26,7 +26,12 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       .required("Weight is required"),
     goal: Yup.string().required("Please select a goal").oneOf(goal, `Exercise name must be one of: ${goal.join(", ")}`),
     gender: Yup.string().required("Please select a gender").oneOf(gender, `Gender name must be one of: ${gender.join(", ")}`),
-    trainer: Yup.string().required("Please select a trainer"),
+    trainer: Yup.string()
+    .required("Please select a trainer")
+    .oneOf(
+      trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
+      `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
+    ),
   });
 
   // Formik setup

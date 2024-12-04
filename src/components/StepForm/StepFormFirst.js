@@ -28,7 +28,12 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
     goal: Yup.string().required("Please select a goal").oneOf(goal, `Exercise name must be one of: ${goal.join(", ")}`),
     gender: Yup.string()
       .oneOf(gender, `Exercise name must be one of: ${gender.join(", ")}`).required("Please select a gender"),
-    trainer: Yup.string().required("Please select a trainer").oneOf(trainers_list, `Exercise name must be one of: ${trainers_list.join(", ")}`),
+    trainer: Yup.string()
+      .required("Please select a trainer")
+      .oneOf(
+        trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
+        `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
+      ),
   });
 
   const formik = useFormik({
