@@ -79,7 +79,6 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
 
     useEffect(() => {
         if (stepThreefullData?.workoutFrequency) {
-            console.log(stepThreefullData?.workoutFrequency);
             const array = stepThreefullData?.workoutFrequency.split(',');
             setWorkout_frequency(array)
         }

@@ -25,19 +25,19 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
       optimalWeight: Yup.number()
         .required("Optimal weight is required")
         .positive("Weight must be a positive number")
-        .min(1,"Weight should be greater than 0"),
+        .min(1, "Weight should be greater than 0"),
       bodyFat: Yup.number()
         .nullable()
         .positive("Body fat percentage must be a positive number")
         .max(100, "Body fat percentage cannot exceed 100%"),
-      discomfort: Yup.string().required("Please select an option"),
-      activityLevel: Yup.string().required("Please select an activity level"),
-      sleepHours: Yup.string().required("Please select sleep hours"),
-      workoutTypes: Yup.string().required("Please select a workout type"),
-      workoutPlace: Yup.string().required("Please select a workout place"),
-      homeEquipment: Yup.string().required("Please select home equipment"),
-      workoutTime: Yup.string().required("Please select workout duration"),
-      workoutFrequency: Yup.string().required("Please select workout frequency"),
+      discomfort: Yup.string().required("Please select an option").oneOf(discomfort_issue, `Exercise name must be one of: ${discomfort_issue.join(", ")}`),
+      activityLevel: Yup.string().required("Please select an activity level").oneOf(activity_level, `Exercise name must be one of: ${activity_level.join(", ")}`),
+      sleepHours: Yup.string().required("Please select sleep hours").oneOf(sleep_rate, `Exercise name must be one of: ${sleep_rate.join(", ")}`),
+      workoutTypes: Yup.string().required("Please select a workout type").oneOf(workout_type, `Exercise name must be one of: ${workout_type.join(", ")}`),
+      workoutPlace: Yup.string().required("Please select a workout place").oneOf(workout_place, `Exercise name must be one of: ${workout_place.join(", ")}`),
+      homeEquipment: Yup.string().required("Please select home equipment").oneOf(equipments, `Exercise name must be one of: ${equipments.join(", ")}`),
+      workoutTime: Yup.string().required("Please select workout duration").oneOf(workout_times, `Exercise name must be one of: ${workout_times.join(", ")}`),
+      workoutFrequency: Yup.string().required("Please select workout frequency").oneOf(weekDays, `Exercise name must be one of: ${weekDays.join(", ")}`),
     }),
     onSubmit: (values) => {
       setStep(4)

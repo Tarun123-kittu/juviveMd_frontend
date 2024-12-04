@@ -34,7 +34,9 @@ const AddUserModal = ({ show, setShow }) => {
         email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
-        gender: Yup.string().required("Gender is required"),
+        gender: Yup.string()
+            .oneOf(["MALE", "FEMALE", "NON-BINARY"], "Gender must be one of: male, female, or non-binary")
+            .required("Gender is required"),
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
@@ -78,16 +80,16 @@ const AddUserModal = ({ show, setShow }) => {
 
 
     useEffect(() => {
-            if (is_staff_created?.isSuccess) {
-                toast.success(is_staff_created?.message?.message);
-                dispatch(get_all_staff({ page: 1 }));
-                dispatch(clear_create_staff_state());
-                handleClose();
-            }
-            if (is_staff_created?.isError) {
-                toast.error(is_staff_created?.error?.message);
-                dispatch(clear_create_staff_state());
-            }
+        if (is_staff_created?.isSuccess) {
+            toast.success(is_staff_created?.message?.message);
+            dispatch(get_all_staff({ page: 1 }));
+            dispatch(clear_create_staff_state());
+            handleClose();
+        }
+        if (is_staff_created?.isError) {
+            toast.error(is_staff_created?.error?.message);
+            dispatch(clear_create_staff_state());
+        }
     }, [is_staff_created]);
 
 
@@ -216,6 +218,7 @@ const AddUserModal = ({ show, setShow }) => {
                                             <option value="">Select Gender</option>
                                             <option value="MALE">Male</option>
                                             <option value="FEMALE">Female</option>
+                                            <option value="NON-BINARy">Nob-binary</option>
                                         </Field>
                                         <ErrorMessage name="gender" component="div" className="text-danger" />
                                     </Form.Group>

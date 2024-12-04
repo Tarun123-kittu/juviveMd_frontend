@@ -29,14 +29,14 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
         .nullable()
         .positive("Body fat percentage must be a positive number")
         .max(100, "Body fat percentage cannot exceed 100%"),
-      discomfort: Yup.string().required("Please select an option"),
-      activityLevel: Yup.string().required("Please select an activity level"),
-      sleepHours: Yup.string().required("Please select sleep hours"),
-      workoutTypes: Yup.string().required("Please select a workout type"),
-      workoutPlace: Yup.string().required("Please select a workout place"),
-      homeEquipment: Yup.string().required("Please select home equipment"),
-      workoutTime: Yup.string().required("Please select workout duration"),
-      workoutFrequency: Yup.string().required("Please select workout frequency"),
+      discomfort: Yup.string().required("Please select an option").oneOf(discomfort_issue, `Gender name must be one of: ${discomfort_issue.join(", ")}`),
+      activityLevel: Yup.string().required("Please select an activity level").oneOf(activity_level, `activity level must be one of: ${activity_level.join(", ")}`),
+      sleepHours: Yup.string().required("Please select sleep hours").oneOf(sleep_rate, `sleep hours must be one of: ${sleep_rate.join(", ")}`),
+      workoutTypes: Yup.string().required("Please select a workout type").oneOf(workout_type, `workout type must be one of: ${workout_type.join(", ")}`),
+      workoutPlace: Yup.string().required("Please select a workout place").oneOf(workout_place, `workout place must be one of: ${workout_place.join(", ")}`),
+      homeEquipment: Yup.string().required("Please select home equipment").oneOf(equipments, `home equipmen must be one of: ${equipments.join(", ")}`),
+      workoutTime: Yup.string().required("Please select workout duration").oneOf(workout_times, `workout duration must be one of: ${workout_times.join(", ")}`),
+      workoutFrequency: Yup.string().required("Please select workout frequency").oneOf(weekDays, `workout frequency must be one of: ${weekDays.join(", ")}`),
     }),
     onSubmit: (values) => {
       console.log("Form Data: ", values);
@@ -47,7 +47,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
 
   return (
     <Form onSubmit={formik.handleSubmit}>
-      <h5 className="step_heading pt-3">Activity Levels & Fitness Goals</h5>
+      <h5 className="step_heading pt-3">Edit Activity Levels & Fitness Goals</h5>
       <Row className="authWrapper">
         <Col lg={6}>
           <Form.Group className="mb-2">
@@ -264,7 +264,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Select
               name="workoutFrequency"
               options={weekDays?.map((day) => ({
-                value: day.charAt(0).toUpperCase() + day.slice(1),
+                value: day,
                 label: day.charAt(0).toUpperCase() + day.slice(1),
               }))}
               isMulti
@@ -278,7 +278,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
               value={
                 formik.values.workoutFrequency
                   ? formik.values.workoutFrequency?.split(",").map((value) => ({
-                    value: value.charAt(0).toUpperCase() + value.slice(1),
+                    value,
                     label: value.charAt(0).toUpperCase() + value.slice(1),
                   }))
                   : [] // If there's no value, default to an empty array

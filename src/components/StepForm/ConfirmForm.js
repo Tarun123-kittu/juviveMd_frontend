@@ -5,7 +5,7 @@ const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModa
   const handleBack = () => {
     setIs_health_issue(false)
     setStep_form_open(true)
-    setStep(1)
+    setStep(2)
   }
   return (
     <div>

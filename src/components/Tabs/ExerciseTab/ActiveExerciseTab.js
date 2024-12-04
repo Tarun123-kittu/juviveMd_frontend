@@ -66,10 +66,10 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
           return (
             <tr>
 
-              <td>{exercise?.exercise_name}</td>
+              <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : '' }</td>
               <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' /></td>
               <td><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></td>
-              <td>{exercise?.category}</td>
+              <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
               <td> <div className='patient_dropdown w-100'>
                 <Dropdown>
                   <Dropdown.Toggle variant="unset">

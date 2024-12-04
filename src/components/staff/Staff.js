@@ -79,7 +79,7 @@ const StaffComponent = () => {
                                                 <img src={staff?.image || Default_user} alt="User Image" />
                                             </div>
                                             <div className="d-inline-grid">
-                                                <p className="mb-0">{staff?.firstName + " " + staff.lastName}</p>
+                                                <p className="mb-0">{staff?.firstName ? staff?.firstName.charAt(0).toUpperCase() + staff.firstName.slice(1) : '' + " " + staff.lastName}</p>
                                                 <span>{staff?.role}</span>
                                             </div>
                                         </div>

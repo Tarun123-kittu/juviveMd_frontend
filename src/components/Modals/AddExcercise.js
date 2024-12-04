@@ -7,16 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import * as Yup from "yup";
 
-const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category,tab }) => {
+
+const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab }) => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(DefaultImage);
   const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE);
-  console.log(is_exercise_created, "this is the exercise created");
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
   };
+
+  const validationSchema = Yup.object().shape({
+    exerciseName: Yup.string()
+      .oneOf(exercise_category, `Exercise name must be one of: ${exercise_category.join(", ")}`)
+  });
 
   const initialValues = {
     exerciseName: "",
@@ -59,7 +65,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     if (is_exercise_created?.isSuccess) {
       toast.success(is_exercise_created?.message?.message);
       dispatch(clear_create_exercise_state);
-      dispatch(get_exercise({page:1,tab}))
+      dispatch(get_exercise({ page: 1, tab }))
       handleClose();
     }
     if (is_exercise_created?.isError) {
@@ -95,7 +101,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading">Add Exercise Detail</h2>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
           {({ setFieldValue }) => (
             <FormikForm>
               <Row>

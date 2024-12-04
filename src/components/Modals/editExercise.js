@@ -8,15 +8,22 @@ import toast from "react-hot-toast";
 import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleExercise";
 import { update_exercise, clear_update_exercise_state } from "../../redux/slices/exerciseSlice/updateExercise";
 import Spinner from 'react-bootstrap/Spinner';
-import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import { get_exercise, clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
+import Loader from "../../common/Loader/Loader";
+import * as Yup from "yup";
 
-const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id,tab }) => {
+const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
     const is_exercise_updated = useSelector((store) => store.UPDATE_EXERCISE_DATA)
-    const [hasIMage, setHasImage] = useState(false)
-    const [image,setImage] = useState()
+    const [hasImage, setHasImage] = useState(false)
+    const [image, setImage] = useState()
+
+      const validationSchema = Yup.object().shape({
+    exerciseName: Yup.string()
+      .oneOf(exercise_category, `Exercise name must be one of: ${exercise_category.join(", ")}`)
+  });
 
     const [initialValues, setInitialValues] = useState({
         exerciseName: "",
@@ -73,7 +80,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 image: image ? image : values.exerciseImage,
                 description: values.exerciseDescription,
                 id: id,
-                hasIMage: hasIMage
+                hasImage: hasImage
             })
         );
     };
@@ -87,7 +94,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         if (is_exercise_updated?.isSuccess) {
             toast.success(is_exercise_updated?.message?.message)
             setshowAddExerciseModal(false)
-            dispatch(get_exercise({page:1,tab}))
+            dispatch(get_exercise({ page: 1, tab }))
             dispatch(clear_update_exercise_state())
             setHasImage(false)
         }
@@ -122,10 +129,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     />
                 </svg>
             </div>
-            <Modal.Body className="p-0 authWrapper add_exercise">
+            {is_exercise?.isLoading ? <Loader /> : <Modal.Body className="p-0 authWrapper add_exercise">
                 <h2 className="deletmodal_heading">Edit Exercise Detail</h2>
                 <Formik
                     initialValues={initialValues}
+                    validationSchema={validationSchema}
                     enableReinitialize
                     onSubmit={handleSubmit}
                 >
@@ -139,6 +147,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             as="select"
                                             name="exerciseType"
                                             className="form-control"
+                                            disabled ={localStorage.getItem('user_role') !== "TRAINER"}
                                         >
                                             <option value="">Select exercise type</option>
                                             {exercise_category?.map((data) => (
@@ -157,6 +166,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 accept="image/png, image/jpg, image/jpeg"
                                                 onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
+                                                disabled ={localStorage.getItem('user_role') !== "TRAINER"}
+                                                
                                             />
                                             <img
                                                 src={imagePreview}
@@ -184,6 +195,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseName"
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
+                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -195,6 +207,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseVideo"
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
+                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -207,13 +220,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseDescription"
                                                     placeholder="Enter description"
                                                     className="form-control"
+                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>
                                     </Row>
                                 </Col>
                             </Row>
-                            <div className="text-end mt-3">
+                            {localStorage?.getItem('user_role') === "TRAINER" && <div className="text-end mt-3">
                                 {!is_exercise_updated?.isLoading ? <button type="submit" className="btn btn-primary">
                                     Submit
                                 </button>
@@ -223,11 +237,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             <span className="visually-hidden">Loading...</span>
                                         </Spinner>
                                     </button>}
-                            </div>
+                            </div>}
                         </FormikForm>
                     )}
                 </Formik>
-            </Modal.Body>
+            </Modal.Body>}
         </Modal>
     );
 };

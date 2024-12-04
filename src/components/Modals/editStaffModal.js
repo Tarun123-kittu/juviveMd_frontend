@@ -49,7 +49,9 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
         email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
-        gender: Yup.string().required("Gender is required"),
+        gender: Yup.string()
+            .oneOf(["MALE", "FEMALE", "NON-BINARY"], "Gender must be one of: male, female, or non-binary")
+            .required("Gender is required"),
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
@@ -143,7 +145,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                 >
                 </svg>
             </div>
-            {selected_staff_detail?.isLoading ? <Loader />  :<Modal.Body className="p-0">
+            {selected_staff_detail?.isLoading ? <Loader /> : <Modal.Body className="p-0">
                 <h5 className="mb-3 modal_heading">Profile Photo</h5>
                 <Row className="border-bottom pb-4 m-0">
                     <Col lg={6} className="border-end">
@@ -249,6 +251,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                                             <option value="">Select Gender</option>
                                             <option value="MALE">Male</option>
                                             <option value="FEMALE">Female</option>
+                                            <option value="NON-BINARY">Non-binary</option>
                                         </Field>
                                         <ErrorMessage name="gender" component="div" className="text-danger" />
                                     </Form.Group>

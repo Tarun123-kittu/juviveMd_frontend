@@ -25,9 +25,10 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       .required("Weight is required")
       .min(1, "Weight must be greater than 0"),
 
-    goal: Yup.string().required("Please select a goal"),
-    gender: Yup.string().required("Please select a gender"),
-    trainer: Yup.string().required("Please select a trainer"),
+    goal: Yup.string().required("Please select a goal").oneOf(goal, `Exercise name must be one of: ${goal.join(", ")}`),
+    gender: Yup.string()
+      .oneOf(gender, `Exercise name must be one of: ${gender.join(", ")}`).required("Please select a gender"),
+    trainer: Yup.string().required("Please select a trainer").oneOf(trainers_list, `Exercise name must be one of: ${trainers_list.join(", ")}`),
   });
 
   const formik = useFormik({
@@ -56,7 +57,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
 
   return (
     <>
-      <h5 className="step_heading pt-3">Essential Health Questions </h5>
+      <h5 className="step_heading pt-3">Personal Details</h5>
       <Form className="authWrapper" onSubmit={formik.handleSubmit}>
         <Row>
           <Col lg={4}>

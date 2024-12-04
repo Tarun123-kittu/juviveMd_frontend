@@ -86,13 +86,13 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
 
     useEffect(() => {
         if (stepThreefullData?.workoutFrequency) {
-            console.log(stepThreefullData?.workoutFrequency);
             const array = stepThreefullData?.workoutFrequency
                 .split(',')
-                .map(item => item.trim().charAt(0).toUpperCase() + item.trim().slice(1));
+                .map(item => item.trim()); 
             setWorkout_frequency(array);
         }
     }, [stepThreefullData]);
+    
 
 
     useEffect(() => {

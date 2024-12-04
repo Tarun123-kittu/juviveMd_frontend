@@ -170,7 +170,7 @@ const Reception_patient_list = () => {
                                             <div className="d-flex align-items-center table_user">
                                                 <img src={Default_user} alt="User Image" />
                                                 <div className="d-inline-grid">
-                                                    <p className="mb-0">{patient?.name}</p>
+                                                    <p className="mb-0">{patient?.name ? patient.name.charAt(0).toUpperCase() + patient.name.slice(1) : ''}</p>
                                                 </div>
                                             </div>
                                         </td>

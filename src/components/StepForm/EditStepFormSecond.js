@@ -30,7 +30,7 @@ const EditStepFormSecond = ({
 
   return (
     <div>
-      <h5 className="step_heading pt-3">Essential Health Questions</h5>
+      <h5 className="step_heading pt-3">Edit Essential Health Questions</h5>
       <p className="tagLine">
         If you select any checkbox, please consult a doctor before using the
         app.
