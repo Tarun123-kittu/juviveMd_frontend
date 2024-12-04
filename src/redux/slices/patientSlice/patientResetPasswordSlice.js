@@ -18,7 +18,7 @@ export const patient_reset_password = createAsyncThunk("patient_reset_password",
             redirect: "follow"
         };
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/reset-password`, requestOptions)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/patient/reset-password`, requestOptions)
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
