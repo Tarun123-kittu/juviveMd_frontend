@@ -13,7 +13,7 @@ const EditLastStep = ({ setStep, setStep_four_additional_information, step_four_
         </Form.Group>
         <div className='d-flex gap-3 justify-content-center mt-4'>
           <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
-          {!is_patient_updated?.isLoading ? <button onClick={() => handleUpdate()} className='cmn_btn ps-4 pe-4'>Next</button>
+          {!is_patient_updated?.isLoading ? <button onClick={() => handleUpdate()} className='cmn_btn ps-4 pe-4'>Update</button>
             :
             <button className='cmn_btn ps-4 pe-4'><Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>

@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { Form } from "react-bootstrap";
 import Logo from "../../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
+import { useNavigate } from "react-router-dom";
 
 // Validation Schema using Yup
 const validationSchema = Yup.object({
@@ -19,6 +20,7 @@ const validationSchema = Yup.object({
 });
 
 const ForgotPassword = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const forgot_password_state = useSelector((store) => store.FORGOT_PASSWORD);
 
@@ -30,6 +32,7 @@ const ForgotPassword = () => {
   useEffect(() => {
     if (forgot_password_state?.isSuccess) {
       toast.success(forgot_password_state?.message?.message);
+      navigate("/")
     }
     if (forgot_password_state?.isError) {
       toast.error(forgot_password_state?.error?.message);
