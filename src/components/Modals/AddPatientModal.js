@@ -45,6 +45,10 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
     const handleClose = () => {
         setshowPateintModal(false)
+        setStepThreeFullData()
+        setStepOneFullData()
+        setIs_health_issue(false)
+        setSelected_health_issue([])
     }
 
     useEffect(() => {
@@ -94,6 +98,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 setIs_health_issue(false)
                 setStep(1)
                 setStepOneFullData()
+                setStepThreeFullData()
                 setSelected_health_issue("")
                 dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
@@ -105,6 +110,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 setIs_health_issue(false)
                 setStep(1)
                 setStepOneFullData()
+                setStepThreeFullData()
                 setSelected_health_issue("")
                 dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
