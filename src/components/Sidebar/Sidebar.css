@@ -5,6 +5,7 @@
     width: calc(100% - var(--sidebar-width));
     right: 0;
     padding: 1rem 1.2rem;
+    z-index: 999;
 }
 
 .sidbar_inner {

@@ -47,6 +47,8 @@ li{
 }
 button.cmn_btn.filter_btn {
   height: 40px;
+  position: relative;
+  z-index: 2;
 }
 .wrapper {
   padding-left: var(--sidebar-width);

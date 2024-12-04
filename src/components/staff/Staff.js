@@ -78,7 +78,7 @@ const StaffComponent = () => {
                             </tr>
                         ) : staff_data?.isSuccess && Array.isArray(staff_data?.data?.data?.items) ? (
                             staff_data.data.data.items.length === 0 ? (
-                                <Nodata />
+                               <tr><td colSpan={5}> <Nodata /></td></tr>
                             ) : (
                                 staff_data.data.data.items.map((staff, i) => (
                                     <tr key={i}>
