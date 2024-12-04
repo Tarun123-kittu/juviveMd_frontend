@@ -20,10 +20,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [hasImage, setHasImage] = useState(false)
     const [image, setImage] = useState()
 
-      const validationSchema = Yup.object().shape({
-    exerciseName: Yup.string()
-      .oneOf(exercise_category, `Exercise name must be one of: ${exercise_category.join(", ")}`)
-  });
+    const validationSchema = Yup.object().shape({
+        exerciseName: Yup.string()
+            .oneOf(exercise_category || [], "Exercise name must be one of the allowed categories")
+            .required("Exercise name is required"),
+    });
 
     const [initialValues, setInitialValues] = useState({
         exerciseName: "",
@@ -147,7 +148,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             as="select"
                                             name="exerciseType"
                                             className="form-control"
-                                            disabled ={localStorage.getItem('user_role') !== "TRAINER"}
+                                            disabled={localStorage.getItem('user_role') !== "TRAINER"}
                                         >
                                             <option value="">Select exercise type</option>
                                             {exercise_category?.map((data) => (
@@ -166,8 +167,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 accept="image/png, image/jpg, image/jpeg"
                                                 onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
-                                                disabled ={localStorage.getItem('user_role') !== "TRAINER"}
-                                                
+                                                disabled={localStorage.getItem('user_role') !== "TRAINER"}
+
                                             />
                                             <img
                                                 src={imagePreview}
@@ -195,7 +196,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseName"
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
-                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -207,7 +208,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseVideo"
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
-                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -220,7 +221,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseDescription"
                                                     placeholder="Enter description"
                                                     className="form-control"
-                                                    disabled ={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
                                                 />
                                             </Form.Group>
                                         </Col>

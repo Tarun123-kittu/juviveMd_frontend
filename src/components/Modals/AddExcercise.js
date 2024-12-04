@@ -21,7 +21,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   const validationSchema = Yup.object().shape({
     exerciseName: Yup.string()
-      .oneOf(exercise_category, `Exercise name must be one of: ${exercise_category.join(", ")}`)
+      .oneOf(exercise_category || [], "Exercise name must be one of the allowed categories")
+      .required("Exercise name is required"),
   });
 
   const initialValues = {
