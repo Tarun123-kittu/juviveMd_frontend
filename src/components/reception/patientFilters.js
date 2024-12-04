@@ -58,15 +58,14 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
 
                         <Dropdown.Menu>
                             <ul>
-                                <li className="cursor-pointer">Select Trainer</li>
-                                {trainers?.map((list) => (
-                                    <li
+                                  {trainers?.map((list) => (
+                                    <Dropdown.Item
                                         key={list.id}
                                         onClick={() => handleTrainerSelect(list?.id, list?.firstName)} // Pass the trainer name
                                         className="cursor-pointer"
                                     >
                                         {list?.firstName}
-                                    </li>
+                                    </Dropdown.Item>
                                 ))}
                             </ul>
                         </Dropdown.Menu>
@@ -84,24 +83,24 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
 
                     <Dropdown.Menu>
                         <ul>
-                            <li
+                            <Dropdown.Item
                                 onClick={() => handleGenderSelect("MALE")} // Set gender to Male
                                 className="cursor-pointer"
                             >
                                 Men
-                            </li>
-                            <li
+                            </Dropdown.Item>
+                            <Dropdown.Item
                                 onClick={() => handleGenderSelect("FEMALE")} // Set gender to Female
                                 className="cursor-pointer"
                             >
                                 Women
-                            </li>
-                            <li
+                            </Dropdown.Item>
+                            <Dropdown.Item
                                 onClick={() => handleGenderSelect("NON-BINARY")} // Set gender to Non-Binary
                                 className="cursor-pointer"
                             >
                                 Non-Binary
-                            </li>
+                            </Dropdown.Item>
                         </ul>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -124,13 +123,13 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
                             <Dropdown.Menu>
                                 <ul>
                                     {goalsList?.map((val, index) => (
-                                        <li
+                                        <Dropdown.Item
                                             key={index}
                                             onClick={() => handleGoalSelect(val)} // Set selected goal
                                             className="cursor-pointer"
                                         >
                                             {val}
-                                        </li>
+                                        </Dropdown.Item>
                                     ))}
                                 </ul>
                             </Dropdown.Menu>
@@ -158,18 +157,18 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
 
                         <Dropdown.Menu>
                             <ul>
-                                <li
+                                <Dropdown.Item
                                     onClick={() => handleStatusSelect(1)}
                                     className="cursor-pointer"
                                 >
                                     Active
-                                </li>
-                                <li
+                                </Dropdown.Item>
+                                <Dropdown.Item
                                     onClick={() => handleStatusSelect(0)}
                                     className="cursor-pointer"
                                 >
                                     InActive
-                                </li>
+                                </Dropdown.Item>
                             </ul>
                         </Dropdown.Menu>
                     </Dropdown>
