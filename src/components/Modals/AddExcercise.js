@@ -67,6 +67,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       toast.success(is_exercise_created?.message?.message);
       dispatch(clear_create_exercise_state);
       dispatch(get_exercise({ page: 1, tab }))
+      setImagePreview(DefaultImage)
       handleClose();
     }
     if (is_exercise_created?.isError) {
@@ -102,7 +103,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading">Add Exercise Detail</h2>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues}  onSubmit={handleSubmit}>
           {({ setFieldValue }) => (
             <FormikForm>
               <Row>
@@ -190,7 +191,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                   Submit
                 </button>
                   :
-                  <button type="submit" className="btn btn-primary">
+                  <button className="btn btn-primary">
                     <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </Spinner>

@@ -83,11 +83,11 @@ const PatientListComponent = () => {
     }
 
     const handleClear = () => {
+        dispatch(get_patients_list({ page, tab: "active" }))
         setUsername()
         setDate()
         setTrainerName()
         setGender()
-        dispatch(get_patients_list({ page, tab: "active" }))
     }
 
 

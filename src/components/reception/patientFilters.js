@@ -43,7 +43,7 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
                 <div className='label'>
                     <span>Username</span>
                 </div>
-                <input type="text" placeholder='Enter Username' className='form-control' value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type="text" placeholder='Enter Username' className='form-control' value={username || ""} onChange={(e) => setUsername(e.target.value)} />
             </div>
 
             {tab === "active" && tab === "active" && (
