@@ -26,7 +26,7 @@ const TrainerExercise = () => {
               + Create Exercise
             </button>
             <button
-              className="cmn_btn px-4 "
+              className="cmn_btn px-4 filter_btn"
               onClick={() => setToggleFilter(!toggleFilter)}
             >
               Filter
@@ -69,9 +69,9 @@ const TrainerExercise = () => {
                     <Dropdown.Menu>
                       <ul>
                         {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
-                        <li>Deepak Rawat</li>
-                        <li>Sahil</li>
-                        <li>Aman</li>
+                        <Dropdown.Item>Deepak Rawat</Dropdown.Item>
+                        <Dropdown.Item>Sahil</Dropdown.Item>
+                        <Dropdown.Item>Aman</Dropdown.Item>
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>
@@ -107,9 +107,9 @@ const TrainerExercise = () => {
 
                     <Dropdown.Menu>
                       <ul>
-                        <li>Men</li>
-                        <li>Women</li>
-                        <li>Non-Binary</li>
+                        <Dropdown.Item>Men</Dropdown.Item>
+                        <Dropdown.Item>Women</Dropdown.Item>
+                        <Dropdown.Item>Non-Binary</Dropdown.Item>
                       </ul>
                     </Dropdown.Menu>
                   </Dropdown>

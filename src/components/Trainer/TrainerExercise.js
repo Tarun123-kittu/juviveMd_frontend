@@ -73,7 +73,7 @@ const TrainerExercise = () => {
                 + Create Exercise
               </button>
               <button
-                className="cmn_btn px-4 "
+                className="cmn_btn px-4 filter_btn"
                 onClick={() => setToggleFilter(!toggleFilter)}
               >
                 Filter
@@ -120,7 +120,7 @@ const TrainerExercise = () => {
                         {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
                         {exercise_category?.map((category) => {
                           return (
-                            <li type="button" onClick={() => setCategory(category)}>{category}</li>
+                            <Dropdown.Item type="button" onClick={() => setCategory(category)}>{category}</Dropdown.Item>
                           )
                         })}
                       </ul>

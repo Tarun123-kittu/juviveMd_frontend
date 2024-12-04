@@ -32,6 +32,7 @@ ul {}
     display: flex;
     align-items: center;
     gap: 11px;
+    z-index: 2;
 }
 
 .patient_filter button.cmn_btn {
@@ -112,13 +113,17 @@ box-shadow: unset;
     width: unset;
     gap: 9px;
 }
-.patient_dropdown .dropdown-menu li {
+.patient_dropdown .dropdown-menu a.dropdown-item, .patient_dropdown .dropdown-menu .dropdown-item:active {
     font-size: 14px;
-    padding: 10px;
+    padding: 15px 10px;
     border-bottom: 1px solid #CCCCCC;
+    background-color: transparent;
+    color: #000;
+    font-weight: 500;
+    text-transform: capitalize;
 }
 
-.patient_dropdown .dropdown-menu li:last-child {
+.patient_dropdown .dropdown-menu a.dropdown-item:last-child {
     border: unset;
 }
 .filter_list input {

@@ -57,24 +57,27 @@ const Sidebar = () => {
         </div>
         <ul className='menu_items d-flex flex-column'>
           {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
+            const currentPath = window.location.pathname; 
+            const isActive = menus.path === currentPath;
             if (menus.role === "ADMIN" && localStorage?.getItem("user_role") === "ADMIN") {
               return (
                 <li key={index}>
-                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
             }
             if (menus.role === "TRAINER" && localStorage?.getItem("user_role") === "TRAINER") {
               return (
                 <li key={index}>
-                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
             }
             if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
+              console.log("Path:", menus.path, "Split Location:", "/" + splitLocation[1]);
               return (
                 <li key={index}>
-                  <Link className={menus.path === "/" + splitLocation[1] ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
+                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
             }

@@ -119,10 +119,17 @@ const PatientListComponent = () => {
 
                                 <Dropdown.Menu>
                                     <ul>
-                                        <li><input type="text" placeholder='Search Trainer' value={trainerName} onChange={(e) => handleSearchTrainerName(e)} /> <span>Search Trainer</span></li>
+                                        <li className='dropdown_search'>
+                                            <input type="text" placeholder='Search Trainer' value={trainerName} onChange={(e) => handleSearchTrainerName(e)} /> 
+                                            <span type="button">
+                                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.75 12.75L15.75 15.75M2.25 8.25C2.25 9.8413 2.88214 11.3674 4.00736 12.4926C5.13258 13.6179 6.6587 14.25 8.25 14.25C9.8413 14.25 11.3674 13.6179 12.4926 12.4926C13.6179 11.3674 14.25 9.8413 14.25 8.25C14.25 6.6587 13.6179 5.13258 12.4926 4.00736C11.3674 2.88214 9.8413 2.25 8.25 2.25C6.6587 2.25 5.13258 2.88214 4.00736 4.00736C2.88214 5.13258 2.25 6.6587 2.25 8.25Z" stroke="#0C5E62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </span>
+                                        </li>
                                         {Array?.isArray(trainer_data) && trainer_data?.map((list) => {
                                             return (
-                                                <li onClick={() => setTrainerName(list?.firstName)}>{list?.firstName}</li>
+                                                <Dropdown.Item onClick={() => setTrainerName(list?.firstName)}>{list?.firstName}</Dropdown.Item>
                                             )
                                         })}
                                     </ul>
@@ -137,8 +144,8 @@ const PatientListComponent = () => {
                         </div>
                         <div className='patient_dropdown w-100'>
                             <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    {gender === "MEN" ? "Men" : gender === "WOMEN" ? "Women" : gender === "NON-BINARY" ? "Non-Binary" : "Select Gender"}
+                                <Dropdown.Toggle variant="unset" id="dropdown-basic">
+                                    {gender === "MALE" ? "Male" : gender === "FEMALE" ? "Female" : gender === "NON-BINARY" ? "Non-Binary" : "Select Gender"}
                                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12.2143 3.7041H11.1253C11.0513 3.7041 10.9816 3.7404 10.938 3.79993L6.81303 9.48579L2.68802 3.79993C2.64446 3.7404 2.57477 3.7041 2.50072 3.7041H1.41175C1.31737 3.7041 1.2622 3.81155 1.31737 3.8885L6.43697 10.9465C6.62282 11.202 7.00323 11.202 7.18763 10.9465L12.3072 3.8885C12.3639 3.81155 12.3087 3.7041 12.2143 3.7041V3.7041Z" fill="black" fill-opacity="0.25" />
                                     </svg>
@@ -147,9 +154,10 @@ const PatientListComponent = () => {
 
                                 <Dropdown.Menu>
                                     <ul>
-                                        <li onClick={() => setGender("MEN")}>Men</li>
-                                        <li onClick={() => setGender("WOMEN")}>Women</li>
-                                        <li onClick={() => setGender("NON-BINARY")}>Non-Binary</li>
+                                    <Dropdown.Item onClick={() => setGender("MALE")} >Male</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setGender("FEMALE")}>Female</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setGender("NON-BINARY")}>Non-Binary</Dropdown.Item>
+                                    
                                     </ul>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -158,6 +166,8 @@ const PatientListComponent = () => {
                         <button className='cmn_btn fade_color' onClick={() => handleClear()}>Clean</button>
                     </div>}
                 </div>
+                <div className={`${toggleFilter && "blur_bg"}`}>
+
                 <DataTable columns={columns}>
                     {patient_list?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_list?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><img className='text-center w-25 m-auto mt-5 mb-5' src={No_data_found} alt="" /> </td></tr> : Array?.isArray(patientData) && patientData?.map((list, i) => {
                         return (
@@ -187,6 +197,7 @@ const PatientListComponent = () => {
                     })}
 
                 </DataTable>
+                </div>
             </div>
             {patient_list?.isSuccess && patient_list?.data?.data?.totalPages > 1 && <Pagination totalPages={patient_list?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
         </div>
