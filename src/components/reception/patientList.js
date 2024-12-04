@@ -196,16 +196,16 @@ const Reception_patient_list = () => {
                                                 <Dropdown.Menu>
                                                     <ul>
                                                         {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
-                                                        <li className='d-flex justify-content-between'>Pending <input type="checkbox" checked={patient?.payment || payment_status_pending} onChange={() => { setPayment_status_pending(!payment_status_pending); setPayment_status_received(false) }} /></li>
-                                                        <li className='d-flex justify-content-between'>Recieved  <input type="checkbox" checked={patient?.payment || payment_status_received} onChange={() => { setPayment_status_received(!payment_status_received); setPayment_status_pending(false) }} /></li>
-                                                        <li className='d-flex justify-content-between'>
+                                                        <Dropdown.Item className='d-flex justify-content-between'>Pending <input type="checkbox" checked={patient?.payment || payment_status_pending} onChange={() => { setPayment_status_pending(!payment_status_pending); setPayment_status_received(false) }} /></Dropdown.Item>
+                                                        <Dropdown.Item className='d-flex justify-content-between'>Recieved  <input type="checkbox" checked={patient?.payment || payment_status_received} onChange={() => { setPayment_status_received(!payment_status_received); setPayment_status_pending(false) }} /></Dropdown.Item>
+                                                        <Dropdown.Item className='d-flex justify-content-between'>
                                                             {!is_payment_status_updated?.isLoading ? <button className='cmn_btn' onClick={() => handleUpdatePaymentStatus(patient?.id)}>Save</button>
                                                                 :
                                                                 <button className='cmn_btn'> <Spinner animation="border" role="status">
                                                                     <span className="visually-hidden">Loading...</span>
                                                                 </Spinner></button>}
                                                             <button className='cmn_btn border-btn'>Close</button>
-                                                        </li>
+                                                        </Dropdown.Item>
                                                     </ul>
                                                 </Dropdown.Menu>
                                             </Dropdown>

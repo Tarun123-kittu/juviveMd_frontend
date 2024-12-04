@@ -103,9 +103,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
                   {showDropdown && tab !== "rejected" && (
                     <Dropdown.Menu>
                       <ul>
-                        <li role="button" onClick={() => { setStatus(0); setIndex(i); setSave(true) }}>Reject</li>
+                        <Dropdown.Item role="button" onClick={() => { setStatus(0); setIndex(i); setSave(true) }}>Reject</Dropdown.Item>
                         {tab !== "active" && (
-                          <li role="button" onClick={() => { setStatus(1); setIndex(i); setSave(true) }}>Approve</li>
+                          <Dropdown.Item role="button" onClick={() => { setStatus(1); setIndex(i); setSave(true) }}>Approve</Dropdown.Item>
                         )}
                       </ul>
                     </Dropdown.Menu>

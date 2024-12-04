@@ -44,9 +44,9 @@ const ExerciseView = () => {
                       <Dropdown.Menu>
                         <ul>
                           {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
-                          <li>Deepak Rawat</li>
-                          <li>Sahil</li>
-                          <li>Aman</li>
+                          <Dropdown.Item>Deepak Rawat</Dropdown.Item>
+                          <Dropdown.Item>Sahil</Dropdown.Item>
+                          <Dropdown.Item>Aman</Dropdown.Item>
                         </ul>
                       </Dropdown.Menu>
                     </Dropdown>

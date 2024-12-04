@@ -165,4 +165,7 @@
         font-size: 22px;
         margin: 0;
     }
+    .cmn_table table thead tr th,.cmn_table table tbody tr {
+    height: auto;
+    }
 }
