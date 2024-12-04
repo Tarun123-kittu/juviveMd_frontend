@@ -14,7 +14,7 @@ import { update_staff, clear_update_staff_state } from "../../redux/slices/staff
 import { get_all_staff, clear_staff_data } from "../../redux/slices/staffSlice/getAllUsers";
 import Loader from "../../common/Loader/Loader"
 
-const EditStaffmodal = ({ show, setShow, staffId, page }) => {
+const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
     const dispatch = useDispatch();
     const [image, setImage] = useState("")
     const [imageView, setImageView] = useState("")
@@ -38,7 +38,10 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
 
     }, [staffId])
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setStaffId(null)
+    };
 
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required("First name is required"),
@@ -96,21 +99,31 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
     };
 
     useEffect(() => {
-        if (selected_staff_detail?.isSuccess) {
-            setFirstName(selected_staff_detail?.data?.data?.firstName)
-            setLastName(selected_staff_detail?.data?.data?.lastName)
-            setPhone(selected_staff_detail?.data?.data?.phone)
-            setEmail(selected_staff_detail?.data?.data?.email)
-            setAddress(selected_staff_detail?.data?.data?.address)
-            setRole(selected_staff_detail?.data?.data?.role)
-            setGender(selected_staff_detail?.data?.data?.gender)
-            setImageView(selected_staff_detail?.data?.data?.image)
-            setImage(selected_staff_detail?.data?.data?.image)
-        }
-        if (selected_staff_detail?.isError) {
-            toast.error(selected_staff_detail?.error?.message);
+        if (selected_staff_detail?.isSuccess && selected_staff_detail?.data?.data) {
+            const staffData = selected_staff_detail.data.data;
+
+            setFirstName(
+                staffData.firstName
+                    ? staffData.firstName.charAt(0).toUpperCase() + staffData.firstName.slice(1)
+                    : ""
+            );
+            setLastName(
+                staffData.lastName
+                    ? staffData.lastName.charAt(0).toUpperCase() + staffData.lastName.slice(1)
+                    : ""
+            );
+            setPhone(staffData.phone || "");
+            setEmail(staffData.email || "");
+            setAddress(staffData.address || "");
+            setRole(staffData.role || "");
+            setGender(staffData.gender || "");
+            setImageView(staffData.image || "");
+            setImage(staffData.image || "");
+        } else if (selected_staff_detail?.isError) {
+            toast.error(selected_staff_detail?.error?.message || "An error occurred.");
         }
     }, [selected_staff_detail]);
+
 
     useEffect(() => {
         if (image) {
@@ -124,6 +137,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
             dispatch(get_all_staff({ page }))
             dispatch(clear_single_staff_state())
             dispatch(clear_update_staff_state())
+            setStaffId(null)
             handleClose()
         }
         if (is_staff_updated?.isError) {
@@ -157,7 +171,11 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                                     className="staff-user-image"
                                 />
                             </div>
-                            <div className="upload_image">
+                            <div
+                                className="upload_image"
+                                onClick={() => document.getElementById('fileInput').click()} 
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <div className="upload_file position-relative">
                                     <Form.Control
                                         id="fileInput"
@@ -170,11 +188,15 @@ const EditStaffmodal = ({ show, setShow, staffId, page }) => {
                                 </div>
                                 {imageError && <span className="text-danger">Image is required</span>}
                                 {image && (
-                                    <span className="remove_file" onClick={handleRemoveImage}>
+                                    <span className="remove_file" onClick={(e) => {
+                                        e.stopPropagation(); 
+                                        handleRemoveImage();
+                                    }}>
                                         Remove
                                     </span>
                                 )}
                             </div>
+
                         </div>
                     </Col>
                     <Col lg={6}>

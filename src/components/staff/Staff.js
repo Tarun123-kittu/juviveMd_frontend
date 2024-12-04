@@ -104,10 +104,16 @@ const StaffComponent = () => {
                                         <td>{staff?.phone || 'N/A'}</td>
                                         <td>{staff?.gender || 'Male'}</td>
                                         <td>
-                                            <button className="btn_info inactive">
+                                            <button
+                                                className="btn_info"
+                                                style={{
+                                                    color: staff?.status === 1 ? 'green' : 'red',
+                                                }}
+                                            >
                                                 {staff?.status === 1 ? 'Active' : 'Inactive'}
                                             </button>
                                         </td>
+
                                         <td>
                                             <div className="d-flex justify-content-between w-100">
                                                 <svg onClick={() => { setShowEditModal(true); setStaffId(staff?.id) }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +144,7 @@ const StaffComponent = () => {
             </div>
             <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setshowDeleteModal} handleDelete={handleDelete} loading={is_staff_deleted?.isLoading} />
             <AddUsermodal show={show} setShow={setShow} />
-            <EditStaffmodal show={showEditModal} setShow={setShowEditModal} staffId={staffId} page={page} />
+            <EditStaffmodal show={showEditModal} setShow={setShowEditModal} staffId={staffId} page={page} setStaffId={setStaffId}/>
         </div>
     )
 }

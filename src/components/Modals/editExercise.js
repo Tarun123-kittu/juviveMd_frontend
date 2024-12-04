@@ -134,7 +134,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 <h2 className="deletmodal_heading">Edit Exercise Detail</h2>
                 <Formik
                     initialValues={initialValues}
-                    validationSchema={validationSchema}
                     enableReinitialize
                     onSubmit={handleSubmit}
                 >
@@ -233,7 +232,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     Submit
                                 </button>
                                     :
-                                    <button type="submit" className="btn btn-primary">
+                                    <button className="btn btn-primary">
                                         <Spinner animation="border" role="status">
                                             <span className="visually-hidden">Loading...</span>
                                         </Spinner>

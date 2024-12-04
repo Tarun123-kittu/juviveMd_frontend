@@ -18,6 +18,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
   const [exerciseId, setExerciseId] = useState(null)
   const [editExerciseModal, setEditExerciseModal] = useState(false)
   const [status, setStatus] = useState(null)
+  const [save, setSave] = useState(false)
   const [index, setIndex] = useState(null)
   const columns = [
     "Exercise Name",
@@ -51,6 +52,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
     if (is_status_updated?.isSuccess) {
       toast.success(is_status_updated?.message?.message)
       dispatch(get_exercise({ page, tab }))
+      setSave(false)
       dispatch(clear_update_exercise_status_state())
     }
     if (is_status_updated?.isError) {
@@ -66,7 +68,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
           return (
             <tr>
 
-              <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : '' }</td>
+              <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
               <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' /></td>
               <td><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
@@ -101,9 +103,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
                   {showDropdown && tab !== "rejected" && (
                     <Dropdown.Menu>
                       <ul>
-                        <li role="button" onClick={() => { setStatus(0); setIndex(i) }}>Reject</li>
+                        <li role="button" onClick={() => { setStatus(0); setIndex(i); setSave(true) }}>Reject</li>
                         {tab !== "active" && (
-                          <li role="button" onClick={() => { setStatus(1); setIndex(i) }}>Approve</li>
+                          <li role="button" onClick={() => { setStatus(1); setIndex(i); setSave(true) }}>Approve</li>
                         )}
                       </ul>
                     </Dropdown.Menu>
@@ -116,6 +118,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
                 {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button
+                      disabled={!save}
                       className="cmn_btn border-btn ms-2"
                       onClick={() => handleUpdateStatus(exercise?.id)}
                     >
@@ -142,7 +145,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
         setshowAddExerciseModal={setEditExerciseModal}
         exercise_category={exercise_category}
         tab={tab}
-        id = {exerciseId}
+        id={exerciseId}
       />
     </div>
   )
