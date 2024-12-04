@@ -55,6 +55,7 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
         setshowPateintModal(false)
         dispatch(clear_selected_patient_state())
         setStep(1)
+        setPatientId(null)
     }
 
     useEffect(() => {

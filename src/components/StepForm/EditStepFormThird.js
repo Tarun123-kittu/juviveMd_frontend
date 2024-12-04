@@ -36,7 +36,18 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
       workoutPlace: Yup.string().required("Please select a workout place").oneOf(workout_place, `workout place must be one of: ${workout_place.join(", ")}`),
       homeEquipment: Yup.string().required("Please select home equipment").oneOf(equipments, `home equipmen must be one of: ${equipments.join(", ")}`),
       workoutTime: Yup.string().required("Please select workout duration").oneOf(workout_times, `workout duration must be one of: ${workout_times.join(", ")}`),
-      workoutFrequency: Yup.string().required("Please select workout frequency").oneOf(weekDays, `workout frequency must be one of: ${weekDays.join(", ")}`),
+      workoutFrequency: Yup.string()
+        .required("Please select workout frequency")
+        .test(
+          "valid-frequency",
+          `Workout frequency name must be one of: ${weekDays.join(", ")}`,
+          (value) => {
+            if (!value) return false;
+
+            const selectedDays = value.split(",");
+            return selectedDays.every((day) => weekDays.includes(day.trim()));
+          }
+        ),
     }),
     onSubmit: (values) => {
       console.log("Form Data: ", values);
@@ -263,25 +274,27 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>How many times per week can you exercise?</Form.Label>
             <Select
               name="workoutFrequency"
-              options={weekDays?.map((day) => ({
+              options={weekDays.map((day) => ({
                 value: day,
                 label: day.charAt(0).toUpperCase() + day.slice(1),
               }))}
               isMulti
               onChange={(selectedOptions) => {
                 const selectedValues = selectedOptions
-                  ? selectedOptions.map((option) => option.value)?.join(",")
+                  ? selectedOptions.map((option) => option.value).join(",")
                   : "";
                 formik.setFieldValue("workoutFrequency", selectedValues);
               }}
               onBlur={() => formik.setFieldTouched("workoutFrequency", true)}
               value={
                 formik.values.workoutFrequency
-                  ? formik.values.workoutFrequency?.split(",").map((value) => ({
-                    value,
-                    label: value.charAt(0).toUpperCase() + value.slice(1),
-                  }))
-                  : [] // If there's no value, default to an empty array
+                  ? formik.values.workoutFrequency
+                    .split(",")
+                    .map((value) => ({
+                      value,
+                      label: value.charAt(0).toUpperCase() + value.slice(1),
+                    }))
+                  : []
               }
             />
             {formik.touched.workoutFrequency && formik.errors.workoutFrequency && (

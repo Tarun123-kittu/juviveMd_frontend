@@ -7,6 +7,7 @@ import "./StepForm.css";
 import Select from "react-select";
 
 const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, setStepThreeFullData, stepThreefullData, setThird_step_Weight_unit, third_step_weight_unit }) => {
+  console.log(weekDays, "this is weekdys")
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -30,14 +31,25 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
         .nullable()
         .positive("Body fat percentage must be a positive number")
         .max(100, "Body fat percentage cannot exceed 100%"),
-      discomfort: Yup.string().required("Please select an option").oneOf(discomfort_issue, `Exercise name must be one of: ${discomfort_issue.join(", ")}`),
-      activityLevel: Yup.string().required("Please select an activity level").oneOf(activity_level, `Exercise name must be one of: ${activity_level.join(", ")}`),
-      sleepHours: Yup.string().required("Please select sleep hours").oneOf(sleep_rate, `Exercise name must be one of: ${sleep_rate.join(", ")}`),
-      workoutTypes: Yup.string().required("Please select a workout type").oneOf(workout_type, `Exercise name must be one of: ${workout_type.join(", ")}`),
-      workoutPlace: Yup.string().required("Please select a workout place").oneOf(workout_place, `Exercise name must be one of: ${workout_place.join(", ")}`),
-      homeEquipment: Yup.string().required("Please select home equipment").oneOf(equipments, `Exercise name must be one of: ${equipments.join(", ")}`),
-      workoutTime: Yup.string().required("Please select workout duration").oneOf(workout_times, `Exercise name must be one of: ${workout_times.join(", ")}`),
-      workoutFrequency: Yup.string().required("Please select workout frequency").oneOf(weekDays, `Exercise name must be one of: ${weekDays.join(", ")}`),
+      discomfort: Yup.string().required("Please select an option").oneOf(discomfort_issue, `option  must be one of: ${discomfort_issue.join(", ")}`),
+      activityLevel: Yup.string().required("Please select an activity level").oneOf(activity_level, `activity level name must be one of: ${activity_level.join(", ")}`),
+      sleepHours: Yup.string().required("Please select sleep hours").oneOf(sleep_rate, `sleep hours name must be one of: ${sleep_rate.join(", ")}`),
+      workoutTypes: Yup.string().required("Please select a workout type").oneOf(workout_type, `workout type name must be one of: ${workout_type.join(", ")}`),
+      workoutPlace: Yup.string().required("Please select a workout place").oneOf(workout_place, `workout place name must be one of: ${workout_place.join(", ")}`),
+      homeEquipment: Yup.string().required("Please select home equipment").oneOf(equipments, `equipment name must be one of: ${equipments.join(", ")}`),
+      workoutTime: Yup.string().required("Please select workout duration").oneOf(workout_times, `workout duration name must be one of: ${workout_times.join(", ")}`),
+      workoutFrequency: Yup.string()
+      .required("Please select workout frequency")
+      .test(
+        "valid-frequency",
+        `Workout frequency name must be one of: ${weekDays.join(", ")}`,
+        (value) => {
+          if (!value) return false;
+  
+          const selectedDays = value.split(","); 
+          return selectedDays.every((day) => weekDays.includes(day.trim()));
+        }
+      ),
     }),
     onSubmit: (values) => {
       setStep(4)
@@ -263,21 +275,26 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
             <Form.Label>How many times per week can you exercise?</Form.Label>
             <Select
               name="workoutFrequency"
-              options={weekDays?.map((day) => ({ value: day, label: day }))}
+              options={weekDays.map((day) => ({
+                value: day,
+                label: day.charAt(0).toUpperCase() + day.slice(1),
+              }))}
               isMulti
               onChange={(selectedOptions) => {
                 const selectedValues = selectedOptions
-                  ? selectedOptions.map((option) => option.value)?.join(",")
+                  ? selectedOptions.map((option) => option.value).join(",")
                   : "";
                 formik.setFieldValue("workoutFrequency", selectedValues);
               }}
               onBlur={() => formik.setFieldTouched("workoutFrequency", true)}
               value={
                 formik.values.workoutFrequency
-                  ? formik.values.workoutFrequency?.split(", ").map((value) => ({
-                    value,
-                    label: value,
-                  }))
+                  ? formik.values.workoutFrequency
+                    .split(",")
+                    .map((value) => ({
+                      value,
+                      label: value.charAt(0).toUpperCase() + value.slice(1),
+                    }))
                   : []
               }
             />
