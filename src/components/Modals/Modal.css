@@ -16,6 +16,12 @@ button.cmn_btn {
     font-size: 14px;
 }
 
+.drag_file .image_preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+}
+
 .fade.cmn_modal.modal {
     background: #f9fafbd4;
 }

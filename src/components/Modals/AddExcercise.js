@@ -65,7 +65,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   useEffect(() => {
     if (is_exercise_created?.isSuccess) {
       toast.success(is_exercise_created?.message?.message);
-      dispatch(clear_create_exercise_state);
+      dispatch(clear_create_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview(DefaultImage)
       handleClose();

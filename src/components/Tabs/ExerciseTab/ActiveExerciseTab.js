@@ -86,7 +86,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
                             : exercise?.status === 0
                               ? "Rejected"
                               : "Draft"}
-                    <svg
+                    {localStorage?.getItem('user_role') === "ADMIN" && <svg
                       width="10"
                       height="15"
                       viewBox="0 0 10 15"
@@ -97,7 +97,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
                         d="M0.982514 2.01959L2.27927 0.879444L9.34239 7.09323C9.45625 7.1928 9.5466 7.3112 9.60826 7.44161C9.66992 7.57203 9.70166 7.71189 9.70166 7.85315C9.70166 7.9944 9.66992 8.13426 9.60826 8.26468C9.5466 8.3951 9.45625 8.5135 9.34239 8.61306L2.27927 14.8301L0.983737 13.6899L7.61297 7.85476L0.982514 2.01959Z"
                         fill="black"
                       />
-                    </svg>
+                    </svg>}
                   </Dropdown.Toggle>
 
                   {showDropdown && tab !== "rejected" && (

@@ -171,17 +171,10 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             />
                                             <img
                                                 src={imagePreview}
+                                                className="image_preview"
                                                 alt="preview"
-                                                style={{
-                                                    width: "100%",
-                                                    maxHeight: "150px",
-                                                    marginTop: "10px",
-                                                }}
+                                            
                                             />
-                                            <h4>
-                                                Drop your image here, or <span>browse</span>
-                                            </h4>
-                                            <p className="m-0">Supports: PNG, JPG, JPEG</p>
                                         </div>
                                     </Form.Group>
                                 </Col>
