@@ -14,6 +14,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState(DefaultImage);
   const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE);
+  const [draft, setDraft] = useState(false)
+  console.log(draft, "this is draft")
+  const [exerciseType, setExerciseType] = useState("")
+  const [exerciseName, setExerciseName] = useState("")
+  const [exerciseVideo, setExerciseVideo] = useState("")
+  const [exerciseDescription, setExerciseDescription] = useState("")
+  const [exerciseImage, setExerciseImage] = useState("")
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -37,6 +44,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const file = event.target.files[0];
     if (file) {
       setFieldValue("exerciseImage", file);
+      setExerciseImage(file)
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -53,6 +61,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         video_link: values.exerciseVideo,
         image: values.exerciseImage,
         description: values.exerciseDescription,
+        draft : draft
       })
     );
   };
@@ -75,6 +84,36 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       dispatch(clear_create_exercise_state);
     }
   }, [is_exercise_created]);
+
+  const handleExerciseTypeChange = (e, setFieldValue) => {
+    const value = e.target.value;
+    setExerciseType(value); // Set the exercise type state
+    setFieldValue("exerciseType", value); // Update Formik field value
+  };
+  const handleExerciseNameChange = (e, setFieldValue) => {
+    const value = e.target.value;
+    setExerciseName(value); // Set the exercise type state
+    setFieldValue("exerciseName", value); // Update Formik field value
+  };
+  const handleExerciseVideoChange = (e, setFieldValue) => {
+    const value = e.target.value;
+    setExerciseVideo(value); // Set the exercise type state
+    setFieldValue("exerciseVideo", value); // Update Formik field value
+  };
+  const handleExerciseDescriptionChange = (e, setFieldValue) => {
+    const value = e.target.value;
+    setExerciseDescription(value); // Set the exercise type state
+    setFieldValue("exerciseDescription", value); // Update Formik field value
+  };
+
+  useEffect(() => {
+    if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage) {
+      setDraft(false)
+    }
+    else {
+      setDraft(true)
+    }
+  }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage])
 
   return (
     <Modal
@@ -103,7 +142,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading">Add Exercise Detail</h2>
-        <Formik initialValues={initialValues}  onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ setFieldValue }) => (
             <FormikForm>
               <Row>
@@ -114,6 +153,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       as="select"
                       name="exerciseType"
                       className="form-control"
+                      onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                     >
                       <option value="">Select exercise type</option>
                       {exercise_category?.map((data) => {
@@ -157,6 +197,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           name="exerciseName"
                           placeholder="Enter exercise name"
                           className="form-control"
+                          onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
                         />
                       </Form.Group>
                     </Col>
@@ -168,6 +209,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           name="exerciseVideo"
                           placeholder="https://youtu.be"
                           className="form-control"
+                          onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                         />
                       </Form.Group>
                     </Col>
@@ -180,6 +222,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           name="exerciseDescription"
                           placeholder="Enter description"
                           className="form-control"
+                          onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                         />
                       </Form.Group>
                     </Col>
@@ -187,8 +230,17 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 </Col>
               </Row>
               <div className="text-end mt-3">
-                {!is_exercise_created?.isLoading ? <button type="submit" className="btn btn-primary">
-                  Submit
+                {!is_exercise_created?.isLoading  ? <button type="submit" disabled={draft} className="btn cmn_btn">
+                  Send For Approval
+                </button>
+                  :
+                  <button className="btn btn-primary">
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                  </button>}
+                {!is_exercise_created?.isLoading ? <button type="submit" onClick={() => setDraft(true)} className="btn cmn_btn ms-2">
+                  Save as Draft
                 </button>
                   :
                   <button className="btn btn-primary">

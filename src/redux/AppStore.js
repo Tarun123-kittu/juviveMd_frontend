@@ -21,6 +21,8 @@ import getExerciseAPI from "./slices/exerciseSlice/getExercise"
 import updateExerciseStatusAPI from "./slices/exerciseSlice/updateExerciseStatus"
 import getSingleExercise from "./slices/exerciseSlice/getSingleExercise"
 import updateExerciseAPI from "./slices/exerciseSlice/updateExercise"
+import patientValidateToken from "./slices/patientSlice/patientValidatePasswordToken"
+import userValidateToken from "./slices/authSlice/userValidatePasswordToken"
 
 const AppStore = configureStore({
   reducer: {
@@ -45,7 +47,9 @@ const AppStore = configureStore({
     ALL_EXERCISES: getExerciseAPI,
     UPDATE_EXERCISE_STATUS: updateExerciseStatusAPI,
     SINGLE_EXERCISE: getSingleExercise,
-    UPDATE_EXERCISE_DATA : updateExerciseAPI
+    UPDATE_EXERCISE_DATA: updateExerciseAPI,
+    PATIENT_VALIDATE_TOKEN: patientValidateToken,
+    USER_VALIDATE_TOKEN: userValidateToken
   },
 })
 

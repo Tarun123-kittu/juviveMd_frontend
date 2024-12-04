@@ -12,13 +12,20 @@ import { get_exercise, clear_get_single_exercise_state } from "../../redux/slice
 import Loader from "../../common/Loader/Loader";
 import * as Yup from "yup";
 
-const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab }) => {
+const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin,setExerciseId }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
     const is_exercise_updated = useSelector((store) => store.UPDATE_EXERCISE_DATA)
     const [hasImage, setHasImage] = useState(false)
     const [image, setImage] = useState()
+    const [draft, setDraft] = useState(false)
+    console.log(draft, "this is draft")
+    const [exerciseType, setExerciseType] = useState("")
+    const [exerciseName, setExerciseName] = useState("")
+    const [exerciseVideo, setExerciseVideo] = useState("")
+    const [exerciseDescription, setExerciseDescription] = useState("")
+    const [exerciseImage, setExerciseImage] = useState("")
 
     const validationSchema = Yup.object().shape({
         exerciseName: Yup.string()
@@ -51,11 +58,17 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 exerciseImage: null,
             });
             setImagePreview(data?.imageUrl || DefaultImage);
+            setExerciseType(data?.category )
+            setExerciseName(data?.exercise_name)
+            setExerciseVideo(data?.video_link)
+            setExerciseDescription(data?.description)
+            setExerciseImage(data?.imageUrl)
         }
     }, [is_exercise]);
 
     const handleClose = () => {
         setshowAddExerciseModal(false);
+        setExerciseId(null)
     };
 
     const handleImageChange = (event, setFieldValue) => {
@@ -81,7 +94,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 image: image ? image : values.exerciseImage,
                 description: values.exerciseDescription,
                 id: id,
-                hasImage: hasImage
+                hasImage: hasImage,
+                draft: draft
             })
         );
     };
@@ -98,12 +112,43 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             dispatch(get_exercise({ page: 1, tab }))
             dispatch(clear_update_exercise_state())
             setHasImage(false)
+            setExerciseId(null)
         }
         if (is_exercise_updated?.isError) {
             toast.success(is_exercise_updated?.error?.message)
             dispatch(clear_update_exercise_state())
         }
     }, [is_exercise_updated])
+
+    const handleExerciseTypeChange = (e, setFieldValue) => {
+        const value = e.target.value;
+        setExerciseType(value); // Set the exercise type state
+        setFieldValue("exerciseType", value); // Update Formik field value
+    };
+    const handleExerciseNameChange = (e, setFieldValue) => {
+        const value = e.target.value;
+        setExerciseName(value); // Set the exercise type state
+        setFieldValue("exerciseName", value); // Update Formik field value
+    };
+    const handleExerciseVideoChange = (e, setFieldValue) => {
+        const value = e.target.value;
+        setExerciseVideo(value); // Set the exercise type state
+        setFieldValue("exerciseVideo", value); // Update Formik field value
+    };
+    const handleExerciseDescriptionChange = (e, setFieldValue) => {
+        const value = e.target.value;
+        setExerciseDescription(value); // Set the exercise type state
+        setFieldValue("exerciseDescription", value); // Update Formik field value
+    };
+
+    useEffect(() => {
+        if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage) {
+            setDraft(false)
+        }
+        else {
+            setDraft(true)
+        }
+    }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage])
 
     return (
         <Modal
@@ -148,6 +193,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             name="exerciseType"
                                             className="form-control"
                                             disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                            onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                                         >
                                             <option value="">Select exercise type</option>
                                             {exercise_category?.map((data) => (
@@ -173,7 +219,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 src={imagePreview}
                                                 className="image_preview"
                                                 alt="preview"
-                                            
+
                                             />
                                         </div>
                                     </Form.Group>
@@ -189,6 +235,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
                                                     disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -201,6 +248,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
                                                     disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -214,6 +262,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     placeholder="Enter description"
                                                     className="form-control"
                                                     disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -221,8 +270,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                 </Col>
                             </Row>
                             {localStorage?.getItem('user_role') === "TRAINER" && <div className="text-end mt-3">
-                                {!is_exercise_updated?.isLoading ? <button type="submit" className="btn btn-primary">
-                                    Submit
+                                {!is_exercise_updated?.isLoading ? <button type="submit" disabled={draft} className="btn cmn_btn">
+                                    Send For Approval
                                 </button>
                                     :
                                     <button className="btn btn-primary">
@@ -230,6 +279,18 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             <span className="visually-hidden">Loading...</span>
                                         </Spinner>
                                     </button>}
+                                {tab !== "active" && tab !== "approvalRequest" && !admin && <div>
+                                    {!is_exercise_updated?.isLoading ? <button type="submit" onClick={() => setDraft(true)} className="btn cmn_btn">
+                                        Edit As Draft
+                                    </button>
+                                        :
+                                        <button className="btn btn-primary">
+                                            <Spinner animation="border" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </Spinner>
+                                        </button>}
+                                </div>}
+
                             </div>}
                         </FormikForm>
                     )}

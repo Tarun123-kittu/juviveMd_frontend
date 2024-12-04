@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { patient_reset_password, clear_patient_reset_password_state } from "../../redux/slices/patientSlice/patientResetPasswordSlice";
@@ -8,13 +8,16 @@ import toast from "react-hot-toast";
 import Logo from "../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
 import "./reception.css";
+import { patient_validate_token, clear_patient_validate_token_state } from "../../redux/slices/patientSlice/patientValidatePasswordToken";
 
 const PatientResetPassword = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { token } = useParams();
+      const [data, setData] = useState(false)
 
     const resetPasswordState = useSelector((store) => store.PATIENT_RESET_PASSWORD);
+    const is_token_valid = useSelector((store) => store.PATIENT_VALIDATE_TOKEN);
 
     const validationSchema = Yup.object({
         password: Yup.string()
@@ -25,17 +28,35 @@ const PatientResetPassword = () => {
             .oneOf([Yup.ref("password"), null], "Passwords must match"),
     });
 
-      useEffect(() => {
+    useEffect(() => {
+        dispatch(patient_validate_token({ token }))
+    }, [])
+
+    useEffect(() => {
         if (resetPasswordState?.isSuccess) {
-          toast.success(resetPasswordState?.message?.message);
-          dispatch(clear_patient_reset_password_state());
-          navigate("/");
+            toast.success(resetPasswordState?.message?.message);
+            dispatch(clear_patient_reset_password_state());
+            navigate("/");
         }
         if (resetPasswordState?.isError) {
-          toast.error(resetPasswordState?.error?.message);
-          dispatch(clear_patient_reset_password_state());
+            toast.error(resetPasswordState?.error?.message);
+            dispatch(clear_patient_reset_password_state());
         }
-      }, [resetPasswordState, dispatch, navigate]);
+    }, [resetPasswordState, dispatch, navigate]);
+
+    useEffect(() => {
+        if (is_token_valid?.isSuccess) {
+          setData(is_token_valid?.message?.data)
+          if(!is_token_valid?.message?.data){
+            toast.error("Your token has been expired")
+          }
+          dispatch(clear_patient_validate_token_state())
+        }
+        if(is_token_valid?.isError){
+          toast.error("This Link has been expired")
+        }
+       
+      }, [is_token_valid])
 
     return (
         <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
@@ -63,6 +84,7 @@ const PatientResetPassword = () => {
                                         name="password"
                                         placeholder="Enter your new password"
                                         className="form-control"
+                                        disabled={!data}
                                     />
                                     <ErrorMessage
                                         name="password"
@@ -80,6 +102,7 @@ const PatientResetPassword = () => {
                                         name="confirmPassword"
                                         placeholder="Confirm your password"
                                         className="form-control"
+                                        disabled={!data}
                                     />
                                     <ErrorMessage
                                         name="confirmPassword"
@@ -93,6 +116,7 @@ const PatientResetPassword = () => {
                                 <button
                                     type="submit"
                                     className="cmn_btn w-100"
+                                    disabled={!data}
                                 >
                                     {!resetPasswordState?.isLoading ? (
                                         "Change Password"

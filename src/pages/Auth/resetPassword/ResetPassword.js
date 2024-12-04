@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { reset_password, clear_reset_password_state } from "../../../redux/slices/authSlice/resetPasswordSlice";
@@ -8,13 +8,20 @@ import toast from "react-hot-toast";
 import Logo from "../../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
 import "./ResetPassword.css";
+import { user_validate_token, clear_user_validate_token_state } from "../../../redux/slices/authSlice/userValidatePasswordToken";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
+  const [data, setData] = useState(false)
 
   const resetPasswordState = useSelector((store) => store.RESET_PASSWORD);
+  const is_token_valid = useSelector((store) => store.USER_VALIDATE_TOKEN);
+
+  useEffect(() => {
+    dispatch(user_validate_token({ token }))
+  }, [])
 
   const validationSchema = Yup.object({
     password: Yup.string()
@@ -36,6 +43,20 @@ const ResetPassword = () => {
       dispatch(clear_reset_password_state());
     }
   }, [resetPasswordState, dispatch, navigate]);
+
+  useEffect(() => {
+    if (is_token_valid?.isSuccess) {
+      setData(is_token_valid?.message?.data)
+      if(!is_token_valid?.message?.data){
+        toast.error("Your token has been expired")
+      }
+      dispatch(clear_user_validate_token_state())
+    }
+    if(is_token_valid?.isError){
+      toast.error("This Link has been expired")
+    }
+   
+  }, [is_token_valid])
 
   return (
     <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
@@ -63,6 +84,7 @@ const ResetPassword = () => {
                     name="password"
                     placeholder="Enter your new password"
                     className="form-control"
+                    disabled={!data}
                   />
                   <ErrorMessage
                     name="password"
@@ -80,6 +102,7 @@ const ResetPassword = () => {
                     name="confirmPassword"
                     placeholder="Confirm your password"
                     className="form-control"
+                    disabled={!data}
                   />
                   <ErrorMessage
                     name="confirmPassword"
@@ -93,6 +116,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   className="cmn_btn w-100"
+                  disabled={!data}
                 >
                   {!resetPasswordState?.isLoading ? (
                     "Change Password"

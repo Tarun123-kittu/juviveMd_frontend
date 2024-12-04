@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import Spinner from 'react-bootstrap/Spinner';
 import EditExcercise from '../../Modals/editExercise';
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
   const [all_exercise, setAllExercise] = useState()
@@ -146,6 +146,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category }) => {
         exercise_category={exercise_category}
         tab={tab}
         id={exerciseId}
+        admin={admin}
+        setExerciseId={setExerciseId}
       />
     </div>
   )

@@ -31,11 +31,11 @@ const Exercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab tab={"active"} showDropdown={true} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab tab={"active"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "rejected":
-        return <ActiveExerciseTab tab={"rejected"} showDropdown={true} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab tab={"rejected"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       default:
         return null;
     }

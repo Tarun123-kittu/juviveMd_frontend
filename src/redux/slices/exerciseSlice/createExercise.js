@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const create_exercise = createAsyncThunk("create_exercise", async ({ exercise_name, category, video_link, image, description }, thunkAPI) => {
+export const create_exercise = createAsyncThunk("create_exercise", async ({ exercise_name, category, video_link, image, description, draft }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -14,6 +14,7 @@ export const create_exercise = createAsyncThunk("create_exercise", async ({ exer
         formdata.append("video_link", video_link);
         formdata.append("image", image);
         formdata.append("description", description);
+        formdata.append("draft", draft);
 
         const requestOptions = {
             method: "POST",

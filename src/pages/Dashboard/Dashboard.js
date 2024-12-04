@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <div className="wrapper">
-      <div className="inner_wrapper">
+      {/* <div className="inner_wrapper">
         <div className="cmn_head mb-3">
           <h2 className="mb-2">Dashboard</h2>
           <div className="dashboardinfo ">
@@ -253,7 +253,7 @@ const Dashboard = () => {
         </DataTable>
 
       </div>
-      <AddUsermodal show={show} setShow={setShow} />
+      <AddUsermodal show={show} setShow={setShow} /> */}
     </div>
   );
 };

@@ -15,10 +15,9 @@ const TrainerDashboardComponent = () => {
         "Action",
     ];
     return (
-        <div>
-            return (
+        <div> (
             <div className="wrapper">
-                <div className="inner_wrapper">
+                {/* <div className="inner_wrapper">
                     <div className="cmn_head mb-3">
                         <h2 className="mb-2">Dashboard</h2>
                         <div className="dashboardinfo tariner_cards">
@@ -158,7 +157,7 @@ const TrainerDashboardComponent = () => {
                             </td>
                         </tr>
                     </DataTable>
-                </div>
+                </div> */}
             </div>
 
             )
