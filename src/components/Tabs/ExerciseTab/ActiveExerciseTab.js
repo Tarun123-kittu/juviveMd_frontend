@@ -11,15 +11,18 @@ import toast from 'react-hot-toast';
 import Spinner from 'react-bootstrap/Spinner';
 import EditExcercise from '../../Modals/editExercise';
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
+  const [isOpen, setIsOpen] = useState(false);
   const [all_exercise, setAllExercise] = useState()
   const [exerciseId, setExerciseId] = useState(null)
   const [editExerciseModal, setEditExerciseModal] = useState(false)
   const [status, setStatus] = useState(null)
+  console.log(status, "this is the status")
   const [save, setSave] = useState(false)
   const [index, setIndex] = useState(null)
+  console.log(index, "this is the index ")
   const columns = [
     "Exercise Name",
     "Image",
@@ -52,6 +55,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
     if (is_status_updated?.isSuccess) {
       toast.success(is_status_updated?.message?.message)
       dispatch(get_exercise({ page, tab }))
+      setStatus(null)
       setSave(false)
       dispatch(clear_update_exercise_status_state())
     }
@@ -75,52 +79,74 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
               <td> <div className='patient_dropdown w-100'>
                 <Dropdown>
                   <Dropdown.Toggle variant="unset">
-                    {index === i && status === 1
-                      ? "Approved"
-                      : status === 0
-                        ? "Rejected"
-                        : exercise?.status === 2
-                          ? "Pending"
-                          : exercise?.status === 1
-                            ? "Approved"
-                            : exercise?.status === 0
-                              ? "Rejected"
-                              : "Draft"}
-                    {localStorage?.getItem('user_role') === "ADMIN" && <svg
-                      width="10"
-                      height="15"
-                      viewBox="0 0 10 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M0.982514 2.01959L2.27927 0.879444L9.34239 7.09323C9.45625 7.1928 9.5466 7.3112 9.60826 7.44161C9.66992 7.57203 9.70166 7.71189 9.70166 7.85315C9.70166 7.9944 9.66992 8.13426 9.60826 8.26468C9.5466 8.3951 9.45625 8.5135 9.34239 8.61306L2.27927 14.8301L0.983737 13.6899L7.61297 7.85476L0.982514 2.01959Z"
-                        fill="black"
-                      />
-                    </svg>}
+                    {index === i && exercise?.status === 2
+                      ? "Pending"
+                      : exercise?.status === 1
+                        ? "Approved"
+                        : exercise?.status === 0
+                          ? "Rejected"
+                          : "Draft"}
+                    <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M0.640229 1.16412L1.93699 0.0239754L9.00011 6.23776C9.11396 6.33733 9.20432 6.45573 9.26598 6.58614C9.32763 6.71656 9.35938 6.85642 9.35938 6.99768C9.35938 7.13893 9.32763 7.2788 9.26598 7.40921C9.20432 7.53963 9.11396 7.65803 9.00011 7.7576L1.93699 13.9746L0.641452 12.8345L7.27069 6.99929L0.640229 1.16412Z" fill="black" />
+                    </svg>
+
                   </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <ul>
+                      <Dropdown.Item onClick={() => { setStatus(1); setIndex(i) }} className="d-flex justify-content-between">
+                        Approve
+                        <input
+                          type="checkbox"
+                          checked={status === 1 && index === i}
+                        />
+                      </Dropdown.Item>
+                      {/* Reject Option */}
+                      <Dropdown.Item onClick={() => { setStatus(0); setIndex(i) }} className="d-flex justify-content-between">
+                        Reject
+                        <input
+                          type="checkbox"
+                          checked={status === 0 && index === i}
+                        />
+                      </Dropdown.Item>
+                      {/* Save and Close Buttons */}
+                      <Dropdown.Item className="d-flex justify-content-between">
+                        {!is_status_updated?.isLoading ? <button
+                          className="cmn_btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpdateStatus(exercise?.id, status);
+                          }}
+                        >
+                          Save
+                        </button>
+                          :
+                          <button className='cmn_btn'> <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </Spinner></button>
+                        }
+                        <button
+                          className="cmn_btn border-btn"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent dropdown from closing
+                            setIsOpen(false); // Close dropdown manually
+                          }}
+                        >
+                          Close
+                        </button>
+                      </Dropdown.Item>
+                    </ul>
+                  </Dropdown.Menu>
 
-                  {showDropdown && tab !== "rejected" && (
-                    <Dropdown.Menu>
-                      <ul>
-                        <Dropdown.Item role="button" onClick={() => { setStatus(0); setIndex(i); setSave(true) }}>Reject</Dropdown.Item>
-                        {tab !== "active" && (
-                          <Dropdown.Item role="button" onClick={() => { setStatus(1); setIndex(i); setSave(true) }}>Approve</Dropdown.Item>
-                        )}
-                      </ul>
-                    </Dropdown.Menu>
-                  )}
                 </Dropdown>
-
               </div></td>
               <td>
                 <button onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} className="cmn_btn">View</button>
-                {showDropdown && tab !== "rejected" && (
+                {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button
                       disabled={!save}
                       className="cmn_btn border-btn ms-2"
-                      onClick={() => handleUpdateStatus(exercise?.id)}
+                      
                     >
                       Save
                     </button>
@@ -131,7 +157,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin}) => {
                       </Spinner>
                     </button>
                   )
-                )}
+                )} */}
 
               </td>
 
