@@ -40,6 +40,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
     const [third_step_weight_unit, setThird_step_Weight_unit] = useState("kg")
     const [step_four_additional_information, setStep_four_additional_information] = useState("")
     const [workout_frequency, setWorkout_frequency] = useState()
+    console.log(stepThreefullData,"this is the step[ three data")
 
     const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
