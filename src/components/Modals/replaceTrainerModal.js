@@ -67,7 +67,7 @@ const ReplaceTrainerModal = ({ trainers_list, setReplaced_trainer, replaces_trai
                         {trainers_list?.map((trainer) => {
                             if (trainer?.id !== staffId) {
                                 return (
-                                    <Dropdown.Item onClick={() => { setReplacedTrainer_id(trainer?.id); setTrainer_name(trainer?.firstName) }}>{trainer?.firstName} {trainer?.totalExercises}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { setReplacedTrainer_id(trainer?.id); setTrainer_name(trainer?.firstName) }}>{trainer?.firstName}</Dropdown.Item>
                                 )
                             }
                         })}
