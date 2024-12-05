@@ -219,7 +219,7 @@ const Reception_patient_list = () => {
                                         <td>
                                             <button className="btn_info active">{patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
-                                        <td>
+                                        {tab === "paymentPending" && <td>
                                             <div className="patient_dropdown">
                                                 <Dropdown
                                                     show={index === i}
@@ -312,7 +312,7 @@ const Reception_patient_list = () => {
                                                     </Dropdown.Menu>
                                                 </Dropdown>
                                             </div>
-                                        </td>
+                                        </td>}
 
 
                                         {tab === "healthIssue" && <td>
