@@ -9,7 +9,7 @@ const NotFound = () => {
             <h1 className="message">
                 The page you are looking for does not exist
             </h1>
-            <button className="go-home-button" onClick={() => navigate('/')}>
+            <button className="go-home-button" onClick={() => navigate(-1)}>
                 Go Back
             </button>
         </div>
