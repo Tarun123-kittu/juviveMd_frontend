@@ -86,7 +86,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                   onToggle={(nextOpenState) => {
                     setIsOpen(nextOpenState); // Sync the dropdown state
                     if (!nextOpenState) {
-                      setStatus(null); // Reset status when dropdown closes
+                      setTimeout(() => setStatus(null), 0); // Delay resetting status slightly
                     }
                   }}
                   autoClose={false}
@@ -95,9 +95,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                     variant="unset"
                     id={`dropdown-autoclose-inside-${i}`}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent parent handlers from interfering
-                      setIsOpen((prevState) => !prevState); // Toggle dropdown state
-                      setIndex(i); // Set the index
+                      e.stopPropagation();
+                      setIsOpen((prevState) => !prevState);
+                      setIndex(i);
                     }}
                   >
                     {exercise?.status === 2
@@ -107,7 +107,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         : exercise?.status === 0
                           ? "Rejected"
                           : "Draft"}
-                    {localStorage.getItem('user_role') === "ADMIN" && (
+                    {localStorage.getItem("user_role") === "ADMIN" && (
                       <svg
                         width="10"
                         height="14"
@@ -123,7 +123,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                     )}
                   </Dropdown.Toggle>
 
-                  {localStorage.getItem('user_role') === "ADMIN" && index === i && (
+                  {localStorage.getItem("user_role") === "ADMIN" && index === i && (
                     <Dropdown.Menu>
                       <ul>
                         {tab !== "active" && (
@@ -137,8 +137,11 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                             Approve
                             <input
                               type="checkbox"
-                              checked={status === 1}
-                              onChange={() => setStatus(0)}
+                              checked={status == 1}
+                              onClick={() => {
+                                setStatus(1); // Ensure consistent logic
+                                setIndex(i);
+                              }}
                             />
                           </Dropdown.Item>
                         )}
@@ -153,8 +156,11 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                             Reject
                             <input
                               type="checkbox"
-                              checked={status === 0}
-                              onChange={() => setStatus(0)}
+                              checked={status == 0}
+                              onClick={() => {
+                                setStatus(0);
+                                setIndex(i);
+                              }}
                             />
                           </Dropdown.Item>
                         )}
@@ -179,8 +185,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                           <button
                             className="cmn_btn border-btn"
                             onClick={() => {
-                              setIsOpen(false); // Close dropdown
-                              setStatus(null); // Reset status
+                              setIsOpen(false);
+                              setStatus(null);
                             }}
                           >
                             Close
@@ -190,6 +196,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                     </Dropdown.Menu>
                   )}
                 </Dropdown>
+
 
 
               </div></td>

@@ -85,9 +85,9 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
                 <button
                   type="button"
                   onClick={() => setThird_step_Weight_unit("lb")}
-                  className={`unit-btn ${third_step_weight_unit === "lb" ? "active" : ""}`}
+                  className={`unit-btn ${third_step_weight_unit === "lbs" ? "active" : ""}`}
                 >
-                  lb
+                  lbs
                 </button>
               </div>
             </div>

@@ -231,7 +231,10 @@ const Reception_patient_list = () => {
                                                                     }}
                                                                 >
                                                                     Pending
-                                                                    <input type="checkbox" checked={payment_status_pending} readOnly />
+                                                                    <input type="checkbox" checked={payment_status_pending}   onClick={() => {
+                                                                        setPayment_status_pending((prevState) => !prevState);
+                                                                        setPayment_status_received(false); // Uncheck "Received"
+                                                                    }} />
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
                                                                     className="d-flex justify-content-between"
@@ -241,7 +244,10 @@ const Reception_patient_list = () => {
                                                                     }}
                                                                 >
                                                                     Received
-                                                                    <input type="checkbox" checked={payment_status_received} readOnly />
+                                                                    <input type="checkbox" checked={payment_status_received} onClick={() => {
+                                                                        setPayment_status_received((prevState) => !prevState);
+                                                                        setPayment_status_pending(false); // Uncheck "Pending"
+                                                                    }} />
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item className="d-flex justify-content-between">
                                                                     {!is_payment_status_updated?.isLoading ? (
