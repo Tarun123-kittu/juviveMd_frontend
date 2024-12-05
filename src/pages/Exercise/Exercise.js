@@ -79,7 +79,7 @@ const Exercise = () => {
                       </div>
                       <input
                         type="text"
-                        placeholder="username"
+                        placeholder="Exercise Name"
                         className="form-control"
                         value={username || ""}
                         onChange={(e) => setUsername(e.target.value)}

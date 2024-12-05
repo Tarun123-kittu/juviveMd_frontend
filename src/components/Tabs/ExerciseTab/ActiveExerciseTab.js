@@ -64,7 +64,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
       dispatch(clear_update_exercise_status_state())
     }
     if (is_status_updated?.isError) {
-      toast.success(is_status_updated?.error?.message)
+      toast.error(is_status_updated?.error?.message)
       dispatch(clear_update_exercise_status_state())
     }
   }, [is_status_updated])
@@ -81,11 +81,24 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
               <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
               <td> <div className='patient_dropdown w-100'>
-                <Dropdown show={isOpen} onToggle={(isOpen) => setIsOpen(isOpen)} autoClose={false} onClick={() => setIndex(i)}>
+                <Dropdown
+                  show={isOpen}
+                  onToggle={(nextOpenState) => {
+                    setIsOpen(nextOpenState); // Sync the dropdown state
+                    if (!nextOpenState) {
+                      setTimeout(() => setStatus(null), 0); // Delay resetting status slightly
+                    }
+                  }}
+                  autoClose={false}
+                >
                   <Dropdown.Toggle
                     variant="unset"
-                    id={`dropdown-autoclose-inside ${i}`}
-                    onClick={() => setIsOpen(!isOpen)} // Toggle dropdown manually
+                    id={`dropdown-autoclose-inside-${i}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsOpen((prevState) => !prevState);
+                      setIndex(i);
+                    }}
                   >
                     {exercise?.status === 2
                       ? "Pending"
@@ -94,8 +107,14 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         : exercise?.status === 0
                           ? "Rejected"
                           : "Draft"}
-                    {localStorage.getItem('user_role') === "ADMIN" && (
-                      <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {localStorage.getItem("user_role") === "ADMIN" && (
+                      <svg
+                        width="10"
+                        height="14"
+                        viewBox="0 0 10 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <path
                           d="M0.640229 1.16412L1.93699 0.0239754L9.00011 6.23776C9.11396 6.33733 9.20432 6.45573 9.26598 6.58614C9.32763 6.71656 9.35938 6.85642 9.35938 6.99768C9.35938 7.13893 9.32763 7.2788 9.26598 7.40921C9.20432 7.53963 9.11396 7.65803 9.00011 7.7576L1.93699 13.9746L0.641452 12.8345L7.27069 6.99929L0.640229 1.16412Z"
                           fill="black"
@@ -104,29 +123,49 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                     )}
                   </Dropdown.Toggle>
 
-                  {localStorage.getItem('user_role') === "ADMIN" && index === i && (
+                  {localStorage.getItem("user_role") === "ADMIN" && index === i && (
                     <Dropdown.Menu>
                       <ul>
-                        <Dropdown.Item
-                          onClick={() => {
-                            setStatus(1);
-                            setIndex(i);
-                          }}
-                          className="d-flex justify-content-between"
-                        >
-                          Approve
-                          <input type="checkbox" checked={status === 1} />
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() => {
-                            setStatus(0);
-                            setIndex(i);
-                          }}
-                          className="d-flex justify-content-between"
-                        >
-                          Reject
-                          <input type="checkbox" checked={status === 0} />
-                        </Dropdown.Item>
+                        {tab !== "active" && (
+                          <Dropdown.Item
+                            onClick={() => {
+                              setStatus(1);
+                              setIndex(i);
+                            }}
+                            className="d-flex justify-content-between"
+                          >
+                            Approve
+                            <input
+                              type="checkbox"
+                              checked={status === 1}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevents triggering the parent's onClick
+                                setStatus(1);
+                                setIndex(i);
+                              }}
+                            />
+                          </Dropdown.Item>
+                        )}
+                        {tab !== "rejected" && (
+                          <Dropdown.Item
+                            onClick={() => {
+                              setStatus(0);
+                              setIndex(i);
+                            }}
+                            className="d-flex justify-content-between"
+                          >
+                            Reject
+                            <input
+                              type="checkbox"
+                              checked={status === 0}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevents triggering the parent's onClick
+                                setStatus(0);
+                                setIndex(i);
+                              }}
+                            />
+                          </Dropdown.Item>
+                        )}
                         <Dropdown.Item className="d-flex justify-content-between">
                           {!is_status_updated?.isLoading ? (
                             <button
@@ -148,7 +187,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                           <button
                             className="cmn_btn border-btn"
                             onClick={() => {
-                              setIsOpen(false); // Close dropdown manually
+                              setIsOpen(false);
+                              setStatus(null);
                             }}
                           >
                             Close
@@ -156,8 +196,12 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         </Dropdown.Item>
                       </ul>
                     </Dropdown.Menu>
+
                   )}
                 </Dropdown>
+
+
+
               </div></td>
               <td>
                 {/* <button  className="cmn_btn">View</button> */}

@@ -38,6 +38,8 @@ const Reception_patient_list = () => {
     const [trainers, setTrainers] = useState()
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [index, setIndex] = useState(null)
+    console.log(index, "this is index")
     const [patientId, setPatientId] = useState(null)
     const [payment_status_pending, setPayment_status_pending] = useState(false)
     const [payment_status_received, setPayment_status_received] = useState(false)
@@ -113,6 +115,18 @@ const Reception_patient_list = () => {
     }
 
     useEffect(() => {
+        if (patient_data?.isSuccess) {
+            setShowFilter(false)
+            setUsername()
+            setGoal()
+            setDate()
+            setGender()
+            setStatus()
+            setTrainer()
+        }
+    }, [patient_data])
+
+    useEffect(() => {
         if (is_patient_deleted?.isSuccess) {
             toast.success(is_patient_deleted?.message?.message)
             dispatch(clear_delete_patient_state())
@@ -142,6 +156,26 @@ const Reception_patient_list = () => {
         }
     }, [is_payment_status_updated])
 
+    const handleDropdownToggle = (e, currentIndex) => {
+        e.stopPropagation();
+        if (index === currentIndex) {
+            setIndex(null);
+            setIsOpen(false);
+        } else {
+            setIndex(currentIndex);
+            setIsOpen(true);
+        }
+    };
+
+    const handleDropdownClose = () => {
+        setIsOpen(false);
+        setIndex(null);
+        setPayment_status_pending(false);
+        setPayment_status_received(false);
+    };
+
+
+
     return (
         <div>
             <div className='wrapper'>
@@ -165,7 +199,7 @@ const Reception_patient_list = () => {
                     </div>
                     <div className='patient_data'>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
-                            {patient_data?.isLoading  ? <tr><td colSpan={9}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
+                            {patient_data?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                                 return (
                                     <tr>
                                         <td className="ps-3">
@@ -185,52 +219,105 @@ const Reception_patient_list = () => {
                                         <td>
                                             <button className="btn_info active">{patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
-                                        {tab === "paymentPending" && <td> <div className="patient_dropdown">
-                                            <Dropdown show={isOpen} onToggle={(isOpen) => setIsOpen(isOpen)} autoClose={false}>
-                                                <Dropdown.Toggle variant="unset">
-                                                    {patient?.payment ? "Received" : "Pending"}
-                                                    <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M0.640229 1.16412L1.93699 0.0239754L9.00011 6.23776C9.11396 6.33733 9.20432 6.45573 9.26598 6.58614C9.32763 6.71656 9.35938 6.85642 9.35938 6.99768C9.35938 7.13893 9.32763 7.2788 9.26598 7.40921C9.20432 7.53963 9.11396 7.65803 9.00011 7.7576L1.93699 13.9746L0.641452 12.8345L7.27069 6.99929L0.640229 1.16412Z" fill="black" />
-                                                    </svg>
-                                                </Dropdown.Toggle>
-
-                                                <Dropdown.Menu>
-                                                    <ul>
-                                                        <Dropdown.Item className="d-flex justify-content-between" onClick={() => {
-                                                            setPayment_status_pending(!payment_status_pending);
-                                                            setPayment_status_received(false);
-                                                        }}>
-                                                            Pending
-                                                            <input type="checkbox" checked={payment_status_pending} readOnly />
-                                                        </Dropdown.Item>
-                                                        <Dropdown.Item className="d-flex justify-content-between" onClick={() => {
-                                                            setPayment_status_received(!payment_status_received);
-                                                            setPayment_status_pending(false);
-                                                        }}>
-                                                            Received
-                                                            <input type="checkbox" checked={payment_status_received} readOnly />
-                                                        </Dropdown.Item>
-                                                        <Dropdown.Item className="d-flex justify-content-between">
-                                                            {!is_payment_status_updated?.isLoading ? (
-                                                                <button className="cmn_btn" onClick={() => handleUpdatePaymentStatus(patient?.id)}>Save</button>
-                                                            ) : (
-                                                                <button className="cmn_btn">
-                                                                    <Spinner animation="border" role="status">
-                                                                        <span className="visually-hidden">Loading...</span>
-                                                                    </Spinner>
+                                        {tab === "paymentPending" && <td>
+                                            <div className="patient_dropdown">
+                                                <Dropdown
+                                                    show={index === i}
+                                                    onToggle={(nextOpenState) => {
+                                                        setIsOpen(nextOpenState);
+                                                        if (!nextOpenState) handleDropdownClose();
+                                                    }}
+                                                    autoClose={false}
+                                                >
+                                                    <Dropdown.Toggle
+                                                        variant="unset"
+                                                        onClick={(e) => handleDropdownToggle(e, i)}
+                                                    >
+                                                        {patient?.payment ? "Received" : "Pending"}
+                                                        <svg
+                                                            width="10"
+                                                            height="14"
+                                                            viewBox="0 0 10 14"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M0.640229 1.16412L1.93699 0.0239754L9.00011 6.23776C9.11396 6.33733 9.20432 6.45573 9.26598 6.58614C9.32763 6.71656 9.35938 6.85642 9.35938 6.99768C9.35938 7.13893 9.32763 7.2788 9.26598 7.40921C9.20432 7.53963 9.11396 7.65803 9.00011 7.7576L1.93699 13.9746L0.641452 12.8345L7.27069 6.99929L0.640229 1.16412Z"
+                                                                fill="black"
+                                                            />
+                                                        </svg>
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        <ul>
+                                                            <Dropdown.Item
+                                                                className="d-flex justify-content-between"
+                                                                onClick={() => {
+                                                                    setPayment_status_pending(true);
+                                                                    setPayment_status_received(false);
+                                                                }}
+                                                            >
+                                                                Pending
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={payment_status_pending}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation(); // Prevents triggering the parent onClick
+                                                                        setPayment_status_pending(true);
+                                                                        setPayment_status_received(false);
+                                                                    }}
+                                                                />
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item
+                                                                className="d-flex justify-content-between"
+                                                                onClick={() => {
+                                                                    setPayment_status_received(true);
+                                                                    setPayment_status_pending(false);
+                                                                }}
+                                                            >
+                                                                Received
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={payment_status_received}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation(); // Prevents triggering the parent onClick
+                                                                        setPayment_status_received(true);
+                                                                        setPayment_status_pending(false);
+                                                                    }}
+                                                                />
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item className="d-flex justify-content-between">
+                                                                {!is_payment_status_updated?.isLoading ? (
+                                                                    <button
+                                                                        className="cmn_btn"
+                                                                        onClick={() => handleUpdatePaymentStatus(patient?.id)}
+                                                                    >
+                                                                        Save
+                                                                    </button>
+                                                                ) : (
+                                                                    <button className="cmn_btn">
+                                                                        <Spinner animation="border" role="status">
+                                                                            <span className="visually-hidden">Loading...</span>
+                                                                        </Spinner>
+                                                                    </button>
+                                                                )}
+                                                                <button
+                                                                    className="cmn_btn border-btn"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDropdownClose();
+                                                                    }}
+                                                                >
+                                                                    Close
                                                                 </button>
-                                                            )}
-                                                            <button className="cmn_btn border-btn" onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setIsOpen(false); // Close dropdown manually
-                                                            }}>Close</button>
-                                                        </Dropdown.Item>
-                                                    </ul>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                                            </Dropdown.Item>
+                                                        </ul>
+                                                    </Dropdown.Menu>
 
-                                        </div>
+                                                </Dropdown>
+                                            </div>
                                         </td>}
+
+
                                         {tab === "healthIssue" && <td>
                                             <div className='health_issue'>
                                                 <div className='tooltip_wrapper'>
