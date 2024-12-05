@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { useLocation } from 'react-router-dom'
 import { SidebarMenuItems } from './SidebarMenu'
 import { Link } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const Sidebar = () => {
+  const [toggle, setToggle] = useState(false)
   const location = useLocation();
   const navigate = useNavigate()
   const { pathname } = location;
@@ -36,7 +37,16 @@ const Sidebar = () => {
 
   return (
     <div className='sidebar_wrapper'>
-      <div className='header d-flex align-itmes-center'>
+      <div className='header d-flex align-items-center gap-2'>
+       {toggle ? <svg onClick={()=>{setToggle(!toggle)}} className='toggle_btn toggleOff'  width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.64016 2.27L7.50016 6.13L11.3402 2.29C11.425 2.19972 11.5272 2.12749 11.6406 2.07766C11.754 2.02783 11.8763 2.00141 12.0002 2C12.2654 2 12.5197 2.10536 12.7073 2.29289C12.8948 2.48043 13.0002 2.73478 13.0002 3C13.0025 3.1226 12.9797 3.24439 12.9333 3.35788C12.8869 3.47138 12.8178 3.57419 12.7302 3.66L8.84016 7.5L12.7302 11.39C12.895 11.5512 12.9916 11.7696 13.0002 12C13.0002 12.2652 12.8948 12.5196 12.7073 12.7071C12.5197 12.8946 12.2654 13 12.0002 13C11.8727 13.0053 11.7456 12.984 11.6268 12.9375C11.508 12.8911 11.4002 12.8204 11.3102 12.73L7.50016 8.87L3.65016 12.72C3.56567 12.8073 3.46473 12.8769 3.35316 12.925C3.2416 12.9731 3.12163 12.9986 3.00016 13C2.73495 13 2.48059 12.8946 2.29306 12.7071C2.10552 12.5196 2.00016 12.2652 2.00016 12C1.99783 11.8774 2.02058 11.7556 2.06701 11.6421C2.11344 11.5286 2.18257 11.4258 2.27016 11.34L6.16016 7.5L2.27016 3.61C2.10535 3.44876 2.0087 3.23041 2.00016 3C2.00016 2.73478 2.10552 2.48043 2.29306 2.29289C2.48059 2.10536 2.73495 2 3.00016 2C3.24016 2.003 3.47016 2.1 3.64016 2.27Z" fill="black"/>
+      </svg>
+      :  
+      <svg onClick={()=>{setToggle(!toggle)}} className='toggle_btn' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 6C4 5.73478 4.10536 5.48043 4.29289 5.29289C4.48043 5.10536 4.73478 5 5 5H19C19.2652 5 19.5196 5.10536 19.7071 5.29289C19.8946 5.48043 20 5.73478 20 6C20 6.26522 19.8946 6.51957 19.7071 6.70711C19.5196 6.89464 19.2652 7 19 7H5C4.73478 7 4.48043 6.89464 4.29289 6.70711C4.10536 6.51957 4 6.26522 4 6ZM4 12C4 11.7348 4.10536 11.4804 4.29289 11.2929C4.48043 11.1054 4.73478 11 5 11H19C19.2652 11 19.5196 11.1054 19.7071 11.2929C19.8946 11.4804 20 11.7348 20 12C20 12.2652 19.8946 12.5196 19.7071 12.7071C19.5196 12.8946 19.2652 13 19 13H5C4.73478 13 4.48043 12.8946 4.29289 12.7071C4.10536 12.5196 4 12.2652 4 12ZM5 17C4.73478 17 4.48043 17.1054 4.29289 17.2929C4.10536 17.4804 4 17.7348 4 18C4 18.2652 4.10536 18.5196 4.29289 18.7071C4.48043 18.8946 4.73478 19 5 19H19C19.2652 19 19.5196 18.8946 19.7071 18.7071C19.8946 18.5196 20 18.2652 20 18C20 17.7348 19.8946 17.4804 19.7071 17.2929C19.5196 17.1054 19.2652 17 19 17H5Z" fill="black"/>
+      </svg>
+      }
+
         <div className='flex-grow-1'>
           <h4 className='mb-0'>{getGreeting()},{localStorage.getItem('user_role')}</h4>
           <p className='quote mb-0'>Happiness is inside, let it out!</p>
@@ -49,8 +59,11 @@ const Sidebar = () => {
 
         </div>
       </div>
-      <div className='sidbar_inner'>
+      <div className={toggle && 'side_bar'}>
+      <div className={toggle ? 'sidbar_inner mobile_sidebar' : 'sidbar_inner'}>
+        
         <div className='user_info'>
+
           <img src={UserImage} alt="user image" />
           <h6>JuviveMD</h6>
           <p>Physiotherapy</p>
@@ -61,14 +74,14 @@ const Sidebar = () => {
             const isActive = menus.path === currentPath;
             if (menus.role === "ADMIN" && localStorage?.getItem("user_role") === "ADMIN") {
               return (
-                <li key={index}>
+                <li key={index} onClick={()=>{setToggle(!toggle)}}>
                   <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
             }
             if (menus.role === "TRAINER" && localStorage?.getItem("user_role") === "TRAINER") {
               return (
-                <li key={index}>
+                <li key={index} onClick={()=>{setToggle(!toggle)}}>
                   <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
@@ -76,7 +89,7 @@ const Sidebar = () => {
             if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
               console.log("Path:", menus.path, "Split Location:", "/" + splitLocation[1]);
               return (
-                <li key={index}>
+                <li key={index} onClick={()=>{setToggle(!toggle)}}>
                   <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
                 </li>
               )
@@ -94,6 +107,7 @@ const Sidebar = () => {
 
           </li>
         </ul>
+      </div>
       </div>
     </div>
   )

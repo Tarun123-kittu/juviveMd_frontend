@@ -1,10 +1,7 @@
 .fade.cmn_modal.modal {
     background: #f9fafbd4;
 }
-.cmn_head h2 {
-    font-size: 24px;
-    margin: 0;
-}
+
 .modal_head svg {
     width: 15px;
 }
@@ -83,7 +80,9 @@ span.remove_file {
 .image_req {
     padding-left: 3rem;
 }
-
+.fade.cmn_modal {
+    padding-left: 0px !important;
+}
 .staff-user-image {
     width: 100px;
     height: 100px;
@@ -215,4 +214,21 @@ max-width: 450px;
 
 .replaces_trainer .trainer_delete {
     font-size: 14px;
+}
+@media(max-width:1440px){
+    .deletmodal_heading{
+        font-size: 20px;
+    }
+    .cmn_modal .modal-content {
+       padding: 1.5rem;
+    }
+}
+@media(max-width:1024px){
+    .deletmodal_heading{
+        margin-top: 10px;
+        font-size: 20px;
+    }
+    .cmn_modal .modal-content {
+        padding: 1rem;
+     }
 }
