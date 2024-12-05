@@ -1,9 +1,12 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import './NotFound.css' // Import the CSS file
 
 const NotFound = () => {
     const navigate = useNavigate()
+    useEffect(() => {
+        navigate(-1)
+    },[])
     return (
         <div className="not-found-container">
             <h1 className="message">

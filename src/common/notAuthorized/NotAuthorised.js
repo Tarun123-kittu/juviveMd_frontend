@@ -1,9 +1,12 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
-import './NotAuthorized.css' // Import the CSS file
+import './NotAuthorized.css' 
 
 const NotAuthorised = () => {
     const navigate = useNavigate()
+      useEffect(() => {
+        navigate(-1)
+    },[])
     return (
         <div className="not-authorized-container">
             <h1 className="message">
