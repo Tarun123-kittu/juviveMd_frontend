@@ -8,10 +8,10 @@ import { Col,Row } from 'react-bootstrap'
 const login = () => {
   return (
     <Row className='m-0'>
-      <Col lg={6} className='p-0'>
+      <Col className='p-0 mobile_media'>
        <LoginSide/> 
       </Col>
-      <Col lg={6} className='p-0'>
+      <Col className='p-0'>
       <LoginComponent/>
       </Col>
     </Row>
