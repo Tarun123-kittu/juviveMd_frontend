@@ -193,7 +193,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                   <Form.Control
                     type="text"
                     name="height"
-                    placeholder={height_unit === "cm" ? "178 cm" : "5.8 feet"}
+                    placeholder={height_unit === "cm" ? "178 " : "5.8 "}
                     value={formik.values.height}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

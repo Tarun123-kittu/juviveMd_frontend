@@ -173,8 +173,8 @@ const Reception_patient_list = () => {
         setPayment_status_pending(false);
         setPayment_status_received(false);
     };
-    
-    
+
+
 
     return (
         <div>
@@ -252,7 +252,7 @@ const Reception_patient_list = () => {
                                                             <Dropdown.Item
                                                                 className="d-flex justify-content-between"
                                                                 onClick={() => {
-                                                                    setPayment_status_pending((prevState) => !prevState);
+                                                                    setPayment_status_pending(true);
                                                                     setPayment_status_received(false);
                                                                 }}
                                                             >
@@ -260,8 +260,9 @@ const Reception_patient_list = () => {
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={payment_status_pending}
-                                                                    onClick={() => {
-                                                                        setPayment_status_pending((prevState) => !prevState);
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation(); // Prevents triggering the parent onClick
+                                                                        setPayment_status_pending(true);
                                                                         setPayment_status_received(false);
                                                                     }}
                                                                 />
@@ -269,7 +270,7 @@ const Reception_patient_list = () => {
                                                             <Dropdown.Item
                                                                 className="d-flex justify-content-between"
                                                                 onClick={() => {
-                                                                    setPayment_status_received((prevState) => !prevState);
+                                                                    setPayment_status_received(true);
                                                                     setPayment_status_pending(false);
                                                                 }}
                                                             >
@@ -277,8 +278,9 @@ const Reception_patient_list = () => {
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={payment_status_received}
-                                                                    onClick={() => {
-                                                                        setPayment_status_received((prevState) => !prevState);
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation(); // Prevents triggering the parent onClick
+                                                                        setPayment_status_received(true);
                                                                         setPayment_status_pending(false);
                                                                     }}
                                                                 />
@@ -310,6 +312,7 @@ const Reception_patient_list = () => {
                                                             </Dropdown.Item>
                                                         </ul>
                                                     </Dropdown.Menu>
+
                                                 </Dropdown>
                                             </div>
                                         </td>}

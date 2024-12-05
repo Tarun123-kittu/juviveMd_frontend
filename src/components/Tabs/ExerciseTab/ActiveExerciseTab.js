@@ -137,9 +137,10 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                             Approve
                             <input
                               type="checkbox"
-                              checked={status == 1}
-                              onClick={() => {
-                                setStatus(1); // Ensure consistent logic
+                              checked={status === 1}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevents triggering the parent's onClick
+                                setStatus(1);
                                 setIndex(i);
                               }}
                             />
@@ -156,8 +157,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                             Reject
                             <input
                               type="checkbox"
-                              checked={status == 0}
-                              onClick={() => {
+                              checked={status === 0}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevents triggering the parent's onClick
                                 setStatus(0);
                                 setIndex(i);
                               }}
@@ -194,6 +196,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         </Dropdown.Item>
                       </ul>
                     </Dropdown.Menu>
+
                   )}
                 </Dropdown>
 
