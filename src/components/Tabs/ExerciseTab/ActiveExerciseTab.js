@@ -107,7 +107,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                   {localStorage.getItem('user_role') === "ADMIN" && index === i && (
                     <Dropdown.Menu>
                       <ul>
-                        <Dropdown.Item
+                        {tab !== "active" && <Dropdown.Item
                           onClick={() => {
                             setStatus(1);
                             setIndex(i);
@@ -116,8 +116,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         >
                           Approve
                           <input type="checkbox" checked={status === 1} />
-                        </Dropdown.Item>
-                        <Dropdown.Item
+                        </Dropdown.Item>}
+                        {tab !== "rejected" && <Dropdown.Item
                           onClick={() => {
                             setStatus(0);
                             setIndex(i);
@@ -126,7 +126,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
                         >
                           Reject
                           <input type="checkbox" checked={status === 0} />
-                        </Dropdown.Item>
+                        </Dropdown.Item>}
                         <Dropdown.Item className="d-flex justify-content-between">
                           {!is_status_updated?.isLoading ? (
                             <button
