@@ -52,6 +52,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
         setSelected_health_issue([])
         setWorkout_frequency()
         setStep_four_additional_information("")
+        setStep(1)
     }
 
     useEffect(() => {
