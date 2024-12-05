@@ -209,3 +209,10 @@ h5.step_heading {
 .authWrapper.add_exercise textarea.form-control {
     height: unset;
 }
+.cmn_modal.replaces_trainer .modal-dialog{
+max-width: 450px;
+}
+
+.replaces_trainer .trainer_delete {
+    font-size: 14px;
+}

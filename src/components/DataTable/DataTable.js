@@ -5,7 +5,7 @@ const DataTable = ({ children, columns, hideAction,hasCheckbox }) => {
   console.log(hideAction);
   return (
     <div className="cmn_table dark_btn dashboard_table">
-      <Table>
+      <Table responsive>
         <thead>
           <tr>
         {/* {hasCheckbox && (

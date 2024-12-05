@@ -12,6 +12,7 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--bs-white);
+    white-space: nowrap;
 }
 .cmn_table table thead tr{
     border-bottom: 20px solid var(--bs-white);

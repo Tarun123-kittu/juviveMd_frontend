@@ -72,3 +72,13 @@ border-color: var(--primary-color);
     width: 480px;
     margin: auto;
 }
+
+@media(max-width:1024px){
+    .mobile_media{
+display: none;
+    }
+    .authWidth {
+        margin: auto;
+        padding: 0px 30px;
+    }
+}
