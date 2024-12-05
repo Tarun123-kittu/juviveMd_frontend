@@ -19,6 +19,7 @@ import { update_patient_payment_api, clear_patient_payment_update_state } from '
 import Spinner from 'react-bootstrap/Spinner';
 import { calculateAge } from '../../common/calculateAge/calculateAge';
 import { formatDate } from '../../common/formatDate/formatDate';
+import Nodata from '../StaticComponents/Nodata';
 
 const Reception_patient_list = () => {
     const dispatch = useDispatch()
@@ -27,6 +28,7 @@ const Reception_patient_list = () => {
     const [showEditPateintModal, setshowEditPateintModal] = useState(false)
     const [username, setUsername] = useState()
     const [goal, setGoal] = useState()
+    const [isOpen, setIsOpen] = useState(false);
     const [date, setDate] = useState()
     const [gender, setGender] = useState()
     const [status, setStatus] = useState()
@@ -163,7 +165,7 @@ const Reception_patient_list = () => {
                     </div>
                     <div className='patient_data'>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
-                            {patient_data?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><img className='text-center w-25 m-auto mt-5 mb-5' src={No_data_found} alt="" /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
+                            {patient_data?.isLoading  ? <tr><td colSpan={9}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                                 return (
                                     <tr>
                                         <td className="ps-3">
@@ -184,31 +186,49 @@ const Reception_patient_list = () => {
                                             <button className="btn_info active">{patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
                                         {tab === "paymentPending" && <td> <div className="patient_dropdown">
-                                            <Dropdown>
+                                            <Dropdown show={isOpen} onToggle={(isOpen) => setIsOpen(isOpen)} autoClose={false}>
                                                 <Dropdown.Toggle variant="unset">
                                                     {patient?.payment ? "Received" : "Pending"}
                                                     <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M0.640229 1.16412L1.93699 0.0239754L9.00011 6.23776C9.11396 6.33733 9.20432 6.45573 9.26598 6.58614C9.32763 6.71656 9.35938 6.85642 9.35938 6.99768C9.35938 7.13893 9.32763 7.2788 9.26598 7.40921C9.20432 7.53963 9.11396 7.65803 9.00011 7.7576L1.93699 13.9746L0.641452 12.8345L7.27069 6.99929L0.640229 1.16412Z" fill="black" />
                                                     </svg>
-
                                                 </Dropdown.Toggle>
 
                                                 <Dropdown.Menu>
                                                     <ul>
-                                                        {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
-                                                        <Dropdown.Item className='d-flex justify-content-between'>Pending <input type="checkbox" checked={patient?.payment || payment_status_pending} onChange={() => { setPayment_status_pending(!payment_status_pending); setPayment_status_received(false) }} /></Dropdown.Item>
-                                                        <Dropdown.Item className='d-flex justify-content-between'>Recieved  <input type="checkbox" checked={patient?.payment || payment_status_received} onChange={() => { setPayment_status_received(!payment_status_received); setPayment_status_pending(false) }} /></Dropdown.Item>
-                                                        <Dropdown.Item className='d-flex justify-content-between'>
-                                                            {!is_payment_status_updated?.isLoading ? <button className='cmn_btn' onClick={() => handleUpdatePaymentStatus(patient?.id)}>Save</button>
-                                                                :
-                                                                <button className='cmn_btn'> <Spinner animation="border" role="status">
-                                                                    <span className="visually-hidden">Loading...</span>
-                                                                </Spinner></button>}
-                                                            <button className='cmn_btn border-btn'>Close</button>
+                                                        <Dropdown.Item className="d-flex justify-content-between" onClick={() => {
+                                                            setPayment_status_pending(!payment_status_pending);
+                                                            setPayment_status_received(false);
+                                                        }}>
+                                                            Pending
+                                                            <input type="checkbox" checked={payment_status_pending} readOnly />
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item className="d-flex justify-content-between" onClick={() => {
+                                                            setPayment_status_received(!payment_status_received);
+                                                            setPayment_status_pending(false);
+                                                        }}>
+                                                            Received
+                                                            <input type="checkbox" checked={payment_status_received} readOnly />
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item className="d-flex justify-content-between">
+                                                            {!is_payment_status_updated?.isLoading ? (
+                                                                <button className="cmn_btn" onClick={() => handleUpdatePaymentStatus(patient?.id)}>Save</button>
+                                                            ) : (
+                                                                <button className="cmn_btn">
+                                                                    <Spinner animation="border" role="status">
+                                                                        <span className="visually-hidden">Loading...</span>
+                                                                    </Spinner>
+                                                                </button>
+                                                            )}
+                                                            <button className="cmn_btn border-btn" onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setIsOpen(false); // Close dropdown manually
+                                                            }}>Close</button>
                                                         </Dropdown.Item>
                                                     </ul>
                                                 </Dropdown.Menu>
                                             </Dropdown>
+
                                         </div>
                                         </td>}
                                         {tab === "healthIssue" && <td>

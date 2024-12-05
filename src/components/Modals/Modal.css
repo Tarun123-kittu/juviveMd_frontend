@@ -12,7 +12,7 @@ button.cmn_btn {
     background: var(--primary-color);
     color: var(--bs-white);
     font-weight: 500;
-    padding: 0px 0.8rem;
+    padding: 0px 0.8rem; 
     font-size: 14px;
 }
 
@@ -20,6 +20,12 @@ button.cmn_btn {
     width: 100%;
     height: 100%;
     border-radius: 3px;
+}
+
+button.btn.cmn_btn:disabled {
+    background: #ddd;
+    pointer-events: unset;
+    cursor: not-allowed;
 }
 
 .fade.cmn_modal.modal {

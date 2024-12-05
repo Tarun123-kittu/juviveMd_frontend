@@ -65,7 +65,7 @@ const TrainerExercise = () => {
           <div className="position-relative">
             <div className="d-flex gap-2 position-absolute end-0">
               <button
-                className="cmn_btn"
+                className="cmn_btn filter_btn"
                 onClick={() => {
                   setshowAddExerciseModal(true);
                 }}

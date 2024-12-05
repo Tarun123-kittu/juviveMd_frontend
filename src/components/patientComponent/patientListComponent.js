@@ -11,6 +11,7 @@ import Pagination from "../../common/pagination/Pagination"
 import { get_trainers } from '../../redux/slices/commonDataSlice/getTrainersSlice';
 import { calculateAge } from '../../common/calculateAge/calculateAge';
 import { formatDate } from '../../common/formatDate/formatDate';
+import Nodata from '../StaticComponents/Nodata';
 
 const PatientListComponent = () => {
     const dispatch = useDispatch()
@@ -169,7 +170,7 @@ const PatientListComponent = () => {
                 <div className={`${toggleFilter && "blur_bg"}`}>
 
                 <DataTable columns={columns}>
-                    {patient_list?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_list?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><img className='text-center w-25 m-auto mt-5 mb-5' src={No_data_found} alt="" /> </td></tr> : Array?.isArray(patientData) && patientData?.map((list, i) => {
+                    {patient_list?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_list?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array?.isArray(patientData) && patientData?.map((list, i) => {
                         return (
                             <tr>
                                 <td className="ps-3">

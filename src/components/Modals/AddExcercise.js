@@ -26,12 +26,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setshowAddExerciseModal(false);
   };
 
-  const validationSchema = Yup.object().shape({
-    exerciseName: Yup.string()
-      .oneOf(exercise_category || [], "Exercise name must be one of the allowed categories")
-      .required("Exercise name is required"),
-  });
-
   const initialValues = {
     exerciseName: "",
     exerciseType: "",
@@ -87,23 +81,23 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   const handleExerciseTypeChange = (e, setFieldValue) => {
     const value = e.target.value;
-    setExerciseType(value); // Set the exercise type state
-    setFieldValue("exerciseType", value); // Update Formik field value
+    setExerciseType(value);
+    setFieldValue("exerciseType", value);
   };
   const handleExerciseNameChange = (e, setFieldValue) => {
     const value = e.target.value;
-    setExerciseName(value); // Set the exercise type state
-    setFieldValue("exerciseName", value); // Update Formik field value
+    setExerciseName(value);
+    setFieldValue("exerciseName", value);
   };
   const handleExerciseVideoChange = (e, setFieldValue) => {
     const value = e.target.value;
-    setExerciseVideo(value); // Set the exercise type state
-    setFieldValue("exerciseVideo", value); // Update Formik field value
+    setExerciseVideo(value);
+    setFieldValue("exerciseVideo", value);
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
     const value = e.target.value;
-    setExerciseDescription(value); // Set the exercise type state
-    setFieldValue("exerciseDescription", value); // Update Formik field value
+    setExerciseDescription(value);
+    setFieldValue("exerciseDescription", value);
   };
 
   useEffect(() => {
@@ -219,14 +213,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
               </Row>
               <div className="text-end mt-3">
                 <div>
-                  {/* Conditionally render buttons based on isLoading */}
                   {!is_exercise_created?.isLoading ? (
                     <>
                       <button
                         type="submit"
-                        onClick={() => setLoading(false)} // Send for Approval logic
+                        onClick={() => setLoading(false)} 
                         disabled={draft}
                         className="btn cmn_btn"
+
                       >
                         Send For Approval
                       </button>
@@ -234,7 +228,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         type="submit"
                         onClick={() => {
                           setDraft(true);
-                          setLoading(true); // Save as Draft logic
+                          setLoading(true); 
                         }}
                         className="btn cmn_btn ms-2"
                       >

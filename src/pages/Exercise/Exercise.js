@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import ActiveExerciseTab from "../../components/Tabs/ExerciseTab/ActiveExerciseTab";
 
+
 const Exercise = () => {
   const dispatch = useDispatch();
   const [toggleFilter, setToggleFilter] = useState(false);

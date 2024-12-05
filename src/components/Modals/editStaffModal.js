@@ -167,7 +167,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                             </div>
                             <div
                                 className="upload_image"
-                                onClick={() => document.getElementById('fileInput').click()} 
                                 style={{ cursor: 'pointer' }}
                             >
                                 <div className="upload_file position-relative">

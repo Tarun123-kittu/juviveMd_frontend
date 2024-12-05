@@ -11,6 +11,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { Formik, Field, ErrorMessage, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
+import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
 
 const AddUserModal = ({ show, setShow }) => {
     const dispatch = useDispatch();
@@ -83,7 +84,9 @@ const AddUserModal = ({ show, setShow }) => {
         if (is_staff_created?.isSuccess) {
             toast.success(is_staff_created?.message?.message);
             dispatch(get_all_staff({ page: 1 }));
+            dispatch(get_trainers())
             dispatch(clear_create_staff_state());
+            setImageData({ image: "", imageView: "" })
             handleClose();
         }
         if (is_staff_created?.isError) {

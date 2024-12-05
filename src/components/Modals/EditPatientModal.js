@@ -56,6 +56,8 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
         dispatch(clear_selected_patient_state())
         setStep(1)
         setPatientId(null)
+        setStepThreeFullData()
+        setStepOneFullData()
     }
 
     useEffect(() => {
@@ -119,6 +121,10 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
             dispatch(clear_update_patient_state())
             dispatch(clear_selected_patient_state())
             handleClose()
+            setStep_four_additional_information()
+            setWorkout_frequency()
+            setStepThreeFullData()
+            setStepOneFullData()
         }
         if (is_patient_updated?.isError) {
             toast.error(is_patient_updated?.error?.message)

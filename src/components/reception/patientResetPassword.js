@@ -14,7 +14,8 @@ const PatientResetPassword = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { token } = useParams();
-      const [data, setData] = useState(false)
+    const [data, setData] = useState(false)
+    const [password_created, setPassword_created] = useState(false)
 
     const resetPasswordState = useSelector((store) => store.PATIENT_RESET_PASSWORD);
     const is_token_valid = useSelector((store) => store.PATIENT_VALIDATE_TOKEN);
@@ -36,7 +37,7 @@ const PatientResetPassword = () => {
         if (resetPasswordState?.isSuccess) {
             toast.success(resetPasswordState?.message?.message);
             dispatch(clear_patient_reset_password_state());
-            navigate("/");
+            setPassword_created(true)
         }
         if (resetPasswordState?.isError) {
             toast.error(resetPasswordState?.error?.message);
@@ -46,17 +47,17 @@ const PatientResetPassword = () => {
 
     useEffect(() => {
         if (is_token_valid?.isSuccess) {
-          setData(is_token_valid?.message?.data)
-          if(!is_token_valid?.message?.data){
-            toast.error("Your token has been expired")
-          }
-          dispatch(clear_patient_validate_token_state())
+            setData(is_token_valid?.message?.data)
+            if (!is_token_valid?.message?.data) {
+                toast.error("Your token has been expired")
+            }
+            dispatch(clear_patient_validate_token_state())
         }
-        if(is_token_valid?.isError){
-          toast.error("This Link has been expired")
+        if (is_token_valid?.isError) {
+            toast.error("This Link has been expired")
         }
-       
-      }, [is_token_valid])
+
+    }, [is_token_valid])
 
     return (
         <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
@@ -76,57 +77,66 @@ const PatientResetPassword = () => {
                 >
                     {({ isSubmitting }) => (
                         <Form>
-                            <div className="mb-2">
-                                <label htmlFor="password">Create new password</label>
-                                <div className="position-relative password_icon">
-                                    <Field
-                                        type="password"
-                                        name="password"
-                                        placeholder="Enter your new password"
-                                        className="form-control"
-                                        disabled={!data}
-                                    />
-                                    <ErrorMessage
-                                        name="password"
-                                        component="div"
-                                        className="text-danger"
-                                    />
-                                </div>
-                            </div>
+                            {
+                                !password_created ? (
+                                    <>
+                                        <div className="mb-2">
+                                            <label htmlFor="password">Create new password</label>
+                                            <div className="position-relative password_icon">
+                                                <Field
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder="Enter your new password"
+                                                    className="form-control"
+                                                    disabled={!data}
+                                                />
+                                                <ErrorMessage
+                                                    name="password"
+                                                    component="div"
+                                                    className="text-danger"
+                                                />
+                                            </div>
+                                        </div>
 
-                            <div className="mb-2">
-                                <label htmlFor="confirmPassword">Confirm password</label>
-                                <div className="position-relative password_icon">
-                                    <Field
-                                        type="password"
-                                        name="confirmPassword"
-                                        placeholder="Confirm your password"
-                                        className="form-control"
-                                        disabled={!data}
-                                    />
-                                    <ErrorMessage
-                                        name="confirmPassword"
-                                        component="div"
-                                        className="text-danger"
-                                    />
-                                </div>
-                            </div>
+                                        <div className="mb-2">
+                                            <label htmlFor="confirmPassword">Confirm password</label>
+                                            <div className="position-relative password_icon">
+                                                <Field
+                                                    type="password"
+                                                    name="confirmPassword"
+                                                    placeholder="Confirm your password"
+                                                    className="form-control"
+                                                    disabled={!data}
+                                                />
+                                                <ErrorMessage
+                                                    name="confirmPassword"
+                                                    component="div"
+                                                    className="text-danger"
+                                                />
+                                            </div>
+                                        </div>
 
-                            <div className="mt-3">
-                                <button
-                                    type="submit"
-                                    className="cmn_btn w-100"
-                                    disabled={!data}
-                                >
-                                    {!resetPasswordState?.isLoading ? (
-                                        "Change Password"
-                                    ) : (
-                                        <Spinner animation="border" role="status">
-                                            <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                    )}
-                                </button>
-                            </div>
+                                        <div className="mt-3">
+                                            <button
+                                                type="submit"
+                                                className="cmn_btn w-100"
+                                                disabled={!data}
+                                            >
+                                                {!resetPasswordState?.isLoading ? (
+                                                    "Change Password"
+                                                ) : (
+                                                    <Spinner animation="border" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </Spinner>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <h1>Your password has been created</h1>
+                                )
+                            }
+
                         </Form>
                     )}
                 </Formik>

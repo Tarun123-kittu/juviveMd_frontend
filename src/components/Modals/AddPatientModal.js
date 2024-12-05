@@ -49,6 +49,8 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
         setStepOneFullData()
         setIs_health_issue(false)
         setSelected_health_issue([])
+        setWorkout_frequency()
+        setStep_four_additional_information("")
     }
 
     useEffect(() => {
@@ -102,6 +104,8 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 setSelected_health_issue("")
                 dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
+                setWorkout_frequency()
+                setStep_four_additional_information("")
                 
             }
             if (step === 4) {
@@ -115,6 +119,8 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 dispatch(get_patients_list({ page: 1, tab: tab }))
                 dispatch(clear_patient_onboarding_state())
                 handleClose()
+                setWorkout_frequency()
+                setStep_four_additional_information("")
 
             }
         }

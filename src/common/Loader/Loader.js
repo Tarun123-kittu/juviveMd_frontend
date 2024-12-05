@@ -1,10 +1,12 @@
-import React from 'react' 
-import LoaderImage from "../../Images/app_loader.gif"
+import React from 'react'
+import "./loader.css"
 
 const Loader = () => {
   return (
     <div className='text-center loader_img'>
-        <img className='' src={LoaderImage} alt="Loader" />
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
     </div>
   )
 }
