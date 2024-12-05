@@ -1,0 +1,45 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Centering the content */
+.not-found-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+/* Styling the message */
+.message {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Button styling */
+.go-home-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.go-home-button:hover {
+    background-color: #218838;
+}
+
+.go-home-button:focus {
+    outline: none;
+}

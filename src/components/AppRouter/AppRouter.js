@@ -21,6 +21,7 @@ import Settings from "../../pages/settings/Settings";
 import TrainerPatients from "../Trainer/TrainerPatients";
 import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 import ReceptionMessages from "../reception/ReceptionMessages";
+import NotFound from "../../common/notFound/NotFound";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -169,6 +170,10 @@ const AppRouter = () => {
                             <NotAuthorised />
                     )
                 },
+                {
+                    path: "*", 
+                    element: <NotFound />, 
+                  },
             ]
         }
     ])
