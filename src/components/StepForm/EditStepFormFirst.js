@@ -16,7 +16,12 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     tel: Yup.string()
       .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
       .required("Contact number is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Invalid email address"
+      )
+      .required("Email is required"),
     date: Yup.date()
       .max(new Date(), "Date of birth cannot be in the future")
       .required("Date of birth is required"),
@@ -27,11 +32,11 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     goal: Yup.string().required("Please select a goal").oneOf(goal, `Exercise name must be one of: ${goal.join(", ")}`),
     gender: Yup.string().required("Please select a gender").oneOf(gender, `Gender name must be one of: ${gender.join(", ")}`),
     trainer: Yup.string()
-    .required("Please select a trainer")
-    .oneOf(
-      trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
-      `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
-    ),
+      .required("Please select a trainer")
+      .oneOf(
+        trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
+        `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
+      ),
   });
 
   // Formik setup
@@ -57,7 +62,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
 
   return loading ? <Loader /> : (
     <>
-    <h5 className="step_heading pt-3">Edit Personal Details</h5>
+      <h5 className="step_heading pt-3">Edit Personal Details</h5>
       <Form className="authWrapper" onSubmit={formik.handleSubmit}>
         <Row>
           <Col lg={4}>

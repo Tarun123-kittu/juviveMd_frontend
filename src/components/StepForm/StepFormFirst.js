@@ -14,7 +14,12 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
     tel: Yup.string()
       .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
       .required("Contact number is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string()
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Invalid email address"
+      )
+      .required("Email is required"),
     date: Yup.date()
       .max(new Date(), "Date of birth cannot be in the future")
       .required("Date of birth is required"),
@@ -239,8 +244,8 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                   </button>
                   <button
                     type="button"
-                    onClick={() => setWeight_unit("lb")}
-                    className={`unit-btn ${weight_unit === "lb" ? "active" : ""}`}
+                    onClick={() => setWeight_unit("lbs")}
+                    className={`unit-btn ${weight_unit === "lbs" ? "active" : ""}`}
                   >
                     Lbs
                   </button>
