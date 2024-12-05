@@ -249,9 +249,9 @@ const AddUserModal = ({ show, setShow }) => {
                                 </Col>
                                 <Col lg={12}>
                                     <Form.Group className="mb-2">
-                                        <Form.Label>Role</Form.Label>
+                                        <Form.Label>Select Role</Form.Label>
                                         <Field as="select" name="role" className="form-control">
-                                            <option value="">Select Role</option>
+                                            <option>  </option>
                                             <option value="RECEPTIONIST">Receptionist</option>
                                             <option value="TRAINER">Trainer</option>
                                         </Field>

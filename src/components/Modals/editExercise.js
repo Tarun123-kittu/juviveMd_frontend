@@ -180,7 +180,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             as="select"
                                             name="exerciseType"
                                             className="form-control"
-                                            disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                            disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
                                             onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                                         >
                                             <option value="">Select exercise type</option>
@@ -200,7 +200,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 accept="image/png, image/jpg, image/jpeg"
                                                 onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
-                                                disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
 
                                             />
                                             <img
@@ -222,7 +222,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseName"
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
                                                     onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -235,7 +235,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseVideo"
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
                                                     onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -249,7 +249,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseDescription"
                                                     placeholder="Enter description"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
                                                     onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -257,17 +257,16 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                             </Row>
-                            {localStorage?.getItem('user_role') === "TRAINER" && (
+                            {localStorage?.getItem('user_role') === "TRAINER" && tab !== "active" && (
                                 <div className="text-end mt-3">
                                     {!is_exercise_updated?.isLoading ? (
                                         <>
-                                            {/* Send For Approval Button */}
                                             <button
                                                 type="submit"
                                                 disabled={draft}
                                                 className="btn cmn_btn"
                                             >
-                                                Send For Approval
+                                                {tab === "approvalRequest" ? "Update" : "Send For Approval"}
                                             </button>
 
                                             {/* Edit As Draft Button */}

@@ -26,6 +26,7 @@ const Exercise = () => {
   useEffect(() => {
     if (common_data?.isSuccess) {
       setExercise_category(common_data?.data?.data?.exercise_category);
+      setToggleFilter(false)
     }
   }, [common_data]);
 
