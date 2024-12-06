@@ -8,11 +8,30 @@
     text-align: center;
 }
 
-.pose_image img {
+/* .pose_image img {
     width: 60%;
     margin: auto;
+} */
+/* .pose_image {
+    min-height: 300px;
+} */
+ul.exercise_status .patient_dropdown button.btn {
+    border: unset !important;
+    justify-content: end;
+    font-size: 14px;
+    color: #404040;
 }
-
+ul.exercise_status h5 {
+    font-size: 16px;
+}
+ul.exercise_status p {
+    font-size: 14px;
+}
+.pose_image img {
+    width: 100%;
+    border-radius: 5px;
+    height: 100%;
+}
 .exercise_heading {
     font-size: 17px;
     font-weight: 600;
@@ -27,4 +46,11 @@ ul.exercise_status li {
 }
 ul.exercise_status button.btn {
     padding-top: 0;
+}
+li.table {
+    display: flex;
+    justify-content: space-between;
+}
+.exercise_heading {
+    font-size: 20px;
 }

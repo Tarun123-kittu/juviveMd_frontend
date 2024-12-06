@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleExercise";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../common/Loader/Loader";
+import "./Exercise.css";
 const ExerciseView = () => {
   const location = useLocation()
   const { id } = location?.state ? location?.state : location
@@ -36,8 +37,8 @@ const ExerciseView = () => {
         <div className="cmn_bg_wrapper">
           <Row className="m-0 ">
             <Col lg={6} className="ps-0 pe-4">
-              <div className="pose_image">
-                <img src={exercise_data?.imageUrl || PoseImage} alt="Exercise Image" />
+              <div className="pose_image text-center">
+                <img className="img-fluid m-auto" src={exercise_data?.imageUrl || PoseImage} alt="Exercise Image" />
               </div>
               <h4 className="exercise_heading text-center mt-2">Image</h4>
               <ul className="exercise_status mt-5">

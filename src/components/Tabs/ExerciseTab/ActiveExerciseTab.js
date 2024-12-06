@@ -84,7 +84,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
               <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' /></td>
               <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
-              <td> <div className='patient_dropdown w-100'>
+              <td className={(localStorage.getItem("user_role") !== "ADMIN" && index !== i) && "active" &&'nodropdown'}> <div className='patient_dropdown w-100'>
                 <Dropdown
                   show={isOpen}
                   onToggle={(nextOpenState) => {
@@ -136,10 +136,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
                               setStatus(1);
                               setIndex(i);
                             }}
-                            className="d-flex justify-content-between"
+                            className="d-flex gap-2"
                           >
-                            Approve
-                            <input
+                             <input
                               type="checkbox"
                               checked={status === 1}
                               onClick={(e) => {
@@ -148,6 +147,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
                                 setIndex(i);
                               }}
                             />
+                            Approve
+                           
                           </Dropdown.Item>
                         )}
                         {tab !== "rejected" && (
@@ -156,9 +157,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
                               setStatus(0);
                               setIndex(i);
                             }}
-                            className="d-flex justify-content-between"
+                            className="d-flex gap-2"
                           >
-                            Reject
                             <input
                               type="checkbox"
                               checked={status === 0}
@@ -168,6 +168,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
                                 setIndex(i);
                               }}
                             />
+                            Reject
                           </Dropdown.Item>
                         )}
                         <Dropdown.Item className="d-flex justify-content-between">

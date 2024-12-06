@@ -270,14 +270,13 @@ const Reception_patient_list = () => {
                                                     <Dropdown.Menu>
                                                         <ul>
                                                             <Dropdown.Item
-                                                                className="d-flex justify-content-between"
+                                                                className="d-flex gap-2"
                                                                 onClick={() => {
                                                                     setPayment_status_pending(true);
                                                                     setPayment_status_received(false);
                                                                 }}
                                                             >
-                                                                Pending
-                                                                <input
+                                                                 <input
                                                                     type="checkbox"
                                                                     checked={payment_status_pending}
                                                                     onClick={(e) => {
@@ -286,15 +285,17 @@ const Reception_patient_list = () => {
                                                                         setPayment_status_received(false);
                                                                     }}
                                                                 />
+                                                                Pending
+                                                               
                                                             </Dropdown.Item>
                                                             <Dropdown.Item
-                                                                className="d-flex justify-content-between"
+                                                                className="d-flex gap-2"
                                                                 onClick={() => {
                                                                     setPayment_status_received(true);
                                                                     setPayment_status_pending(false);
                                                                 }}
                                                             >
-                                                                Received
+                                                                
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={payment_status_received}
@@ -304,6 +305,7 @@ const Reception_patient_list = () => {
                                                                         setPayment_status_pending(false);
                                                                     }}
                                                                 />
+                                                                Received
                                                             </Dropdown.Item>
                                                             <Dropdown.Item className="d-flex justify-content-between">
                                                                 {!is_payment_status_updated?.isLoading ? (
