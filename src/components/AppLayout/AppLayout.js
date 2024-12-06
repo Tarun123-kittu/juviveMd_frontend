@@ -10,7 +10,6 @@ const AppLayout = () => {
   const params = useParams();
   const { token } = params;
 
-  // Check if the current route is unprotected
   const isUnprotectedRoute = 
     unProtectedUrls.some((url) => 
       url.includes(":token") 
@@ -18,10 +17,7 @@ const AppLayout = () => {
         : pathname === url
     );
 
-  // If the route is not unprotected, it's a protected route
   const isProtectedRoute = !isUnprotectedRoute;
-
-  console.log({ isProtectedRoute, pathname });
 
   return (
     <>
@@ -38,13 +34,3 @@ const AppLayout = () => {
 };
 
 export default AppLayout;
-
-// // Unprotected URLs configuration
-// export const unProtectedUrls = [
-//   "/login",
-//   "/",
-//   "/sign-up",
-//   "/reset-password/:token",
-//   "/forgot-password",
-//   "/patient/reset-password/:token"
-// ];

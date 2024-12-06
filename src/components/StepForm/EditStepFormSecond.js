@@ -58,7 +58,6 @@ const EditStepFormSecond = ({
         </button>
         <button
           onClick={() => {
-            console.log("Selected Health Issues:", selected_health_issue);
             setStep(3);
           }}
           className="cmn_btn ps-4 pe-4"

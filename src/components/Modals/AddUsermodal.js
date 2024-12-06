@@ -22,7 +22,6 @@ const AddUserModal = ({ show, setShow }) => {
     const [imageError, setImageError] = useState(false)
 
     const is_staff_created = useSelector((store) => store.CREATE_STAFF);
-    console.log(is_staff_created, "this is is staff created")
 
     const handleClose = () => setShow(false);
 

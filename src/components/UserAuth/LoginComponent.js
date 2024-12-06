@@ -45,7 +45,6 @@ const LoginComponent = () => {
       setSubmitting(false);
     } catch (error) {
       setSubmitting(false);
-      console.error("Login failed", error);
     }
   };
 
@@ -54,10 +53,8 @@ const LoginComponent = () => {
     const isRemembered = localStorage.getItem("phloii_remember_me") === "true";
     const rememberedEmail = localStorage.getItem("phloii_user_email");
     const last_login = localStorage.getItem("last_login");
-    console.log(typeof(last_login))
 
     if (token && last_login == day) {
-      authMiddleware(navigate);
     }
 
     if (isRemembered && rememberedEmail && token) {

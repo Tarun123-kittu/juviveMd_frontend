@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
 export const get_selected_patient = createAsyncThunk("get_selected_patient", async ({ id }, thunkAPI) => {
-    console.log("This is from redux api")
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {

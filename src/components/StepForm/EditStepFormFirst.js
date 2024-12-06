@@ -6,8 +6,6 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Loader from "../../common/Loader/Loader";
 const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, stepOnefullData, setTrainer_name }) => {
-  console.log(patient_all_data, "this is the patient all data from the first modal")
-  // Validation schema
   const validationSchema = Yup.object({
     name: Yup.string()
       .min(3, "Name must be at least 3 characters")

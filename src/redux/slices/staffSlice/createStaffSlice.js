@@ -11,7 +11,6 @@ export const create_staff_api = createAsyncThunk("create_staff_api", async ({ da
     try {
         const myHeaders = new Headers();
         myHeaders.append("Authorization", validToken);
-        console.log('Headers:', myHeaders); 
 
         const formdata = new FormData();
         formdata.append("profilePic", data?.image);

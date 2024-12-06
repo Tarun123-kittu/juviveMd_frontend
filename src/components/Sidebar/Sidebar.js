@@ -93,7 +93,6 @@ const Sidebar = () => {
               )
             }
             if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
-              console.log("Path:", menus.path, "Split Location:", "/" + splitLocation[1]);
               return (
                 <li key={index}>
                   <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>

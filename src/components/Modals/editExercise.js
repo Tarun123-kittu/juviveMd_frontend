@@ -20,7 +20,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [hasImage, setHasImage] = useState(false)
     const [image, setImage] = useState()
     const [draft, setDraft] = useState(false)
-    console.log(draft, "this is draft")
     const [exerciseType, setExerciseType] = useState("")
     const [exerciseName, setExerciseName] = useState("")
     const [exerciseVideo, setExerciseVideo] = useState("")
@@ -101,7 +100,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
 
     const handleSubmit = (values) => {
-        console.log(values);
         handleSave(values);
     };
 

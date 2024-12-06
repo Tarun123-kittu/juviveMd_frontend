@@ -50,7 +50,6 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
         ),
     }),
     onSubmit: (values) => {
-      console.log("Form Data: ", values);
       setStepThreeFullData(values)
       setStep(4)
     },

@@ -61,7 +61,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSubmit = (values) => {
-    console.log(values);
     handleSave(values);
   };
 
