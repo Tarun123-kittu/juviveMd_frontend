@@ -42,9 +42,9 @@ li{
   background: var(--fade-color);
   height: 45px;
 }
-.blur_bg {
+/* .blur_bg {
   opacity: 15%;
-}
+} */
 button.cmn_btn.filter_btn {
   height: 40px;
   position: relative;
@@ -88,10 +88,12 @@ li.dropdown_search {
   border-bottom: 1px solid #D7D7D7;
 }
 li.dropdown_search input {
-  width: 100%;
   border-radius: 5px;
   border: 1px solid #ACC9CB80;
   padding:5px 10px;
+  font-size: 12px;
+  width: 100%;
+  font-weight: 400;
 }
 li.dropdown_search input:focus{
   outline: #0C5E62;
@@ -100,7 +102,7 @@ li.dropdown_search span {
   border: 1px solid #ACC9CB80;
   flex: 0 0 32px;
   text-align: center;
-  line-height: 31px;
+  line-height: 24px;
   border-radius: 5px;
 }
 .loader_img {

@@ -26,43 +26,31 @@ ul {}
     border-radius: 5px;
 }
 /*patient data css ends here */
-.patient_filter {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    z-index: 2;
-}
-
-.patient_filter button.cmn_btn {
-    height: 37px;
-}
-span.filter_heading {
-    position: absolute;
-    top: -27px;
-    left: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: #000;
-}
-.filter_list {
-   display: flex;
-   border: 1px solid #D9D9D9;
-   border-radius: 3px;
-}
 
 .patient_filter {
     position: absolute;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 11px;
+   z-index: 3;
     top: 64px;
     padding: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
     border-radius: 5px;background: #fff;
+    right: 0;
+    min-width: 270px;
 }
+.patient_filter button.cmn_btn {
+    height: 37px;
+}
+
+.filter_list {
+   display: flex;
+   border: 1px solid #D9D9D9;
+   border-radius: 3px;
+   margin-bottom: 10px;
+}
+.patient_filter .patient_dropdown {
+    margin-bottom: 10px;
+}
+
 
 
 .patient_dropdown button.btn {
@@ -114,15 +102,28 @@ box-shadow: unset;
     gap: 9px;
 }
 .patient_dropdown .dropdown-menu a.dropdown-item, .patient_dropdown .dropdown-menu .dropdown-item:active {
-    font-size: 14px;
+    font-size: 13px;
     padding: 8px 15px;
     border-bottom: 1px solid #CCCCCC;
     background-color: transparent;
     color: #000;
-    font-weight: 500;
     text-transform: capitalize;
 }
+.patient_filter .patient_dropdown button.btn{
+    color: #00000080;
+}
 
+.patient_filter .patient_dropdown  .dropdown {
+    position: unset;
+}
+
+.patient_filter .patient_dropdown  .dropdown-menu {
+    position: unset !important;
+    inset: unset !important;
+    transform: unset !important;
+    overflow: auto;
+    max-height: 198px;
+}
 .patient_dropdown .dropdown-menu a.dropdown-item:last-child {
     border: unset;
 }
@@ -170,8 +171,5 @@ box-shadow: unset;
     .patient_filter button.cmn_btn {
         height: 33px;
     }
-    span.filter_heading {
-        top: -22px;
-        font-size: 14px;
-    }
+ 
 }

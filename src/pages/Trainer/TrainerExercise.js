@@ -35,11 +35,10 @@ const TrainerExercise = () => {
 
             {toggleFilter && (
               <div className="patient_filter">
-                <span className="filter_heading">Filter</span>
                 <div className="filter_list w-100">
-                  <div className="label">
+                  {/* <div className="label">
                     <span>Exercise</span>
-                  </div>
+                  </div> */}
                   <input
                     type="text"
                     placeholder="Exercise Name"
@@ -77,9 +76,9 @@ const TrainerExercise = () => {
                   </Dropdown>
                 </div>
                 <div className="filter_list w-100">
-                  <div className="label">
+                  {/* <div className="label">
                     <span>Date</span>
-                  </div>
+                  </div> */}
                   <input
                     type="date"
                     placeholder="Exercise Name"
@@ -114,8 +113,11 @@ const TrainerExercise = () => {
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
+                <div className='d-flex justify-content-end gap-2'>
+
                 <button className="cmn_btn">Search</button>
                 <button className="cmn_btn fade_color">Clean</button>
+                  </div>
               </div>
             )}
             <Tabs
