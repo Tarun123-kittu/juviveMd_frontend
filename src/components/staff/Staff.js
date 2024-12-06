@@ -23,6 +23,7 @@ const StaffComponent = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setshowDeleteModal] = useState(false);
     const [replaces_trainer, setReplaced_trainer] = useState(false)
+    console.log(replaces_trainer,"this is the replaced trainer")
     const [trainers_list, setTrainer_list] = useState()
     const [exerciseCount, setExercisesCount] = useState(0)
     const [page, setPage] = useState(1);

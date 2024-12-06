@@ -5,16 +5,21 @@ import { Dropdown } from 'react-bootstrap'
 import { useDispatch, useSelector } from "react-redux";
 import { get_exercise } from '../../../redux/slices/exerciseSlice/getExercise';
 import Loader from '../../../common/Loader/Loader';
-import No_data_found from "../../../Images/No_data_found.svg"
 import { update_exercise_status, clear_update_exercise_status_state } from '../../../redux/slices/exerciseSlice/updateExerciseStatus';
 import toast from 'react-hot-toast';
 import Spinner from 'react-bootstrap/Spinner';
 import EditExcercise from '../../Modals/editExercise';
 import { FaRegEye } from "react-icons/fa";
 import Nodata from '../../StaticComponents/Nodata';
+import { useLocation,useNavigate } from 'react-router-dom';
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setToggleFilter }) => {
+
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setToggleFilter,pathname }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
+  const {path} = location
+  console.log(path,"this is the path")
   const [page, setPage] = useState(1)
   const [isOpen, setIsOpen] = useState(false);
   const [all_exercise, setAllExercise] = useState()
@@ -204,7 +209,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
               </div></td>
               <td>
                 {/* <button  className="cmn_btn">View</button> */}
-                <FaRegEye title='View Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />
+                <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView",{state : {id : exercise?.id}}) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button

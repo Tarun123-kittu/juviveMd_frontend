@@ -24,6 +24,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
+    dispatch(clear_create_exercise_state());
+    setImagePreview("")
   };
 
   const initialValues = {
@@ -74,7 +76,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }
     if (is_exercise_created?.isError) {
       toast.error(is_exercise_created?.error?.message);
-      dispatch(clear_create_exercise_state);
+      dispatch(clear_create_exercise_state());
     }
   }, [is_exercise_created]);
 
@@ -89,9 +91,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setFieldValue("exerciseName", value);
   };
   const handleExerciseVideoChange = (e, setFieldValue) => {
-    const value = e.target.value;
+    const value = e.target.value
+    if (!value.includes("embed")) {
+      toast.error("The exercise video link must contain 'embed'.");
+    }
     setExerciseVideo(value);
     setFieldValue("exerciseVideo", value);
+  
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
     const value = e.target.value;

@@ -1,32 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import PoseImage from "../../Images/pose_image.png";
 import { Dropdown } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleExercise";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../common/Loader/Loader";
 const ExerciseView = () => {
-  return (
+  const location = useLocation()
+  const { id } = location?.state ? location?.state : location
+  console.log(id, "this is the id")
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
+  const [exercise_data, setExerciseData] = useState()
+  console.log(is_exercise, "this is the exercise data")
+
+  useEffect(() => {
+    if (id) {
+      dispatch(get_single_exercise({ id }));
+    }
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (is_exercise?.isSuccess) {
+      setExerciseData(is_exercise?.data?.data)
+    }
+  }, [is_exercise])
+  return is_exercise?.isLoading ? <Loader /> : (
     <div className="wrapper">
       <div className="inner_wrapper">
         <div className="cmn_head pb-3">
-          <h2>Tree pose</h2>
+          <h2>{exercise_data?.exercise_name}</h2>
         </div>
         <div className="cmn_bg_wrapper">
           <Row className="m-0 ">
             <Col lg={6} className="ps-0 pe-4">
               <div className="pose_image">
-                <img src={PoseImage} alt="Exercise Image" />
+                <img src={exercise_data?.imageUrl || PoseImage} alt="Exercise Image" />
               </div>
               <h4 className="exercise_heading text-center mt-2">Image</h4>
               <ul className="exercise_status mt-5">
                 <li>
-                  <h5>Category</h5> <p className="">Flexibility</p>
+                  <h5>Category</h5> <p className="">{exercise_data?.category}</p>
                 </li>
                 <li className="table">
-                 <h5>Exercise Status</h5>{" "}
+                  <h5>Exercise Status</h5>{" "}
                   <div className="patient_dropdown">
                     <Dropdown>
                       <Dropdown.Toggle variant="unset">
-                        Category
-                        <svg
+                        {exercise_data?.status === 0 && "Rejected"}
+                        {exercise_data?.status === 1 && "Approved"}
+                        {exercise_data?.status === 2 && "Pending"}
+                        {exercise_data?.status === 3 && "Draft"}
+                        {/* <svg
                           width="14"
                           height="14"
                           viewBox="0 0 14 14"
@@ -38,17 +65,16 @@ const ExerciseView = () => {
                             fill="black"
                             fill-opacity="0.25"
                           />
-                        </svg>
+                        </svg> */}
                       </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
+                      {/* <Dropdown.Menu>
                         <ul>
-                          {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
                           <Dropdown.Item>Deepak Rawat</Dropdown.Item>
                           <Dropdown.Item>Sahil</Dropdown.Item>
                           <Dropdown.Item>Aman</Dropdown.Item>
                         </ul>
-                      </Dropdown.Menu>
+                      </Dropdown.Menu> */}
                     </Dropdown>
                   </div>
                 </li>
@@ -57,17 +83,14 @@ const ExerciseView = () => {
             <Col lg={6} className="pe-0 ps-4">
               <h4 className="exercise_heading">Description</h4>
               <p>
-                Tree pose, also known as Vrikshasana, is a standing yoga pose
-                that challenges balance, stability, and focus. It's a beginner
-                pose that can be done anywhere in a yoga sequence, or even as a
-                standalone pose. 
+                {exercise_data?.description}
               </p>
               <h4 className="exercise_heading mt-5">Description</h4>
               <div className="exercise_video">
                 <iframe
                   width="100%"
                   height="315"
-                  src="https://www.youtube.com/embed/LhL5SNZfnQs"
+                  src={exercise_data?.video_link}
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
@@ -75,10 +98,9 @@ const ExerciseView = () => {
               </div>
             </Col>
             <Col lg={12} className="">
-            <div className="d-flex justify-content-center gap-3 pt-3">
-                <button className="cmn_btn ps-4 pe-4">Back</button>
-                <button className="cmn_btn ps-4 pe-4">Save</button>
-            </div>
+              <div className="d-flex justify-content-center gap-3 pt-3">
+                <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
+              </div>
             </Col>
           </Row>
         </div>

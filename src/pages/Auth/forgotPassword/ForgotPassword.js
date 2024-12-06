@@ -32,6 +32,7 @@ const ForgotPassword = () => {
   useEffect(() => {
     if (forgot_password_state?.isSuccess) {
       toast.success(forgot_password_state?.message?.message);
+      dispatch(clear_forgot_password_state())
       navigate("/")
     }
     if (forgot_password_state?.isError) {

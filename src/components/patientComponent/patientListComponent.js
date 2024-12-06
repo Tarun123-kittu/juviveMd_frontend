@@ -186,7 +186,7 @@ const PatientListComponent = () => {
                                 <td>{formatDate(list?.created_at)}</td>
                                 <td>{calculateAge(list.dob)}</td>
                                 <td>{list?.phone}</td>
-                                <td>{list?.gender}</td>
+                                <td>{list?.gender ? list?.gender?.charAt(0)?.toUpperCase() + list?.gender?.slice(1)?.toLowerCase() : ""}</td>
                                 <td>{list?.goal}</td>
                                 <td>{list?.trainerName || "Not Available"}</td>
                                 <td>
