@@ -99,7 +99,7 @@ const ExerciseView = () => {
             </Col>
             <Col lg={12} className="">
               <div className="d-flex justify-content-center gap-3 pt-3">
-                <button className="cmn_btn ps-4 pe-4">Back</button>
+                <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
               </div>
             </Col>
           </Row>
