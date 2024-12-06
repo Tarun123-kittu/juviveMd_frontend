@@ -20,6 +20,8 @@ const PatientListComponent = () => {
     const [patientData, setPatientData] = useState()
     const [username, setUsername] = useState()
     const [trainerName, setTrainerName] = useState()
+    const [trainerid, setTrainerid] = useState()
+    console.log(trainerid,"this is the trainer id")
     const [trainer_data, setTrainer_data] = useState()
     const [date, setDate] = useState()
     const [gender, setGender] = useState()
@@ -80,7 +82,7 @@ const PatientListComponent = () => {
 
     const handleSearch = () => {
         if(username || gender || trainerName || date){
-            dispatch(get_patients_list({ page, tab: "active", username, date, gender, trainer: trainerName }))
+            dispatch(get_patients_list({ page, tab: "active", username, date, gender, trainer: trainerid }))
         }
     }
 
@@ -90,6 +92,7 @@ const PatientListComponent = () => {
         setDate()
         setTrainerName()
         setGender()
+        setTrainerid()
     }
 
 
@@ -113,7 +116,7 @@ const PatientListComponent = () => {
                         <div className='patient_dropdown w-100'>
                             <Dropdown>
                                 <Dropdown.Toggle variant="unset" >
-                                    Assigned Trainer <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    {trainerName ? trainerName : "Assigned Trainer"} <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12.2143 3.7041H11.1253C11.0513 3.7041 10.9816 3.7404 10.938 3.79993L6.81303 9.48579L2.68802 3.79993C2.64446 3.7404 2.57477 3.7041 2.50072 3.7041H1.41175C1.31737 3.7041 1.2622 3.81155 1.31737 3.8885L6.43697 10.9465C6.62282 11.202 7.00323 11.202 7.18763 10.9465L12.3072 3.8885C12.3639 3.81155 12.3087 3.7041 12.2143 3.7041V3.7041Z" fill="black" fill-opacity="0.25" />
                                     </svg>
 
@@ -131,7 +134,7 @@ const PatientListComponent = () => {
                                         </li>
                                         {Array?.isArray(trainer_data) && trainer_data?.map((list) => {
                                             return (
-                                                <Dropdown.Item onClick={() => setTrainerName(list?.firstName)}>{list?.firstName}</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => {setTrainerName(list?.firstName);setTrainerid(list?.id)}}>{list?.firstName}</Dropdown.Item>
                                             )
                                         })}
                                     </ul>
