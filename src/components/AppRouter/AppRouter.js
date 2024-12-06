@@ -126,11 +126,15 @@ const AppRouter = () => {
                     path: "/exercise",
 
                     element: <Exercise />
+                    
                 },
                 {
                     path: "/exerciseView",
-
-                    element: <ExerciseView />
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <ExerciseView />
+                        </ProtectedRoute>
+                    )
                 },
                 {
                     path: "/trainer/dashboard",

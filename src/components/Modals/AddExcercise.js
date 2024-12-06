@@ -91,9 +91,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setFieldValue("exerciseName", value);
   };
   const handleExerciseVideoChange = (e, setFieldValue) => {
-    const value = e.target.value;
+    const value = e.target.value
+    if (!value.includes("embed")) {
+      toast.error("The exercise video link must contain 'embed'.");
+    }
     setExerciseVideo(value);
     setFieldValue("exerciseVideo", value);
+  
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
     const value = e.target.value;

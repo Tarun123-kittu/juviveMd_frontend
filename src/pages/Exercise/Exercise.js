@@ -6,10 +6,15 @@ import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDl
 import { useDispatch, useSelector } from "react-redux";
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import ActiveExerciseTab from "../../components/Tabs/ExerciseTab/ActiveExerciseTab";
+import { useLocation } from 'react-router-dom';
 
 
 const Exercise = () => {
   const dispatch = useDispatch();
+  const location = useLocation()
+  console.log(location)
+  const {pathname} = location
+  console.log(pathname,"this is the path")
   const [toggleFilter, setToggleFilter] = useState(false);
   const [exercise_category, setExercise_category] = useState();
   const [activeTab, setActiveTab] = useState("active");
@@ -34,11 +39,11 @@ const Exercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab pathname={pathname} setToggleFilter={setToggleFilter} tab={"active"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab pathname={pathname} setToggleFilter={setToggleFilter} tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab pathname={pathname} setToggleFilter={setToggleFilter} tab={"rejected"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       default:
         return null;
     }
