@@ -33,6 +33,8 @@ const LoginComponent = () => {
   const [email, setEmail] = useState("")
   const remember = false;
   const Useremail = "";
+  const current_date = new Date()
+  const day = current_date.getDate()
 
 
   const handleLogin = async (values, { setSubmitting }) => {
@@ -51,6 +53,12 @@ const LoginComponent = () => {
   useEffect(() => {
     const isRemembered = localStorage.getItem("phloii_remember_me") === "true";
     const rememberedEmail = localStorage.getItem("phloii_user_email");
+    const last_login = localStorage.getItem("last_login");
+    console.log(typeof(last_login))
+
+    if (token && last_login == day) {
+      authMiddleware(navigate);
+    }
 
     if (isRemembered && rememberedEmail && token) {
       authMiddleware(navigate);
@@ -60,7 +68,7 @@ const LoginComponent = () => {
   useEffect(() => {
     if (user_details?.isSuccess) {
       const token = user_details?.data?.data;
-
+      localStorage.setItem("last_login", day);
       if (rememberMe) {
         localStorage.setItem("phloii_user_email", email);
         localStorage.setItem("phloii_remember_me", "true");

@@ -76,6 +76,8 @@ ul.menu_items li a.sidebar_active svg path {
     border-radius: 50%;
 }
 
+span.author_name {font-weight: bold;font-size: 14px;}
+
 span.notify_dot {
     position: absolute;
     width: 7px;
