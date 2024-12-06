@@ -68,6 +68,7 @@ font-size: 12px;
     height: 30px;
     border: 4px solid #000;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 .tooltip_wrapper .tooltip_custom {
@@ -76,16 +77,15 @@ font-size: 12px;
     height: unset;
     max-height: unset;
     left: 50%;
-    transform: translate(-50%, 0px);
     z-index: 2;
-    min-width: 300px;
+    max-width: 300px;
     padding: 13px;
     border: 1px solid #ACC9CB80;
     border-radius: 10px;
-    top: 52px;
     opacity: 0;
     visibility: hidden;
     transition: all .3s;
+    margin-top: 20px;
 }
 .tooltip_wrapper:hover .tooltip_custom{
     opacity: 1;
@@ -104,7 +104,6 @@ font-size: 12px;
 }
 
 .tooltip_wrapper {
-    position: relative;
     width: 29px;
 }
 

@@ -34,11 +34,11 @@ const TrainerExercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab tab={"active"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab tab={"approvalRequest"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category}/>;
       case "draft":
-        return <ActiveExerciseTab tab={"draft"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category}/>;
       default:
         return null;
     }

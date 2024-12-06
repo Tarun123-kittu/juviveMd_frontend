@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import AddpatientModal from '../../components/Modals/AddPatientModal';
@@ -22,6 +22,9 @@ import { formatDate } from '../../common/formatDate/formatDate';
 import Nodata from '../StaticComponents/Nodata';
 
 const Reception_patient_list = () => {
+    const elementRef = useRef(null);
+    
+  
     const dispatch = useDispatch()
     const [showFilter, setShowFilter] = useState(false)
     const [showPateintModal, setshowPateintModal] = useState(false)
@@ -43,6 +46,7 @@ const Reception_patient_list = () => {
     const [patientId, setPatientId] = useState(null)
     const [payment_status_pending, setPayment_status_pending] = useState(false)
     const [payment_status_received, setPayment_status_received] = useState(false)
+    const[leftPosition,setLeftpostion] = useState("")
     const [path, setPath] = useState(["active"])
     console.log(path, "this is the path")
     const patient_data = useSelector((store) => store.GET_PATIENT_LIST)
@@ -53,6 +57,16 @@ const Reception_patient_list = () => {
     const handelShowFilter = () => {
         setShowFilter(!showFilter)
     }
+    useEffect(() => {
+        console.log(elementRef,"dsajdslakjd====>out")
+        if (elementRef.current) {
+            console.log(elementRef,"dsajdslakjd====>in")
+          const rect = elementRef.current.getBoundingClientRect();
+          setLeftpostion(rect.left - 133)
+          console.log('Left position from viewport:', rect.left);
+        }
+      }, [tab,elementRef.current]);
+      console.log(elementRef,"dsajdslakjd====>outer")
     const columns = [
         "User Name",
         "Date",
@@ -327,10 +341,10 @@ const Reception_patient_list = () => {
 
 
                                         {tab === "healthIssue" && <td>
-                                            <div className='health_issue'>
+                                            <div className='health_issue'  ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
                                                     <span className='d-flex align-items-center justify-content-center'>!</span>
-                                                    <div className='tooltip_custom'>
+                                                    <div className='tooltip_custom' style={{  left: `${leftPosition}px`}}>
                                                         <ul>
                                                             {Array?.isArray(patient?.health_issue_text) && patient?.health_issue_text?.map((issue, index) => (
                                                                 <li key={index}>{issue}</li>

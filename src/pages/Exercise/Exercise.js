@@ -21,23 +21,24 @@ const Exercise = () => {
 
   useEffect(() => {
     dispatch(common_data_api());
+    
   }, []);
 
   useEffect(() => {
     if (common_data?.isSuccess) {
       setExercise_category(common_data?.data?.data?.exercise_category);
-      setToggleFilter(false)
+      
     }
   }, [common_data]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab tab={"active"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       case "rejected":
-        return <ActiveExerciseTab tab={"rejected"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} showDropdown={true} exercise_category={exercise_category} admin={true}/>;
       default:
         return null;
     }
@@ -45,6 +46,7 @@ const Exercise = () => {
 
   const handleSearch = () => {
     dispatch(get_exercise({ page: 1, tab: activeTab, date, exercise: username, category }))
+    
   }
 
   const handleClear = () => {
@@ -52,6 +54,12 @@ const Exercise = () => {
     setCategory()
     setDate()
     dispatch(get_exercise({ page: 1, tab: activeTab }))
+  }
+
+  const handleValueClear = () => {
+    setUsername()
+    setCategory()
+    setDate()
   }
 
   return (
@@ -137,7 +145,7 @@ const Exercise = () => {
 
             <Tabs
               activeKey={activeTab} // Controlled active tab
-              onSelect={(key) => setActiveTab(key)} // Update active tab
+              onSelect={(key) => {setActiveTab(key);handleValueClear()}} // Update active tab
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >

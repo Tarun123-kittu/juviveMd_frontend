@@ -13,7 +13,7 @@ import EditExcercise from '../../Modals/editExercise';
 import { FaRegEye } from "react-icons/fa";
 import Nodata from '../../StaticComponents/Nodata';
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setToggleFilter }) => {
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +46,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin }) => {
 
   useEffect(() => {
     if (exercise_data?.isSuccess) {
-      setAllExercise(exercise_data?.data?.data?.items)
+      setAllExercise(exercise_data?.data?.data?.items);
+      setToggleFilter(false)
     }
   }, [exercise_data])
 

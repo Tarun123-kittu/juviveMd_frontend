@@ -166,6 +166,15 @@ li.page-item.active a.page-link {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 10%);
   border-radius: 5px;
 }
+.cmn_table .patient_dropdown .dropdown {
+  position: unset;
+}
+
+.cmn_table .patient_dropdown  .dropdown-menu {
+  inset: unset !important;
+  transform: unset !important;
+  width: auto;
+}
 
 @media(max-width:1440px){
   .cmn_btn {

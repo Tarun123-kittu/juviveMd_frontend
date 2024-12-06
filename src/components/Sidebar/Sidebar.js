@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React,{useState} from 'react'
-=======
 import React, { useEffect,useState } from 'react'
->>>>>>> ebb5a5b5b926d1da7fcd28b6a4fd8b937dae4947
 import { useLocation } from 'react-router-dom'
 import { SidebarMenuItems } from './SidebarMenu'
 import { Link } from 'react-router-dom'

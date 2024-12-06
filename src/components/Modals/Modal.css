@@ -12,7 +12,10 @@ button.cmn_btn {
     padding: 0px 0.8rem; 
     font-size: 14px;
 }
-
+.cmn_modal .authWrapper img.img-fluid {
+width: auto;
+height: -webkit-fill-available;
+}
 .drag_file .image_preview {
     width: 100%;
     height: 100%;

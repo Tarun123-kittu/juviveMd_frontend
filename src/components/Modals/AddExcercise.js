@@ -12,7 +12,7 @@ import * as Yup from "yup";
 
 const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab }) => {
   const dispatch = useDispatch();
-  const [imagePreview, setImagePreview] = useState(DefaultImage);
+  const [imagePreview, setImagePreview] = useState("");
   const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE);
   const [draft, setDraft] = useState(false)
   const [exerciseType, setExerciseType] = useState("")
@@ -70,7 +70,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       toast.success(is_exercise_created?.message?.message);
       dispatch(clear_create_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
-      setImagePreview(DefaultImage)
+      setImagePreview("")
       handleClose();
     }
     if (is_exercise_created?.isError) {
@@ -154,18 +154,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         className="form-control"
                       />
                       <img
-                        src={imagePreview}
+                        src={imagePreview || DefaultImage}
                         alt="preview"
-                        style={{
-                          width: "100%",
-                          maxHeight: "150px",
-                          marginTop: "10px",
-                        }}
+                       className={imagePreview && "img-fluid"}
                       />
-                      <h4>
+                      {imagePreview === "" &&  <><h4>
                         Drop your image here, or <span>browse</span>
                       </h4>
-                      <p className="m-0">Supports: PNG, JPG, JPEG</p>
+                      <p className="m-0">Supports: PNG, JPG, JPEG</p></>}
                     </div>
                   </Form.Group>
                 </Col>
