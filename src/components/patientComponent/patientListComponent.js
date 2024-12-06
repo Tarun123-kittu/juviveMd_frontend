@@ -45,6 +45,7 @@ const PatientListComponent = () => {
     useEffect(() => {
         if (patient_list?.isSuccess) {
             setPatientData(patient_list?.data?.data?.items)
+            setToggleFilter(false)
         }
         if (patient_list?.isError) {
 

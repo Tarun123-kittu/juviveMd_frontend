@@ -35,14 +35,16 @@ const Reception_patient_list = () => {
     const [trainer, setTrainer] = useState()
     const [page, setPage] = useState(1)
     const [tab, setTab] = useState("active")
+    console.log(tab, "this is tab")
     const [trainers, setTrainers] = useState()
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [index, setIndex] = useState(null)
-    console.log(index, "this is index")
     const [patientId, setPatientId] = useState(null)
     const [payment_status_pending, setPayment_status_pending] = useState(false)
     const [payment_status_received, setPayment_status_received] = useState(false)
+    const [path, setPath] = useState(["active"])
+    console.log(path, "this is the path")
     const patient_data = useSelector((store) => store.GET_PATIENT_LIST)
     const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_list = useSelector((store) => store.TRAINERS_LIST)
@@ -116,15 +118,10 @@ const Reception_patient_list = () => {
 
     useEffect(() => {
         if (patient_data?.isSuccess) {
-            setShowFilter(false)
-            setUsername()
-            setGoal()
-            setDate()
-            setGender()
-            setStatus()
-            setTrainer()
+            setShowFilter(false);
         }
-    }, [patient_data])
+    }, [patient_data, path, tab]);
+
 
     useEffect(() => {
         if (is_patient_deleted?.isSuccess) {
@@ -174,6 +171,17 @@ const Reception_patient_list = () => {
         setPayment_status_received(false);
     };
 
+    const handleUpdatePath = (tabName) => {
+        setPath((prevPath) => [...prevPath, tabName]);
+        setUsername();
+        setGoal();
+        setDate();
+        setGender();
+        setStatus();
+        setTrainer();
+    };
+
+
 
 
     return (
@@ -185,9 +193,9 @@ const Reception_patient_list = () => {
                     </div>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
                         <ul className='static_tabs flex-grow-1 d-flex mb-0'>
-                            <li style={{ cursor: "pointer" }} onClick={() => setTab("active")} className={tab === "active" ? 'active' : ""}>Active</li>
-                            <li style={{ cursor: "pointer" }} onClick={() => setTab("healthIssue")} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>
-                            <li style={{ cursor: "pointer" }} onClick={() => setTab("paymentPending")} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>
+                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>
+                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>
+                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>
                         </ul>
                         <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button> <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>
                         {showFilter &&
