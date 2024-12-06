@@ -22,9 +22,8 @@ const Sidebar = () => {
   const { pathname } = location;
   const splitLocation = pathname.split("/");
   const quotes_list = useSelector((store) => store.GET_QUOTES)
-  console.log(quotes_list,"this is quotes_list")
   const current_date = new Date()
-  const day = current_date.getDate()
+  const day = current_date.getDate() > 30 ? current_date.getDate() -1 : current_date.getDate()
 
   useEffect(() => {
     if(quotes?.length === 0){
@@ -71,8 +70,8 @@ const Sidebar = () => {
       }
 
         <div className='flex-grow-1'>
-          <h4 className='mb-0'>{getGreeting()},{localStorage.getItem('user_role')}</h4>
-          {Array?.isArray(quotes) && <p className='quote mb-0'><span className=''>{quotes[day]?.author} - </span>{quotes[day]?.quote}</p>}
+          <h4 className='mb-0'>{getGreeting()},{localStorage?.getItem('user_name')}</h4>
+          {Array?.isArray(quotes) && <p className='quote mb-0'><span className='author_name'>{quotes[day]?.author} - </span>{quotes[day]?.quote}</p>}
         </div>
         <div className='notifications position-relative d-flex align-items-center justify-content-center'>
           <span className='notify_dot'></span>
@@ -89,7 +88,7 @@ const Sidebar = () => {
 
           <img src={UserImage} alt="user image" />
           <h6>JuviveMD</h6>
-          <p>Physiotherapy</p>
+          <p>{localStorage.getItem('user_role')}</p>
         </div>
         <ul className='menu_items d-flex flex-column'>
           {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
@@ -110,7 +109,6 @@ const Sidebar = () => {
               )
             }
             if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
-              console.log("Path:", menus.path, "Split Location:", "/" + splitLocation[1]);
               return (
                 <li key={index} onClick={()=>{setToggle(!toggle)}}>
                   <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>

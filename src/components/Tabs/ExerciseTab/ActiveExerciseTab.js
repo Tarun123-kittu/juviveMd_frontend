@@ -21,11 +21,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
   const [exerciseId, setExerciseId] = useState(null)
   const [editExerciseModal, setEditExerciseModal] = useState(false)
   const [status, setStatus] = useState(null)
-  console.log(status, "this is the status")
   const [save, setSave] = useState(false)
   const [index, setIndex] = useState(null)
 
-  console.log(index, "this is the index ")
   const columns = [
     "Exercise Name",
     "Image",

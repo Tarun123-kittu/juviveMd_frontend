@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 export const update_staff = createAsyncThunk("update_staff", async ({ data, id }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
-    console.log(data?.image,"this is from redux store")
     try {
         const myHeaders = new Headers();
         myHeaders.append("Authorization", validToken);

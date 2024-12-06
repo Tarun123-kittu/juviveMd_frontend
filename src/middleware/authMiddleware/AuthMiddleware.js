@@ -8,7 +8,7 @@ export const authMiddleware = (navigate) => {
             const decodedToken = jwtDecode(token);
             const { user } = decodedToken;
             localStorage.setItem("user_role", user?.role)
-            console.log(user, "this is from the middleware")
+            localStorage.setItem("user_name",user.firstName)
 
             if (user?.role === "ADMIN") {
                 navigate("/dashboard")
@@ -20,7 +20,6 @@ export const authMiddleware = (navigate) => {
                 navigate("/reception/dashboard")
             }
         } catch (error) {
-            console.error('Error decoding token:', error);
             navigate('/');
         }
     } else {

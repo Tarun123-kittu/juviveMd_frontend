@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom'
 const Nodata = () => {
   const location = useLocation()
   const {pathname} = location
-  console.log(pathname,"this is the location")
   return (
     <div className='noData d-flex justify-content-center align-items-center'> 
    <div className='noData_inner text-center'>

@@ -2,7 +2,6 @@ import React from "react";
 import Table from "react-bootstrap/Table";
 import { Form } from "react-bootstrap";
 const DataTable = ({ children, columns, hideAction,hasCheckbox }) => {
-  console.log(hideAction);
   return (
     <div className="cmn_table dark_btn dashboard_table">
       <Table responsive>

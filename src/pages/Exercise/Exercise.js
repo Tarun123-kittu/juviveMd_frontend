@@ -74,7 +74,7 @@ const Exercise = () => {
 
               <button
                 className="cmn_btn px-4 filter_btn"
-                onClick={() => {  console.log("Filter toggled");setToggleFilter(!toggleFilter)}}
+                onClick={() => { setToggleFilter(!toggleFilter)}}
               >
                 Filter
               </button>
