@@ -19,7 +19,6 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin,setTogg
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {path} = location
-  console.log(path,"this is the path")
   const [page, setPage] = useState(1)
   const [isOpen, setIsOpen] = useState(false);
   const [all_exercise, setAllExercise] = useState()

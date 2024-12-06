@@ -8,19 +8,22 @@ import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
+import { create_exercise_draft,clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 
 
-const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab }) => {
+const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab }) => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState("");
+  const [image, setImage] = useState("");
   const is_exercise_created = useSelector((store) => store.CREATE_EXERCISE);
+  const is_exercise_draft_created = useSelector((store) => store.CREATE_DRAFT_EXERCISE);
   const [draft, setDraft] = useState(false)
   const [exerciseType, setExerciseType] = useState("")
   const [exerciseName, setExerciseName] = useState("")
   const [exerciseVideo, setExerciseVideo] = useState("")
   const [exerciseDescription, setExerciseDescription] = useState("")
   const [exerciseImage, setExerciseImage] = useState("")
-  const [loading, setLoading] = useState(null)
+  const [loading, setLoading] = useState("")
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -52,12 +55,24 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const handleSave = (values) => {
     dispatch(
       create_exercise({
-        exercise_name: values.exerciseName,
-        category: values.exerciseType,
-        video_link: values.exerciseVideo,
-        image: values.exerciseImage,
-        description: values.exerciseDescription,
-        draft: draft
+        exercise_name: exerciseName,
+        category: exerciseType,
+        video_link: exerciseVideo,
+        image: exerciseImage,
+        description: exerciseDescription,
+        draft: true
+      })
+    );
+  };
+  const handleSaveDraaft = (values) => {
+    dispatch(
+      create_exercise_draft({
+        exercise_name: exerciseName,
+        category: exerciseType,
+        video_link: exerciseVideo,
+        image: exerciseImage,
+        description: exerciseDescription,
+        draft: false
       })
     );
   };
@@ -72,6 +87,11 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       dispatch(clear_create_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview("")
+      if (draft) {
+        setActiveTab("draft")
+      } else {
+        setActiveTab("approvalRequest")
+      }
       handleClose();
     }
     if (is_exercise_created?.isError) {
@@ -79,6 +99,25 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       dispatch(clear_create_exercise_state());
     }
   }, [is_exercise_created]);
+
+  useEffect(() => {
+    if (is_exercise_draft_created?.isSuccess) {
+      toast.success(is_exercise_draft_created?.message?.message);
+      dispatch(clear_create_exercise_draft_state());
+      dispatch(get_exercise({ page: 1, tab }))
+      setImagePreview("")
+      if (draft) {
+        setActiveTab("draft")
+      } else {
+        setActiveTab("approvalRequest")
+      }
+      handleClose();
+    }
+    if (is_exercise_draft_created?.isError) {
+      toast.error(is_exercise_draft_created?.error?.message);
+      dispatch(clear_create_exercise_draft_state());
+    }
+  }, [is_exercise_draft_created]);
 
   const handleExerciseTypeChange = (e, setFieldValue) => {
     const value = e.target.value;
@@ -97,7 +136,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }
     setExerciseVideo(value);
     setFieldValue("exerciseVideo", value);
-  
+
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
     const value = e.target.value;
@@ -161,12 +200,12 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       <img
                         src={imagePreview || DefaultImage}
                         alt="preview"
-                       className={imagePreview && "img-fluid"}
+                        className={imagePreview && "img-fluid"}
                       />
-                      {imagePreview === "" &&  <><h4>
+                      {imagePreview === "" && <><h4>
                         Drop your image here, or <span>browse</span>
                       </h4>
-                      <p className="m-0">Supports: PNG, JPG, JPEG</p></>}
+                        <p className="m-0">Supports: PNG, JPG, JPEG</p></>}
                     </div>
                   </Form.Group>
                 </Col>
@@ -214,35 +253,51 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
               </Row>
               <div className="text-end mt-3">
                 <div>
-                  {!is_exercise_created?.isLoading ? (
-                    <>
-                      <button
-                        type="submit"
-                        onClick={() => setLoading(false)} 
-                        disabled={draft}
-                        className="btn cmn_btn"
+                  {
+                    (!is_exercise_created?.isLoading) ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            handleSave();
+                            setLoading("first"); 
+                          }}
+                          disabled={draft}
+                          className="btn cmn_btn"
+                        >
+                          Send For Approval
+                        </button>
+                      </>
+                    ) : (
+                      <button className="btn cmn_btn" disabled>
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </button>
+                    )
+                  }
+                  {
+                    (!is_exercise_draft_created?.isLoading) ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setDraft(true);
+                            handleSaveDraaft();
+                            setLoading("second"); 
+                          }}
+                          className="btn cmn_btn ms-2"
+                        >
+                          Save as Draft
+                        </button>
+                      </>
+                    ) :  (
+                      <button className="btn cmn_btn" disabled>
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </button>
+                    )
+                  }
 
-                      >
-                        Send For Approval
-                      </button>
-                      <button
-                        type="submit"
-                        onClick={() => {
-                          setDraft(true);
-                          setLoading(true); 
-                        }}
-                        className="btn cmn_btn ms-2"
-                      >
-                        Save as Draft
-                      </button>
-                    </>
-                  ) : (
-                    <button className="btn cmn_btn">
-                      <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                    </button>
-                  )}
                 </div>
 
               </div>

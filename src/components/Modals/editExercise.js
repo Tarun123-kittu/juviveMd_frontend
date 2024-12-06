@@ -11,12 +11,14 @@ import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise, clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
 import Loader from "../../common/Loader/Loader";
 import * as Yup from "yup";
+import { update_exercise_draft, clear_update_exercise_draft_state } from "../../redux/slices/exerciseSlice/updateExercideDraft";
 
 const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
     const is_exercise_updated = useSelector((store) => store.UPDATE_EXERCISE_DATA)
+    const is_exercise_updated_draft = useSelector((store) => store.UPDATE_DRAFT_EXERCISE)
     const [hasImage, setHasImage] = useState(false)
     const [image, setImage] = useState()
     const [draft, setDraft] = useState(false)
@@ -87,14 +89,28 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const handleSave = (values) => {
         dispatch(
             update_exercise({
-                exercise_name: values.exerciseName,
-                category: values.exerciseType,
-                video_link: values.exerciseVideo,
-                image: image ? image : values.exerciseImage,
-                description: values.exerciseDescription,
+                exercise_name: exerciseName,
+                category: exerciseType,
+                video_link: exerciseVideo,
+                image: image ? image : exerciseImage,
+                description: exerciseDescription,
                 id: id,
                 hasImage: hasImage,
-                draft: draft
+                draft: false
+            })
+        );
+    };
+    const handleSaveDraft = (values) => {
+        dispatch(
+            update_exercise_draft({
+                exercise_name: exerciseName,
+                category: exerciseType,
+                video_link: exerciseVideo,
+                image: image ? image : exerciseImage,
+                description: exerciseDescription,
+                id: id,
+                hasImage: hasImage,
+                draft: true
             })
         );
     };
@@ -117,6 +133,21 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             dispatch(clear_update_exercise_state())
         }
     }, [is_exercise_updated])
+
+    useEffect(() => {
+        if (is_exercise_updated_draft?.isSuccess) {
+            toast.success(is_exercise_updated_draft?.message?.message)
+            setshowAddExerciseModal(false)
+            dispatch(get_exercise({ page: 1, tab }))
+            dispatch(clear_update_exercise_draft_state())
+            setHasImage(false)
+            setExerciseId(null)
+        }
+        if (is_exercise_updated_draft?.isError) {
+            toast.error(is_exercise_updated_draft?.error?.message)
+            dispatch(clear_update_exercise_draft_state())
+        }
+    }, [is_exercise_updated_draft])
 
     const handleExerciseTypeChange = (e, setFieldValue) => {
         const value = e.target.value;
@@ -146,7 +177,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         else {
             setDraft(true)
         }
-    }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage])
+    }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, is_exercise])
 
     return (
         <Modal
@@ -178,7 +209,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             as="select"
                                             name="exerciseType"
                                             className="form-control"
-                                            disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
+                                            disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
                                             onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                                         >
                                             <option value="">Select exercise type</option>
@@ -198,7 +229,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 accept="image/png, image/jpg, image/jpeg"
                                                 onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
-                                                disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
+                                                disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
 
                                             />
                                             <img
@@ -220,7 +251,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseName"
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
                                                     onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -233,7 +264,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseVideo"
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
                                                     onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -247,7 +278,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseDescription"
                                                     placeholder="Enter description"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active"}
+                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
                                                     onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -256,37 +287,54 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                 </Col>
                             </Row>
                             {localStorage?.getItem('user_role') === "TRAINER" && tab !== "active" && (
-                                <div className="text-end mt-3">
-                                    {!is_exercise_updated?.isLoading ? (
-                                        <>
-                                            <button
-                                                type="submit"
-                                                disabled={draft}
-                                                className="btn cmn_btn"
-                                            >
-                                                {tab === "approvalRequest" ? "Update" : "Send For Approval"}
+                                <>
+                                    <div className="d-flex justify-content-end align-items-center mt-3 flex-wrap">
+                                        {!is_exercise_updated?.isLoading ? (
+                                            <>
+                                                {tab !== "approvalRequest" && (
+                                                    <button
+                                                        disabled={draft}
+                                                        className="btn cmn_btn me-2"
+                                                        onClick={() => handleSave()}
+                                                    >
+                                                        {tab === "approvalRequest" ? "Update" : "Send For Approval"}
+                                                    </button>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <button className="btn cmn_btn me-2">
+                                                <Spinner animation="border" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </Spinner>
                                             </button>
-
-                                            {/* Edit As Draft Button */}
-                                            {tab !== "active" && tab !== "approvalRequest" && !admin && (
-                                                <button
-                                                    type="submit"
-                                                    onClick={() => setDraft(true)}
-                                                    className="btn cmn_btn ms-2"
-                                                >
-                                                    Edit As Draft
-                                                </button>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <button className="btn cmn_btn">
-                                            <Spinner animation="border" role="status">
-                                                <span className="visually-hidden">Loading...</span>
-                                            </Spinner>
-                                        </button>
-                                    )}
-                                </div>
+                                        )}
+                                        {!is_exercise_updated_draft?.isLoading ? (
+                                            <>
+                                                {/* Edit As Draft Button */}
+                                                {tab !== "active" && tab !== "approvalRequest" && !admin && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setDraft(true);
+                                                            handleSaveDraft();
+                                                        }}
+                                                        className="btn cmn_btn"
+                                                    >
+                                                        Edit As Draft
+                                                    </button>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <button className="btn cmn_btn">
+                                                <Spinner animation="border" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </Spinner>
+                                            </button>
+                                        )}
+                                    </div>
+                                </>
                             )}
+
+
 
                         </FormikForm>
                     )}

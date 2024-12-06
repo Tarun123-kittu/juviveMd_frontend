@@ -39,6 +39,8 @@ const TrainerExercise = () => {
         return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category}/>;
       case "draft":
         return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category}/>;
+        case "rejected":
+          return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category}/>;
       default:
         return null;
     }
@@ -152,6 +154,7 @@ const TrainerExercise = () => {
               <Tab eventKey="active" title="Active" />
               <Tab eventKey="approvalRequest" title="Approval Requests" />
               <Tab eventKey="draft" title="Draft" />
+              <Tab eventKey="rejected" title="Rejected" />
             </Tabs>
 
             {/* Conditionally render content */}
@@ -164,6 +167,7 @@ const TrainerExercise = () => {
         setshowAddExerciseModal={setshowAddExerciseModal}
         exercise_category={exercise_category}
         tab={activeTab}
+        setActiveTab={setActiveTab}
       />
     </div>
   );
