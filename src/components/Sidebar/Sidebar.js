@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { SidebarMenuItems } from './SidebarMenu'
 import { Link } from 'react-router-dom'
@@ -7,12 +7,32 @@ import UserImage from '../../Images/default_use.svg'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
+import { get_quotes } from '../../redux/slices/quotesSlice/quotesSlice'
 
 const Sidebar = () => {
+  const dispatch = useDispatch()
   const location = useLocation();
   const navigate = useNavigate()
+  const [quotes,setQuotes] = useState([])
   const { pathname } = location;
   const splitLocation = pathname.split("/");
+  const quotes_list = useSelector((store) => store.GET_QUOTES)
+  console.log(quotes_list,"this is quotes_list")
+  const current_date = new Date()
+  const day = current_date.getDate()
+
+  useEffect(() => {
+    if(quotes?.length === 0){
+      dispatch(get_quotes())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (quotes_list?.isSuccess) {
+      setQuotes(quotes_list?.data?.quotes)
+    }
+  }, [quotes_list])
 
   const handleLogout = () => {
     Cookies.remove('authToken');
@@ -39,7 +59,7 @@ const Sidebar = () => {
       <div className='header d-flex align-itmes-center'>
         <div className='flex-grow-1'>
           <h4 className='mb-0'>{getGreeting()},{localStorage.getItem('user_role')}</h4>
-          <p className='quote mb-0'>Happiness is inside, let it out!</p>
+          {Array?.isArray(quotes) && <p className='quote mb-0'><span className=''>{quotes[day]?.author} - </span>{quotes[day]?.quote}</p>}
         </div>
         <div className='notifications position-relative d-flex align-items-center justify-content-center'>
           <span className='notify_dot'></span>
@@ -57,7 +77,7 @@ const Sidebar = () => {
         </div>
         <ul className='menu_items d-flex flex-column'>
           {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-            const currentPath = window.location.pathname; 
+            const currentPath = window.location.pathname;
             const isActive = menus.path === currentPath;
             if (menus.role === "ADMIN" && localStorage?.getItem("user_role") === "ADMIN") {
               return (
