@@ -217,7 +217,7 @@ const AddUserModal = ({ show, setShow }) => {
                                             <option value="">Select Gender</option>
                                             <option value="MALE">Male</option>
                                             <option value="FEMALE">Female</option>
-                                            <option value="NON-BINARy">Nob-binary</option>
+                                            <option value="NON-BINARY">Non-binary</option>
                                         </Field>
                                         <ErrorMessage name="gender" component="div" className="text-danger" />
                                     </Form.Group>
