@@ -105,11 +105,10 @@ const PatientListComponent = () => {
                 <div className="cmn_head d-flex justify-content-between align-items-center mb-3 position-relative">
                     <h2>Patient List</h2> <button className="cmn_btn px-4" onClick={() => setToggleFilter(!toggleFilter)}>Filter</button>
                     {toggleFilter && <div className='patient_filter'>
-                        <span className='filter_heading'>Filter</span>
                         <div className='filter_list w-100'>
-                            <div className='label'>
+                            {/* <div filter_list w-100>
                                 <span>Username</span>
-                            </div>
+                            </div> */}
                             <input type="text" placeholder='Username' className='form-control' value={username || ""} onChange={(e) => setUsername(e.target.value)} />
                         </div>
 
@@ -142,9 +141,9 @@ const PatientListComponent = () => {
                             </Dropdown>
                         </div>
                         <div className='filter_list w-100'>
-                            <div className='label'>
+                            {/* <div className='label'>
                                 <span>Date</span>
-                            </div>
+                            </div> */}
                             <input type="date" placeholder='Exercise Name' className='form-control' onChange={(e) => setDate(e.target.value)} />
                         </div>
                         <div className='patient_dropdown w-100'>
@@ -167,8 +166,10 @@ const PatientListComponent = () => {
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
-                        <button className='cmn_btn' onClick={() => handleSearch()}>Search</button>
-                        <button className='cmn_btn fade_color' onClick={() => handleClear()}>Clean</button>
+                       <div className='d-flex justify-content-end gap-2'>
+                       <button className='cmn_btn' onClick={() => handleSearch()}>Search</button>
+                       <button className='cmn_btn fade_color' onClick={() => handleClear()}>Clean</button>
+                       </div>
                     </div>}
                 </div>
                 <div className={`${toggleFilter && "blur_bg"}`}>

@@ -86,11 +86,10 @@ const Exercise = () => {
             </div>
               {toggleFilter && (
                   <div className="patient_filter">
-                    <span className="filter_heading">Filter</span>
                     <div className="filter_list w-100">
-                      <div className="label">
+                      {/* <div className="label">
                         <span>Exercise</span>
-                      </div>
+                      </div> */}
                       <input
                         type="text"
                         placeholder="Exercise Name"
@@ -132,9 +131,9 @@ const Exercise = () => {
                       </Dropdown>
                     </div>
                     <div className="filter_list w-100">
-                      <div className="label">
+                      {/* <div className="label">
                         <span>Date</span>
-                      </div>
+                      </div> */}
                       <input
                         type="date"
                         placeholder="Exercise Name"
@@ -142,8 +141,10 @@ const Exercise = () => {
                         onChange={(e) => setDate(e.target.value)}
                       />
                     </div>
+                    <div className='d-flex justify-content-end gap-2'>
                     <button className="cmn_btn" onClick={() => handleSearch()}>Search</button>
                     <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clean</button>
+                      </div>
                   </div>
                 )}
             <div className={`${toggleFilter && "blur_bg"}`}>

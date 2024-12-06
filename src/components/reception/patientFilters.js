@@ -40,9 +40,9 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
     return (
         <div className='patient_filter'>
             <div className='filter_list w-100'>
-                <div className='label'>
+                {/* <div className='label'>
                     <span>Username</span>
-                </div>
+                </div> */}
                 <input type="text" placeholder='Enter Username' className='form-control' value={username || ""} onChange={(e) => setUsername(e.target.value)} />
             </div>
 
@@ -108,9 +108,9 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
 
             {tab !== "active" && (
                 <div className='filter_list w-100'>
-                    <div className='label'>
+                    {/* <div className='label'>
                         <span>Goal</span>
-                    </div>
+                    </div> */}
                     <div className='patient_dropdown w-100'>
                         <Dropdown>
                             <Dropdown.Toggle variant="unset" id="dropdown-basic" className="cursor-pointer">
@@ -139,9 +139,9 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
             )}
 
             <div className='filter_list w-100'>
-                <div className='label'>
+                {/* <div className='label'>
                     <span>Date</span>
-                </div>
+                </div> */}
                 <input type="date" placeholder='Exercise Name' className='form-control' onChange={(e) => setDate(e.target.value)} ref={dateRef} />
             </div>
 
@@ -174,9 +174,11 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
                     </Dropdown>
                 </div>
             )}
+ <div className='d-flex justify-content-end gap-2'>
 
             <button className='cmn_btn' onClick={() => (goal || gender || date || username || status || trainer) && handleSearch()}>Search</button>
             <button className='cmn_btn fade_color' onClick={() => (goal || gender || date || username || status || trainer) && handleClean()}>Clean</button>
+ </div>
         </div>
     );
 };
