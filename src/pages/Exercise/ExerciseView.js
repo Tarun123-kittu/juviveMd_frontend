@@ -7,6 +7,7 @@ import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleE
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../common/Loader/Loader";
 import ReactPlayer from 'react-player';
+import "./Exercise.css"
 
 const ExerciseView = () => {
   const location = useLocation()
@@ -35,9 +36,15 @@ const ExerciseView = () => {
         </div>
         <div className="cmn_bg_wrapper">
           <Row className="m-0 ">
-            <Col lg={6} className="ps-0 pe-4">
+            <Col lg={5} className="ps-0 pe-4">
               <div className="pose_image">
-                <img src={exercise_data?.imageUrl || PoseImage} alt="Exercise_Image" />
+                <img
+                  src={exercise_data?.imageUrl || PoseImage}
+                  alt="Exercise_Image"
+                  className="exercise_preview_image"
+                  style={{ width: '100%', height: '350px', objectFit: 'cover' }}
+                />
+
               </div>
               <h4 className="exercise_heading text-center mt-2">Image</h4>
               <ul className="exercise_status mt-5">
@@ -80,7 +87,7 @@ const ExerciseView = () => {
                 </li>
               </ul>
             </Col>
-            <Col lg={6} className="pe-0 ps-4">
+            <Col lg={7} className="pe-0 ps-4">
               <h4 className="exercise_heading">Description</h4>
               <p>
                 {exercise_data?.description}
@@ -95,15 +102,20 @@ const ExerciseView = () => {
                 />
               </div>
             </Col>
-            <Col lg={12} className="">
-              <div className="d-flex justify-content-center gap-3 pt-3">
-                <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
-              </div>
-            </Col>
+
           </Row>
+        </div>
+        <div>
+          <Col lg={12} className="">
+            <div className="d-flex justify-content-center gap-3 pt-3">
+              <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
+            </div>
+          </Col>
         </div>
       </div>
     </div>
+
+
   );
 };
 

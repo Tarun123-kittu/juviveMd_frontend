@@ -14,11 +14,11 @@
 }
 
 .exercise_heading {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--bs-black);
 }
-.exercise_video iframe {
+.exercise_video video {
     clip-path: inset(0 0 0 0 round 20px);
 }
 ul.exercise_status li {
@@ -27,4 +27,7 @@ ul.exercise_status li {
 }
 ul.exercise_status button.btn {
     padding-top: 0;
+}
+ul.exercise_status li  h5 {
+    font-size: 18px;
 }
