@@ -152,6 +152,8 @@ const Reception_patient_list = () => {
     useEffect(() => {
         if (is_payment_status_updated?.isSuccess) {
             toast.success(is_payment_status_updated?.message?.message)
+            setIsOpen(false);
+            setIndex(null);
             dispatch(clear_patient_payment_update_state())
             dispatch(get_patients_list({ page, tab }))
         }
