@@ -183,6 +183,7 @@ const Reception_patient_list = () => {
     const handleDropdownClose = () => {
         setIsOpen(false);
         setIndex(null);
+        setStatus(null)
         setPayment_status_pending(false);
         setPayment_status_received(false);
     };
