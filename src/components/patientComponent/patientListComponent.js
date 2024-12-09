@@ -34,7 +34,7 @@ const PatientListComponent = () => {
         "Phone No.",
         "Gender",
         "Goal",
-        "Assign Trainer",
+        "Assigned Trainer",
         "Status",
         "Overview",
     ];

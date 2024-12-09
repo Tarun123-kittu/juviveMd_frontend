@@ -6,15 +6,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleExercise";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../common/Loader/Loader";
+import ReactPlayer from 'react-player';
+
 const ExerciseView = () => {
   const location = useLocation()
   const { id } = location?.state ? location?.state : location
-  console.log(id, "this is the id")
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
   const [exercise_data, setExerciseData] = useState()
-  console.log(is_exercise, "this is the exercise data")
 
   useEffect(() => {
     if (id) {
@@ -87,14 +87,12 @@ const ExerciseView = () => {
               </p>
               <h4 className="exercise_heading mt-5">Description</h4>
               <div className="exercise_video">
-                <iframe
+                <ReactPlayer
+                  url={exercise_data?.video_link}
                   width="100%"
-                  height="315"
-                  src={exercise_data?.video_link}
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
+                  height="315px"
+                  controls
+                />
               </div>
             </Col>
             <Col lg={12} className="">
