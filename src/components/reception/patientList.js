@@ -154,12 +154,18 @@ const Reception_patient_list = () => {
             toast.success(is_payment_status_updated?.message?.message)
             setIsOpen(false);
             setIndex(null);
+            setPayment_status_pending(false)
+            setPayment_status_received(false)
             dispatch(clear_patient_payment_update_state())
             dispatch(get_patients_list({ page, tab }))
         }
         if (is_payment_status_updated?.isError) {
             toast.error(is_payment_status_updated?.error?.message)
             dispatch(clear_patient_payment_update_state())
+            setIsOpen(false);
+            setIndex(null);
+            setPayment_status_pending(false)
+            setPayment_status_received(false)
         }
     }, [is_payment_status_updated])
 
