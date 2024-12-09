@@ -85,7 +85,7 @@ const ExerciseView = () => {
               <p>
                 {exercise_data?.description}
               </p>
-              <h4 className="exercise_heading mt-5">Description</h4>
+              <h4 className="exercise_heading mt-5">Exercise video</h4>
               <div className="exercise_video">
                 <ReactPlayer
                   url={exercise_data?.video_link}
