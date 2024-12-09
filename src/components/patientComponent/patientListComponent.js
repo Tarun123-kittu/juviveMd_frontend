@@ -6,7 +6,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { get_patients_list } from '../../redux/slices/patientSlice/getPatientList';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from "../../common/Loader/Loader"
-import No_data_found from "../../Images/No_data_found.svg";
 import Pagination from "../../common/pagination/Pagination"
 import { get_trainers } from '../../redux/slices/commonDataSlice/getTrainersSlice';
 import { calculateAge } from '../../common/calculateAge/calculateAge';
@@ -21,7 +20,6 @@ const PatientListComponent = () => {
     const [username, setUsername] = useState()
     const [trainerName, setTrainerName] = useState()
     const [trainerid, setTrainerid] = useState()
-    console.log(trainerid,"this is the trainer id")
     const [trainer_data, setTrainer_data] = useState()
     const [date, setDate] = useState()
     const [gender, setGender] = useState()
@@ -42,7 +40,7 @@ const PatientListComponent = () => {
     useEffect(() => {
         dispatch(get_patients_list({ page, tab: "active" }))
         dispatch(get_trainers())
-    }, [])
+    }, [dispatch,page])
 
     useEffect(() => {
         if (patient_list?.isSuccess) {
@@ -106,9 +104,6 @@ const PatientListComponent = () => {
                     <h2>Patient List</h2> <button className="cmn_btn px-4" onClick={() => setToggleFilter(!toggleFilter)}>Filter</button>
                     {toggleFilter && <div className='patient_filter'>
                         <div className='filter_list w-100'>
-                            {/* <div filter_list w-100>
-                                <span>Username</span>
-                            </div> */}
                             <input type="text" placeholder='Username' className='form-control' value={username || ""} onChange={(e) => setUsername(e.target.value)} />
                         </div>
 
@@ -141,9 +136,6 @@ const PatientListComponent = () => {
                             </Dropdown>
                         </div>
                         <div className='filter_list w-100'>
-                            {/* <div className='label'>
-                                <span>Date</span>
-                            </div> */}
                             <input type="date" placeholder='Exercise Name' className='form-control' onChange={(e) => setDate(e.target.value)} />
                         </div>
                         <div className='patient_dropdown w-100'>
@@ -180,7 +172,7 @@ const PatientListComponent = () => {
                             <tr>
                                 <td className="ps-3">
                                     <div className="d-flex align-items-center table_user">
-                                        <img src={list?.image || Default_user} alt="User Image" />
+                                        <img src={list?.image || Default_user} alt="User_image" />
                                         <div className="d-inline-grid">
                                             <p className="mb-0">{list?.name}</p>
                                         </div>

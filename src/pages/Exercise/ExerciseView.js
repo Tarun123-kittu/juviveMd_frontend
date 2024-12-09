@@ -37,7 +37,7 @@ const ExerciseView = () => {
           <Row className="m-0 ">
             <Col lg={6} className="ps-0 pe-4">
               <div className="pose_image">
-                <img src={exercise_data?.imageUrl || PoseImage} alt="Exercise Image" />
+                <img src={exercise_data?.imageUrl || PoseImage} alt="Exercise_Image" />
               </div>
               <h4 className="exercise_heading text-center mt-2">Image</h4>
               <ul className="exercise_status mt-5">

@@ -56,15 +56,11 @@ const Reception_patient_list = () => {
         setShowFilter(!showFilter)
     }
     useEffect(() => {
-        console.log(elementRef,"dsajdslakjd====>out")
         if (elementRef.current) {
-            console.log(elementRef,"dsajdslakjd====>in")
           const rect = elementRef.current.getBoundingClientRect();
           setLeftpostion(rect.left - 133)
-          console.log('Left position from viewport:', rect.left);
         }
       }, [tab,elementRef.current]);
-      console.log(elementRef,"dsajdslakjd====>outer")
     const columns = [
         "User Name",
         "Date",
