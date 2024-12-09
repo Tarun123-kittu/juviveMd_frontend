@@ -64,6 +64,7 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
         const result = await response.json();
         return result;
     } catch (error) {
+        console.log(error,"from redux")
         return thunkAPI.rejectWithValue({
             message: error.message,
         });
