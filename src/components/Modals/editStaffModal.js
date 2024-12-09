@@ -11,7 +11,7 @@ import { Formik, Field, ErrorMessage, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import { get_single_staff, clear_single_staff_state } from "../../redux/slices/staffSlice/getStaffByIdSlice";
 import { update_staff, clear_update_staff_state } from "../../redux/slices/staffSlice/updateStaffSlice";
-import { get_all_staff, clear_staff_data } from "../../redux/slices/staffSlice/getAllUsers";
+import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
 import Loader from "../../common/Loader/Loader"
 
 const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
@@ -27,7 +27,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
     const [gender, setGender] = useState("")
     const [imageError, setImageError] = useState(false)
     const [hasImage, setHasImage] = useState(false)
-    const [update_staff, setUpdate_staff] = useState(true)
 
     const selected_staff_detail = useSelector((store) => store.STAFF_DETAIL);
     const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
@@ -309,7 +308,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                                 </Col>
                                 <Col lg={12}>
                                     <div className="text-end mt-1">
-                                        <button disabled={update_staff} type="submit" className="cmn_btn px-4">
+                                        <button type="submit" className="cmn_btn px-4">
                                             {!is_staff_updated?.isLoading ? "Update User" :
                                                 <Spinner animation="border" role="status">
                                                     <span className="visually-hidden">Loading...</span>

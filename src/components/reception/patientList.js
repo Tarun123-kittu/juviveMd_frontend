@@ -187,6 +187,8 @@ const Reception_patient_list = () => {
         setGender();
         setStatus();
         setTrainer();
+        setIsOpen(false);
+        setIndex(null);
     };
 
 
