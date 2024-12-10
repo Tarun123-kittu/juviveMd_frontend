@@ -17,6 +17,7 @@ import ReplaceTrainerModal from "../Modals/replaceTrainerModal";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
 
 
+
 const StaffComponent = () => {
     const dispatch = useDispatch()
     const [show, setShow] = useState(false);
@@ -30,6 +31,7 @@ const StaffComponent = () => {
     const is_staff_deleted = useSelector((store) => store.DELETE_STAFF)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
     const [staffId, setStaffId] = useState(null)
+
 
     useEffect(() => {
         dispatch(get_all_staff({ page }))
@@ -64,7 +66,6 @@ const StaffComponent = () => {
 
     useEffect(() => {
         if (is_staff_deleted?.isSuccess) {
-            toast.success(is_staff_deleted?.message.message)
             dispatch(get_all_staff({ page }))
             dispatch(clear_delete_staff_state())
             setshowDeleteModal(false)
@@ -83,7 +84,7 @@ const StaffComponent = () => {
                     setReplaced_trainer(true)
                     setStaffId(id)
                     setExercisesCount(findExercises?.totalExercises)
-                }else{
+                } else {
                     setshowDeleteModal(true)
                     setStaffId(id)
                 }
@@ -133,8 +134,13 @@ const StaffComponent = () => {
                                             </div>
                                         </td>
                                         <td>{formatDate(staff?.created_at)}</td>
-                                        <td>{staff?.phone || 'N/A'}</td>
-                                        <td>{staff?.gender || 'Male'}</td>
+                                        <td>{staff?.countryCode} {staff?.phone || 'N/A'}</td>
+                                        <td>
+                                            {staff?.gender
+                                                ? staff.gender.charAt(0).toUpperCase() + staff.gender.slice(1).toLowerCase()
+                                                : ''}
+                                        </td>
+
                                         <td>
                                             <button
                                                 className="btn_info"
@@ -177,7 +183,7 @@ const StaffComponent = () => {
             <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setshowDeleteModal} handleDelete={handleDelete} loading={is_staff_deleted?.isLoading} />
             <AddUsermodal show={show} setShow={setShow} />
             <EditStaffmodal show={showEditModal} setShow={setShowEditModal} staffId={staffId} page={page} setStaffId={setStaffId} />
-            <ReplaceTrainerModal trainers_list={trainers_list} setReplaced_trainer={setReplaced_trainer} replaces_trainer={replaces_trainer} exerciseCount={exerciseCount} setStaffId={setStaffId} staffId={staffId} />
+            <ReplaceTrainerModal trainers_list={trainers_list} setReplaced_trainer={setReplaced_trainer} replaces_trainer={replaces_trainer} exerciseCount={exerciseCount} setStaffId={setStaffId} staffId={staffId} showToast={true} />
         </div>
     )
 }

@@ -13,6 +13,7 @@ import { get_single_staff, clear_single_staff_state } from "../../redux/slices/s
 import { update_staff, clear_update_staff_state } from "../../redux/slices/staffSlice/updateStaffSlice";
 import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
 import Loader from "../../common/Loader/Loader"
+import { countryCodes } from "../../common/countriesData/CountriesList";
 
 const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
     const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
     const [gender, setGender] = useState("")
     const [imageError, setImageError] = useState(false)
     const [hasImage, setHasImage] = useState(false)
+    const [countryCode, setCountryCode] = useState(null)
 
     const selected_staff_detail = useSelector((store) => store.STAFF_DETAIL);
     const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
@@ -47,17 +49,19 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
         firstName: Yup.string().required("First name is required"),
         lastName: Yup.string().required("Last name is required"),
         phone: Yup.string()
-            .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
+            .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
             .required("Phone number is required"),
+        countryCode: Yup.string().required("Country code is required"),
         email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
         gender: Yup.string()
-            .oneOf(["MALE", "FEMALE", "NON-BINARY"], "Gender must be one of: male, female, or non-binary")
+            .oneOf(["MALE", "FEMALE", "NON-BINARY"], "Gender must be one of: MALE, FEMALE, or NON-BINARY")
             .required("Gender is required"),
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
+    
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -119,6 +123,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
             setGender(staffData.gender || "");
             setImageView(staffData.image || "");
             setImage(staffData.image || "");
+            setCountryCode(staffData?.countryCode || "")
         } else if (selected_staff_detail?.isError) {
             toast.error(selected_staff_detail?.error?.message || "An error occurred.");
         }
@@ -206,6 +211,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                         firstName,
                         lastName,
                         phone,
+                        countryCode,
                         gender,
                         email,
                         address,
@@ -250,19 +256,36 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                                 <Col lg={6}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
-                                        <Field
-                                            type="text"
-                                            name="phone"
-                                            placeholder="Enter 10-digit phone number"
-                                            className="form-control"
-                                        />
+                                        <div className="d-flex gap-2">
+                                            <Field
+                                                as="select"
+                                                name="countryCode"
+                                                placeholder="Enter your phone number"
+                                                className="form-select"
+                                                style={{ width: "80px" }}
+                                            >
+                                                <option>US +1</option>
+                                                {Array?.isArray(countryCodes) && countryCodes?.map((code, i) => {
+                                                    return (
+                                                        <option value={code?.mobileCode}>{code?.isoCode} <span>{code?.mobileCode}</span></option>
+                                                    )
+                                                })}
+                                            </Field>
+                                            <ErrorMessage name="countryCode" component="div" className="text-danger" />
+                                            <Field
+                                                type="text"
+                                                name="phone"
+                                                placeholder="Enter 10-digit phone number"
+                                                className="form-control"
+                                            />
+                                        </div>
                                         <ErrorMessage name="phone" component="div" className="text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={6}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Gender</Form.Label>
-                                        <Field as="select" value={values?.gender} name="gender" className="form-control">
+                                        <Field as="select" value={values?.gender} name="gender" className="form-select">
                                             <option value="">Select Gender</option>
                                             <option value="MALE">Male</option>
                                             <option value="FEMALE">Female</option>
@@ -298,7 +321,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                                 <Col lg={12}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Role</Form.Label>
-                                        <Field as="select" value={values?.role} name="role" className="form-control">
+                                        <Field as="select" value={values?.role} name="role" className="form-select">
                                             <option value="">Select Role</option>
                                             <option value="RECEPTIONIST">Receptionist</option>
                                             <option value="TRAINER">Trainer</option>

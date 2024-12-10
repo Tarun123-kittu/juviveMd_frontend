@@ -12,6 +12,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { jwtDecode } from 'jwt-decode';
 import Cookies from "js-cookie";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Validation Schema using Yup
 const validationSchema = Yup.object({
@@ -30,6 +31,7 @@ const LoginComponent = () => {
   const dispatch = useDispatch();
   const user_details = useSelector((Store) => Store.LOGIN_STATE);
   const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("")
   const remember = false;
   const Useremail = "";
@@ -84,6 +86,10 @@ const LoginComponent = () => {
 
 
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="authWrapper min-vh-100 d-flex align-items-center">
       <div className="authWidth">
@@ -126,21 +132,34 @@ const LoginComponent = () => {
 
               <Form.Group className="mb-2" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.password && errors.password}
-                />
+                <div className="position-relative">
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Enter your password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.password && errors.password}
+                  />
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className="position-absolute"
+                    style={{
+                      top: "50%",
+                      right: "10px",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
                 </Form.Control.Feedback>
                 <p className="mt-2 mb-0">
-                  It must be a combination of minimum 8 letters, numbers, and
-                  symbols.
+                  It must be a combination of minimum 8 letters, numbers, and symbols.
                 </p>
               </Form.Group>
 

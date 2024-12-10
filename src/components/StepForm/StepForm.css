@@ -29,6 +29,10 @@ p.tagLine {
   font-size: 14px;
 }
 
+.not_allowed {
+  pointer-events: none;
+cursor: not-allowed;
+}
 
 ol.consolt_final li {
   list-style: nu;

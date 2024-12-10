@@ -5,15 +5,21 @@ import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Loader from "../../common/Loader/Loader";
+import { countryCodes } from "../../common/countriesData/CountriesList";
 const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, stepOnefullData, setTrainer_name }) => {
   const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, "Name must be at least 3 characters")
-      .max(50, "Name can't exceed 50 characters")
-      .required("Name is required"),
+    firstName: Yup.string()
+      .min(3, "First Name must be at least 3 characters")
+      .max(50, "First Name can't exceed 50 characters")
+      .required("First Name is required"),
+    lastName: Yup.string()
+      .min(3, "Last Name must be at least 3 characters")
+      .max(50, "Last Name can't exceed 50 characters")
+      .required("Last Name is required"),
     tel: Yup.string()
       .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
       .required("Contact number is required"),
+    countryCode: Yup.string().required("Country code is required"),
     email: Yup.string()
       .matches(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -41,8 +47,10 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: stepOnefullData?.name || patient_all_data?.name || "",
+      firstName: stepOnefullData?.firstName || patient_all_data?.firstName || "",
+      lastName: stepOnefullData?.lastName || patient_all_data?.lastName || "",
       tel: stepOnefullData?.tel || patient_all_data?.phone || "",
+      countryCode: stepOnefullData?.countryCode || patient_all_data?.countryCode || "",
       email: stepOnefullData?.email || patient_all_data?.email || "",
       date: stepOnefullData?.date || patient_all_data?.dob || "",
       height: stepOnefullData?.height || patient_all_data?.height?.value || "",
@@ -58,6 +66,36 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     },
   });
 
+  const handleUnitChange = (unit) => {
+    console.log(unit, "unit unit")
+    if (height_unit !== unit) {
+      let convertedHeight = formik.values.height;
+      console.log(convertedHeight, "convertedHeight convertedHeight")
+
+      if (unit === "cm" && height_unit === "feet") {
+        convertedHeight = (formik.values.height * 30.48).toFixed(2);
+      } else if (unit === "feet" && height_unit === "cm") {
+        convertedHeight = (formik.values.height * 0.0328084).toFixed(2);
+      }
+
+      formik.setFieldValue("height", convertedHeight);
+      setHeight_unit(unit);
+    }
+  };
+
+  const handleUnitChangeWeight = (unit) => {
+    if (weight_unit !== unit) {
+      let convertedWeight = formik.values.weight;
+      if (unit === "kg" && weight_unit === "lbs") {
+        convertedWeight = (parseFloat(formik.values.weight) * 0.453592).toFixed(2);
+      } else if (unit === "lbs" && weight_unit === "kg") {
+        convertedWeight = (parseFloat(formik.values.weight) * 2.20462).toFixed(2);
+      }
+      formik.setFieldValue("weight", convertedWeight);
+      setWeight_unit(unit);
+    }
+  };
+
   return loading ? <Loader /> : (
     <>
       <h5 className="step_heading pt-3">Edit Personal Details</h5>
@@ -65,15 +103,32 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
         <Row>
           <Col lg={4}>
             <Form.Group className="mb-2">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>First Name</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
-                placeholder="Name of patient"
-                value={formik.values.name}
+                name="firstName"
+                placeholder="First Name of patient"
+                value={formik.values.firstName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.name && !!formik.errors.name}
+                isInvalid={formik.touched.firstName && !!formik.errors.firstName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.name}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-2">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="lastName"
+                placeholder="Last Name of patient"
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.lastName && !!formik.errors.lastName}
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.name}
@@ -83,15 +138,33 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
           <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Contact Number</Form.Label>
-              <Form.Control
-                type="tel"
-                name="tel"
-                placeholder="Contact Number"
-                value={formik.values.tel}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.tel && !!formik.errors.tel}
-              />
+              <div className="d-flex gap-2">
+                <select
+                  name="countryCode"
+                  value={formik.values.countryCode}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="form-select"
+                  style={{ width: "80px" }}
+                >
+                  <option value="US +1">US +1</option>
+                  {Array.isArray(countryCodes) &&
+                    countryCodes.map((code, i) => (
+                      <option key={i} value={code?.mobileCode}>
+                        {code?.isoCode} {code?.mobileCode}
+                      </option>
+                    ))}
+                </select>
+                <Form.Control
+                  type="tel"
+                  name="tel"
+                  placeholder="Contact Number"
+                  value={formik.values.tel}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.tel && !!formik.errors.tel}
+                />
+              </div>
               <Form.Control.Feedback type="invalid">
                 {formik.errors.tel}
               </Form.Control.Feedback>
@@ -119,8 +192,6 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
           <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Email Id</Form.Label>
@@ -160,7 +231,11 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={4}>
+        </Row>
+        <Row>
+
+
+          <Col lg={6}>
             <Form.Group className="mb-2">
               <Form.Label>Date of birth</Form.Label>
               <Form.Control
@@ -177,80 +252,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col lg={4}>
-            <Form.Group className="mb-2">
-              <Form.Label>Height</Form.Label>
-              <div className="volumeInput">
-                <div className="position-relative d-flex align-items-center">
-                  <Form.Control
-                    type="text"
-                    name="height"
-                    placeholder="Enter Height"
-                    value={formik.values.height}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.height && !!formik.errors.height}
-                    style={{ marginRight: '10px' }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setHeight_unit("cm")}
-                    className={`unit-btn ${height_unit === "cm" ? "active" : ""}`}
-                  >
-                    Cm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setHeight_unit("feet")}
-                    className={`unit-btn ${height_unit === "feet" ? "active" : ""}`}
-                  >
-                    Feet
-                  </button>
-                </div>
-              </div>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.height}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Col>
-          <Col lg={4}>
-            <Form.Group className="mb-2">
-              <Form.Label>Weight</Form.Label>
-              <div className="volumeInput">
-                <div className="position-relative d-flex align-items-center">
-                  <Form.Control
-                    type="text"
-                    name="weight"
-                    placeholder="Enter Weight"
-                    value={formik.values.weight}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.weight && !!formik.errors.weight}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setWeight_unit("kg")}
-                    className={`unit-btn ${weight_unit === "kg" ? "active" : ""}`}
-                  >
-                    kg
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setWeight_unit("lbs")}
-                    className={`unit-btn ${weight_unit === "lbs" ? "active" : ""}`}
-                  >
-                    Lbs
-                  </button>
-                </div>
-              </div>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.weight}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Col>
-          <Col lg={4}>
+          <Col lg={6}>
             <Form.Group className="mb-2">
               <Form.Label>Assign the trainer to him or her.</Form.Label>
               <Form.Select
@@ -277,6 +279,81 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {formik.errors.trainer}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+        </Row>
+        <Row>
+          <Col lg={6}>
+            <Form.Group className="mb-2">
+              <Form.Label>Height</Form.Label>
+              <div className="volumeInput">
+                <div className="position-relative d-flex align-items-center w-100">
+                  <Form.Control
+                    type="text"
+                    name="height"
+                    placeholder="Enter Height"
+                    value={formik.values.height}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isInvalid={formik.touched.height && !!formik.errors.height}
+                    style={{ marginRight: "10px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChange("cm")}
+                    className={`unit-btn ${height_unit === "cm" ? "active" : ""}`}
+                  >
+                    Cm
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChange("feet")}
+                    className={`unit-btn ${height_unit === "feet" ? "active" : ""}`}
+                  >
+                    Feet
+                  </button>
+                </div>
+              </div>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.height}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+          <Col lg={6}>
+            <Form.Group className="mb-2">
+              <Form.Label>Weight</Form.Label>
+              <div className="volumeInput">
+                <div className="position-relative d-flex align-items-center w-100">
+                  <Form.Control
+                    type="text"
+                    name="weight"
+                    placeholder="Enter Weight"
+                    value={formik.values.weight}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isInvalid={formik.touched.weight && !!formik.errors.weight}
+                    style={{ marginRight: "10px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChangeWeight("kg")}
+                    className={`unit-btn ${weight_unit === "kg" ? "active" : ""}`}
+                  >
+                    kg
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleUnitChangeWeight("lbs")}
+                    className={`unit-btn ${weight_unit === "lbs" ? "active" : ""}`}
+                  >
+                    Lbs
+                  </button>
+                </div>
+              </div>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.weight}
               </Form.Control.Feedback>
             </Form.Group>
           </Col>

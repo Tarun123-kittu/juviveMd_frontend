@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ step, stepOnefullData, selected_health_issue,trainer_name, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }, thunkAPI) => {
+export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api", async ({ step, stepOnefullData, selected_health_issue, trainer_name, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -10,8 +10,10 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
         myHeaders.append("Authorization", validToken);
 
         const raw = JSON.stringify({
-            "name": stepOnefullData?.name,
+            "firstName": stepOnefullData?.firstName,
+            "lastName": stepOnefullData?.lastName,
             "phone": stepOnefullData?.tel,
+            "countryCode": stepOnefullData?.countryCode,
             "email": stepOnefullData?.email,
             "gender": stepOnefullData?.gender,
             "height": {
@@ -25,7 +27,7 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
             "goal": stepOnefullData?.goal,
             "dob": stepOnefullData?.date,
             "trainerID": stepOnefullData?.trainer,
-            "trainerName" :trainer_name,
+            "trainerName": trainer_name,
             "step": step,
             "health_issue_text": selected_health_issue,
             "optimal_weight": {
@@ -64,7 +66,7 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
         const result = await response.json();
         return result;
     } catch (error) {
-        console.log(error,"from redux")
+        console.log(error, "from redux")
         return thunkAPI.rejectWithValue({
             message: error.message,
         });

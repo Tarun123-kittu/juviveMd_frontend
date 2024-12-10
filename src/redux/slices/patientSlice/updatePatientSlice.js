@@ -12,8 +12,10 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
 
         const raw = JSON.stringify({
             "id": id,
-            "name": stepOnefullData?.name ? stepOnefullData?.name : patient_details?.name,
+            "firstName": stepOnefullData?.firstName ? stepOnefullData?.firstName : patient_details?.firstName,
+            "lastName": stepOnefullData?.lastName ? stepOnefullData?.lastName : patient_details?.lastName,
             "phone": stepOnefullData?.tel ? stepOnefullData?.tel : patient_details?.phone,
+            "countryCode": stepOnefullData?.countryCode ? stepOnefullData?.countryCode : patient_details?.countryCode,
             "email": stepOnefullData?.email ? stepOnefullData?.email : patient_details?.email,
             "gender": stepOnefullData?.gender ? stepOnefullData?.gender : patient_details?.gender,
             "height": {
@@ -24,6 +26,7 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
                 "unit": weight_unit ? weight_unit : patient_details?.weight?.unit,
                 "value": stepOnefullData?.weight ? stepOnefullData?.weight : patient_details?.weight?.value
             },
+            "countryCode" : stepOnefullData?.countryCode ? stepOnefullData?.countryCode : patient_details?.countryCode,
             "goal": stepOnefullData?.goal ? stepOnefullData?.goal : patient_details?.goal,
             "dob": stepOnefullData?.date ? stepOnefullData?.date : patient_details?.dob,
             "trainerID": stepOnefullData?.trainer ? stepOnefullData?.trainer : patient_details?.trainerID,
