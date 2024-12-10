@@ -1,237 +1,263 @@
 .fade.cmn_modal.modal {
-    background: #f9fafbd4;
+  background: #f9fafbd4;
 }
 
 .modal_head svg {
-    width: 15px;
+  width: 15px;
 }
 button.cmn_btn {
-    background: var(--primary-color);
-    color: var(--bs-white);
-    font-weight: 500;
-    padding: 0px 0.8rem; 
-    font-size: 14px;
+  background: var(--primary-color);
+  color: var(--bs-white);
+  font-weight: 500;
+  padding: 0px 0.8rem;
+  font-size: 14px;
 }
 .cmn_modal .authWrapper img.img-fluid {
-width: auto;
-height: -webkit-fill-available;
+  width: auto;
+  height: -webkit-fill-available;
 }
 .drag_file .image_preview {
-    width: 100%;
-    height: 100%;
-    border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
 }
 
 button.btn.cmn_btn:disabled {
-    background: #ddd;
-    pointer-events: unset;
-    cursor: not-allowed;
+  background: #ddd;
+  pointer-events: unset;
+  cursor: not-allowed;
 }
 
 .fade.cmn_modal.modal {
-    background: #f9fafbd4;
+  background: #f9fafbd4;
 }
 
 .cmn_modal .modal-dialog {
-    max-width: 796px;
+  max-width: 796px;
 }
 
 .cmn_modal .modal-content {
-    padding: 2rem;
-    border: unset;
-    box-shadow: 0px 4px 20px rgba(0,0,0,8%);
+  padding: 2rem;
+  border: unset;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 8%);
 }
 .modal_head svg {
-    width: 15px;
+  width: 15px;
 }
 
 .upload_file {
-    border: 2px solid var(--primary-color);
-    padding: 10px;
-    border-radius: 5px;
-    min-width: 164px;
-    text-align: center;
-    margin-bottom: 8px;
-    color: var(--bs-black);
+  border: 2px solid var(--primary-color);
+  padding: 10px;
+  border-radius: 5px;
+  min-width: 164px;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--bs-black);
 }
 
 .upload_image {
-    text-align: center;
+  text-align: center;
 }
 
 span.remove_file {
-    color: var(--bs-black);
-    cursor: pointer;
+  color: var(--bs-black);
+  cursor: pointer;
 }
 
 .modal_heading {
-    font-size: 18px;
-    font-weight: 600;
-    color: #21272A;
+  font-size: 18px;
+  font-weight: 600;
+  color: #21272a;
 }
 .image_req span {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .image_req p {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--bs-black);
-    margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--bs-black);
+  margin-bottom: 4px;
 }
 
 .image_req {
-    padding-left: 3rem;
+  padding-left: 3rem;
 }
 .fade.cmn_modal {
-    padding-left: 0px !important;
+  padding-left: 0px !important;
 }
 .staff-user-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .staff-user-image {
-    overflow: hidden;
+  overflow: hidden;
 }
 /* delete modal */
 .cmn_modal.deleteModal .modal-dialog {
-    max-width: 560px;
+  max-width: 560px;
 }
 .deletmodal_heading {
-    color: var(--primary-color);
-    font-size: 26px;
+  color: var(--primary-color);
+  font-size: 26px;
 }
 .modal_logo img {
-    width: 153px;
+  width: 153px;
 }
 
 /* Add patient */
 
 ul.static_tabs {
-    border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 ul.static_tabs li {
-    padding: 10px;
-    font-weight: 500;
-    color: #666666;
+  padding: 10px;
+  font-weight: 500;
+  color: #666666;
 }
 
 ul.static_tabs li.active {
-    border-bottom: 1px solid var(--primary-color);
-    color: var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  color: var(--primary-color);
 }
 
 ul.steps {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1.43px solid #D9DBE9;
-    padding-bottom: 20px;
-    width: 90%;
-    margin: auto;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1.43px solid #d9dbe9;
+  padding-bottom: 20px;
+  width: 90%;
+  margin: auto;
 }
 
 li.step {
-    width: 30px;
-    height: 30px;
-    background: #EFF0F6;
-    border-radius: 50%;
-    flex: 0 0 30px;
-    color: #6F6C90;
+  width: 30px;
+  height: 30px;
+  background: #eff0f6;
+  border-radius: 50%;
+  flex: 0 0 30px;
+  color: #6f6c90;
 }
 
 li.line_bar {
-    width: 17%;
-    height: 7px;
-    background: #EFF0F6;
-    border-radius: 12px;
+  width: 17%;
+  height: 7px;
+  background: #eff0f6;
+  border-radius: 12px;
 }
 h5.step_heading {
-    font-size: 20px;
-    color: var(--primary-color);
+  font-size: 20px;
+  color: var(--primary-color);
 }
 .cmn_modal.EmailSentModal .modal-dialog {
-    max-width: 450px;
+  max-width: 450px;
 }
 
-.EmailSentModal  .deletmodal_heading {
-    font-size: 18px;
-    line-height: 25px;
+.EmailSentModal .deletmodal_heading {
+  font-size: 18px;
+  line-height: 25px;
 }
 
 .EmailSentModal span {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.EmailSentModal .modal_logo img{
-    width: 103px;
+.EmailSentModal .modal_logo img {
+  width: 103px;
 }
 
 /* Add exercise */
 .drag_file {
-    position: relative;
-    height: 184px;
-    border: 1.11px dashed #B1BFD0;
-    border-radius: 5px;
-    
+  position: relative;
+  height: 184px;
+  border: 1.11px dashed #b1bfd0;
+  border-radius: 5px;
 }
 
 .drag_file h4 {
-    font-size: 13px;
-    text-align: center;
-    font-weight: 400;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 400;
 }
 
 .drag_file p {
-    font-size: 12px;
-    text-align: center;
-    color: var(--primary-color);
+  font-size: 12px;
+  text-align: center;
+  color: var(--primary-color);
 }
 
 .drag_file h4 span {
-    color: var(--primary-color);
-    font-weight: 500;
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
 .authWrapper .drag_file input {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
 }
 .authWrapper.add_exercise textarea.form-control {
-    height: unset;
+  height: unset;
 }
-.cmn_modal.replaces_trainer .modal-dialog{
-max-width: 450px;
+.cmn_modal.replaces_trainer .modal-dialog {
+  max-width: 450px;
 }
 
 .replaces_trainer .trainer_delete {
-    font-size: 14px;
+  font-size: 14px;
 }
-@media(max-width:1440px){
-    .deletmodal_heading{
-        font-size: 20px;
-    }
-    .cmn_modal .modal-content {
-       padding: 1.5rem;
-    }
+@media (max-width: 1440px) {
+  .deletmodal_heading {
+    font-size: 20px;
+  }
+  .cmn_modal .modal-content {
+    padding: 1.5rem;
+  }
 }
-@media(max-width:1024px){
-    .deletmodal_heading{
-        margin-top: 10px;
-        font-size: 20px;
-    }
-    .cmn_modal .modal-content {
-        padding: 1rem;
-     }
+@media (max-width: 1024px) {
+  .deletmodal_heading {
+    margin-top: 10px;
+    font-size: 20px;
+  }
+  .cmn_modal .modal-content {
+    padding: 1rem;
+  }
+}
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #0c5e62;
+  border: 1px solid #0c5e62;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 12px;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }

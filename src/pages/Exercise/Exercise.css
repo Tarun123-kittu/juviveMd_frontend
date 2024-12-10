@@ -33,11 +33,11 @@ ul.exercise_status p {
     height: 100%;
 }
 .exercise_heading {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--bs-black);
 }
-.exercise_video iframe {
+.exercise_video video {
     clip-path: inset(0 0 0 0 round 20px);
 }
 ul.exercise_status li {
@@ -53,4 +53,7 @@ li.table {
 }
 .exercise_heading {
     font-size: 20px;
+}
+ul.exercise_status li  h5 {
+    font-size: 18px;
 }

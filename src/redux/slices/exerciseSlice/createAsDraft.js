@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const create_exercise = createAsyncThunk("create_exercise", async ({ exercise_name, category, video_link, image, description, draft }, thunkAPI) => {
+export const create_exercise_draft = createAsyncThunk("create_exercise_draft", async ({ exercise_name, category, video_link, image, description,  }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -14,7 +14,7 @@ export const create_exercise = createAsyncThunk("create_exercise", async ({ exer
         formdata.append("video_link", video_link);
         formdata.append("image", image);
         formdata.append("description", description);
-        formdata.append("draft", false);
+        formdata.append("draft", true);
 
         const requestOptions = {
             method: "POST",
@@ -40,8 +40,8 @@ export const create_exercise = createAsyncThunk("create_exercise", async ({ exer
     }
 })
 
-const createExerciseAPI = createSlice({
-    name: "createExerciseAPI",
+const createExerciseDraftAPI = createSlice({
+    name: "createExerciseDraftAPI",
     initialState: {
         isLoading: false,
         isSuccess: false,
@@ -50,7 +50,7 @@ const createExerciseAPI = createSlice({
         message: null
     },
     reducers: {
-        clear_create_exercise_state: (state) => {
+        clear_create_exercise_draft_state: (state) => {
             state.isLoading = false
             state.isSuccess = false
             state.isError = false
@@ -61,20 +61,20 @@ const createExerciseAPI = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(create_exercise.pending, (state) => {
+            .addCase(create_exercise_draft.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(create_exercise.fulfilled, (state, action) => {
+            .addCase(create_exercise_draft.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
                 state.message = action.payload
             })
-            .addCase(create_exercise.rejected, (state, action) => {
+            .addCase(create_exercise_draft.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.error = action.payload
             })
     }
 })
-export const { clear_create_exercise_state } = createExerciseAPI.actions
-export default createExerciseAPI.reducer
+export const { clear_create_exercise_draft_state } = createExerciseDraftAPI.actions
+export default createExerciseDraftAPI.reducer

@@ -6,16 +6,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { get_single_exercise } from "../../redux/slices/exerciseSlice/getSingleExercise";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../common/Loader/Loader";
-import "./Exercise.css";
+import ReactPlayer from 'react-player';
+import "./Exercise.css"
+
 const ExerciseView = () => {
   const location = useLocation()
   const { id } = location?.state ? location?.state : location
-  console.log(id, "this is the id")
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
   const [exercise_data, setExerciseData] = useState()
-  console.log(is_exercise, "this is the exercise data")
 
   useEffect(() => {
     if (id) {
@@ -36,9 +36,15 @@ const ExerciseView = () => {
         </div>
         <div className="cmn_bg_wrapper">
           <Row className="m-0 ">
-            <Col lg={6} className="ps-0 pe-4">
-              <div className="pose_image text-center">
-                <img className="img-fluid m-auto" src={exercise_data?.imageUrl || PoseImage} alt="Exercise Image" />
+            <Col lg={5} className="ps-0 pe-4">
+              <div className="pose_image">
+                <img
+                  src={exercise_data?.imageUrl || PoseImage}
+                  alt="Exercise_Image"
+                  className="exercise_preview_image"
+                  style={{ width: '100%', height: '350px', objectFit: 'cover' }}
+                />
+
               </div>
               <h4 className="exercise_heading text-center mt-2">Image</h4>
               <ul className="exercise_status mt-5">
@@ -81,32 +87,35 @@ const ExerciseView = () => {
                 </li>
               </ul>
             </Col>
-            <Col lg={6} className="pe-0 ps-4">
+            <Col lg={7} className="pe-0 ps-4">
               <h4 className="exercise_heading">Description</h4>
               <p>
                 {exercise_data?.description}
               </p>
-              <h4 className="exercise_heading mt-5">Description</h4>
+              <h4 className="exercise_heading mt-5">Exercise video</h4>
               <div className="exercise_video">
-                <iframe
+                <ReactPlayer
+                  url={exercise_data?.video_link}
                   width="100%"
-                  height="315"
-                  src={exercise_data?.video_link}
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
+                  height="315px"
+                  controls
+                />
               </div>
             </Col>
-            <Col lg={12} className="">
-              <div className="d-flex justify-content-center gap-3 pt-3">
-                <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
-              </div>
-            </Col>
+
           </Row>
+        </div>
+        <div>
+          <Col lg={12} className="">
+            <div className="d-flex justify-content-center gap-3 pt-3">
+              <button className="cmn_btn ps-4 pe-4" onClick={() => navigate(-1)}>Back</button>
+            </div>
+          </Col>
         </div>
       </div>
     </div>
+
+
   );
 };
 

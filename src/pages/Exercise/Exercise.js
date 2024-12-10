@@ -12,9 +12,7 @@ import { useLocation } from 'react-router-dom';
 const Exercise = () => {
   const dispatch = useDispatch();
   const location = useLocation()
-  console.log(location)
   const {pathname} = location
-  console.log(pathname,"this is the path")
   const [toggleFilter, setToggleFilter] = useState(false);
   const [exercise_category, setExercise_category] = useState();
   const [activeTab, setActiveTab] = useState("active");
@@ -87,9 +85,6 @@ const Exercise = () => {
               {toggleFilter && (
                   <div className="patient_filter">
                     <div className="filter_list w-100">
-                      {/* <div className="label">
-                        <span>Exercise</span>
-                      </div> */}
                       <input
                         type="text"
                         placeholder="Exercise Name"
@@ -120,7 +115,6 @@ const Exercise = () => {
 
                         <Dropdown.Menu>
                           <ul>
-                            {/* <li><input type="text" placeholder='Search Trainer' /> <span>Search Trainer</span></li> */}
                             {exercise_category?.map((category) => {
                               return (
                                 <Dropdown.Item type="button" onClick={() => setCategory(category)}>{category}</Dropdown.Item>
@@ -131,9 +125,6 @@ const Exercise = () => {
                       </Dropdown>
                     </div>
                     <div className="filter_list w-100">
-                      {/* <div className="label">
-                        <span>Date</span>
-                      </div> */}
                       <input
                         type="date"
                         placeholder="Exercise Name"
@@ -150,8 +141,8 @@ const Exercise = () => {
             <div className={`${toggleFilter && "blur_bg"}`}>
 
             <Tabs
-              activeKey={activeTab} // Controlled active tab
-              onSelect={(key) => {setActiveTab(key);handleValueClear()}} // Update active tab
+              activeKey={activeTab} 
+              onSelect={(key) => {setActiveTab(key);handleValueClear()}} 
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >
@@ -160,7 +151,6 @@ const Exercise = () => {
               <Tab eventKey="rejected" title="Rejected" />
             </Tabs>
 
-            {/* Conditionally render content */}
             {renderTabContent()}
             </div>
           </div>
