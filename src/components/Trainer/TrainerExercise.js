@@ -8,9 +8,14 @@ import AddExcercise from "../Modals/AddExcercise";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch, useSelector } from "react-redux";
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import { useLocation } from "react-router-dom";
+import { clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
+
 
 const TrainerExercise = () => {
   const dispatch = useDispatch();
+  const location = useLocation()
+  const { pathname } = location
   const [toggleFilter, setToggleFilter] = useState(false);
   const [showAddExerciseModal, setshowAddExerciseModal] = useState(false);
   const [exercise_category, setExercise_category] = useState();
@@ -34,13 +39,13 @@ const TrainerExercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} />;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category}/>;
-        case "rejected":
-          return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} />;
+      case "rejected":
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} />;
       default:
         return null;
     }
@@ -54,7 +59,12 @@ const TrainerExercise = () => {
     setUsername()
     setCategory()
     setDate()
-    dispatch(get_exercise({ page: 1, tab: activeTab}))
+    dispatch(get_exercise({ page: 1, tab: activeTab }))
+  }
+
+  const handleUpdateTab = (key) => {
+    setActiveTab(key)
+    dispatch(clear_get_single_exercise_state())
   }
 
   return (
@@ -140,14 +150,14 @@ const TrainerExercise = () => {
                   />
                 </div>
                 <div className='d-flex justify-content-end gap-2'>
-                <button className="cmn_btn" onClick={() => handleSearch()}>Search</button>
-                <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clean</button>
+                  <button className="cmn_btn" onClick={() => handleSearch()}>Search</button>
+                  <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clean</button>
                 </div>
               </div>
             )}
             <Tabs
               activeKey={activeTab} // Controlled active tab
-              onSelect={(key) => setActiveTab(key)} // Update active tab
+              onSelect={(key) => handleUpdateTab(key)} // Update active tab
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >

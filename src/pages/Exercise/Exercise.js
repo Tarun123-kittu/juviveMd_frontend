@@ -4,7 +4,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { Dropdown } from "react-bootstrap";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch, useSelector } from "react-redux";
-import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import { get_exercise,clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
 import ActiveExerciseTab from "../../components/Tabs/ExerciseTab/ActiveExerciseTab";
 import { useLocation } from 'react-router-dom';
 
@@ -63,6 +63,7 @@ const Exercise = () => {
     setUsername()
     setCategory()
     setDate()
+    dispatch(clear_get_single_exercise_state())
   }
 
   return (

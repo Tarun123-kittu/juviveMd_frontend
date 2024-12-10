@@ -11,14 +11,14 @@ import Spinner from 'react-bootstrap/Spinner';
 import EditExcercise from '../../Modals/editExercise';
 import { FaRegEye } from "react-icons/fa";
 import Nodata from '../../StaticComponents/Nodata';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Pagination from '../../../common/pagination/Pagination';
+import { FaEdit } from "react-icons/fa";
 
 
 const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname }) => {
-  const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { path } = location
   const [page, setPage] = useState(1)
   const [isOpen, setIsOpen] = useState(false);
   const [all_exercise, setAllExercise] = useState()
@@ -34,7 +34,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     "Exercise Link",
     "Category",
     "Exercise Status",
-    "View"
+    "Action"
   ];
 
   const exercise_data = useSelector((store) => store.ALL_EXERCISES)
@@ -44,7 +44,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     if (tab) {
       dispatch(get_exercise({ page, tab }))
     }
-  }, [tab])
+  }, [tab,page,dispatch])
 
   useEffect(() => {
     if (exercise_data?.isSuccess) {
@@ -77,6 +77,10 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     setIsOpen(false)
   }, [tab])
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage + 1);
+};
+
   return (
     <div>
       <DataTable columns={columns}>
@@ -85,16 +89,16 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
             <tr>
 
               <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
-              <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' /></td>
+              <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' alt="exercise"/></td>
               <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
               <td> <div className='patient_dropdown w-100'>
                 <Dropdown
                   show={isOpen}
                   onToggle={(nextOpenState) => {
-                    setIsOpen(nextOpenState); // Sync the dropdown state
+                    setIsOpen(nextOpenState); 
                     if (!nextOpenState) {
-                      setTimeout(() => setStatus(null), 0); // Delay resetting status slightly
+                      setTimeout(() => setStatus(null), 0); 
                     }
                   }}
                   autoClose={false}
@@ -147,7 +151,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                               type="checkbox"
                               checked={status === 1}
                               onClick={(e) => {
-                                e.stopPropagation(); // Prevents triggering the parent's onClick
+                                e.stopPropagation(); 
                                 setStatus(1);
                                 setIndex(i);
                               }}
@@ -167,7 +171,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                               type="checkbox"
                               checked={status === 0}
                               onClick={(e) => {
-                                e.stopPropagation(); // Prevents triggering the parent's onClick
+                                e.stopPropagation(); 
                                 setStatus(0);
                                 setIndex(i);
                               }}
@@ -212,8 +216,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
               </div></td>
               <td>
-                {/* <button  className="cmn_btn">View</button> */}
-                <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />
+                {(localStorage?.getItem('user_role') === "TRAINER" || localStorage?.getItem('user_role') === "ADMIN") && (tab === "approvalRequest" || tab === "active") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                {(localStorage?.getItem('user_role') === "ADMIN") && (tab === "rejected") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button
@@ -239,6 +244,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
         })}
 
       </DataTable>
+      {exercise_data?.isSuccess && exercise_data?.data?.data?.totalPages > 1 && <Pagination totalPages={exercise_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
       <EditExcercise
         showAddExerciseModal={editExerciseModal}
         setshowAddExerciseModal={setEditExerciseModal}

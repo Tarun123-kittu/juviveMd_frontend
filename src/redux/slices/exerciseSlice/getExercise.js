@@ -58,7 +58,7 @@ const getExerciseAPI = createSlice({
     data: [],
     error: null,
   },
-  reducer: {
+  reducers: {
     clear_get_single_exercise_state: (state) => {
       state.isLoading = false
       state.isSuccess = false

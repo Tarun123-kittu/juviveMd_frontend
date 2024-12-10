@@ -11,7 +11,7 @@ import "./Exercise.css"
 
 const ExerciseView = () => {
   const location = useLocation()
-  const { id } = location?.state ? location?.state : location
+  const { id,tab } = location?.state ? location?.state : location
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
