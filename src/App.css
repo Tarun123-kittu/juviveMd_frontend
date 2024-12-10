@@ -72,6 +72,9 @@ button.cmn_btn.filter_btn {
 .cmn_btn.fade_color:hover svg{
   fill: var(--bs-white);
 } 
+span.text-decoration-underline {
+  color: #121619;
+}
 .loader_img img {
   width: 60px;
 }
@@ -131,12 +134,25 @@ ul.pagination li a {
   color: var(--bs-black);
 }
 
+body .form-check-input:checked, body input[type="checkbox"]:checked {
+  background-color: #005e62;
+  border-color: #ffffff;
+  accent-color: #005e62;
+}
+body .form-check-input, body input[type="checkbox"]{
+  background-color: #fff;
+  border-color: #005e62;
+}
 ul.pagination li.active {
   background-color: var(--primary-color);
   border-radius: 3px;
 }
 
-
+.table td.nodropdown .patient_dropdown button.btn {
+  min-width: unset;
+  border: unset !important;
+  justify-content: center;
+}
 
 li.page-item.active a.page-link {
   background-color: var(--primary-color);

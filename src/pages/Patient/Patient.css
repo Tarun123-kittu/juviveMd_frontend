@@ -97,9 +97,10 @@ box-shadow: unset;
     display: none;
 }
 .table .patient_dropdown button.btn {
-    border: unset !important;
+    /* border: unset !important; */
     width: unset;
     gap: 9px;
+    min-width: 157px;
 }
 .patient_dropdown .dropdown-menu a.dropdown-item, .patient_dropdown .dropdown-menu .dropdown-item:active {
     font-size: 13px;
