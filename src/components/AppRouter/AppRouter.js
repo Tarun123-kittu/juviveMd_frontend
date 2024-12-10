@@ -109,18 +109,15 @@ const AppRouter = () => {
                             <Patient />
                         </ProtectedRoute>
                     ),
+                },
+                {
+                    path: "/patient/patientData",
+                    element: (
+                        <ProtectedRoute requiredRole="ADMIN">
+                            <PatientData />
+                        </ProtectedRoute>
+                    )
 
-                    children: [
-                        {
-                            path: "/patient/patientData",
-                            element: (
-                                <ProtectedRoute requiredRole="ADMIN">
-                                    <PatientData />
-                                </ProtectedRoute>
-                            )
-
-                        }
-                    ]
                 },
                 {
                     path: "/exercise",

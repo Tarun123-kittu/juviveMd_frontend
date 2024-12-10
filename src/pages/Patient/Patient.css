@@ -1,15 +1,24 @@
-ul {}
 
-.report_info ul {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
+.report_info ul li{
+width: 20%;
 }
-
+.report_info ul {
+    display: flex;
+  flex-wrap: wrap;
+}
+.user-data {
+    width: 100%;
+    padding-left: 3rem;
+}
+.cmn_head h4 {
+    font-size: 18px;
+    margin: 0;
+}
 .report_info ul strong {
-    min-width: 122px;
     display: inline-block;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
+    padding-right: 10px;
 }
 
 .report_info ul span {

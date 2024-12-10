@@ -70,7 +70,7 @@ const Sidebar = () => {
         }
 
         <div className='flex-grow-1'>
-          <h4 className='mb-0'>{getGreeting()},{localStorage?.getItem('user_name')}</h4>
+          <h4 className='mb-0 text-capitalize'>{getGreeting()},{localStorage?.getItem('user_name')}</h4>
           {Array?.isArray(quotes) && <p className='quote mb-0'><span className='author_name'>{quotes[day]?.author} - </span>{quotes[day]?.quote}</p>}
         </div>
         <div className='notifications position-relative d-flex align-items-center justify-content-center'>

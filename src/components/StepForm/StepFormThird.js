@@ -345,7 +345,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
 
         <Col lg={12} className="text-center mt-4">
           <div className='d-flex gap-3 justify-content-center'>
-            <button onClick={() => setStep(2)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
+            <button onClick={() => setStep(2)} className='cmn_btn border-btn ps-4 pe-4'>Back</button>
             <button type="submit" className='cmn_btn ps-4 pe-4'>Next</button>
           </div>
         </Col>

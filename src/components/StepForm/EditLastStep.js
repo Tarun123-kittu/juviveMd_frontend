@@ -12,7 +12,7 @@ const EditLastStep = ({ setStep, setStep_four_additional_information, step_four_
           <Form.Control as="textarea" rows={6} value={step_four_additional_information} onChange={(e) => setStep_four_additional_information(e.target.value)} style={{ height: "200px" }} />
         </Form.Group>
         <div className='d-flex gap-3 justify-content-center mt-4'>
-          <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>back</button>
+          <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>Back</button>
           {!is_patient_updated?.isLoading ? <button onClick={() => handleUpdate()} className='cmn_btn ps-4 pe-4'>Update</button>
             :
             <button className='cmn_btn ps-4 pe-4'><Spinner animation="border" role="status">

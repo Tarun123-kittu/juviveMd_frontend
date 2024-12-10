@@ -360,7 +360,7 @@ const Reception_patient_list = () => {
 
                                                     </div>
                                                 </div>
-                                                View health issue
+                                               <span> View health issue</span>
                                             </div>
                                         </td>}
 

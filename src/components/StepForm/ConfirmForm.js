@@ -17,7 +17,7 @@ const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModa
         <li>Find out which community 	programs are safe and helpful to you.</li>
       </ol>
       <div className='d-flex gap-3 justify-content-center'>
-        <button className='cmn_btn border-btn ps-5 pe-5' onClick={() => handleBack()}>back</button>
+        <button className='cmn_btn border-btn ps-5 pe-5' onClick={() => handleBack()}>Back</button>
         {!onboarding_process?.isLoading ? <button type="submit" className='cmn_btn ps-5 pe-5' onClick={() => handleSubmit()}>Save</button>
           :
           <button type="submit" className='cmn_btn ps-5 pe-5'><Spinner animation="border" role="status">

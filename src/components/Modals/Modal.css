@@ -261,3 +261,140 @@ input[type="checkbox"]:checked::after {
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
+
+input[type="range"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  /*  slider progress trick  */
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Track: webkit browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Track: Mozilla Firefox */
+input[type="range"]::-moz-range-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px rgba(12, 94, 98, 1);
+}
+
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid rgba(12, 94, 98, 1);
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px rgba(12, 94, 98, 1);
+}
+h5.feed-sub-text {
+  font-size: 18px;
+}
+
+.status {
+  margin-top: 15px;
+}
+
+ul.duration-data {
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+}
+
+ul.duration-data span {
+  color: var(--primary-color);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+ul.duration-data p {
+  font-size: 14px;
+  margin: 4px 0px;
+  font-weight: 500;
+}
+
+ul.duration-data {
+  margin-top: 20px;
+}
+
+.injury-data input, .injury-data select {
+  border: 1px solid rgba(172, 201, 203, 1);
+  border-radius: 3px;
+  padding: 0px 5px;
+  font-size: 12px;
+  color: #000;
+  height: 30px;
+  width: 111px;
+}
+
+.injury-data input:focus,.injury-data select:focus {
+  outline: unset;
+}
+ul.add-feedback button {
+  height: 20px;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+ul.add-feedback {
+  margin-bottom: 20px;
+}
+
+ul.add-feedback li {color: var(--bs-black);margin-bottom: 10px;}
+.injury-data label {
+  font-size: 12px;
+  color: #000;
+  font-weight: 500;
+}
+
+.feedback-desc {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1.4px solid rgba(172, 201, 203, 0.28);
+  margin-top: 1rem;
+}
+
+.feedback-desc p{
+  font-size: 14px;
+}
+.feedback-desc li img{
+  width: 47px;
+  height: 47px;
+  border-radius: 3px;
+}
+ul.add-feedback li {
+  font-size: 14px;
+  font-weight: 500;
+}
+.cmn_modal.FeedbackModal .deletmodal_heading {
+  color: #000;
+  font-weight: 600;
+}

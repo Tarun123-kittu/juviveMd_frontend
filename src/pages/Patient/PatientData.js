@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import default_user from "../../Images/default_user.svg";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import PatientInfoTab from "../../components/Tabs/PatientTabs/PatientInfoTab";
 const PatientData = () => {
+ 
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -14,9 +16,10 @@ const PatientData = () => {
               <span>Receptionist</span>
             </div>
           </div>
-          <ul>
+         <div className="user-data">
+         <ul className="justify-content-between">
             <li>
-              <strong>Age:</strong>
+              <strong style={{width:"80px"}}>Age:</strong>
               <span>32 Years</span>
             </li>
             <li>
@@ -31,6 +34,10 @@ const PatientData = () => {
               <strong>Weeks:</strong>
               <span>4 Weeks</span>
             </li>
+           
+          </ul>
+          <ul className="justify-content-between">
+          
             <li>
               <strong>Weight (kg):</strong>
               <span>55 kg</span>
@@ -48,10 +55,11 @@ const PatientData = () => {
               <span>In progress</span>
             </li>
           </ul>
-          <button className="cmn_btn">Reports</button>
+         </div>
+          <button className="cmn_btn px-4">Reports</button>
         </div>
-        <div className="cmn_head mb-2 mt-4">
-          <h2>
+        <div className="cmn_head mb-3 mt-4">
+          <h4>
             Monday,2 July{" "}
             <svg
               className="ms-2"
@@ -66,15 +74,15 @@ const PatientData = () => {
                 fill="black"
               />
             </svg>
-          </h2>
+          </h4>
         </div>
         <Tabs
-          defaultActiveKey="profile"
+          defaultActiveKey="monday"
           id="uncontrolled-tab-example"
-          className="mb-3 weekendTabs"
+          className="mb-3 weekendTabs cmn_tabs"
         >
           <Tab eventKey="monday" title="Monday">
-            Tab content for Monday
+          <PatientInfoTab/>
           </Tab>
           <Tab eventKey="tuesday" title="Tuesday">
             Tab content for Tuesday
@@ -96,6 +104,7 @@ const PatientData = () => {
           </Tab>
         </Tabs>
       </div>
+      
     </div>
   );
 };
