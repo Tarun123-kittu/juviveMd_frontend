@@ -11,7 +11,6 @@ export const get_exercise = createAsyncThunk(
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("Authorization", validToken);
 
-      // Dynamically build the request body
       const raw = JSON.stringify({
         ...(date && { date }),
         ...(exercise && { exercise }),

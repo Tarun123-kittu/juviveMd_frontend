@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import AddpatientModal from '../../components/Modals/AddPatientModal';
@@ -23,8 +23,8 @@ import Nodata from '../StaticComponents/Nodata';
 
 const Reception_patient_list = () => {
     const elementRef = useRef(null);
-    
-  
+
+
     const dispatch = useDispatch()
     const [showFilter, setShowFilter] = useState(false)
     const [showPateintModal, setshowPateintModal] = useState(false)
@@ -45,7 +45,7 @@ const Reception_patient_list = () => {
     const [patientId, setPatientId] = useState(null)
     const [payment_status_pending, setPayment_status_pending] = useState(false)
     const [payment_status_received, setPayment_status_received] = useState(false)
-    const[leftPosition,setLeftpostion] = useState("")
+    const [leftPosition, setLeftpostion] = useState("")
     const [path, setPath] = useState(["active"])
     const patient_data = useSelector((store) => store.GET_PATIENT_LIST)
     const common_data = useSelector((store) => store.COMMON_DATA)
@@ -57,10 +57,11 @@ const Reception_patient_list = () => {
     }
     useEffect(() => {
         if (elementRef.current) {
-          const rect = elementRef.current.getBoundingClientRect();
-          setLeftpostion(rect.left - 133)
+            const rect = elementRef.current.getBoundingClientRect();
+            setLeftpostion(rect.left - 133)
         }
-      }, [tab,elementRef.current]);
+    }, [tab, elementRef.current]);
+
     const columns = [
         "User Name",
         "Date",
@@ -233,14 +234,18 @@ const Reception_patient_list = () => {
                                             <div className="d-flex align-items-center table_user">
                                                 <img src={Default_user} alt="User Image" />
                                                 <div className="d-inline-grid">
-                                                    <p className="mb-0">{patient?.name ? patient.name.charAt(0).toUpperCase() + patient.name.slice(1) : ''}</p>
+                                                    <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
                                         <td>{patient?.phone}</td>
-                                        <td>{patient?.gender}</td>
+                                        <td>
+                                            {patient?.gender
+                                                ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1).toLowerCase()
+                                                : ''}
+                                        </td>
                                         <td>{patient?.goal}</td>
                                         <td>{patient?.trainerName}</td>
                                         <td>
@@ -283,7 +288,7 @@ const Reception_patient_list = () => {
                                                                     setPayment_status_received(false);
                                                                 }}
                                                             >
-                                                                 <input
+                                                                <input
                                                                     type="checkbox"
                                                                     checked={payment_status_pending}
                                                                     onClick={(e) => {
@@ -293,7 +298,7 @@ const Reception_patient_list = () => {
                                                                     }}
                                                                 />
                                                                 Pending
-                                                               
+
                                                             </Dropdown.Item>
                                                             <Dropdown.Item
                                                                 className="d-flex gap-2"
@@ -302,7 +307,7 @@ const Reception_patient_list = () => {
                                                                     setPayment_status_pending(false);
                                                                 }}
                                                             >
-                                                                
+
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={payment_status_received}
@@ -348,10 +353,10 @@ const Reception_patient_list = () => {
 
 
                                         {tab === "healthIssue" && <td>
-                                            <div className='health_issue'  ref={elementRef}>
+                                            <div className='health_issue' ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
                                                     <span className='d-flex align-items-center justify-content-center'>!</span>
-                                                    <div className='tooltip_custom' style={{  left: `${leftPosition}px`}}>
+                                                    <div className='tooltip_custom' style={{ left: `${leftPosition}px` }}>
                                                         <ul>
                                                             {Array?.isArray(patient?.health_issue_text) && patient?.health_issue_text?.map((issue, index) => (
                                                                 <li key={index}>{issue}</li>
@@ -384,7 +389,7 @@ const Reception_patient_list = () => {
                     {patient_data?.isSuccess && patient_data?.data?.data?.totalPages > 1 && <Pagination totalPages={patient_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
                 </div>
                 <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_patient_deleted?.isLoading} />
-                <AddpatientModal showPateintModal={showPateintModal} setshowPateintModal={setshowPateintModal} tab={tab} common_data={common_data} />
+                <AddpatientModal showPateintModal={showPateintModal} setshowPateintModal={setshowPateintModal} tab={tab} common_data={common_data} setTab={setTab} />
                 <EditpatientModal showPateintModal={showEditPateintModal} setshowPateintModal={setshowEditPateintModal} tab={tab} common_data={common_data} patientId={patientId} page={page} setPatientId={setPatientId} />
             </div>
         </div>

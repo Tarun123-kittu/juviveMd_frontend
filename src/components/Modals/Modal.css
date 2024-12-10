@@ -125,6 +125,11 @@ ul.static_tabs li.active {
   color: var(--primary-color);
 }
 
+.not_allowed {
+  pointer-events: none;
+cursor: not-allowed;
+}
+
 ul.steps {
   display: flex;
   gap: 5px;

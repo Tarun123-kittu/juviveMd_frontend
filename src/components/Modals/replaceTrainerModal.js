@@ -15,6 +15,7 @@ const ReplaceTrainerModal = ({
     exerciseCount,
     setStaffId,
     staffId,
+    showToast
 }) => {
     const dispatch = useDispatch();
     const [replaced_trainer_id, setReplacedTrainer_id] = useState(null);
@@ -33,7 +34,7 @@ const ReplaceTrainerModal = ({
     };
 
     useEffect(() => {
-        if (is_staff_deleted?.isSuccess) {
+        if (is_staff_deleted?.isSuccess && showToast) {
             handleClose(); 
             toast.success(is_staff_deleted?.message?.message);
             dispatch(get_all_staff());

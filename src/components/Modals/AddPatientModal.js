@@ -14,7 +14,7 @@ import { patient_onboarding_api, clear_patient_onboarding_state } from "../../re
 import toast from "react-hot-toast";
 import { get_patients_list } from "../../redux/slices/patientSlice/getPatientList";
 
-const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_data }) => {
+const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_data,setTab }) => {
     const dispatch = useDispatch()
     const [equipments, setEquipments] = useState([])
     const [activity_level, setActivity_level] = useState([])
@@ -107,6 +107,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 dispatch(clear_patient_onboarding_state())
                 setWorkout_frequency()
                 setStep_four_additional_information("")
+                setTab("healthIssue")
                 
             }
             if (step === 4) {
@@ -122,6 +123,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                 handleClose()
                 setWorkout_frequency()
                 setStep_four_additional_information("")
+                setTab("paymentPending")
 
             }
         }

@@ -72,7 +72,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
           <Form.Group className="mb-2">
             <Form.Label>What is the optimal weight for you? in Lbs/Kg</Form.Label>
             <div className="volumeInput w-100">
-              <div className="position-relative w-100 d-flex align-items-center">
+              <div className="position-relative w-100 d-flex align-items-center w-100">
                 <Form.Control
                   type="text"
                   name="optimalWeight"
