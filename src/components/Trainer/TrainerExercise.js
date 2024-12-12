@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import { useLocation } from "react-router-dom";
 import { clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
+import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../constants/permissionConstants";
+import UploadFileModal from "../Modals/uploadFileModal";
 
 
 const TrainerExercise = () => {
@@ -19,10 +22,13 @@ const TrainerExercise = () => {
   const [toggleFilter, setToggleFilter] = useState(false);
   const [showAddExerciseModal, setshowAddExerciseModal] = useState(false);
   const [exercise_category, setExercise_category] = useState();
+  const [showFileUploadModal,setShowFileUploadModal] = useState(false)
   const [activeTab, setActiveTab] = useState("active");
   const [username, setUsername] = useState("")
   const [category, setCategory] = useState("")
   const [date, setDate] = useState("")
+  const [ExercisePermission] = getRoutePermissions(permission_constants.EXERCISE)
+
 
   const common_data = useSelector((store) => store.COMMON_DATA);
 
@@ -39,13 +45,13 @@ const TrainerExercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
       default:
         return null;
     }
@@ -76,14 +82,21 @@ const TrainerExercise = () => {
         <div className="cmn_bg_wrapper exercise_tab">
           <div className="position-relative">
             <div className="d-flex gap-2 position-absolute end-0">
+              {ExercisePermission?.canCreate && 
               <button
+                className="cmn_btn filter_btn"
+                onClick={() => setShowFileUploadModal(true)}
+              >
+                + Upload File
+              </button>}
+              {ExercisePermission?.canCreate && <button
                 className="cmn_btn filter_btn"
                 onClick={() => {
                   setshowAddExerciseModal(true);
                 }}
               >
                 + Create Exercise
-              </button>
+              </button>}
               <button
                 className="cmn_btn px-4 filter_btn"
                 onClick={() => setToggleFilter(!toggleFilter)}
@@ -95,9 +108,6 @@ const TrainerExercise = () => {
             {toggleFilter && (
               <div className="patient_filter">
                 <div className="filter_list w-100">
-                  {/* <div className="label">
-                    <span>Exercise</span>
-                  </div> */}
                   <input
                     type="text"
                     placeholder="username"
@@ -156,8 +166,8 @@ const TrainerExercise = () => {
               </div>
             )}
             <Tabs
-              activeKey={activeTab} // Controlled active tab
-              onSelect={(key) => handleUpdateTab(key)} // Update active tab
+              activeKey={activeTab}
+              onSelect={(key) => handleUpdateTab(key)}
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >
@@ -167,7 +177,6 @@ const TrainerExercise = () => {
               <Tab eventKey="rejected" title="Rejected" />
             </Tabs>
 
-            {/* Conditionally render content */}
             {renderTabContent()}
           </div>
         </div>
@@ -179,6 +188,7 @@ const TrainerExercise = () => {
         tab={activeTab}
         setActiveTab={setActiveTab}
       />
+      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal}/>
     </div>
   );
 };

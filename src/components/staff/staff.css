@@ -11,3 +11,13 @@
     overflow: hidden;
     object-fit: cover;
 }
+
+.custom-phone-input input {
+    border: unset; 
+  }
+  
+  .custom-phone-input input:focus {
+    border: unset; 
+    outline: none;
+  }
+  

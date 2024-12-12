@@ -16,7 +16,7 @@ export const update_staff = createAsyncThunk("update_staff", async ({ data, id }
         formdata.append("gender", data?.gender);
         formdata.append("email", data?.email);
         formdata.append("address", data?.address);
-        formdata.append("role", data?.role);
+        formdata.append("roleId", data?.role);
         formdata.append("hasImage", data?.hasImage);
         formdata.append("countryCode", data?.countryCode);
         formdata.append("id", id);

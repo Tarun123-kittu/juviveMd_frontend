@@ -41,8 +41,10 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
     const [step_four_additional_information, setStep_four_additional_information] = useState("")
     const [workout_frequency, setWorkout_frequency] = useState()
 
+
     const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
+    console.log(step,step_form_open,"this is the trainer data")
     const handleClose = () => {
         setshowPateintModal(false)
         setStepThreeFullData()
@@ -52,10 +54,10 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
         setWorkout_frequency()
         setStep_four_additional_information("")
         setStep(1)
+        setStep_form_open(true)
     }
 
     useEffect(() => {
-
         dispatch(get_trainers())
     }, [])
 
@@ -173,10 +175,10 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                                 </ul>
                             )}
                     {step === 1 && step_form_open && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} setStepOneFullData={setStepOneFullData} stepOnefullData={stepOnefullData} setHeight_unit={setHeight_unit} height_unit={height_unit} setWeight_unit={setWeight_unit} weight_unit={weight_unit} setTrainer_name={setTrainer_name} />}
-                    {step === 2 && step_form_open && <StepFormSecond health_issue={health_issue} setStep={setStep} setIs_health_issue={setIs_health_issue} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} is_health_issue={is_health_issue}   setStep_form_open={setStep_form_open}/>}
+                    {step === 2 && step_form_open && <StepFormSecond health_issue={health_issue} setStep={setStep} setIs_health_issue={setIs_health_issue} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} is_health_issue={is_health_issue}  setStep_form_open={setStep_form_open}/>}
                     {step === 3 && step_form_open && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} setStepThreeFullData={setStepThreeFullData} stepThreefullData={stepThreefullData}  setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} />}
                     {step === 4 && step_form_open && <LastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleSubmit={handleSubmit} onboarding_process={onboarding_process} />}
-                    {is_health_issue && <ConfirmForm setStep={setStep} setIs_health_issue={setIs_health_issue} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} handleSubmit={handleSubmit} onboarding_process={onboarding_process}/>}
+                    {is_health_issue && <ConfirmForm setStep={setStep} step_form_open={step_form_open} setIs_health_issue={setIs_health_issue} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} handleSubmit={handleSubmit} onboarding_process={onboarding_process}/>}
                 </Modal.Body>
             </Modal>
         </div>

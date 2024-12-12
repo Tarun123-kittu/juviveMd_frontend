@@ -4,11 +4,14 @@ import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
-import { countryCodes } from "../../common/countriesData/CountriesList";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name }) => {
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('')
   const [trainer_names, setTrainer_names] = useState([])
-  console.log(trainer_names, "this is the trainer names")
   const validationSchema = Yup.object({
     firstName: Yup.string()
       .min(3, "First Name must be at least 3 characters")
@@ -19,7 +22,6 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       .max(50, "Last Name can't exceed 50 characters")
       .required("Last Name is required"),
     tel: Yup.string()
-      .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
       .required("Contact number is required"),
     countryCode: Yup.string().required("Country Code is required"),
     email: Yup.string()
@@ -81,14 +83,12 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
 
   const handleFilterTrainer = (e) => {
     const filteredTrainer = trainer_names?.filter((el) => el.firstName.toLowerCase() === e.target.value.toLowerCase())
-    console.log(filteredTrainer, "filtered trainer")
   }
 
 
   const handleUnitChange = (unit) => {
     if (height_unit !== unit) {
       let convertedHeight = formik.values.height;
-      console.log(convertedHeight, "convertedHeight convertedHeight")
 
       if (unit === "cm" && height_unit === "feet") {
         convertedHeight = (formik.values.height * 30.48).toFixed(2);
@@ -112,6 +112,21 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       setWeight_unit(unit);
     }
   };
+
+
+
+
+  const handleValidatePhone = (phone, setFieldValue) => {
+    setPhone(phone);
+    setPhone(phone);
+    const parsedPhone = parsePhoneNumberFromString(phone);
+
+    if (parsedPhone) {
+      setFieldValue('tel', parsedPhone.nationalNumber)
+      setFieldValue('countryCode', parsedPhone.countryCallingCode)
+    }
+
+  }
 
   return (
     <>
@@ -154,39 +169,27 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
           </Col>
           <Col lg={4}>
             <Form.Group className="mb-2">
-              <Form.Label>Contact Number</Form.Label>
+              <Form.Label>Phone Number</Form.Label>
               <div className="d-flex gap-2">
-                <select
-                  name="countryCode"
-                  value={formik.values.countryCode}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="form-select"
-                  style={{ width: "80px" }}
-                >
-                  <option value="US +1">US +1</option>
-                  {Array.isArray(countryCodes) &&
-                    countryCodes.map((code, i) => (
-                      <option key={i} value={code?.mobileCode}>
-                        {code?.isoCode} {code?.mobileCode}
-                      </option>
-                    ))}
-                </select>
-                <Form.Control
-                  type="tel"
+                <PhoneInput
+                  defaultCountry="us"
                   name="tel"
-                  placeholder="Contact Number"
-                  value={formik.values.tel}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.tel && !!formik.errors.tel}
+                  value={formik.values.tel} 
+                  onChange={(phone) => {
+                    formik.setFieldValue("tel", phone); 
+                    handleValidatePhone(phone, formik.setFieldValue); 
+                  }}
+                  onBlur={() => formik.setFieldTouched("tel", true)} 
                 />
               </div>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.tel}
-              </Form.Control.Feedback>
+              { formik.errors.tel && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.tel}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </Col>
+
 
           <Col lg={4}>
             <Form.Group className="mb-2">
@@ -305,8 +308,9 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               <div className="volumeInput">
                 <div className="position-relative d-flex align-items-center w-100">
                   <Form.Control
-                    type="text"
+                    type="number"
                     name="height"
+                    min={1}
                     placeholder="Enter Height"
                     value={formik.values.height}
                     onChange={formik.handleChange}
@@ -341,7 +345,8 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               <div className="volumeInput">
                 <div className="position-relative d-flex align-items-center w-100">
                   <Form.Control
-                    type="text"
+                    type="number"
+                    min={1}
                     name="weight"
                     placeholder="Enter Weight"
                     value={formik.values.weight}

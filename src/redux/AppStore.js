@@ -26,6 +26,9 @@ import userValidateToken from "./slices/authSlice/userValidatePasswordToken"
 import getQuotesAPI from "./slices/quotesSlice/quotesSlice"
 import createExerciseDraftAPI from "./slices/exerciseSlice/createAsDraft"
 import updateExerciseDraftAPI from "./slices/exerciseSlice/updateExercideDraft"
+import getRoleSlice from "./slices/roleSlice/getRole"
+import permissionSlice from "./slices/roleSlice/permissionSlice"
+import uploadExerciseAPI from "./slices/exerciseSlice/uploadExercises"
 
 const AppStore = configureStore({
   reducer: {
@@ -53,9 +56,12 @@ const AppStore = configureStore({
     UPDATE_EXERCISE_DATA: updateExerciseAPI,
     PATIENT_VALIDATE_TOKEN: patientValidateToken,
     USER_VALIDATE_TOKEN: userValidateToken,
-    GET_QUOTES : getQuotesAPI,
-    CREATE_DRAFT_EXERCISE : createExerciseDraftAPI,
-    UPDATE_DRAFT_EXERCISE : updateExerciseDraftAPI
+    GET_QUOTES: getQuotesAPI,
+    CREATE_DRAFT_EXERCISE: createExerciseDraftAPI,
+    UPDATE_DRAFT_EXERCISE: updateExerciseDraftAPI,
+    ROLE_LIST: getRoleSlice,
+    PERMISSIONS_DATA: permissionSlice,
+    UPLOAD_EXERCISE: uploadExerciseAPI
   },
 })
 

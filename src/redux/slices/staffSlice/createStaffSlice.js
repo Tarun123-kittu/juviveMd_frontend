@@ -20,7 +20,7 @@ export const create_staff_api = createAsyncThunk("create_staff_api", async ({ da
         formdata.append("gender", data?.gender);
         formdata.append("email", data?.email);
         formdata.append("address", data?.address);
-        formdata.append("role", data?.role);
+        formdata.append("roleId", data?.role);
         formdata.append("hasImage", true);
         formdata.append("countryCode", data?.countryCode);
 

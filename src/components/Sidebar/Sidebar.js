@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_quotes } from '../../redux/slices/quotesSlice/quotesSlice'
+import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions'
+import { permission_constants } from '../../constants/permissionConstants'
 
 const Sidebar = () => {
 
   const [toggle, setToggle] = useState(false)
-
   const dispatch = useDispatch()
 
   const location = useLocation();
@@ -24,6 +25,10 @@ const Sidebar = () => {
   const quotes_list = useSelector((store) => store.GET_QUOTES)
   const current_date = new Date()
   const day = current_date.getDate() > 30 ? current_date.getDate() - 1 : current_date.getDate()
+  const [firstPermissionStaff] = getRoutePermissions(permission_constants?.STAFF);
+  const [firstPermissionPatient] = getRoutePermissions(permission_constants?.PATIENT);
+  const [firstPermissionExercise] = getRoutePermissions(permission_constants?.EXERCISE);
+  const [firstPermissionDashboard] = getRoutePermissions(permission_constants?.DASHBOARD);
 
   useEffect(() => {
     if (quotes?.length === 0) {
@@ -94,25 +99,86 @@ const Sidebar = () => {
             {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
               const currentPath = window.location.pathname;
               const isActive = menus.path === currentPath;
-              if (menus.role === "ADMIN" && localStorage?.getItem("user_role") === "ADMIN") {
+              if (menus.role === "Admin" && localStorage?.getItem("user_role") === "Admin") {
                 return (
-                  <li key={index} onClick={() => { setToggle(!toggle) }}>
-                    <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
-                  </li>
+                  <>
+                    {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
+                      <li key={`${index}-staff`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
+                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                  </>
+                );
+              }
+
+              if (menus.role === "Trainer" && localStorage?.getItem("user_role") === "Trainer") {
+                return (
+                  <>
+                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
+                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                  </>
                 )
               }
-              if (menus.role === "TRAINER" && localStorage?.getItem("user_role") === "TRAINER") {
+              if (menus.role === "Receptionist" && localStorage?.getItem("user_role") === "Receptionist") {
                 return (
-                  <li key={index} onClick={() => { setToggle(!toggle) }}>
-                    <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
-                  </li>
-                )
-              }
-              if (menus.role === "RECEPTIONIST" && localStorage?.getItem("user_role") === "RECEPTIONIST") {
-                return (
-                  <li key={index} onClick={() => { setToggle(!toggle) }}>
-                    <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>{menus.icon} <span>{menus.name}</span></Link>
-                  </li>
+                  <>
+                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                  </>
                 )
               }
 

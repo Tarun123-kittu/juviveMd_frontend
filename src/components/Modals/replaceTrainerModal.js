@@ -20,6 +20,8 @@ const ReplaceTrainerModal = ({
     const dispatch = useDispatch();
     const [replaced_trainer_id, setReplacedTrainer_id] = useState(null);
     const [replaced_trainer_name, setTrainer_name] = useState('');
+    const [trainer_data, setTrainer_data] = useState([])
+
     const is_staff_deleted = useSelector((store) => store.DELETE_STAFF);
 
     const handleClose = () => {
@@ -35,7 +37,7 @@ const ReplaceTrainerModal = ({
 
     useEffect(() => {
         if (is_staff_deleted?.isSuccess && showToast) {
-            handleClose(); 
+            handleClose();
             toast.success(is_staff_deleted?.message?.message);
             dispatch(get_all_staff());
             dispatch(get_trainers())
@@ -44,7 +46,23 @@ const ReplaceTrainerModal = ({
             toast.error(is_staff_deleted?.error?.message);
             dispatch(clear_delete_staff_state());
         }
-    }, [is_staff_deleted, dispatch]); 
+    }, [is_staff_deleted, dispatch]);
+
+
+    const handleSearchTrainerName = (e) => {
+        const searchQuery = e.target.value.toLowerCase();
+        setTrainer_name(e.target.value);
+        if (!searchQuery) {
+            setTrainer_data(trainers_list); return;
+        }
+        const searchedNames = trainers_list?.data?.data.filter((el) => el.firstName?.toLowerCase().includes(searchQuery));
+        setTrainer_data(searchedNames);
+    };
+
+
+    useEffect(() => {
+        setTrainer_data(trainers_list)
+    }, [trainers_list])
 
     return (
         <Modal
@@ -102,22 +120,33 @@ const ReplaceTrainerModal = ({
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            {trainers_list?.map((trainer) => {
-                                if (trainer?.id !== staffId) {
-                                    return (
-                                        <Dropdown.Item
-                                            key={trainer?.id}
-                                            onClick={() => {
-                                                setReplacedTrainer_id(trainer?.id);
-                                                setTrainer_name(trainer?.firstName);
-                                            }}
-                                        >
-                                            {trainer?.firstName}
-                                        </Dropdown.Item>
-                                    );
-                                }
-                                return null;
-                            })}
+                            <ul>
+                                <li className='dropdown_search'>
+                                    <input type="text" placeholder='Search Trainer' value={replaced_trainer_name} onChange={(e) => handleSearchTrainerName(e)} />
+                                    <span type="button">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.75 12.75L15.75 15.75M2.25 8.25C2.25 9.8413 2.88214 11.3674 4.00736 12.4926C5.13258 13.6179 6.6587 14.25 8.25 14.25C9.8413 14.25 11.3674 13.6179 12.4926 12.4926C13.6179 11.3674 14.25 9.8413 14.25 8.25C14.25 6.6587 13.6179 5.13258 12.4926 4.00736C11.3674 2.88214 9.8413 2.25 8.25 2.25C6.6587 2.25 5.13258 2.88214 4.00736 4.00736C2.88214 5.13258 2.25 6.6587 2.25 8.25Z" stroke="#0C5E62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </span>
+                                </li>
+                                {Array.isArray(trainer_data) && trainer_data?.length > 0 ? (
+                                    trainer_data.map((list) => {
+                                        if (list?.id !== staffId) {
+                                            return (
+                                                <Dropdown.Item key={list?.id} onClick={() => {
+                                                    setTrainer_name(list?.firstName);
+                                                    setReplacedTrainer_id(list?.id);
+                                                }}>
+                                                    {list?.firstName}
+                                                </Dropdown.Item>
+                                            );
+                                        }
+                                    })
+                                ) : (
+                                    <p>No Trainer found</p>
+                                )}
+
+                            </ul>
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>

@@ -14,7 +14,6 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-// Validation Schema using Yup
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
@@ -30,6 +29,7 @@ const LoginComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user_details = useSelector((Store) => Store.LOGIN_STATE);
+  const roles_list = useSelector((store) => store.ROLE_LIST)
   const [rememberMe, setRememberMe] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("")
@@ -57,6 +57,7 @@ const LoginComponent = () => {
     const last_login = localStorage.getItem("last_login");
 
     if (token && last_login == day) {
+      authMiddleware(navigate);
     }
 
     if (isRemembered && rememberedEmail && token) {
@@ -65,23 +66,22 @@ const LoginComponent = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (user_details?.isSuccess) {
-      const token = user_details?.data?.data;
-      localStorage.setItem("last_login", day);
-      if (rememberMe) {
-        localStorage.setItem("phloii_user_email", email);
-        localStorage.setItem("phloii_remember_me", "true");
+      if (user_details?.isSuccess) {
+        const token = user_details?.data?.data;
+        localStorage.setItem("last_login", day);
+        if (rememberMe) {
+          localStorage.setItem("phloii_user_email", email);
+          localStorage.setItem("phloii_remember_me", "true");
+        }
+        Cookies.set("authToken", token);
+        authMiddleware(navigate);
+        dispatch(clear_login_state());
       }
-      Cookies.set("authToken", token);
-      authMiddleware(navigate);
-      toast.success("Login Successful");
-      dispatch(clear_login_state());
-    }
 
-    if (user_details?.isError) {
-      toast.error(user_details?.error?.message);
-      dispatch(clear_login_state());
-    }
+      if (user_details?.isError) {
+        toast.error(user_details?.error?.message);
+        dispatch(clear_login_state());
+      }
   }, [user_details, remember, Useremail, navigate, dispatch]);
 
 

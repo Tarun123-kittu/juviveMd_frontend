@@ -13,7 +13,7 @@ import Loader from "../../common/Loader/Loader";
 import * as Yup from "yup";
 import { update_exercise_draft, clear_update_exercise_draft_state } from "../../redux/slices/exerciseSlice/updateExercideDraft";
 
-const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId }) => {
+const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
@@ -209,7 +209,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             as="select"
                                             name="exerciseType"
                                             className="form-control"
-                                            disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
+                                            disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                             onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                                         >
                                             <option value="">Select exercise type</option>
@@ -229,7 +229,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 accept="image/png, image/jpg, image/jpeg"
                                                 onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
-                                                disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
+                                                disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
 
                                             />
                                             <img
@@ -251,7 +251,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseName"
                                                     placeholder="Enter exercise name"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                     onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -264,7 +264,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseVideo"
                                                     placeholder="https://youtu.be"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                     onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -278,7 +278,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     name="exerciseDescription"
                                                     placeholder="Enter description"
                                                     className="form-control"
-                                                    disabled={localStorage.getItem('user_role') !== "TRAINER" || tab === "active" || tab === "approvalRequest"}
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                     onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                                                 />
                                             </Form.Group>
@@ -286,7 +286,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                             </Row>
-                            {localStorage?.getItem('user_role') === "TRAINER" && tab !== "active" && (
+                            {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") &&(
                                 <>
                                     <div className="d-flex justify-content-end align-items-center mt-3 flex-wrap">
                                         {!is_exercise_updated?.isLoading ? (

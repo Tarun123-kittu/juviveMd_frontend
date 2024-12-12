@@ -13,9 +13,14 @@ import * as Yup from "yup";
 import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
 import { get_trainers } from "../../redux/slices/commonDataSlice/getTrainersSlice";
 import { countryCodes } from "../../common/countriesData/CountriesList";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-const AddUserModal = ({ show, setShow }) => {
+const AddUserModal = ({ show, setShow, rolesList }) => {
     const dispatch = useDispatch();
+    const [phone, setPhone] = useState('');
+    const [countryCode, setCountryCode] = useState('')
     const [imageData, setImageData] = useState({
         image: "",
         imageView: "",
@@ -24,14 +29,17 @@ const AddUserModal = ({ show, setShow }) => {
 
     const is_staff_created = useSelector((store) => store.CREATE_STAFF);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setImageData({ image: "", imageView: "" })
+        setPhone("")
+    };
 
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required("First name is required"),
         lastName: Yup.string().required("Last name is required"),
         phone: Yup.string()
-            .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
-            .required("Phone number is required"),
+            .required("phone is required"),
         countryCode: Yup.string()
             .required("Country code is required"),
         email: Yup.string()
@@ -104,6 +112,19 @@ const AddUserModal = ({ show, setShow }) => {
         }
     }, [imageData])
 
+    const handleValidatePhone = (phone, setFieldValue) => {
+        setPhone(phone);
+        setPhone(phone);
+        const parsedPhone = parsePhoneNumberFromString(phone);
+    
+        if (parsedPhone) {
+            setFieldValue('phone',parsedPhone.nationalNumber)
+            setFieldValue('countryCode',parsedPhone.countryCallingCode)
+        }
+
+    }
+
+
     return (
         <Modal show={show} onHide={handleClose} className="cmn_modal" centered>
             <div className="modal_head text-end">
@@ -160,7 +181,7 @@ const AddUserModal = ({ show, setShow }) => {
                         firstName: "",
                         lastName: "",
                         phone: "",
-                        countryCode : "+1",
+                        countryCode: "+1",
                         gender: "",
                         email: "",
                         address: "",
@@ -175,7 +196,7 @@ const AddUserModal = ({ show, setShow }) => {
                         dispatch(create_staff_api({ data: { ...values, image: imageData.image } }));
                     }}
                 >
-                    {() => (
+                    {({ setFieldValue }) => (
                         <FormikForm>
                             <Row className="authWrapper">
                                 <Col lg={6}>
@@ -206,27 +227,12 @@ const AddUserModal = ({ show, setShow }) => {
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
                                         <div className="d-flex gap-2">
-                                            <Field
-                                                as="select"
-                                                name="countryCode"
-                                                placeholder="Enter 10-digit phone number"
-                                                className="form-select"
-                                                style={{ width: "80px" }}
-                                            >
-                                                <option>US +1</option>
-                                                {Array?.isArray(countryCodes) && countryCodes?.map((code, i) => {
-                                                    return (
-                                                        <option value={code?.mobileCode}>{code?.isoCode} <span>{code?.mobileCode}</span></option>
-                                                    )
-                                                })}
-                                            </Field>
-                                            <ErrorMessage name="countryCode" component="div" className="text-danger" />
-                                            <Field
-                                                type="text"
-                                                name="phone"
-                                                placeholder="Enter 10-digit phone number"
-                                                className="form-control"
+                                            <PhoneInput
+                                                defaultCountry="us"
+                                                value={phone}
+                                                onChange={(phone) => handleValidatePhone(phone, setFieldValue)}
                                             />
+                                            {/* {!isValid && <div style={{ color: 'red' }}>Phone is not valid</div>} */}
                                         </div>
                                         <ErrorMessage name="phone" component="div" className="text-danger" />
                                     </Form.Group>
@@ -272,8 +278,13 @@ const AddUserModal = ({ show, setShow }) => {
                                         <Form.Label>Select Role</Form.Label>
                                         <Field as="select" name="role" className="form-select">
                                             <option className="not_allowed" disabled>  </option>
-                                            <option value="RECEPTIONIST">Receptionist</option>
-                                            <option value="TRAINER">Trainer</option>
+                                            {rolesList?.map((list, i) => {
+                                                if (list?.roleName !== "Admin") {
+                                                    return (
+                                                        <option value={list?.id}>{list?.roleName}</option>
+                                                    )
+                                                }
+                                            })}
                                         </Field>
                                         <ErrorMessage name="role" component="div" className="text-danger" />
                                     </Form.Group>

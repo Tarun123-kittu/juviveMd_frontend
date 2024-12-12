@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import authenticationMiddleware from "./authenticationMiddleware"
-import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const token = Cookies.get("authToken");

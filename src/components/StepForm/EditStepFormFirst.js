@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
@@ -6,7 +6,19 @@ import { Row, Col } from "react-bootstrap";
 import "./StepForm.css";
 import Loader from "../../common/Loader/Loader";
 import { countryCodes } from "../../common/countriesData/CountriesList";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
 const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, stepOnefullData, setTrainer_name }) => {
+  const [phone, setPhone] = useState()
+  useEffect(() => {
+    if (patient_all_data?.phone && patient_all_data?.countryCode) {
+      const fullPhone = `+${patient_all_data.countryCode}${patient_all_data.phone}`;
+      setPhone(fullPhone);
+    }
+  }, [patient_all_data]);
+  console.log(patient_all_data, "patient_all_data")
   const validationSchema = Yup.object({
     firstName: Yup.string()
       .min(3, "First Name must be at least 3 characters")
@@ -17,7 +29,6 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       .max(50, "Last Name can't exceed 50 characters")
       .required("Last Name is required"),
     tel: Yup.string()
-      .matches(/^[0-9]{10}$/, "Contact number must be 10 digits")
       .required("Contact number is required"),
     countryCode: Yup.string().required("Country code is required"),
     email: Yup.string()
@@ -49,7 +60,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     initialValues: {
       firstName: stepOnefullData?.firstName || patient_all_data?.firstName || "",
       lastName: stepOnefullData?.lastName || patient_all_data?.lastName || "",
-      tel: stepOnefullData?.tel || patient_all_data?.phone || "",
+      tel: stepOnefullData?.tel || patient_all_data?.phone || "", 
       countryCode: stepOnefullData?.countryCode || patient_all_data?.countryCode || "",
       email: stepOnefullData?.email || patient_all_data?.email || "",
       date: stepOnefullData?.date || patient_all_data?.dob || "",
@@ -61,16 +72,15 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     },
     validationSchema,
     onSubmit: (values) => {
+      console.log(values,"this is the values")
       setStepOneFullData(values)
       setStep(2)
     },
   });
 
   const handleUnitChange = (unit) => {
-    console.log(unit, "unit unit")
     if (height_unit !== unit) {
       let convertedHeight = formik.values.height;
-      console.log(convertedHeight, "convertedHeight convertedHeight")
 
       if (unit === "cm" && height_unit === "feet") {
         convertedHeight = (formik.values.height * 30.48).toFixed(2);
@@ -95,6 +105,17 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       setWeight_unit(unit);
     }
   };
+
+  const handleValidatePhone = (phone, setFieldValue) => {
+    setPhone(phone);
+    const parsedPhone = parsePhoneNumberFromString(phone);
+
+    if (parsedPhone) {
+      setFieldValue('tel', parsedPhone.nationalNumber)
+      setFieldValue('countryCode', parsedPhone.countryCallingCode)
+    }
+
+  }
 
   return loading ? <Loader /> : (
     <>
@@ -137,32 +158,14 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
           </Col>
           <Col lg={4}>
             <Form.Group className="mb-2">
-              <Form.Label>Contact Number</Form.Label>
+              <Form.Label>Phone Number</Form.Label>
               <div className="d-flex gap-2">
-                <select
-                  name="countryCode"
-                  value={formik.values.countryCode}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="form-select"
-                  style={{ width: "80px" }}
-                >
-                  <option value="US +1">US +1</option>
-                  {Array.isArray(countryCodes) &&
-                    countryCodes.map((code, i) => (
-                      <option key={i} value={code?.mobileCode}>
-                        {code?.isoCode} {code?.mobileCode}
-                      </option>
-                    ))}
-                </select>
-                <Form.Control
-                  type="tel"
+                <PhoneInput
+                  defaultCountry="us"
                   name="tel"
-                  placeholder="Contact Number"
-                  value={formik.values.tel}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.tel && !!formik.errors.tel}
+                  value={phone} // Use local state to control the input
+                  onChange={(phone) => handleValidatePhone(phone, formik.setFieldValue)}
+                  onBlur={() => formik.setFieldTouched('tel', true)}
                 />
               </div>
               <Form.Control.Feedback type="invalid">
@@ -170,6 +173,8 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+
+
           <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Gender</Form.Label>

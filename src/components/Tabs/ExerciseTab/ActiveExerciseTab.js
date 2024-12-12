@@ -14,9 +14,13 @@ import Nodata from '../../StaticComponents/Nodata';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../../common/pagination/Pagination';
 import { FaEdit } from "react-icons/fa";
+import { getRoutePermissions } from '../../../middleware/permissionsMiddleware/getRoutePermissions';
+import { permission_constants } from '../../../constants/permissionConstants';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission }) => {
+
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
@@ -27,6 +31,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   const [status, setStatus] = useState(null)
   const [save, setSave] = useState(false)
   const [index, setIndex] = useState(null)
+  const [ExercisePermissionApproveReject] = getRoutePermissions(permission_constants.EXERCISEAPPROVEREJECT)
 
   const columns = [
     "Exercise Name",
@@ -34,6 +39,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     "Exercise Link",
     "Category",
     "Exercise Status",
+    "Created By",
     "Action"
   ];
 
@@ -44,7 +50,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     if (tab) {
       dispatch(get_exercise({ page, tab }))
     }
-  }, [tab,page,dispatch])
+  }, [tab, page, dispatch])
 
   useEffect(() => {
     if (exercise_data?.isSuccess) {
@@ -79,7 +85,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
   const handlePageChange = (newPage) => {
     setPage(newPage + 1);
-};
+  };
 
   return (
     <div>
@@ -89,16 +95,16 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
             <tr>
 
               <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
-              <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' alt="exercise"/></td>
+              <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' alt="exercise" /></td>
               <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
-              <td className={(localStorage.getItem("user_role") !== "ADMIN" && index !== i) && "active" &&'nodropdown'}> <div className='patient_dropdown w-100'>
+              <td className={(localStorage.getItem("user_role") !== "ADMIN" && index !== i) && "active" && 'nodropdown'}> <div className='patient_dropdown w-100'>
                 <Dropdown
                   show={isOpen}
                   onToggle={(nextOpenState) => {
-                    setIsOpen(nextOpenState); 
+                    setIsOpen(nextOpenState);
                     if (!nextOpenState) {
-                      setTimeout(() => setStatus(null), 0); 
+                      setTimeout(() => setStatus(null), 0);
                     }
                   }}
                   autoClose={false}
@@ -119,7 +125,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                         : exercise?.status === 0
                           ? "Rejected"
                           : "Draft"}
-                    {localStorage.getItem("user_role") === "ADMIN" && (
+                    {ExercisePermissionApproveReject?.canUpdate && (
                       <svg
                         width="10"
                         height="14"
@@ -135,7 +141,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                     )}
                   </Dropdown.Toggle>
 
-                  {localStorage.getItem("user_role") === "ADMIN" && index === i && (
+                  {ExercisePermissionApproveReject?.canUpdate && index === i && (
                     <Dropdown.Menu>
                       <ul>
                         {tab !== "active" && (
@@ -146,17 +152,17 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                             }}
                             className="d-flex gap-2"
                           >
-                             <input
+                            <input
                               type="checkbox"
                               checked={status === 1}
                               onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 setStatus(1);
                                 setIndex(i);
                               }}
                             />
                             Approve
-                           
+
                           </Dropdown.Item>
                         )}
                         {tab !== "rejected" && (
@@ -171,7 +177,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                               type="checkbox"
                               checked={status === 0}
                               onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 setStatus(0);
                                 setIndex(i);
                               }}
@@ -217,9 +223,15 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
               </div></td>
               <td>
-                {(localStorage?.getItem('user_role') === "TRAINER" || localStorage?.getItem('user_role') === "ADMIN") && (tab === "approvalRequest" || tab === "active") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                {exercise?.trainerName ? exercise?.trainerName?.charAt(0).toUpperCase() + exercise.trainerName.slice(1) : ''}
+              </td>
+              <td>
+                {/* {(localStorage?.getItem('user_role') === "TRAINER" || localStorage?.getItem('user_role') === "ADMIN") && (tab === "approvalRequest" || tab === "active") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 {(localStorage?.getItem('user_role') === "ADMIN") && (tab === "rejected") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
-                {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />} */}
+
+                {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
+                {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button
@@ -254,6 +266,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
         id={exerciseId}
         admin={admin}
         setExerciseId={setExerciseId}
+        ExercisePermission={ExercisePermission}
+        ExercisePermissionApproveReject={ExercisePermissionApproveReject}
       />
     </div>
   )

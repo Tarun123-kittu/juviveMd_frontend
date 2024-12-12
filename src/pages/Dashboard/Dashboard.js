@@ -5,10 +5,12 @@ import Default_user from "../../Images/default_user.svg";
 import AddUsermodal from "../../components/Modals/AddUsermodal";
 import DataTable from "../../components/DataTable/DataTable";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const Dashboard = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false);
+  const permissions_data = useSelector((store) => store.PERMISSIONS_DATA)
+  console.log(permissions_data,"this is the permissions")
 
   const handleShow = () => setShow(true);
 

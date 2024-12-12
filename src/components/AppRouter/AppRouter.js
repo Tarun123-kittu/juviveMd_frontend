@@ -43,7 +43,7 @@ const AppRouter = () => {
                 {
                     path: "/dashboard",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <Dashboard />
                         </ProtectedRoute>
                     ),
@@ -51,7 +51,7 @@ const AppRouter = () => {
                 {
                     path: "/settings",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <Settings />
                         </ProtectedRoute>
                     ),
@@ -59,7 +59,7 @@ const AppRouter = () => {
                 {
                     path: "/messages",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <Message />
                         </ProtectedRoute>
                     ),
@@ -67,7 +67,7 @@ const AppRouter = () => {
                 {
                     path: "/staff",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <Staff />
                         </ProtectedRoute>
                     ),
@@ -75,7 +75,7 @@ const AppRouter = () => {
                 {
                     path: "/reception/patient",
                     element: (
-                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                        <ProtectedRoute requiredRole="Receptionist">
                             <Receptionist_patients />
                         </ProtectedRoute>
                     ),
@@ -83,7 +83,7 @@ const AppRouter = () => {
                 {
                     path: "/reception/dashboard",
                     element: (
-                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                        <ProtectedRoute requiredRole="Receptionist">
                             <Reception_dashboard />
                         </ProtectedRoute>
                     ),
@@ -91,7 +91,7 @@ const AppRouter = () => {
                 {
                     path: "/reception/messages",
                     element: (
-                        <ProtectedRoute requiredRole="RECEPTIONIST">
+                        <ProtectedRoute requiredRole="Receptionist">
                             <ReceptionMessages />
                         </ProtectedRoute>
                     ),
@@ -105,15 +105,15 @@ const AppRouter = () => {
                 {
                     path: "/patient",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <Patient />
                         </ProtectedRoute>
                     ),
                 },
                 {
-                    path: "/patient/patientData",
+                    path: "/patientData",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
+                        <ProtectedRoute requiredRole="Admin">
                             <PatientData />
                         </ProtectedRoute>
                     )
@@ -128,15 +128,13 @@ const AppRouter = () => {
                 {
                     path: "/exerciseView",
                     element: (
-                        <ProtectedRoute requiredRole="ADMIN">
                             <ExerciseView />
-                        </ProtectedRoute>
                     )
                 },
                 {
                     path: "/trainer/dashboard",
                     element: (
-                        <ProtectedRoute requiredRole="TRAINER">
+                        <ProtectedRoute requiredRole="Trainer">
                             <TrainerDashboard />
                         </ProtectedRoute>
                     )
@@ -144,7 +142,7 @@ const AppRouter = () => {
                 {
                     path: "/trainer/messages",
                     element: (
-                        <ProtectedRoute requiredRole="TRAINER">
+                        <ProtectedRoute requiredRole="Trainer">
                             <TrainerMessages />
                         </ProtectedRoute>
                     )
@@ -152,7 +150,7 @@ const AppRouter = () => {
                 {
                     path: "/trainer/patient",
                     element: (
-                        <ProtectedRoute requiredRole="TRAINER">
+                        <ProtectedRoute requiredRole="Trainer">
                             <TrainerPatients />
                         </ProtectedRoute>
                     )
@@ -160,7 +158,7 @@ const AppRouter = () => {
                 {
                     path: "/trainer/exercise",
                     element: (
-                        <ProtectedRoute requiredRole="TRAINER">
+                        <ProtectedRoute requiredRole="Trainer">
                             <TrainerExercise />
                         </ProtectedRoute>
                     )

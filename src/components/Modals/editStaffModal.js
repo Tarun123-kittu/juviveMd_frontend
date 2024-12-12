@@ -13,9 +13,12 @@ import { get_single_staff, clear_single_staff_state } from "../../redux/slices/s
 import { update_staff, clear_update_staff_state } from "../../redux/slices/staffSlice/updateStaffSlice";
 import { get_all_staff } from "../../redux/slices/staffSlice/getAllUsers";
 import Loader from "../../common/Loader/Loader"
-import { countryCodes } from "../../common/countriesData/CountriesList";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
+
+const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList }) => {
     const dispatch = useDispatch();
     const [image, setImage] = useState("")
     const [imageView, setImageView] = useState("")
@@ -43,14 +46,13 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
     const handleClose = () => {
         setShow(false)
         setStaffId(null)
+        setCountryCode('')
     };
 
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required("First name is required"),
         lastName: Yup.string().required("Last name is required"),
-        phone: Yup.string()
-            .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
-            .required("Phone number is required"),
+        phone: Yup.string().required("phone is required"),
         countryCode: Yup.string().required("Country code is required"),
         email: Yup.string()
             .email("Invalid email address")
@@ -61,7 +63,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
         address: Yup.string().required("Address is required"),
         role: Yup.string().required("Role is required"),
     });
-    
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -119,7 +121,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
             setPhone(staffData.phone || "");
             setEmail(staffData.email || "");
             setAddress(staffData.address || "");
-            setRole(staffData.role || "");
+            setRole(staffData.roleId || "");
             setGender(staffData.gender || "");
             setImageView(staffData.image || "");
             setImage(staffData.image || "");
@@ -150,6 +152,20 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
             dispatch(clear_update_staff_state())
         }
     }, [is_staff_updated])
+
+    const handleValidatePhone = (phone, setFieldValue) => {
+        const parsedPhone = parsePhoneNumberFromString(phone);
+        
+        if (parsedPhone) {
+            setCountryCode(parsedPhone.countryCallingCode)
+            setFieldValue('phone', parsedPhone.nationalNumber);
+            setFieldValue('countryCode', parsedPhone.countryCallingCode);
+    
+            console.log(parsedPhone.nationalNumber, "parsedPhone.nationalNumber");
+            console.log(parsedPhone.countryCallingCode, "parsedPhone.countryCallingCode");
+        }
+    };
+    
 
     return (
         <Modal show={show} onHide={handleClose} className="cmn_modal" centered>
@@ -226,7 +242,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                         dispatch(update_staff({ data: { ...values, image: image, hasImage }, id: staffId }));
                     }}
                 >
-                    {({ values, handleChange }) => (
+                    {({ values, handleChange, setFieldValue }) => (
                         <FormikForm>
                             <Row className="authWrapper">
                                 <Col lg={6}>
@@ -257,26 +273,10 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
                                         <div className="d-flex gap-2">
-                                            <Field
-                                                as="select"
-                                                name="countryCode"
-                                                placeholder="Enter your phone number"
-                                                className="form-select"
-                                                style={{ width: "80px" }}
-                                            >
-                                                <option>US +1</option>
-                                                {Array?.isArray(countryCodes) && countryCodes?.map((code, i) => {
-                                                    return (
-                                                        <option value={code?.mobileCode}>{code?.isoCode} <span>{code?.mobileCode}</span></option>
-                                                    )
-                                                })}
-                                            </Field>
-                                            <ErrorMessage name="countryCode" component="div" className="text-danger" />
-                                            <Field
-                                                type="text"
-                                                name="phone"
-                                                placeholder="Enter 10-digit phone number"
-                                                className="form-control"
+                                            <PhoneInput
+                                                defaultCountry="us"
+                                                value={phone}
+                                                onChange={(phone) => handleValidatePhone(phone, setFieldValue)}
                                             />
                                         </div>
                                         <ErrorMessage name="phone" component="div" className="text-danger" />
@@ -320,11 +320,16 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId }) => {
                                 </Col>
                                 <Col lg={12}>
                                     <Form.Group className="mb-2">
-                                        <Form.Label>Role</Form.Label>
-                                        <Field as="select" value={values?.role} name="role" className="form-select">
-                                            <option value="">Select Role</option>
-                                            <option value="RECEPTIONIST">Receptionist</option>
-                                            <option value="TRAINER">Trainer</option>
+                                        <Form.Label>Staff Role</Form.Label>
+                                        <Field as="select" disabled name="role" className="form-control">
+                                            <option className="not_allowed" disabled>  </option>
+                                            {rolesList?.map((list, i) => {
+                                                if (list?.roleName !== "Admin") {
+                                                    return (
+                                                        <option value={list?.id}>{list?.roleName}</option>
+                                                    )
+                                                }
+                                            })}
                                         </Field>
                                         <ErrorMessage name="role" component="div" className="text-danger" />
                                     </Form.Group>

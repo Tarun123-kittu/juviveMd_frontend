@@ -6,7 +6,6 @@ import EditpatientModal from '../../components/Modals/EditPatientModal';
 import { get_patients_list } from '../../redux/slices/patientSlice/getPatientList';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from "../../common/Loader/Loader"
-import No_data_found from "../../Images/No_data_found.svg";
 import Pagination from "../../common/pagination/Pagination"
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { get_trainers } from '../../redux/slices/commonDataSlice/getTrainersSlice';
@@ -20,6 +19,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import { calculateAge } from '../../common/calculateAge/calculateAge';
 import { formatDate } from '../../common/formatDate/formatDate';
 import Nodata from '../StaticComponents/Nodata';
+import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../constants/permissionConstants";
 
 const Reception_patient_list = () => {
     const elementRef = useRef(null);
@@ -52,6 +53,12 @@ const Reception_patient_list = () => {
     const trainers_list = useSelector((store) => store.TRAINERS_LIST)
     const is_patient_deleted = useSelector((store) => store.DELETE_PATIENT)
     const is_payment_status_updated = useSelector((store) => store.UPDATE_PATIENT_PAYMENT)
+    const PatientPermissions = getRoutePermissions(permission_constants.PATIENT)?.[0] || {};
+    const PatientPaymentPermissions = getRoutePermissions(permission_constants.PATIENTPAYMENT)?.[0] || {};
+
+    console.log(PatientPermissions, "PatientPermissions");
+    console.log(PatientPaymentPermissions, "PatientPaymentPermissions");
+
     const handelShowFilter = () => {
         setShowFilter(!showFilter)
     }
@@ -71,6 +78,7 @@ const Reception_patient_list = () => {
         "Goal",
         "Assigned Trainer",
         "Status",
+        "Created By",
         "Overview",
     ];
     const columns_one = [
@@ -82,6 +90,7 @@ const Reception_patient_list = () => {
         "Goal",
         "Assigned Trainer",
         "Status",
+        "Created By",
         "Health Issue",
         "Overview",
     ];
@@ -94,6 +103,7 @@ const Reception_patient_list = () => {
         "Goal",
         "Assigned Trainer",
         "Status",
+        "Created By",
         "Payment",
         "Overview",
     ];
@@ -217,7 +227,7 @@ const Reception_patient_list = () => {
                             <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>
                             <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>
                         </ul>
-                        <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button> <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>
+                        {PatientPermissions?.canCreate && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>
                         {showFilter &&
 
                             <PatientFilters tab={tab} showFilter={showFilter} username={username} setUsername={setUsername} setGoal={setGoal} goal={goal} setDate={setDate} date={date} setGender={setGender} gender={gender} setStatus={setStatus} status={status} setTrainer={setTrainer} trainer={trainer} trainers={trainers} goalsList={goalsList} handleSearch={handleSearch} page={page} />
@@ -240,7 +250,7 @@ const Reception_patient_list = () => {
                                         </td>
                                         <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
-                                        <td>{patient?.phone}</td>
+                                        <td>+{patient?.countryCode} {patient?.phone}</td>
                                         <td>
                                             {patient?.gender
                                                 ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1).toLowerCase()
@@ -279,7 +289,7 @@ const Reception_patient_list = () => {
                                                             />
                                                         </svg>
                                                     </Dropdown.Toggle>
-                                                    <Dropdown.Menu>
+                                                    {PatientPaymentPermissions?.canUpdate && <Dropdown.Menu>
                                                         <ul>
                                                             <Dropdown.Item
                                                                 className="d-flex gap-2"
@@ -321,7 +331,7 @@ const Reception_patient_list = () => {
                                                             </Dropdown.Item>
                                                             <Dropdown.Item className="d-flex justify-content-between">
                                                                 {!is_payment_status_updated?.isLoading ? (
-                                                                    <button
+                                                                    PatientPermissions?.canUpdate && <button
                                                                         className="cmn_btn"
                                                                         onClick={() => handleUpdatePaymentStatus(patient?.id)}
                                                                     >
@@ -345,11 +355,14 @@ const Reception_patient_list = () => {
                                                                 </button>
                                                             </Dropdown.Item>
                                                         </ul>
-                                                    </Dropdown.Menu>
+                                                    </Dropdown.Menu>}
 
                                                 </Dropdown>
                                             </div>
                                         </td>}
+                                        <td>
+                                            {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : ""}
+                                        </td>
 
 
                                         {tab === "healthIssue" && <td>
@@ -365,19 +378,19 @@ const Reception_patient_list = () => {
 
                                                     </div>
                                                 </div>
-                                               <span> View health issue</span>
+                                                <span> View health issue</span>
                                             </div>
                                         </td>}
 
                                         <td className='text-center'>
                                             <div className="d-flex justify-content-between w-100">
-                                                <svg onClick={() => { setshowEditPateintModal(true); setPatientId(patient?.id) }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                {PatientPermissions?.canUpdate && <svg onClick={() => { setshowEditPateintModal(true); setPatientId(patient?.id) }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M5.26562 19.2151L11.0737 19.1953L23.7507 6.5834C24.2482 6.08368 24.5219 5.42004 24.5219 4.71409C24.5219 4.00814 24.2482 3.3445 23.7507 2.84478L21.6633 0.748087C20.6683 -0.251345 18.9323 -0.246057 17.9452 0.744121L5.26562 13.3586V19.2151ZM19.8023 2.6174L21.8936 4.71012L19.7917 6.80153L17.7044 4.70616L19.8023 2.6174ZM7.89788 14.4612L15.8341 6.56489L17.9215 8.66158L9.98658 16.5552L7.89788 16.5619V14.4612Z" fill="black" />
                                                     <path d="M2.63226 24.489H21.0581C22.5098 24.489 23.6903 23.3029 23.6903 21.8445V10.3835L21.0581 13.0279V21.8445H6.7886C6.75438 21.8445 6.71884 21.8577 6.68462 21.8577C6.64119 21.8577 6.59776 21.8458 6.55301 21.8445H2.63226V3.33341H11.6438L14.2761 0.688965H2.63226C1.18057 0.688965 0 1.875 0 3.33341V21.8445C0 23.3029 1.18057 24.489 2.63226 24.489Z" fill="black" />
-                                                </svg>
-                                                <svg onClick={() => { setShowDeleteModal(true); setPatientId(patient?.id) }} className="me-3" width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                </svg>}
+                                                {PatientPermissions?.canDelete && <svg onClick={() => { setShowDeleteModal(true); setPatientId(patient?.id) }} className="me-3" width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3.96355 24C3.28478 24 2.70701 23.7606 2.23026 23.2817C1.7535 22.8028 1.51512 22.223 1.51512 21.5422V2.69372H0V1.17185H6.06048V0H15.1512V1.17185H21.2117V2.69372H19.6965V21.5422C19.6965 22.2422 19.4632 22.8271 18.9966 23.2969C18.5299 23.7666 17.9471 24.001 17.2481 24H3.96355ZM18.1814 2.69372H3.03024V21.5422C3.03024 21.8151 3.11761 22.0393 3.29235 22.2148C3.4671 22.3904 3.69083 22.4781 3.96355 22.4781H17.2496C17.4819 22.4781 17.6956 22.3807 17.8905 22.1859C18.0855 21.9911 18.1824 21.776 18.1814 21.5406V2.69372ZM7.28469 19.4344H8.79981V5.73748H7.28469V19.4344ZM12.4119 19.4344H13.927V5.73748H12.4119V19.4344Z" fill="black" />
-                                                </svg>
+                                                </svg>}
                                             </div>
                                         </td>
                                     </tr>
