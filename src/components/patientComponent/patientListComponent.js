@@ -101,8 +101,8 @@ const Reception_patient_list = () => {
         "Goal",
         "Assigned Trainer",
         "Status",
-        "Created By",
         "Payment",
+        "Created By",
         "Overview",
     ];
 

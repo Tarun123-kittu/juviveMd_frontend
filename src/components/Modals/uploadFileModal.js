@@ -16,6 +16,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const [fileName, setFileName] = useState('');
     const [isValidUpload, setIsValidUpload] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [show_close_button,setShow_close_button] = useState(false)
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
     const handleClose = () => {
         setShowFileUploadModal(false)
@@ -78,6 +79,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     useEffect(() => {
         if (is_file_uploades?.isSuccess) {
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
+            setShow_close_button(true)
         }
     }, [is_file_uploades])
 
@@ -201,6 +203,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                     {isValidUpload && <button className='cmn_btn' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}</button>}
+                    {show_close_button && <button className='cmn_btn' onClick={handleClose}>Close</button>}
                 </div>
             </Modal.Body>
 
