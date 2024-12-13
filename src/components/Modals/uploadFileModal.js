@@ -21,6 +21,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const handleClose = () => {
         setShowFileUploadModal(false)
         dispatch(clear_upload_exercise_state())
+        setShow_close_button(false)
     }
 
     const handleFileUpload = (e) => {
@@ -95,6 +96,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                 setErrorMessage('');
                 dispatch(clear_upload_exercise_state())
                 setFileData(null)
+                setShow_close_button(false)
             }}
             centered
         >
