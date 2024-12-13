@@ -13,6 +13,7 @@ import { clear_get_single_exercise_state } from "../../redux/slices/exerciseSlic
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
 import UploadFileModal from "../Modals/uploadFileModal";
+import { clear_upload_exercise_state } from "../../redux/slices/exerciseSlice/uploadExercises";
 
 
 const TrainerExercise = () => {
@@ -34,6 +35,7 @@ const TrainerExercise = () => {
 
   useEffect(() => {
     dispatch(common_data_api());
+    dispatch(clear_upload_exercise_state())
   }, []);
 
   useEffect(() => {
@@ -188,7 +190,7 @@ const TrainerExercise = () => {
         tab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal}/>
+      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} tab={activeTab}/>
     </div>
   );
 };

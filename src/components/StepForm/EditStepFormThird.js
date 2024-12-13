@@ -55,6 +55,46 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
     },
   });
 
+
+  const handleOptimalWeightChange = (value) => {
+    formik.setFieldValue("optimalWeight", value);
+
+    setStepThreeFullData(prevState => ({
+      ...prevState,
+      optimalWeight: value,
+    }));
+  };
+
+  const handleUnitChangeWeight = (unit) => {
+    if (third_step_weight_unit !== unit) {
+      let weightValue = parseFloat(formik.values.optimalWeight);
+
+      if (isNaN(weightValue)) {
+        formik.setFieldValue("optimalWeight", "");
+        setStepThreeFullData(prevState => ({
+          ...prevState,
+          optimalWeight: "",
+        }));
+        return;
+      }
+
+      let convertedWeight = weightValue;
+      if (unit === "kg" && third_step_weight_unit === "lbs") {
+        convertedWeight = (weightValue * 0.453592).toFixed(2);
+      } else if (unit === "lbs" && third_step_weight_unit === "kg") {
+        convertedWeight = (weightValue * 2.20462).toFixed(2);
+      }
+
+      formik.setFieldValue("optimalWeight", convertedWeight);
+      setStepThreeFullData(prevState => ({
+        ...prevState,
+        optimalWeight: convertedWeight,
+        weightUnit: unit,
+      }));
+      setThird_step_Weight_unit(unit);
+    }
+  };
+
   return (
     <Form onSubmit={formik.handleSubmit}>
       <h5 className="step_heading pt-3">Edit Activity Levels & Fitness Goals</h5>
@@ -63,26 +103,26 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
           <Form.Group className="mb-2">
             <Form.Label>What is the optimal weight for you? in Lbs/Kg</Form.Label>
             <div className="volumeInput w-100">
-              <div className="position-relative w-100 d-flex align-items-center w-100">
+              <div className="position-relative w-100 d-flex align-items-center">
                 <Form.Control
                   type="text"
                   name="optimalWeight"
                   placeholder="Enter weight"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   value={formik.values.optimalWeight}
+                  onChange={(e) => handleOptimalWeightChange(e.target.value)}
+                  onBlur={formik.handleBlur}
                   style={{ marginRight: '10px' }}
                 />
                 <button
                   type="button"
-                  onClick={() => setThird_step_Weight_unit("kg")}
+                  onClick={() => handleUnitChangeWeight("kg")}
                   className={`unit-btn ${third_step_weight_unit === "kg" ? "active" : ""}`}
                 >
                   kg
                 </button>
                 <button
                   type="button"
-                  onClick={() => setThird_step_Weight_unit("lbs")}
+                  onClick={() => handleUnitChangeWeight("lbs")}
                   className={`unit-btn ${third_step_weight_unit === "lbs" ? "active" : ""}`}
                 >
                   lbs

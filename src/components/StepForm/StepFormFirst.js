@@ -10,7 +10,6 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name }) => {
   const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('')
   const [trainer_names, setTrainer_names] = useState([])
   const validationSchema = Yup.object({
     firstName: Yup.string()
@@ -116,17 +115,21 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
 
 
 
-  const handleValidatePhone = (phone, setFieldValue) => {
-    setPhone(phone);
-    setPhone(phone);
-    const parsedPhone = parsePhoneNumberFromString(phone);
-
+  const handleValidatePhone = (val, setFieldValue, values) => {
+  
+    setPhone(val);
+    const parsedPhone = parsePhoneNumberFromString(val); 
+  
     if (parsedPhone) {
-      setFieldValue('tel', parsedPhone.nationalNumber)
-      setFieldValue('countryCode', parsedPhone.countryCallingCode)
+      setFieldValue('tel', parsedPhone.nationalNumber);
+      if (values.countryCode !== parsedPhone.countryCallingCode) {
+        setFieldValue('countryCode', parsedPhone.countryCallingCode);
+      }
+    } else {
+      console.error("Phone number parsing failed. Ensure the input is in the correct format.");
     }
+  };
 
-  }
 
   return (
     <>
@@ -174,15 +177,14 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                 <PhoneInput
                   defaultCountry="us"
                   name="tel"
-                  value={formik.values.tel} 
+                  // value={formik.values.tel}
                   onChange={(phone) => {
-                    formik.setFieldValue("tel", phone); 
-                    handleValidatePhone(phone, formik.setFieldValue); 
+                    handleValidatePhone(phone, formik.setFieldValue, formik.values);
                   }}
-                  onBlur={() => formik.setFieldTouched("tel", true)} 
                 />
+
               </div>
-              { formik.errors.tel && (
+              {formik.errors.tel && (
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.tel}
                 </Form.Control.Feedback>

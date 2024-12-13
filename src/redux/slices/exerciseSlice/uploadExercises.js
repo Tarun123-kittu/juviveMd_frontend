@@ -6,7 +6,6 @@ export const upload_exercises = createAsyncThunk("upload_exercises", async ({ fi
     const validToken = "Bearer " + token;
     try {
         const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", validToken);
 
         const formdata = new FormData();

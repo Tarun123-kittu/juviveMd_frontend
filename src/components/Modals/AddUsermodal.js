@@ -114,7 +114,6 @@ const AddUserModal = ({ show, setShow, rolesList }) => {
 
     const handleValidatePhone = (phone, setFieldValue) => {
         setPhone(phone);
-        setPhone(phone);
         const parsedPhone = parsePhoneNumberFromString(phone);
     
         if (parsedPhone) {

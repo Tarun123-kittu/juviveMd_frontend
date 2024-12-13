@@ -90,7 +90,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   return (
     <div>
       <DataTable columns={columns}>
-        {exercise_data?.isLoading ? <tr><td colSpan={5}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
+        {exercise_data?.isLoading ? <tr><td colSpan={7}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
           return (
             <tr>
 

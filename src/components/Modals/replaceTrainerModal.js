@@ -15,7 +15,8 @@ const ReplaceTrainerModal = ({
     exerciseCount,
     setStaffId,
     staffId,
-    showToast
+    showToast,
+    patientCount
 }) => {
     const dispatch = useDispatch();
     const [replaced_trainer_id, setReplacedTrainer_id] = useState(null);
@@ -95,7 +96,7 @@ const ReplaceTrainerModal = ({
                 <h4 className="deletmodal_heading">Delete Trainer</h4>
                 <p className="trainer_delete">
                     The trainer you are trying to delete has created {exerciseCount}{' '}
-                    {exerciseCount > 1 ? 'exercises' : 'exercise'}. Please assign{' '}
+                    {exerciseCount > 1 ? 'exercises' : 'exercise'} and {patientCount} Patient assigned. Please assign{' '}
                     {exerciseCount > 1 ? 'these' : 'this'} {exerciseCount > 1 ? 'exercises' : 'exercise'} to a
                     new trainer before proceeding.
                 </p>

@@ -88,6 +88,14 @@ button.cmn_btn .spinner-border {
   width: 20px;
   height: 20px;
 }
+.cmn_modal .modal-body {
+  max-height: auto;
+  overflow: unset;
+}
+ul.react-international-phone-country-selector-dropdown {
+  width: 100%;
+  min-width: 200px;
+}
 li.dropdown_search {
   padding: 10px;
   display: flex;
@@ -197,6 +205,7 @@ li.page-item.active a.page-link {
   transform: unset !important;
   width: auto;
 }
+
 
 @media(max-width:1440px){
   .cmn_btn {
