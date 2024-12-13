@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { upload_exercises, clear_upload_exercise_state } from '../../redux/slices/exerciseSlice/uploadExercises';
 import { get_exercise } from '../../redux/slices/exerciseSlice/getExercise';
 import Spinner from 'react-bootstrap/Spinner';
-
+import InfoIcon from '../../Images/info.png'
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const dispatch = useDispatch();
     const [fileData, setFileData] = useState(null);
@@ -121,6 +121,11 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
             <Modal.Body>
                 <h2 className="deletmodal_heading">Upload Exercises</h2>
                 <div className="mb-3 pt-3">
+                    <div className='info d-flex gap-3'>
+
+                <img src={InfoIcon} alt="InfoIcon"/>   
+                 <h6 >  File must include the following columns: exercise_name, category, video_link, description, imageUrl.</h6>
+                    </div>
                     <input
                         type="file"
                         accept=".csv, .xlsx, .xls"
@@ -145,7 +150,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                                 {fileData.slice(1).map((row, index) => (
                                     <tr key={index}>
                                         {row.map((cell, i) => (
-                                            <td key={i}>{cell}</td>
+                                            <td class="text-break" key={i}>{cell}</td>
                                         ))}
                                     </tr>
                                 ))}

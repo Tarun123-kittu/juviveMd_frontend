@@ -427,3 +427,25 @@ ul.add-feedback li {
   list-style: inside;
   font-size: 14px;
 }
+
+.info img {
+    flex: 0 0 24px;
+    height: 100%;
+    width: 24px;
+}
+
+.info {
+    background: #0dcaf047;
+    border: 1px solid #0dcaf0;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.info h6 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 29px;
+    margin: 0;
+}
