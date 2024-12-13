@@ -88,9 +88,9 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
 
       let convertedWeight = weightValue;
       if (unit === "kg" && third_step_weight_unit === "lbs") {
-        convertedWeight = (weightValue * 0.453592).toFixed(2);
+        convertedWeight = (weightValue * 0.453592).toFixed(0);
       } else if (unit === "lbs" && third_step_weight_unit === "kg") {
-        convertedWeight = (weightValue * 2.20462).toFixed(2);
+        convertedWeight = (weightValue * 2.20462).toFixed(0);
       }
 
       formik.setFieldValue("optimalWeight", convertedWeight);

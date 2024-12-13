@@ -97,9 +97,9 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     if (weight_unit !== unit) {
       let convertedWeight = formik.values.weight;
       if (unit === "kg" && weight_unit === "lbs") {
-        convertedWeight = (parseFloat(formik.values.weight) * 0.453592).toFixed(2);
+        convertedWeight = (parseFloat(formik.values.weight) * 0.453592).toFixed(0);
       } else if (unit === "lbs" && weight_unit === "kg") {
-        convertedWeight = (parseFloat(formik.values.weight) * 2.20462).toFixed(2);
+        convertedWeight = (parseFloat(formik.values.weight) * 2.20462).toFixed(0);
       }
       formik.setFieldValue("weight", convertedWeight);
       setWeight_unit(unit);
@@ -159,7 +159,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
           <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Phone Number</Form.Label>
-              <div className="d-flex gap-2">
+              <div className="w-100">
                 <PhoneInput
                   defaultCountry="us"
                   name="tel"

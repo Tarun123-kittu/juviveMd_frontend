@@ -235,7 +235,7 @@ const Reception_patient_list = () => {
                     </div>
                     <div className='patient_data'>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
-                            {patient_data?.isLoading ? <tr><td colSpan={10}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
+                            {patient_data?.isLoading ? <tr><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 11 : 10}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 12 : 10}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                                 return (
                                     <tr>
                                         <td className="ps-3">

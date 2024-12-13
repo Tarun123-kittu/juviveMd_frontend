@@ -90,9 +90,9 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       let convertedHeight = formik.values.height;
 
       if (unit === "cm" && height_unit === "feet") {
-        convertedHeight = (formik.values.height * 30.48).toFixed(2);
+        convertedHeight = (formik.values.height * 30.48).toFixed(0);
       } else if (unit === "feet" && height_unit === "cm") {
-        convertedHeight = (formik.values.height * 0.0328084).toFixed(2);
+        convertedHeight = (formik.values.height * 0.0328084).toFixed(0);
       }
 
       formik.setFieldValue("height", convertedHeight);
@@ -173,7 +173,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
           <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Phone Number</Form.Label>
-              <div className="d-flex gap-2">
+              <div className="w-100">
                 <PhoneInput
                   defaultCountry="us"
                   name="tel"

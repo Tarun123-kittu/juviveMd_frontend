@@ -225,7 +225,7 @@ const AddUserModal = ({ show, setShow, rolesList }) => {
                                 <Col lg={6}>
                                     <Form.Group className="mb-2">
                                         <Form.Label>Phone Number</Form.Label>
-                                        <div className="d-flex gap-2">
+                                        <div className="w-100">
                                             <PhoneInput
                                                 defaultCountry="us"
                                                 value={phone}

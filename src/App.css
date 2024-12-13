@@ -205,7 +205,12 @@ li.page-item.active a.page-link {
   transform: unset !important;
   width: auto;
 }
-
+.react-international-phone-input-container{
+  width: 100%;
+}
+input.react-international-phone-input{
+  width: 100%;
+}
 
 @media(max-width:1440px){
   .cmn_btn {
