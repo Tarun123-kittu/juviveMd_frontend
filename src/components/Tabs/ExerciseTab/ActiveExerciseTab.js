@@ -90,7 +90,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   return (
     <div>
       <DataTable columns={columns}>
-        {exercise_data?.isLoading ? <tr><td colSpan={7}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
+        {exercise_data?.isLoading ? <tr><td colSpan={7}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={7}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
           return (
             <tr>
 
@@ -98,7 +98,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
               <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' alt="exercise" /></td>
               <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
-              <td className={(localStorage.getItem("user_role") !== "ADMIN" && index !== i) && "active" && 'nodropdown'}> <div className='patient_dropdown w-100'>
+              <td className={ExercisePermissionApproveReject?.canUpdate ? "" : 'nodropdown'}> <div className='patient_dropdown w-100'>
                 <Dropdown
                   show={isOpen}
                   onToggle={(nextOpenState) => {

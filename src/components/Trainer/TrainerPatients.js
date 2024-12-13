@@ -52,7 +52,7 @@ const TrainerPatients = () => {
         "Goal",
         "Assigned Trainer",
         "Status",
-        "Overview",
+        "Actions",
     ];
 
     useEffect(() => {
@@ -199,7 +199,6 @@ const TrainerPatients = () => {
                     </div>}
                 </div>
                 <div className={`${toggleFilter && "blur_bg"}`}>
-
                     <DataTable columns={columns}>
                         {patient_list?.isLoading ? <tr><td colSpan={9}><Loader /></td></tr> : patient_list?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={9}><Nodata /> </td></tr> : Array?.isArray(patientData) && patientData?.map((list, i) => {
                             return (
@@ -208,7 +207,7 @@ const TrainerPatients = () => {
                                         <div className="d-flex align-items-center table_user">
                                             <img src={list?.image || Default_user} alt="User_image" />
                                             <div className="d-inline-grid">
-                                                <p className="mb-0">{list?.name}</p>
+                                                <p className="mb-0">{list?.firstName} {list?.lastName}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -219,7 +218,9 @@ const TrainerPatients = () => {
                                     <td>{list?.goal}</td>
                                     <td>{list?.trainerName || "Not Available"}</td>
                                     <td>
-                                        <button className="btn_info active">{list?.status === 0 ? "Inactive" : "Active"}</button>
+                                        <button className="btn_info active" style={{
+                                                    color: list?.status === 1 ? '#0c5e62' : 'red',
+                                                }}>{list?.status === 0 ? "Inactive" : "Active"}</button>
                                     </td>
                                     <td className='text-center'>
                                         {PatientPermissions?.canRead && <button onClick={() => navigate("/patientData")} className='cmn_btn fade_color px-0  px-3'><TiArrowRight size={40} /> </button>}

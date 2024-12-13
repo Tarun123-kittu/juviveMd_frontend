@@ -61,11 +61,21 @@ const Reception_patient_list = () => {
         setShowFilter(!showFilter)
     }
     useEffect(() => {
-        if (elementRef.current) {
-            const rect = elementRef.current.getBoundingClientRect();
-            setLeftpostion(rect.left - 133)
-        }
-    }, [tab, elementRef.current]);
+        const updatePosition = () => {
+            if (elementRef.current) {
+                const rect = elementRef.current.getBoundingClientRect();
+                setLeftpostion(rect.left - 133);
+            }
+        };
+    
+        updatePosition();
+        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', updatePosition);
+        return () => {
+            window.removeEventListener('resize', updatePosition);
+            window.removeEventListener('scroll', updatePosition);
+        };
+    }, [tab]);
 
     const columns = [
         "User Name",
@@ -77,7 +87,7 @@ const Reception_patient_list = () => {
         "Assigned Trainer",
         "Status",
         "Created By",
-        "Overview",
+        "Actions",
     ];
     const columns_one = [
         "User Name",
@@ -90,7 +100,7 @@ const Reception_patient_list = () => {
         "Status",
         "Created By",
         "Health Issue",
-        "Overview",
+        "Actions",
     ];
     const columns_two = [
         "User Name",
@@ -103,7 +113,7 @@ const Reception_patient_list = () => {
         "Status",
         "Payment",
         "Created By",
-        "Overview",
+        "Actions",
     ];
 
     useEffect(() => {
@@ -240,7 +250,7 @@ const Reception_patient_list = () => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img src={Default_user} alt="User Image" />
+                                                <img src={Default_user} alt="User-image" />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
@@ -248,7 +258,7 @@ const Reception_patient_list = () => {
                                         </td>
                                         <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
-                                        <td>+{patient?.countryCode} {patient?.phone}</td>
+                                        <td className='text-nowrap'>+{patient?.countryCode} {patient?.phone}</td>
                                         <td>
                                             {patient?.gender
                                                 ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1).toLowerCase()
@@ -257,7 +267,10 @@ const Reception_patient_list = () => {
                                         <td>{patient?.goal}</td>
                                         <td>{patient?.trainerName}</td>
                                         <td>
-                                            <button className="btn_info active">{patient?.status === 0 ? "Inactive" : "Active"}</button>
+                                            <button className="btn_info active"  style={{
+                                                    color: patient?.status === 1 ? '#0c5e62' : 'red',
+                                                }}>
+                                                    {patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
                                         {tab === "paymentPending" && <td>
                                             <div className="patient_dropdown">

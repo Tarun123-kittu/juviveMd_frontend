@@ -144,7 +144,7 @@ const ReplaceTrainerModal = ({
                                         }
                                     })
                                 ) : (
-                                    <p>No Trainer found</p>
+                                    <p className='m-0 p-2'>No Trainer found</p>
                                 )}
 
                             </ul>

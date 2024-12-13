@@ -242,9 +242,6 @@ h5.step_heading {
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: #e0e0e0;
   border: 1px solid #ccc;
   border-radius: 3px;
   cursor: pointer;
@@ -256,16 +253,7 @@ input[type="checkbox"]:checked {
   border: 1px solid #0c5e62;
 }
 
-input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 6px;
-  height: 12px;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-}
+
 
 input[type="range"] {
   /* removing default appearance */
@@ -404,7 +392,9 @@ ul.add-feedback li {
   font-weight: 600;
 }
 
-
+tr.rowmatched td {
+  background: #acc9cb;
+}
 
 .show_errors {
   background: #ff000038;
@@ -417,11 +407,11 @@ ul.add-feedback li {
   font-size: 14px;
 }
 .show_success {
-  background: #0c5e62;
+  background: var(--fade-color);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 10px;
-  color:white
+  color:#000;
 }
 .show_errors li {
   list-style: inside;
