@@ -22,6 +22,7 @@ import TrainerPatients from "../Trainer/TrainerPatients";
 import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 import ReceptionMessages from "../reception/ReceptionMessages";
 import NotFound from "../../common/notFound/NotFound";
+import ReceptionistExercise from "../reception/ReceptionistExercise";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -85,6 +86,14 @@ const AppRouter = () => {
                     element: (
                         <ProtectedRoute requiredRole="Receptionist">
                             <Reception_dashboard />
+                        </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/reception/exercise",
+                    element: (
+                        <ProtectedRoute requiredRole="Receptionist">
+                            <ReceptionistExercise />
                         </ProtectedRoute>
                     ),
                 },

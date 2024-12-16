@@ -91,7 +91,7 @@ const Sidebar = () => {
 
           <div className='user_info'>
 
-            <img style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} src={UserImage} alt="user_image" />
+            <img style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} src={localStorage.getItem('juvive_image_url') || UserImage} alt="user_image" />
             <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")}>JuviveMD</h6>
             <p>{localStorage.getItem('user_role')}</p>
           </div>
@@ -172,6 +172,13 @@ const Sidebar = () => {
                       </li>
                     )}
                     {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
                       <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
