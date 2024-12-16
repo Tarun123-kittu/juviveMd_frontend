@@ -107,6 +107,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
     useEffect(() => {
         if (selected_staff_detail?.isSuccess && selected_staff_detail?.data?.data) {
             const staffData = selected_staff_detail.data.data;
+            console.log(staffData,"this is the staff data")
 
             setFirstName(
                 staffData.firstName
@@ -118,7 +119,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                     ? staffData.lastName.charAt(0).toUpperCase() + staffData.lastName.slice(1)
                     : ""
             );
-            setPhone(staffData.phone || "");
+            setPhone(staffData.countryCode + staffData.phone || "");
             setEmail(staffData.email || "");
             setAddress(staffData.address || "");
             setRole(staffData.roleId || "");
@@ -155,17 +156,17 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
 
     const handleValidatePhone = (phone, setFieldValue) => {
         const parsedPhone = parsePhoneNumberFromString(phone);
-        
+
         if (parsedPhone) {
             setCountryCode(parsedPhone.countryCallingCode)
             setFieldValue('phone', parsedPhone.nationalNumber);
             setFieldValue('countryCode', parsedPhone.countryCallingCode);
-    
+
             console.log(parsedPhone.nationalNumber, "parsedPhone.nationalNumber");
             console.log(parsedPhone.countryCallingCode, "parsedPhone.countryCallingCode");
         }
     };
-    
+
 
     return (
         <Modal show={show} onHide={handleClose} className="cmn_modal" centered>

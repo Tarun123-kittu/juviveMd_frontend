@@ -25,6 +25,11 @@ const ReceptionistExercise = () => {
   const [category, setCategory] = useState("")
   const [date, setDate] = useState("")
   const [ExercisePermission] = getRoutePermissions(permission_constants.EXERCISE)
+  const [ExerciseActiveTabPermission] = getRoutePermissions(permission_constants.EXERCISEACTIVETAB)
+  const [ExerciseApprovalTabPermission] = getRoutePermissions(permission_constants.EXERCISEAPPROVALTAB)
+  const [ExerciseDraftTabPermission] = getRoutePermissions(permission_constants.EXERCISEDRAFTTAB)
+  const [ExerciseRejectedTabPermission] = getRoutePermissions(permission_constants.EXERCISEREJECTEDTTAB)
+  const [ExerciseUploadPermission] = getRoutePermissions(permission_constants.EXERCISEUPLOAD)
 
 
   const common_data = useSelector((store) => store.COMMON_DATA);
@@ -79,7 +84,7 @@ const ReceptionistExercise = () => {
         <div className="cmn_bg_wrapper exercise_tab">
           <div className="position-relative">
             <div className="d-flex gap-2 position-absolute end-0">
-              {ExercisePermission?.canCreate &&
+              {ExerciseUploadPermission?.canCreate &&
                 <button
                   className="cmn_btn filter_btn"
                   onClick={() => setShowFileUploadModal(true)}
@@ -168,10 +173,10 @@ const ReceptionistExercise = () => {
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >
-              <Tab eventKey="active" title="Active" />
-              <Tab eventKey="approvalRequest" title="Approval Requests" />
-              <Tab eventKey="draft" title="Draft" />
-              <Tab eventKey="rejected" title="Rejected" />
+              {ExerciseActiveTabPermission?.canRead && <Tab eventKey="active" title="Active" />}
+              {ExerciseApprovalTabPermission?.canRead && <Tab eventKey="approvalRequest" title="Approval Requests" />}
+              {ExerciseDraftTabPermission?.canRead && <Tab eventKey="draft" title="Draft" />}
+              {ExerciseRejectedTabPermission?.canRead && <Tab eventKey="rejected" title="Rejected" />}
             </Tabs>
 
             {renderTabContent()}

@@ -91,7 +91,25 @@ const Sidebar = () => {
 
           <div className='user_info'>
 
-            <img style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} src={localStorage.getItem('juvive_image_url') || UserImage} alt="user_image" />
+            <img
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                const userRole = localStorage.getItem('user_role');
+                if (userRole === "TRAINER") {
+                  navigate("/trainer/dashboard");
+                } else if (userRole === "RECEPTIONIST") {
+                  navigate("/reception/dashboard");
+                } else {
+                  navigate("/dashboard");
+                }
+              }}
+              src={
+                !localStorage.getItem('juvive_image_url')
+                  ? UserImage : localStorage.getItem('juvive_image_url')
+              }
+              alt="user_image"
+            />
+
             <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")}>JuviveMD</h6>
             <p>{localStorage.getItem('user_role')}</p>
           </div>

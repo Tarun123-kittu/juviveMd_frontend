@@ -56,6 +56,9 @@ const Reception_patient_list = () => {
     const is_payment_status_updated = useSelector((store) => store.UPDATE_PATIENT_PAYMENT)
     const PatientPermissions = getRoutePermissions(permission_constants.PATIENT)?.[0] || {};
     const PatientPaymentPermissions = getRoutePermissions(permission_constants.PATIENTPAYMENT)?.[0] || {};
+    const PatientActiveTabPermissions = getRoutePermissions(permission_constants.PATIENTACTIVETAB)?.[0] || {};
+    const PatientHealthTabPermissions = getRoutePermissions(permission_constants.PATIENTHEALTHISSUETAB)?.[0] || {};
+    const PatientPaymenTabtPermissions = getRoutePermissions(permission_constants.PATIENTPAYMENTTAB)?.[0] || {};
 
     const handelShowFilter = () => {
         setShowFilter(!showFilter)
@@ -67,7 +70,7 @@ const Reception_patient_list = () => {
                 setLeftpostion(rect.left - 133);
             }
         };
-    
+
         updatePosition();
         window.addEventListener('resize', updatePosition);
         window.addEventListener('scroll', updatePosition);
@@ -231,9 +234,9 @@ const Reception_patient_list = () => {
                     </div>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
                         <ul className='static_tabs flex-grow-1 d-flex mb-0'>
-                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>
-                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>
-                            <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>
+                            {PatientActiveTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>}
+                            {PatientHealthTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>}
+                            {PatientPaymenTabtPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>}
                         </ul>
                         {PatientPermissions?.canCreate && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>
                         {showFilter &&
@@ -267,10 +270,10 @@ const Reception_patient_list = () => {
                                         <td>{patient?.goal}</td>
                                         <td>{patient?.trainerName}</td>
                                         <td>
-                                            <button className="btn_info active"  style={{
-                                                    color: patient?.status === 1 ? '#0c5e62' : 'red',
-                                                }}>
-                                                    {patient?.status === 0 ? "Inactive" : "Active"}</button>
+                                            <button className="btn_info active" style={{
+                                                color: patient?.status === 1 ? '#0c5e62' : 'red',
+                                            }}>
+                                                {patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
                                         {tab === "paymentPending" && <td>
                                             <div className="patient_dropdown">
