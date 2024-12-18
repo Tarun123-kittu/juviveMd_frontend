@@ -23,6 +23,7 @@ import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 import ReceptionMessages from "../reception/ReceptionMessages";
 import NotFound from "../../common/notFound/NotFound";
 import ReceptionistExercise from "../reception/ReceptionistExercise";
+import PatientReport from "../../pages/Patient/PatientReport";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -122,9 +123,14 @@ const AppRouter = () => {
                 {
                     path: "/patientData",
                     element: (
-                        <ProtectedRoute requiredRole="Admin">
                             <PatientData />
-                        </ProtectedRoute>
+                    )
+
+                },
+                {
+                    path: "/patient-report",
+                    element: (
+                            <PatientReport />
                     )
 
                 },

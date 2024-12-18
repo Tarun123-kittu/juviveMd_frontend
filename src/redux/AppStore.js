@@ -29,6 +29,7 @@ import updateExerciseDraftAPI from "./slices/exerciseSlice/updateExercideDraft"
 import getRoleSlice from "./slices/roleSlice/getRole"
 import permissionSlice from "./slices/roleSlice/permissionSlice"
 import uploadExerciseAPI from "./slices/exerciseSlice/uploadExercises"
+import getExerciseByCategory from "./slices/exerciseSlice/getExerciseByCategory"
 
 const AppStore = configureStore({
   reducer: {
@@ -61,7 +62,8 @@ const AppStore = configureStore({
     UPDATE_DRAFT_EXERCISE: updateExerciseDraftAPI,
     ROLE_LIST: getRoleSlice,
     PERMISSIONS_DATA: permissionSlice,
-    UPLOAD_EXERCISE: uploadExerciseAPI
+    UPLOAD_EXERCISE: uploadExerciseAPI,
+    EXERCISE_BY_CATEGORY: getExerciseByCategory
   },
 })
 

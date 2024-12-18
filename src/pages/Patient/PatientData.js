@@ -7,20 +7,24 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { get_selected_patient, clear_selected_patient_state } from "../../redux/slices/patientSlice/getSelectedPatientSlice";
 import { calculateAge } from "../../common/calculateAge/calculateAge";
+import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { formatDate } from "../../common/formatDate/formatDate";
-import Loader from "../../common/Loader/Loader";
+import AddPateintExercise from "../../components/Modals/AddPateintExercise";
 
 const PatientData = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
+  const [exercise_category,setExercise_category] = useState()
+  const[showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
   const { patientId } = location?.state ? location?.state : location
-  console.log(patientId)
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
+  const common_data = useSelector((store) => store.COMMON_DATA)
 
   useEffect(() => {
     dispatch(get_selected_patient({ id: patientId }))
+    dispatch(common_data_api())
   }, [])
 
   useEffect(() => {
@@ -28,6 +32,12 @@ const PatientData = () => {
       setPatient_data(patient_details?.data?.data)
     }
   }, [patient_details])
+
+  useEffect(() => {
+    if (common_data?.isSuccess) {
+      setExercise_category(common_data?.data?.data?.exercise_category)
+    }
+  }, [common_data])
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -81,7 +91,7 @@ const PatientData = () => {
           </div>
           <button className="cmn_btn px-4">Reports</button>
         </div>
-        <div className="cmn_head mb-3 mt-4">
+        <div className="cmn_head mb-3 mt-4 position-relative">
           <h4>
             Monday,2 July{" "}
             <svg
@@ -98,6 +108,7 @@ const PatientData = () => {
               />
             </svg>
           </h4>
+          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={()=>{setshowAddPateintExercise(true)}}>+ Add Exercise</button>
         </div>
         <Tabs
           defaultActiveKey="monday"
@@ -127,7 +138,7 @@ const PatientData = () => {
           </Tab>
         </Tabs>
       </div>
-
+      <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category}/>
     </div>
   );
 };
