@@ -13,7 +13,7 @@ const DataTable = ({ children, columns, hideAction,hasCheckbox }) => {
               </th>
             )} */}
             {columns.map((col, index) => (
-              <th key={index}>{col === "Action" ? "" : col}</th>
+              <th key={index}>{col}</th>
             ))}
           </tr>
         </thead>

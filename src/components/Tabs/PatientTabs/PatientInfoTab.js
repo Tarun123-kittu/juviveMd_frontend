@@ -13,7 +13,7 @@ const PatientInfoTab = () => {
     "Duration Time",
     "Description",
     "Patient Review",
-    "Link",
+    "Action",
   ];
   
   return (
@@ -26,6 +26,7 @@ const PatientInfoTab = () => {
           <td>Normal pace, 3km</td>
           <td onClick={()=>setShowReviewModal(true)} className="text-decoration-underline">Easy</td>
           <td>
+            <div className="d-flex gap-2">
             <img src={LinkImage} width={18} altDeleteImage="" />
             <img
               src={DeleteImage}
@@ -34,6 +35,7 @@ const PatientInfoTab = () => {
               altDeleteImage=""
             />
             <img src={EditImage} width={18} altDeleteImage="" />
+            </div>
           </td>
         </tr>
       </DataTable>

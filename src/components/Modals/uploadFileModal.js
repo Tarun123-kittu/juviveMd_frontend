@@ -215,7 +215,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                         <>
                             {fileName.endsWith('.csv') ? (
                                 <CSVLink data={fileData} filename={fileName}>
-                                    <button>Download Sample</button>
+                                    <button className='cmn_btn'>Download Sample</button>
                                 </CSVLink>
                             ) : (
                                 <button
