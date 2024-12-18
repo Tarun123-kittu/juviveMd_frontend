@@ -3,8 +3,9 @@ import default_user from "../../Images/default_user.svg";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import PatientInfoTab from "../../components/Tabs/PatientTabs/PatientInfoTab";
+import AddPateintExercise from "../../components/Modals/AddPateintExercise";
 const PatientData = () => {
- 
+ const[showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -58,7 +59,7 @@ const PatientData = () => {
          </div>
           <button className="cmn_btn px-4">Reports</button>
         </div>
-        <div className="cmn_head mb-3 mt-4">
+        <div className="cmn_head mb-3 mt-4 position-relative">
           <h4>
             Monday,2 July{" "}
             <svg
@@ -75,6 +76,7 @@ const PatientData = () => {
               />
             </svg>
           </h4>
+          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={()=>{setshowAddPateintExercise(true)}}>+ Add Exercise</button>
         </div>
         <Tabs
           defaultActiveKey="monday"
@@ -104,7 +106,7 @@ const PatientData = () => {
           </Tab>
         </Tabs>
       </div>
-      
+      <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} />
     </div>
   );
 };

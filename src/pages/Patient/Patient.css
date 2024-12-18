@@ -174,6 +174,76 @@ box-shadow: unset;
     top: -16px;
     right: 30px;
 }
+/* patient-report */
+h4.report_title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.cmn_card {
+    padding: 1.2rem;
+    border: 1px solid rgba(232, 231, 231, 1);
+    border-radius: 5px;
+}
+
+.heart_headt {
+    display: flex;
+    align-items: center;
+}
+
+.hear_logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: #fff;
+    box-shadow: 0px 0px 5px rgba(0,0,0,10%);
+    text-align: center;
+}
+
+.heart_head h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.progres_head ul {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    border: 1px solid rgba(172, 201, 203, 0.5);
+    border-radius: 22px;
+    padding: 5px 9px;
+}
+
+.progres_head ul li {font-size: 14px;padding: 4px 1.5rem;font-weight: 500;cursor: pointer;}
+
+li.primary {
+    background: var(--primary-color);
+    border-radius: 35px;
+    color: var(--bs-white);
+}
+.cmn_card .highcharts-container {
+    height: 320px !important;
+}
+.progres_head h6 {
+    color: var(--primary-color);
+}
+
+h4.heart_rate {
+    color: rgba(232, 57, 75, 1);
+    font-size: 50px;
+    font-weight: 400;
+}
+p.bpm_status {
+    font-weight: 600;
+font-size: 18px;
+}
+
+h4.heart_rate span {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 1);
+}
 @media(max-width:1440px){
     .filter_list input, .label,.patient_dropdown button.btn{
         font-size: 13px;
