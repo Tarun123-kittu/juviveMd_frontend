@@ -89,7 +89,7 @@ const TrainerPatients = () => {
         "Assigned Trainer",
         "Status",
         "Created By",
-        "Actions",
+        "Action",
     ];
     const columns_one = [
         "User Name",
@@ -102,7 +102,7 @@ const TrainerPatients = () => {
         "Status",
         "Created By",
         "Health Issue",
-        "Actions",
+        "Action",
     ];
     const columns_two = [
         "User Name",
@@ -115,7 +115,7 @@ const TrainerPatients = () => {
         "Status",
         "Payment",
         "Created By",
-        "Actions",
+        "Action",
     ];
 
     useEffect(() => {
@@ -395,7 +395,7 @@ const TrainerPatients = () => {
                                         </td>}
 
                                         <td className='text-center'>
-                                            <div className="d-flex justify-content-between w-100">
+                                            <div className="d-flex justify-content-between w-100 gap-2">
                                                 {PatientPermissions?.canUpdate && <svg onClick={() => { setshowEditPateintModal(true); setPatientId(patient?.id) }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M5.26562 19.2151L11.0737 19.1953L23.7507 6.5834C24.2482 6.08368 24.5219 5.42004 24.5219 4.71409C24.5219 4.00814 24.2482 3.3445 23.7507 2.84478L21.6633 0.748087C20.6683 -0.251345 18.9323 -0.246057 17.9452 0.744121L5.26562 13.3586V19.2151ZM19.8023 2.6174L21.8936 4.71012L19.7917 6.80153L17.7044 4.70616L19.8023 2.6174ZM7.89788 14.4612L15.8341 6.56489L17.9215 8.66158L9.98658 16.5552L7.89788 16.5619V14.4612Z" fill="black" />
                                                     <path d="M2.63226 24.489H21.0581C22.5098 24.489 23.6903 23.3029 23.6903 21.8445V10.3835L21.0581 13.0279V21.8445H6.7886C6.75438 21.8445 6.71884 21.8577 6.68462 21.8577C6.64119 21.8577 6.59776 21.8458 6.55301 21.8445H2.63226V3.33341H11.6438L14.2761 0.688965H2.63226C1.18057 0.688965 0 1.875 0 3.33341V21.8445C0 23.3029 1.18057 24.489 2.63226 24.489Z" fill="black" />
@@ -408,7 +408,6 @@ const TrainerPatients = () => {
                                     </tr>
                                 )
                             })}
-
                         </DataTable>
                     </div>
                     {patient_data?.isSuccess && patient_data?.data?.data?.totalPages > 1 && <Pagination totalPages={patient_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}

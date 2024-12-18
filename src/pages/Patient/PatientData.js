@@ -1,10 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import default_user from "../../Images/default_user.svg";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import PatientInfoTab from "../../components/Tabs/PatientTabs/PatientInfoTab";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { get_selected_patient, clear_selected_patient_state } from "../../redux/slices/patientSlice/getSelectedPatientSlice";
+import { calculateAge } from "../../common/calculateAge/calculateAge";
+import { formatDate } from "../../common/formatDate/formatDate";
+import Loader from "../../common/Loader/Loader";
+
 const PatientData = () => {
- 
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [patient_data, setPatient_data] = useState()
+  const { patientId } = location?.state ? location?.state : location
+  console.log(patientId)
+  const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
+
+  useEffect(() => {
+    dispatch(get_selected_patient({ id: patientId }))
+  }, [])
+
+  useEffect(() => {
+    if (patient_details?.isSuccess) {
+      setPatient_data(patient_details?.data?.data)
+    }
+  }, [patient_details])
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -12,50 +35,50 @@ const PatientData = () => {
           <div className="d-flex align-items-center table_user">
             <img src={default_user} alt="User Image" />
             <div className="d-inline-grid">
-              <p className="mb-0">Neeraj</p>
-              <span>Receptionist</span>
+              <p className="mb-0">{patient_data?.firstName} {patient_data?.lastName}</p>
+              <span>{patient_data?.roleName}</span>
             </div>
           </div>
-         <div className="user-data">
-         <ul className="justify-content-between">
-            <li>
-              <strong style={{width:"80px"}}>Age:</strong>
-              <span>32 Years</span>
-            </li>
-            <li>
-              <strong>Height(inch):</strong>
-              <span>6.1 inchs</span>
-            </li>
-            <li>
-              <strong>Goal:</strong>
-              <span>Weight loss</span>
-            </li>
-            <li>
-              <strong>Weeks:</strong>
-              <span>4 Weeks</span>
-            </li>
-           
-          </ul>
-          <ul className="justify-content-between">
-          
-            <li>
-              <strong>Weight (kg):</strong>
-              <span>55 kg</span>
-            </li>
-            <li>
-              <strong>Phone No.</strong>
-              <span>08082297777</span>
-            </li>
-            <li>
-              <strong>Date </strong>
-              <span>04/09/2024</span>
-            </li>
-            <li>
-              <strong>Status</strong>
-              <span>In progress</span>
-            </li>
-          </ul>
-         </div>
+          <div className="user-data">
+            <ul className="justify-content-between">
+              <li>
+                <strong style={{ width: "80px" }}>Age:</strong>
+                <span>{calculateAge(patient_data?.dob)} Years</span>
+              </li>
+              <li>
+                <strong>Height({patient_data?.height?.unit}):</strong>
+                <span>{patient_data?.height?.value}</span>
+              </li>
+              <li>
+                <strong>Goal:</strong>
+                <span>{patient_data?.goal}</span>
+              </li>
+              <li>
+                <strong>Weeks:</strong>
+                <span>4 Weeks</span>
+              </li>
+
+            </ul>
+            <ul className="justify-content-between">
+
+              <li>
+                <strong>Weight ({patient_data?.weight?.unit}):</strong>
+                <span>{patient_data?.weight?.value}</span>
+              </li>
+              <li>
+                <strong>Phone No.</strong>
+                <span>{patient_data?.countryCode ? "+" : ""}{patient_data?.countryCode} {patient_data?.phone}</span>
+              </li>
+              <li>
+                <strong>Date </strong>
+                <span>{formatDate(patient_data?.created_at)}</span>
+              </li>
+              <li>
+                <strong>Status</strong>
+                <span>{patient_data?.status === 0 ? "Inactive" : "Active"}</span>
+              </li>
+            </ul>
+          </div>
           <button className="cmn_btn px-4">Reports</button>
         </div>
         <div className="cmn_head mb-3 mt-4">
@@ -82,7 +105,7 @@ const PatientData = () => {
           className="mb-3 weekendTabs cmn_tabs"
         >
           <Tab eventKey="monday" title="Monday">
-          <PatientInfoTab/>
+            <PatientInfoTab />
           </Tab>
           <Tab eventKey="tuesday" title="Tuesday">
             Tab content for Tuesday
@@ -104,7 +127,7 @@ const PatientData = () => {
           </Tab>
         </Tabs>
       </div>
-      
+
     </div>
   );
 };

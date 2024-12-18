@@ -230,8 +230,10 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                 {(localStorage?.getItem('user_role') === "ADMIN") && (tab === "rejected") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />} */}
 
-                {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
-                {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+               <div className='d-flex gap-2 justify-content-between'>
+               {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
+               {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+               </div>
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button

@@ -19,7 +19,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const [show_close_button, setShow_close_button] = useState(false)
     const [show_success, setShow_success] = useState([])
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
-    console.log(show_success, "this is the show_success")
+    console.log(is_file_uploades, "is_file_uploades is_file_uploades")
     const handleClose = () => {
         setShowFileUploadModal(false)
         dispatch(clear_upload_exercise_state())
@@ -86,6 +86,12 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
             setShow_success(is_file_uploades?.data?.data?.successRecords)
+            dispatch(clear_upload_exercise_state())
+        }
+        if (is_file_uploades?.isError) {
+            toast.error(is_file_uploades?.error?.message, {
+                duration: 2000})
+            dispatch(clear_upload_exercise_state())
         }
     }, [is_file_uploades])
 
@@ -215,7 +221,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                         <>
                             {fileName.endsWith('.csv') ? (
                                 <CSVLink data={fileData} filename={fileName}>
-                                    <button>Download Sample</button>
+                                    <button className='cmn_btn'>Download Sample</button>
                                 </CSVLink>
                             ) : (
                                 <button

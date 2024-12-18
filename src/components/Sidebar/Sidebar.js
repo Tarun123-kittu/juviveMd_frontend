@@ -95,9 +95,9 @@ const Sidebar = () => {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 const userRole = localStorage.getItem('user_role');
-                if (userRole === "TRAINER") {
+                if (userRole === "Trainer") {
                   navigate("/trainer/dashboard");
-                } else if (userRole === "RECEPTIONIST") {
+                } else if (userRole === "Receptionist") {
                   navigate("/reception/dashboard");
                 } else {
                   navigate("/dashboard");

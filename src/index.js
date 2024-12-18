@@ -12,7 +12,8 @@ root.render(
   <React.StrictMode>
     <Provider store={AppStore}>
       <App />
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-right"
+        reverseOrder={false} />
     </Provider>
   </React.StrictMode>
 );
