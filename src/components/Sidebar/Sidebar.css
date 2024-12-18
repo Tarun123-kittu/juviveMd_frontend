@@ -102,7 +102,7 @@ p.quote {
     font-size: 18px;
     font-weight: 600;
 }
-li.log_out {
+ul.menu_items li.log_out {
     position: fixed;
     bottom: 30px;
     left: 40px;
@@ -169,4 +169,53 @@ li.log_out div {
     .sidbar_inner.mobile_sidebar {
         top: 77px;
     }
+}
+a.sidebar_active {
+    position: relative;
+}
+
+a.sidebar_active::after {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    content: "";
+    left: 0;
+    bottom: -10px;
+}
+a.sidebar_active::before {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    content: "";
+    left: 5px;
+    top: -11px;
+}
+ul.menu_items li {
+    position: relative;
+}
+
+ul.menu_items .active_menu::after {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    content: "";
+    left: 12px;
+    border-radius: 50%;
+    background: #aac9cb;
+    bottom: -20px;
+}
+ul.menu_items .active_menu::before {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    content: "";
+    left: 12px;
+    border-radius: 50%;
+    background: #aac9cb;
+    top: -20px;
+    z-index: 2;
 }
