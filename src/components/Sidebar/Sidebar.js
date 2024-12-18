@@ -108,28 +108,28 @@ const Sidebar = () => {
                 return (
                   <>
                     {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
-                      <li key={`${index}-staff`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-staff`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
@@ -143,21 +143,21 @@ const Sidebar = () => {
                 return (
                   <>
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
@@ -170,21 +170,21 @@ const Sidebar = () => {
                 return (
                   <>
                     {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
                       </li>
                     )}
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)}>
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>
                         </Link>
