@@ -10,34 +10,83 @@ import { calculateAge } from "../../common/calculateAge/calculateAge";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { formatDate } from "../../common/formatDate/formatDate";
 import AddPateintExercise from "../../components/Modals/AddPateintExercise";
+import { get_patient_plan,clear_patient_plan_state } from "../../redux/slices/patientPlan/getPAtientPlan";
 
 const PatientData = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
-  const [exercise_category,setExercise_category] = useState()
-  const[showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
+  const [exercise_category, setExercise_category] = useState()
+  const [weekdays, setWeekdays] = useState()
+  const [currentBmi, setCurrentBmi] = useState('')
+  const [expectedBmi, setExpectedBmi] = useState('')
+  const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
+  const [activeTab, setActiveTab] = useState('monday'); // Initial active tab is Monday
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
+  console.log(patientId, "patientId is patientId patientId patientId patientId patientId patientId patientId patientId")
 
   useEffect(() => {
     dispatch(get_selected_patient({ id: patientId }))
     dispatch(common_data_api())
   }, [])
 
+  function calculateBMI(height, weight, heightUnit, weightUnit) {
+    if (heightUnit === "cm") {
+      height = height / 100;
+    } else if (heightUnit === "ft") {
+      const [feet, inches = 0] = height.split(".").map(Number);
+      height = (feet * 0.3048) + (inches * 0.0254);
+    }
+
+    if (weightUnit === "lbs") {
+      weight = weight * 0.453592;
+    }
+
+    const bmi = weight / (height * height);
+
+    let category = "";
+    if (bmi < 18.5) {
+      category = "Underweight";
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      category = "Normal weight";
+    } else if (bmi >= 25 && bmi < 29.9) {
+      category = "Overweight";
+    } else {
+      category = "Obesity";
+    }
+
+    return {
+      bmi: bmi.toFixed(2),
+      category: category
+    };
+  }
+
   useEffect(() => {
     if (patient_details?.isSuccess) {
       setPatient_data(patient_details?.data?.data)
+      const bmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.weight?.unit)
+      setCurrentBmi(bmi?.bmi)
+      const expectbmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.optimal_weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.optimal_weight?.unit)
+      setExpectedBmi(expectbmi?.bmi)
     }
   }, [patient_details])
 
   useEffect(() => {
     if (common_data?.isSuccess) {
       setExercise_category(common_data?.data?.data?.exercise_category)
+      setWeekdays(common_data?.data?.data?.weekDays)
     }
   }, [common_data])
+
+
+
+  const handleTabSelect = (key) => {
+    dispatch(clear_patient_plan_state())
+    setActiveTab(key); // Update active tab when a new tab is clicked
+  };
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -88,6 +137,25 @@ const PatientData = () => {
                 <span>{patient_data?.status === 0 ? "Inactive" : "Active"}</span>
               </li>
             </ul>
+            <ul className="justify-content-between">
+
+              <li>
+                <strong>Current BMI:</strong>
+                <span>{currentBmi}</span>
+              </li>
+              <li>
+                <strong>Expected BMI:</strong>
+                <span>{expectedBmi}</span>
+              </li>
+              <li>
+                <strong>Days Prefrences: </strong>
+                <span>{patient_data?.exercise_perweek?.join(", ")}</span>
+              </li>
+              <li>
+                <strong>Activity Level</strong>
+                <span>{patient_data?.activity_level}</span>
+              </li>
+            </ul>
           </div>
           <button className="cmn_btn px-4">Reports</button>
         </div>
@@ -108,37 +176,52 @@ const PatientData = () => {
               />
             </svg>
           </h4>
-          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={()=>{setshowAddPateintExercise(true)}}>+ Add Exercise</button>
+          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Exercise</button>
         </div>
         <Tabs
-          defaultActiveKey="monday"
+          activeKey={activeTab}  // Control active tab through state
+          onSelect={handleTabSelect}  // Handle tab change
           id="uncontrolled-tab-example"
           className="mb-3 weekendTabs cmn_tabs"
         >
           <Tab eventKey="monday" title="Monday">
-            <PatientInfoTab />
+            {activeTab === 'monday' && (
+              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category}/>
+            )}
           </Tab>
           <Tab eventKey="tuesday" title="Tuesday">
-            Tab content for Tuesday
+            {activeTab === 'tuesday' && (
+              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category}/>
+            )}
           </Tab>
-          <Tab eventKey="wednessday" title="Wednessday" >
-            Tab content for Wednessday
+          <Tab eventKey="wednesday" title="Wednesday">
+            {activeTab === 'wednesday' && (
+              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category}/>
+            )}
           </Tab>
-          <Tab eventKey="thursday" title="Thursday" >
-            Tab content for Thursday
+          <Tab eventKey="thursday" title="Thursday">
+            {activeTab === 'thursday' && (
+              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category}/>
+            )}
           </Tab>
-          <Tab eventKey="friday" title="Friday" >
-            Tab content for Friday
+          <Tab eventKey="friday" title="Friday">
+            {activeTab === 'friday' && (
+              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category}/>
+            )}
           </Tab>
-          <Tab eventKey="saturday" title="Saturday" >
-            Tab content for Saturday
+          <Tab eventKey="saturday" title="Saturday">
+            {activeTab === 'saturday' && (
+              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category}/>
+            )}
           </Tab>
-          <Tab eventKey="sunday" title="Sunday" >
-            Tab content for sunday
+          <Tab eventKey="sunday" title="Sunday">
+            {activeTab === 'sunday' && (
+              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category}/>
+            )}
           </Tab>
         </Tabs>
       </div>
-      <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category}/>
+      <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} />
     </div>
   );
 };

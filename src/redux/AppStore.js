@@ -30,6 +30,9 @@ import getRoleSlice from "./slices/roleSlice/getRole"
 import permissionSlice from "./slices/roleSlice/permissionSlice"
 import uploadExerciseAPI from "./slices/exerciseSlice/uploadExercises"
 import getExerciseByCategory from "./slices/exerciseSlice/getExerciseByCategory"
+import createPatientPlan from "./slices/patientPlan/createPatientPlan"
+import getPatientPlan from "./slices/patientPlan/getPAtientPlan"
+import getSelectedPatientExerciseDetails from "./slices/patientPlan/getSelectedPAtientPlan"
 
 const AppStore = configureStore({
   reducer: {
@@ -63,7 +66,10 @@ const AppStore = configureStore({
     ROLE_LIST: getRoleSlice,
     PERMISSIONS_DATA: permissionSlice,
     UPLOAD_EXERCISE: uploadExerciseAPI,
-    EXERCISE_BY_CATEGORY: getExerciseByCategory
+    EXERCISE_BY_CATEGORY: getExerciseByCategory,
+    CREATE_PATIENT_PLAN: createPatientPlan,
+    GET_PATIENT_PLAN: getPatientPlan,
+    GET_SELECTED_PATIENT_EXERCISE_DETAILS : getSelectedPatientExerciseDetails
   },
 })
 

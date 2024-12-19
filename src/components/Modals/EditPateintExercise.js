@@ -1,9 +1,11 @@
 import React from "react";
 import { Modal, Row, Col, Form } from "react-bootstrap";
 import TrainingImage from "../../Images/training.png";
+import { get_selected_patient_exercise_details, clear_selected_patient_exercise_state } from "../../redux/slices/patientPlan/getSelectedPAtientPlan";
 const EditPateintExercise = ({
   showEditPateintExercise,
   setshowEditPateintExercise,
+  exercise_category
 }) => {
   const handleClose = () => {
     setshowEditPateintExercise(false);
@@ -103,12 +105,12 @@ const EditPateintExercise = ({
               </div>
               <div className="flex-grow-1 d-flex gap-2 ">
                 <div className="w-100">
-                <div className="d-flex gap-2 align-items-center">
-                  <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
-                  <span className="time">sec</span>{" "}
-                  <span className="time min">min</span>
-                </div>
-                <Form.Control type="text" placeholder="00" />
+                  <div className="d-flex gap-2 align-items-center">
+                    <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                    <span className="time">sec</span>{" "}
+                    <span className="time min">min</span>
+                  </div>
+                  <Form.Control type="text" placeholder="00" />
                 </div>
                 <span className="minus align-self-end mb-2">-</span>
               </div>
@@ -129,14 +131,14 @@ const EditPateintExercise = ({
               <div className="flex-grow-1">
                 <div className="d-flex gap-2 align-items-center">
                   <Form.Label className="flex-grow-1">Reps</Form.Label>{" "}
-          
+
                 </div>
                 <Form.Control type="text" placeholder="00" />
               </div>
               <div className="flex-grow-1">
                 <div className="d-flex gap-2 align-items-center">
                   <Form.Label className="flex-grow-1">Weight (lbs/kg)</Form.Label>{" "}
-                
+
                 </div>
                 <Form.Control type="text" placeholder="00" />
               </div>
@@ -148,7 +150,7 @@ const EditPateintExercise = ({
                 </div>
                 <Form.Control type="text" placeholder="00" />
               </div>
-          
+
             </div>
           </Form.Group>
           <Form.Group className="mb-2">
@@ -160,14 +162,14 @@ const EditPateintExercise = ({
               <div className="flex-grow-1">
                 <div className="d-flex gap-2 align-items-center">
                   <Form.Label className="flex-grow-1">Reps</Form.Label>{" "}
-          
+
                 </div>
                 <Form.Control type="text" placeholder="00" />
               </div>
               <div className="flex-grow-1">
                 <div className="d-flex gap-2 align-items-center">
                   <Form.Label className="flex-grow-1">Weight (lbs/kg)</Form.Label>{" "}
-                
+
                 </div>
                 <Form.Control type="text" placeholder="00" />
               </div>
@@ -180,62 +182,62 @@ const EditPateintExercise = ({
               <span className="minus align-self-end mb-2">-</span>
             </div>
           </Form.Group>
-     
+
         </div>
         <div className="modal_card mt-3">
-            <h5>Heart Rate and Targets</h5>
-            <Row>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
+          <h5>Heart Rate and Targets</h5>
+          <Row>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Heart Rate Target (bpm)</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Heart Rate Target (bpm)"
                 />
               </Form.Group>
-                </Col>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Zone Target</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Zone Target"
                 />
               </Form.Group>
-                </Col>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Intensity ( 1-10 )</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Zone Target"
                 />
               </Form.Group>
-                </Col>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Pace</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Pace"
                 />
               </Form.Group>
-                </Col>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Distance Goal ( Km/Meter)</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Distance Goal ( Km/Meter)"
                 />
               </Form.Group>
-                </Col>
-                <Col lg={12} className="d-flex justify-content-center gap-3 mt-3">
-                <button className="cmn_btn border-btn ">Cancel</button>
-                <button className="cmn_btn">Submit</button>
-                </Col>
-            </Row>
-     
+            </Col>
+            <Col lg={12} className="d-flex justify-content-center gap-3 mt-3">
+              <button className="cmn_btn border-btn ">Cancel</button>
+              <button className="cmn_btn">Submit</button>
+            </Col>
+          </Row>
+
         </div>
       </Modal.Body>
     </Modal>

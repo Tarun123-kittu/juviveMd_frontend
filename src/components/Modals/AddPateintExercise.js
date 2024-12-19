@@ -3,11 +3,17 @@ import { Modal, Row, Col, Form } from "react-bootstrap";
 import TrainingImage from "../../Images/training.png";
 import { get_exercise_by_category, clear_exercise_by_category_state } from "../../redux/slices/exerciseSlice/getExerciseByCategory";
 import { useDispatch, useSelector } from "react-redux";
+import { create_patient_plan, clear_create_patient_plan_state } from "../../redux/slices/patientPlan/createPatientPlan";
+import Multiselect from 'multiselect-react-dropdown';
+import Spinner from 'react-bootstrap/Spinner';
+import toast from "react-hot-toast";
 
 const AddPateintExercise = ({
   showAddPateintExercise,
   setshowAddPateintExercise,
-  exercise_category
+  exercise_category,
+  patientId,
+  weekdays
 }) => {
   const dispatch = useDispatch()
   const [category, setCategory] = useState('')
@@ -16,10 +22,15 @@ const AddPateintExercise = ({
   const [exerciseImage, setExerciseImage] = useState('')
   const [distance, setDistance] = useState('')
   const [distanceUnit, setDistanceUnit] = useState('km')
-  const [heartRate, setHeartRate] = useState('')
+  const [heartRate, setHeartRate] = useState({ value: null, unit: "bpm" })
   const [zoneTarget, setZoneTarget] = useState('')
   const [intensity, setIntensity] = useState('')
   const [pace, setPace] = useState('')
+  const [selectedWeekdays, setSelectedWeekdays] = useState([])
+  const [updatedWeekdays, setUpdatedWeekdays] = useState([])
+  const [distanceVal, setDistanceVal] = useState({
+    value: distance, unit: distanceUnit
+  })
   const [flexibilityField, setFlexibilityField] = useState([{
     reps: "",
     weight: { value: null, unit: "kg" },
@@ -28,7 +39,6 @@ const AddPateintExercise = ({
   const [cardioFields, setCradioFields] = useState([{
     time: { value: null, unit: "sec" }
   },])
-  console.log(flexibilityField, "flexibilityField")
   const [categoryError, setCategoryError] = useState('')
   const [selectedExerciseError, setSelectedExerciseError] = useState('')
   const [exerciseVideoError, setExerciseVideoError] = useState('')
@@ -40,8 +50,10 @@ const AddPateintExercise = ({
   const [paceError, setPaceError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({});
   const [cardioError, setCradioError] = useState({});
+  const [weekError, setWeekError] = useState('')
   const [exercise, setExercise] = useState()
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+  const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const handleClose = () => {
     setshowAddPateintExercise(false);
     setCategory('')
@@ -50,6 +62,21 @@ const AddPateintExercise = ({
     setExerciseImage('')
     setDistance('')
     setDistanceUnit('km')
+    setHeartRate({ value: null, unit: "bpm" })
+    setDistance('')
+    setPace('')
+    setIntensity('')
+    setZoneTarget('')
+    setHeartRateError('')
+    setPaceError('')
+    setIntensitErrory('')
+    setZoneTargetError('')
+    setDistanceError('')
+    setCategoryError('')
+    setSelectedExerciseError('')
+    setFieldErrors({})
+    setCradioError({})
+
   };
 
   const handleFetchExercise = (e) => {
@@ -86,21 +113,22 @@ const AddPateintExercise = ({
   const findEmptyFields = () => {
     let errors = {};
 
-    // Loop through each flexibilityField item
     flexibilityField.forEach((field, index) => {
-      if (!field.reps.trim()) {
-        errors[`reps-${index}`] = "Reps is required"; // Mark reps as empty for this index
+      if (!String(field.reps || "").trim()) {
+        errors[`reps-${index}`] = "Reps is required";
       }
-      if (!field.weight.value) {
-        errors[`weight-${index}`] = "Weight is required"; // Mark weight as empty for this index
+      if (!field.weight) {
+        errors[`weight-${index}`] = "Weight is required";
       }
-      if (!field.time.value) {
+      if (!field.time) {
         errors[`time-${index}`] = "Time is required";
       }
     });
-    setFieldErrors(errors)
+
+    setFieldErrors(errors);
     return errors;
   };
+
 
   const findEmptyCardioFields = () => {
     let errors = {};
@@ -122,14 +150,40 @@ const AddPateintExercise = ({
       return
     }
     const errors = findEmptyFields();
-    if (category === "flexibility training" && errors) {
+    if (category === "strength exercise" && Object.keys(errors)?.length > 0) {
       return
     }
 
     const cardioerrors = findEmptyCardioFields();
-    if (category !== "flexibility training" && cardioerrors) {
+    if (category !== "strength exercise" && Object.keys(cardioerrors)?.length > 0) {
       return
     }
+    if (!heartRate) {
+      setHeartRateError("Please enter heart rate")
+      return
+    }
+    if (!zoneTarget) {
+      setZoneTargetError("Please enter Target xone")
+      return
+    }
+    if (!intensity) {
+      setIntensitErrory("Please enter intensity")
+      return
+    }
+    if (!pace) {
+      setPaceError("Please enter pace")
+      return
+    }
+    if (!distance) {
+      setDistanceError("Please enter distance")
+      return
+    }
+
+    if (updatedWeekdays?.length === 0) {
+      setWeekError("Please select days")
+      return
+    }
+    dispatch(create_patient_plan({ category, exerciseId: selectedExercise, patientId, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
   }
 
   const handleFlexibilityRow = () => {
@@ -146,12 +200,13 @@ const AddPateintExercise = ({
   const handleChangeFlexibilityFields = (i, field, e) => {
     let { value } = e.target;
     value = value.replace(/[^0-9]/g, "");
+    const numericValue = Number(value);
     if (field === "reps") {
       if (value > 25 || value < 0) {
         return
       }
     }
-    
+
     if (field === "weight") {
       if (value < 0) {
         return
@@ -168,30 +223,41 @@ const AddPateintExercise = ({
         index === i
           ? {
             ...item,
-            [field]: field === "reps" ? value : { ...item[field], value: value },
+            [field]: field === "reps" ? numericValue : { ...item[field], value: numericValue },
           }
           : item
       )
     );
   };
 
-
-
   const handleChangeCardioFields = (i, field, e) => {
-    const { value } = e.target;
+    const value = Number(e.target.value);
+    const unit = cardioFields[i][field]?.unit; 
+    
+
+    if (unit === "sec" && value > 60) {
+      return; 
+    }
+
+    if (unit === "min" && value > 4) {
+      return; 
+    }
+
     setCradioFields((prev) =>
       prev.map((item, index) =>
         index === i
           ? {
             ...item,
-            [field]: field === "reps" ? value : { ...item[field], value: value },
+            [field]: { ...item[field], value: value }, 
           }
           : item
       )
     );
   };
 
+
   const handleChangeFlexibilityUnit = (i, field, unit) => {
+    setFlexibilityField({})
     setFlexibilityField((prev) =>
       prev.map((item, index) =>
         index === i
@@ -231,6 +297,33 @@ const AddPateintExercise = ({
       }
     ]);
   }
+
+  const handleSelect = (selectedList) => {
+    const days = selectedList.map((item) => item.name);
+    setSelectedWeekdays(selectedList);
+    setUpdatedWeekdays(days)
+  };
+
+
+  const handleRemove = (selectedList) => {
+    const days = selectedList.map((item) => item.name);
+    setSelectedWeekdays(selectedList);
+    setUpdatedWeekdays(days)
+  };
+
+  const options = weekdays?.map((day) => ({ name: day }));
+
+  useEffect(() => {
+    if (is_plan_created?.isSuccess) {
+      toast.success(is_plan_created?.data?.message)
+      dispatch(clear_create_patient_plan_state())
+      handleClose()
+    }
+    if (is_plan_created?.isError) {
+      toast.error(is_plan_created?.error?.message)
+      dispatch(clear_create_patient_plan_state())
+    }
+  }, [is_plan_created])
 
   return (
     <Modal
@@ -307,7 +400,7 @@ const AddPateintExercise = ({
             </Col>
           </Row>
         </div>
-        {category !== "flexibility training" && <div className="modal_card mt-3">
+        {category !== "strength exercise" && <div className="modal_card mt-3">
           <div className="d-flex align-items-center mb-2">
             <h5 className="flex-grow-1 mb-0">Steps and Reps</h5>{" "}
             <button onClick={() => handleAddCardioFields()} className="cmn_btn add_row">Add Row</button>
@@ -338,7 +431,7 @@ const AddPateintExercise = ({
           ))}
 
         </div>}
-        {category === "flexibility training" && <div className="modal_card mt-3">
+        {category === "strength exercise" && <div className="modal_card mt-3">
           <div className="d-flex align-items-center mb-2">
             <h5 className="flex-grow-1 mb-0">Steps and Reps</h5>{" "}
             <button onClick={handleFlexibilityRow} className="cmn_btn add_row">Add Row</button>
@@ -387,7 +480,7 @@ const AddPateintExercise = ({
           ))}
 
         </div>}
-        {category !== "flexibility training" && <div className="modal_card mt-3">
+        <div className="modal_card mt-3">
           <h5>Heart Rate and Targets</h5>
           <Row>
             <Col lg={6}>
@@ -396,9 +489,11 @@ const AddPateintExercise = ({
                 <Form.Control
                   type="text"
                   placeholder="Heart Rate Target (bpm)"
-                  className={categoryError ? "is-invalid" : ""}
+                  className={heartRateError ? "is-invalid" : ""}
+                  value={heartRate?.value}
+                  onChange={(e) => { setHeartRate({ value: Number(e.target.value), unit: "bpm" }); setHeartRateError('') }}
                 />
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {heartRateError && <div className="invalid-feedback">{heartRateError}</div>}
               </Form.Group>
             </Col>
             <Col lg={6}>
@@ -407,9 +502,11 @@ const AddPateintExercise = ({
                 <Form.Control
                   type="text"
                   placeholder="Zone Target"
-                  className={categoryError ? "is-invalid" : ""}
+                  className={zoneTargetError ? "is-invalid" : ""}
+                  value={zoneTarget}
+                  onChange={(e) => { setZoneTarget(Number(e.target.value)); setZoneTargetError('') }}
                 />
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {zoneTargetError && <div className="invalid-feedback">{zoneTargetError}</div>}
               </Form.Group>
             </Col>
             <Col lg={6}>
@@ -418,21 +515,23 @@ const AddPateintExercise = ({
                 <Form.Control
                   type="text"
                   placeholder="Zone Target"
-                  className={categoryError ? "is-invalid" : ""}
+                  className={intensityError ? "is-invalid" : ""}
+                  value={intensity}
+                  onChange={(e) => { setIntensity(Number(e.target.value)); setIntensitErrory('') }}
                 />
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {intensityError && <div className="invalid-feedback">{intensityError}</div>}
               </Form.Group>
             </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Pace</Form.Label>
-                <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} onChange={(e) => setPace(e.target.value)}>
+                <Form.Select aria-label="Default select example" className={paceError ? "is-invalid" : ""} onChange={(e) => { setPace(e.target.value); setPaceError('') }}>
                   <option>Open this PAce</option>
-                  <option value="Moderator">Moderator</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Vigorous">Vigorous</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="medium">Medium</option>
+                  <option value="vigorous">Vigorous</option>
                 </Form.Select>
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {paceError && <div className="invalid-feedback">{paceError}</div>}
               </Form.Group>
             </Col>
             <Col lg={6}>
@@ -456,18 +555,36 @@ const AddPateintExercise = ({
                 <Form.Control
                   type="text"
                   placeholder="Distance Goal ( Km/Meter)"
-                  className={categoryError ? "is-invalid" : ""}
+                  className={distanceError ? "is-invalid" : ""}
+                  value={distance}
+                  onChange={(e) => { setDistance(Number(e.target.value)); setDistanceError(''); setDistanceVal({ value: Number(e.target.value), unit: distanceUnit }) }}
                 />
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {distanceError && <div className="invalid-feedback">{distanceError}</div>}
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
+                <Form.Label>Weekdays</Form.Label>
+                <Multiselect
+                  options={options}
+                  selectedValues={selectedWeekdays}
+                  onSelect={handleSelect}
+                  onRemove={handleRemove}
+                  displayValue="name"
+                />
+                {weekError && <div className="invalid-feedback">{weekError}</div>}
               </Form.Group>
             </Col>
 
+
           </Row>
 
-        </div>}
+        </div>
         <div className="d-flex justify-content-center gap-3 mt-3">
           <button className="cmn_btn border-btn ">Cancel</button>
-          <button className="cmn_btn" onClick={handleSubmit}>Submit</button>
+          <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_created?.isLoading ? "Submit" : <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>}</button>
         </div>
       </Modal.Body>
     </Modal>
