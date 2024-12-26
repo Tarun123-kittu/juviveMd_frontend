@@ -54,7 +54,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays }) => 
       <DataTable columns={columns}>
         {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Array.isArray(data) && data?.map(({ exercise, patient, patientPlan }, i) => (
           <tr>
-            <td>{exercise?.category}</td>
+            <td>{patientPlan?.category}</td>
             <td>{exercise?.exercise_name}</td>
             <td> <img src={exercise?.imageUrl || Training} altDeleteImage="" className="rounded-5" width={50} height={50} /></td>
             <td>{patientPlan?.sets?.length}</td>
