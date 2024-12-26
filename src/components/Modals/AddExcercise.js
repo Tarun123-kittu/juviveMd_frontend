@@ -8,14 +8,9 @@ import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
-<<<<<<< HEAD
-import { create_exercise_draft,clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
-import Multiselect from 'multiselect-react-dropdown';
-=======
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
 
->>>>>>> 71ee505818b206fa17b14e3413cdf5fc69b878b8
 
 const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty }) => {
   const dispatch = useDispatch();
@@ -455,7 +450,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           className="form-control"
                           onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                         />
-                      </Form.Group>
+                      </Form.Group> 
                     </Col>
                     <Col lg={6}>
                       <Form.Group className="mb-2">
