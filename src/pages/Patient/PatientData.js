@@ -249,21 +249,21 @@ const PatientData = () => {
               <ul className="d-flex gap-2 ">
                 <li className="bmi_card flex-grow-1">
                 <div className="link_image d-flex justify-content-center align-items-center">
-                  <img src="/static/media/email.f44beff9edd8e704c93f5817bae9c873.svg" alt="email"/>
+                  <img src="/height_image.png" alt="email"/>
                   </div>
                   <span>Height</span>
                   <p className="mb-0">{patient_data?.height?.value}{patient_data?.height?.unit}</p>
                 </li>
                 <li className="bmi_card flex-grow-1">
                 <div className="link_image d-flex justify-content-center align-items-center">
-                  <img src="/static/media/email.f44beff9edd8e704c93f5817bae9c873.svg" alt="email"/>
+                  <img src="/weight_image.png" alt="email"/>
                   </div>
                   <span>Weight</span>
                   <p className="mb-0">{patient_data?.weight?.value}{patient_data?.weight?.unit}</p>
                 </li>
                 <li className="bmi_card flex-grow-1">
                 <div className="link_image d-flex justify-content-center align-items-center">
-                  <img src="/static/media/email.f44beff9edd8e704c93f5817bae9c873.svg" alt="email"/>
+                  <img src="/bmi_image.png" alt="email"/>
                   </div>
                   <span>BMI</span>
                   <p className="mb-0">{currentBmi}</p>
