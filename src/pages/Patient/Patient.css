@@ -1,38 +1,122 @@
-
-.report_info ul li{
-width: 20%;
-}
-.report_info ul {
-    display: flex;
-  flex-wrap: wrap;
-}
 .user-data {
     width: 100%;
-    padding-left: 3rem;
+    padding-left:1.5rem;
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.bmi_report {
+    flex: 0 0 284px;
+    background: rgba(172, 201, 203, 0.2);
+    border: 1px solid rgba(172, 201, 203, 0.4);
+    border-radius: 13px;
+    overflow: hidden;
+}
+.report_info {
+    display: flex;
+        justify-content: space-between;
+        border: 1px solid rgba(172, 201, 203, 0.4);
+        padding: 20px;
+        border-radius: 13px;
+        background: rgba(172, 201, 203, 0.2);
+}
+.footer_bmi {
+    text-align: center;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    margin-top: 25px;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+ul.user_select_weeks {
+    display: flex;
+    gap: 9px;
+}
+h4.info_heading {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 13px;
+}
+ul.user_select_weeks li {
+    flex-grow: 1;
+    background: var(--primary-color);
+    text-align: center;
+    padding: 8px 13px;
+    color: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.execise_days {
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    padding-top: 19px;
+    margin-top: 19px;
+}
+.table_user_data{
+    padding-right: 1.5rem;
+}
+.user-data li{
+    margin-bottom:10px;
 }
 .cmn_head h4 {
     font-size: 18px;
     margin: 0;
 }
 .report_info ul strong {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
     padding-right: 10px;
+    color: rgba(0, 0, 0, 1);
+}
+.bmi_report {
+    flex: 0 0 284px;
+    background: rgba(172, 201, 203, 0.2);
+    border: 1px solid rgba(172, 201, 203, 0.4);
+    border-radius: 13px;
 }
 
-.report_info ul span {
-    font-weight: 400;
-    color: var(--primary-color);
-    font-size: 12px;
+.bmi_report h5 {
+    padding: 37px 0px;
+    text-align: center;
+    background: rgba(212, 231, 233, 1);
+    font-size: 24px;
+    font-weight: 700;
 }
-.report_info {
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid #ACC9CB80;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 8%);
-    padding: 20px;
-    border-radius: 5px;
+.report_info ul span {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 1);
+    font-size: 14px;
+}
+li.bmi_card {
+    background: rgba(255, 255, 255, 1);
+    border-radius: 15px;
+    padding: 12px;
+    text-align: center;
+}
+
+li.bmi_card img {
+    margin: auto;
+}
+
+.bmi_data {
+    padding: 15px;
+}
+
+li.bmi_card .link_image {
+    margin: auto;
+    margin-bottom: 6px;
+}
+
+li.bmi_card span {
+    font-size: 12px;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+li.bmi_card p {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 600;
 }
 /*patient data css ends here */
 
@@ -244,6 +328,32 @@ h4.heart_rate span {
     font-weight: 700;
     color: rgba(0, 0, 0, 1);
 }
+.info_flex_grid {
+    display: flex;
+    gap: 10px;
+}
+
+.link_image {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    background: rgba(172, 201, 203, 1);
+}
+.table_user_data p.patien_name {
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: capitalize;
+    padding-bottom: 11px;
+}
+
+.table_user_data img.user_profile {
+    flex: 0 0 160px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+}
 @media(max-width:1440px){
     .filter_list input, .label,.patient_dropdown button.btn{
         font-size: 13px;
@@ -252,4 +362,15 @@ h4.heart_rate span {
         height: 33px;
     }
  
+}
+
+@media(min-width:1440px){
+    .bmi_report {
+        flex: 0 0 340px;
+    }
+    .table_user_data img.user_profile {
+        flex: 0 0 200px;
+        width: 200px;
+        height: 200px;
+    }
 }

@@ -61,7 +61,7 @@ const Sidebar = () => {
     }
   };
 
-
+  const userImageUrl = localStorage.getItem('juvive_image_url');
   return (
     <div className='sidebar_wrapper'>
       <div className='header d-flex align-items-center gap-2'>
@@ -103,10 +103,9 @@ const Sidebar = () => {
                   navigate("/dashboard");
                 }
               }}
-              src={
-                !localStorage.getItem('juvive_image_url')
-                  ? UserImage : localStorage.getItem('juvive_image_url')
-              }
+         
+                src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
+              
               alt="user_image"
             />
 

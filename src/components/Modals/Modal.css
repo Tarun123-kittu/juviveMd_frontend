@@ -484,6 +484,9 @@ span.minus {
   color: #fff;
   flex: 0 0 20px;
 }
+span.minus.plus {
+  background: var(--primary-color);
+}
 span.time {
   background: var(--primary-color);
   color: #fff;
