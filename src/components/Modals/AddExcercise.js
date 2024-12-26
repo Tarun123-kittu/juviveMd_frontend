@@ -8,10 +8,16 @@ import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
+<<<<<<< HEAD
 import { create_exercise_draft,clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
+=======
+import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
+import Multiselect from 'multiselect-react-dropdown';
 
-const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab }) => {
+>>>>>>> 71ee505818b206fa17b14e3413cdf5fc69b878b8
+
+const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty }) => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState("");
   const [image, setImage] = useState("");
@@ -22,18 +28,18 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [exerciseName, setExerciseName] = useState("")
   const [exerciseVideo, setExerciseVideo] = useState("")
   const [exerciseDescription, setExerciseDescription] = useState("")
-  const [exerciseImage, setExerciseImage] = useState("")
+  const [exerciseImage, setExerciseImage] = useState(DefaultImage)
   const [loading, setLoading] = useState("")
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const options = [
-    { name: "Option 1", id: 1 },
-    { name: "Option 2", id: 2 },
-    { name: "Option 3", id: 3 },
-    { name: "Option 4", id: 4 },
-  ];
-  const onSelect = (selectedList) => {
-    setSelectedOptions(selectedList);
-  };
+  const [bodyNames, setBodyNames] = useState([])
+  const [selectedBodyNames, setSelectedBodyNames] = useState([]);
+  const [selectedMovements, setSelectedMovements] = useState([]);
+  const [movementsArray, setMovementsArray] = useState([]);
+  const [movementResponse, setMovementResponse] = useState()
+  const [difficulty, setDifficuilty] = useState()
+  const [difficuiltOptions, setDifficuiltOptions] = useState()
+  const [difficuiltyResponse, setDifficuiltyResponse] = useState()
+
+  console.log(difficuiltyResponse, "difficuiltyResponse")
 
   const onRemove = (selectedList) => {
     setSelectedOptions(selectedList);
@@ -42,6 +48,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setshowAddExerciseModal(false);
     dispatch(clear_create_exercise_state());
     setImagePreview("")
+    setSelectedBodyNames([])
+    setSelectedMovements([])
+    setMovementsArray([])
+    setMovementResponse([])
+    setDifficuilty()
+    setDifficuiltOptions()
+    setDifficuiltyResponse()
   };
 
   const initialValues = {
@@ -70,8 +83,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       create_exercise({
         exercise_name: exerciseName,
         category: exerciseType,
+        difficulty_level: difficuiltyResponse,
+        body_parts: movementResponse,
         video_link: exerciseVideo,
-        image: exerciseImage,
+        image_url: exerciseImage,
         description: exerciseDescription,
         draft: true
       })
@@ -82,8 +97,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       create_exercise_draft({
         exercise_name: exerciseName,
         category: exerciseType,
+        difficulty_level: difficuiltyResponse,
+        body_parts: movementResponse,
         video_link: exerciseVideo,
-        image: exerciseImage,
+        image_url: exerciseImage,
         description: exerciseDescription,
         draft: false
       })
@@ -100,6 +117,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       dispatch(clear_create_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview("")
+      setSelectedBodyNames([])
+      setSelectedMovements([])
+      setMovementsArray([])
+      setMovementResponse([])
+      setDifficuilty()
+      setDifficuiltOptions()
+      setDifficuiltyResponse()
       if (draft) {
         setActiveTab("draft")
       } else {
@@ -119,6 +143,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       dispatch(clear_create_exercise_draft_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview("")
+      setSelectedBodyNames([])
+      setSelectedMovements([])
+      setMovementsArray([])
+      setMovementResponse([])
+      setDifficuilty()
+      setDifficuiltOptions()
+      setDifficuiltyResponse()
       if (draft) {
         setActiveTab("draft")
       } else {
@@ -142,6 +173,12 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setExerciseName(value);
     setFieldValue("exerciseName", value);
   };
+
+  const handleExerciseImageChange = (e, setFieldValue) => {
+    const value = e.target.value;
+    setExerciseImage(value);
+    setFieldValue("exerciseImage", value);
+  };
   const handleExerciseVideoChange = (e, setFieldValue) => {
     const value = e.target.value
     setExerciseVideo(value);
@@ -162,6 +199,94 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setDraft(true)
     }
   }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage])
+
+  useEffect(() => {
+    if (body_parts?.length) {
+      const bodyName = body_parts?.map((part) => ({ name: part.name }));
+      setBodyNames(bodyName);
+    }
+  }, [body_parts]);
+
+  const handleSelect = (selectedList) => {
+    setSelectedBodyNames([...selectedList]);
+  };
+
+  const handleRemove = (selectedList, removedItem) => {
+    setSelectedBodyNames([...selectedList]);
+    const updatedMovements = movementsArray.filter(
+      (movement) => movement.key !== removedItem.name
+    );
+    setMovementsArray(updatedMovements);
+
+    const updatedSelectedMovements = selectedMovements.filter(
+      (movement) => movement.key !== removedItem.name
+    );
+    setSelectedMovements(updatedSelectedMovements);
+  };
+
+  const handleSelectMovements = (selectedList) => {
+    setSelectedMovements([...selectedList]);
+  };
+
+  const handleRemoveMovements = (selectedList) => {
+    setSelectedMovements([...selectedList]);
+  };
+
+  const handleSelectDifficuilt = (selectedList) => {
+    setDifficuilty([...selectedList]);
+    const formattedResponse = selectedList.map((item) => item.name);
+    setDifficuiltyResponse(formattedResponse);
+  };
+
+  const handleRemoveDifficuilt = (selectedList) => {
+    setDifficuilty([...selectedList]);
+    const formattedResponse = selectedList.map((item) => item.name);
+    setDifficuiltyResponse(formattedResponse);
+  };
+
+
+  useEffect(() => {
+    if (selectedBodyNames.length && body_parts?.length) {
+      const newMovements = selectedBodyNames?.flatMap((selected) => {
+        const matchingPart = body_parts?.find((el) => el.name === selected.name);
+        return matchingPart?.movements.map((movement) => ({
+          name: movement,
+          key: selected.name,
+        })) || [];
+      });
+
+      setMovementsArray(newMovements);
+    } else {
+      setMovementsArray([]);
+    }
+  }, [selectedBodyNames, body_parts]);
+
+  useEffect(() => {
+    const response = selectedMovements?.reduce((acc, movement) => {
+      const bodyPartIndex = acc.findIndex(
+        (part) => part.name === movement.key
+      );
+
+      if (bodyPartIndex === -1) {
+        acc.push({
+          name: movement.key,
+          movements: [movement.name],
+        });
+      } else {
+        acc[bodyPartIndex].movements.push(movement.name);
+      }
+
+      return acc;
+    }, []);
+
+    setMovementResponse(response);
+  }, [selectedMovements]);
+
+  useEffect(() => {
+    const diffcuilty = exerciseDifficuilty?.map((exe) => ({ name: exe }))
+    setDifficuiltOptions(diffcuilty)
+  }, [exerciseDifficuilty])
+
 
   return (
     <Modal
@@ -250,6 +375,35 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         type="file"
                         name="exerciseImage"
                         accept="image/png, image/jpg, image/jpeg"
+                        // onChange={(e) => handleImageChange(e, setFieldValue)}
+                        className="form-control"
+                        // disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                      />
+                      <img
+                        src={exerciseImage}
+                        className="image_preview"
+                        alt="preview"
+
+                      />
+                    </div>
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Exercise Image Url</Form.Label>
+                    <Field
+                      type="text"
+                      name="exerciseImage"
+                      placeholder="Enter image url"
+                      className="form-control"
+                      onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                    />
+                  </Form.Group>
+                  {/* <Form.Group className="mb-2">
+                    <Form.Label>Exercise Image</Form.Label>
+                    <div className="drag_file d-flex align-items-center justify-content-center flex-column">
+                      <input
+                        type="file"
+                        name="exerciseImage"
+                        accept="image/png, image/jpg, image/jpeg"
                         onChange={(e) => handleImageChange(e, setFieldValue)}
                         className="form-control"
                       />
@@ -263,7 +417,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       </h4>
                         <p className="m-0">Supports: PNG, JPG, JPEG</p></>}
                     </div>
-                  </Form.Group>
+                  </Form.Group> */}
                 </Col>
                 <Col lg={8}>
                   <Row>
@@ -281,6 +435,18 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     </Col>
                     <Col lg={6}>
                       <Form.Group className="mb-2">
+                        <Form.Label>Difficuilty level</Form.Label>
+                        <Multiselect
+                          options={difficuiltOptions}
+                          selectedValues={difficulty}
+                          onSelect={handleSelectDifficuilt}
+                          onRemove={handleRemoveDifficuilt}
+                          displayValue="name"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col lg={6}>
+                      <Form.Group className="mb-2">
                         <Form.Label>Exercise Video Link</Form.Label>
                         <Field
                           type="text"
@@ -288,6 +454,30 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           placeholder="https://youtu.be"
                           className="form-control"
                           onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col lg={6}>
+                      <Form.Group className="mb-2">
+                        <Form.Label>Select Body Parts</Form.Label>
+                        <Multiselect
+                          options={bodyNames}
+                          selectedValues={selectedBodyNames}
+                          onSelect={handleSelect}
+                          onRemove={handleRemove}
+                          displayValue="name"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col lg={6}>
+                      <Form.Group className="mb-2">
+                        <Form.Label>Select Movements</Form.Label>
+                        <Multiselect
+                          options={movementsArray}
+                          selectedValues={selectedMovements}
+                          onSelect={handleSelectMovements}
+                          onRemove={handleRemoveMovements}
+                          displayValue="name"
                         />
                       </Form.Group>
                     </Col>
@@ -315,7 +505,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         <button
                           onClick={() => {
                             handleSave();
-                            setLoading("first"); 
+                            setLoading("first");
                           }}
                           disabled={draft}
                           className="btn cmn_btn"
@@ -338,14 +528,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           onClick={() => {
                             setDraft(true);
                             handleSaveDraaft();
-                            setLoading("second"); 
+                            setLoading("second");
                           }}
                           className="btn cmn_btn ms-2"
                         >
                           Save as Draft
                         </button>
                       </>
-                    ) :  (
+                    ) : (
                       <button className="btn cmn_btn" disabled>
                         <Spinner animation="border" role="status">
                           <span className="visually-hidden">Loading...</span>

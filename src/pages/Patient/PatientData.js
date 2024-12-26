@@ -305,37 +305,37 @@ const PatientData = () => {
         >
           <Tab eventKey="monday" title="Monday">
             {activeTab === 'monday' && (
-              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="tuesday" title="Tuesday">
             {activeTab === 'tuesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="wednesday" title="Wednesday">
             {activeTab === 'wednesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="thursday" title="Thursday">
             {activeTab === 'thursday' && (
-              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="friday" title="Friday">
             {activeTab === 'friday' && (
-              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="saturday" title="Saturday">
             {activeTab === 'saturday' && (
-              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
           <Tab eventKey="sunday" title="Sunday">
             {activeTab === 'sunday' && (
-              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category}/>
+              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays}/>
             )}
           </Tab>
         </Tabs>

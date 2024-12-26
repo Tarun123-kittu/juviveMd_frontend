@@ -1,29 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const create_exercise_draft = createAsyncThunk("create_exercise_draft", async ({ exercise_name, category, video_link, image, description,  }, thunkAPI) => {
+export const create_exercise_draft = createAsyncThunk("create_exercise_draft", async ({ exercise_name, category, video_link, image, description, draft, difficulty_level, body_parts, image_url }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
         const myHeaders = new Headers();
         myHeaders.append("Authorization", validToken);
+        myHeaders.append("Content-Type", "application/json"); 
 
-        const formdata = new FormData();
-        formdata.append("exercise_name", exercise_name);
-        formdata.append("category", category);
-        formdata.append("video_link", video_link);
-        formdata.append("image", image);
-        formdata.append("description", description);
-        formdata.append("draft", true);
+        const body = {
+            exercise_name,
+            category,
+            video_link,
+            image_url,
+            description,
+            draft: true,
+            difficulty_level,
+            body_parts,
+            image_url
+        };
 
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
-            body: formdata,
+            body: JSON.stringify(body), 
             redirect: "follow"
         };
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/exercise/create`, requestOptions)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/exercise/create`, requestOptions);
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
@@ -38,7 +43,7 @@ export const create_exercise_draft = createAsyncThunk("create_exercise_draft", a
             message: error.message,
         });
     }
-})
+});
 
 const createExerciseDraftAPI = createSlice({
     name: "createExerciseDraftAPI",
@@ -51,30 +56,31 @@ const createExerciseDraftAPI = createSlice({
     },
     reducers: {
         clear_create_exercise_draft_state: (state) => {
-            state.isLoading = false
-            state.isSuccess = false
-            state.isError = false
-            state.message = null
-            state.error = null
-            return state
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = false;
+            state.message = null;
+            state.error = null;
+            return state;
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(create_exercise_draft.pending, (state) => {
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(create_exercise_draft.fulfilled, (state, action) => {
-                state.isLoading = false
-                state.isSuccess = true
-                state.message = action.payload
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
             })
             .addCase(create_exercise_draft.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.error = action.payload
-            })
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            });
     }
-})
-export const { clear_create_exercise_draft_state } = createExerciseDraftAPI.actions
-export default createExerciseDraftAPI.reducer
+});
+
+export const { clear_create_exercise_draft_state } = createExerciseDraftAPI.actions;
+export default createExerciseDraftAPI.reducer;

@@ -27,6 +27,8 @@ const TrainerExercise = () => {
   const [activeTab, setActiveTab] = useState("active");
   const [username, setUsername] = useState("")
   const [category, setCategory] = useState("")
+    const [body_parts,setBody_parts] = useState()
+    const [exerciseDifficuilty,setExerciseDifficuilty] = useState()
   const [date, setDate] = useState("")
   const [ExercisePermission] = getRoutePermissions(permission_constants.EXERCISE)
   const [ExerciseActiveTabPermission] = getRoutePermissions(permission_constants.EXERCISEACTIVETAB)
@@ -46,19 +48,25 @@ const TrainerExercise = () => {
   useEffect(() => {
     if (common_data?.isSuccess) {
       setExercise_category(common_data?.data?.data?.exercise_category);
+      setBody_parts(common_data?.data?.data?.bodyParts)
+      setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
     }
   }, [common_data]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts}
+          exerciseDifficuilty={exerciseDifficuilty} />;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts}
+          exerciseDifficuilty={exerciseDifficuilty} />;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts}
+          exerciseDifficuilty={exerciseDifficuilty} />;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts}
+          exerciseDifficuilty={exerciseDifficuilty} />;
       default:
         return null;
     }
@@ -192,6 +200,8 @@ const TrainerExercise = () => {
         showAddExerciseModal={showAddExerciseModal}
         setshowAddExerciseModal={setshowAddExerciseModal}
         exercise_category={exercise_category}
+        body_parts={body_parts}
+        exerciseDifficuilty={exerciseDifficuilty}
         tab={activeTab}
         setActiveTab={setActiveTab}
       />
