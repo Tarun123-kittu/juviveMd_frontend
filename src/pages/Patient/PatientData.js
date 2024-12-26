@@ -10,7 +10,8 @@ import { calculateAge } from "../../common/calculateAge/calculateAge";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { formatDate } from "../../common/formatDate/formatDate";
 import AddPateintExercise from "../../components/Modals/AddPateintExercise";
-import { get_patient_plan,clear_patient_plan_state } from "../../redux/slices/patientPlan/getPAtientPlan";
+import { get_patient_plan, clear_patient_plan_state } from "../../redux/slices/patientPlan/getPAtientPlan";
+
 import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
 const PatientData = () => {
@@ -22,12 +23,13 @@ const PatientData = () => {
   const [weekdays, setWeekdays] = useState()
   const [currentBmi, setCurrentBmi] = useState('')
   const [expectedBmi, setExpectedBmi] = useState('')
+  const [body_parts, setBody_parts] = useState()
+  const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
-  const [activeTab, setActiveTab] = useState('monday'); // Initial active tab is Monday
+  const [activeTab, setActiveTab] = useState('monday');
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
-  console.log(patientId, "patientId is patientId patientId patientId patientId patientId patientId patientId patientId")
 
   useEffect(() => {
     dispatch(get_selected_patient({ id: patientId }))
@@ -79,6 +81,8 @@ const PatientData = () => {
     if (common_data?.isSuccess) {
       setExercise_category(common_data?.data?.data?.exercise_category)
       setWeekdays(common_data?.data?.data?.weekDays)
+      setBody_parts(common_data?.data?.data?.bodyParts)
+      setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
     }
   }, [common_data])
 
@@ -305,42 +309,42 @@ const PatientData = () => {
         >
           <Tab eventKey="monday" title="Monday">
             {activeTab === 'monday' && (
-              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="tuesday" title="Tuesday">
             {activeTab === 'tuesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="wednesday" title="Wednesday">
             {activeTab === 'wednesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="thursday" title="Thursday">
             {activeTab === 'thursday' && (
-              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="friday" title="Friday">
             {activeTab === 'friday' && (
-              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="saturday" title="Saturday">
             {activeTab === 'saturday' && (
-              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
           <Tab eventKey="sunday" title="Sunday">
             {activeTab === 'sunday' && (
-              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays}/>
+              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} />
             )}
           </Tab>
         </Tabs>
       </div>
-      <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} />
+      {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />}
     </div>
   );
 };

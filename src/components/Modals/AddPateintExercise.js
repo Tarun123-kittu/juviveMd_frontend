@@ -7,14 +7,18 @@ import { create_patient_plan, clear_create_patient_plan_state } from "../../redu
 import Multiselect from 'multiselect-react-dropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import toast from "react-hot-toast";
+import { get_patient_difficuilties, clear_patient_difficuilties_state } from "../../redux/slices/patientPlan/getPatientDifficuilties";
 
 const AddPateintExercise = ({
   showAddPateintExercise,
   setshowAddPateintExercise,
   exercise_category,
   patientId,
-  weekdays
+  weekdays,
+  body_parts,
+  exerciseDifficuilty
 }) => {
+  console.log(exerciseDifficuilty, "this is the exercise difficuilty")
   const dispatch = useDispatch()
   const [category, setCategory] = useState('')
   const [selectedExercise, setSelectedExercise] = useState('')
@@ -39,6 +43,13 @@ const AddPateintExercise = ({
   const [cardioFields, setCradioFields] = useState([{
     time: { value: null, unit: "sec" }
   },])
+  const [bodyNames, setBodyNames] = useState([])
+  const [selectedBodyNames, setSelectedBodyNames] = useState([]);
+  const [selectedMovements, setSelectedMovements] = useState([]);
+  const [movementsArray, setMovementsArray] = useState([]);
+  const [movementResponse, setMovementResponse] = useState()
+  const [difficuiltOptions, setDifficuiltOptions] = useState()
+  const [difficuiltyResponse, setDifficuiltyResponse] = useState()
   const [categoryError, setCategoryError] = useState('')
   const [selectedExerciseError, setSelectedExerciseError] = useState('')
   const [exerciseVideoError, setExerciseVideoError] = useState('')
@@ -51,9 +62,15 @@ const AddPateintExercise = ({
   const [fieldErrors, setFieldErrors] = useState({});
   const [cardioError, setCradioError] = useState({});
   const [weekError, setWeekError] = useState('')
+  const [diffError, setDiffError] = useState('')
+  const [bodyError, setBodyError] = useState('')
+  const [moveError, setMoveError] = useState('')
   const [exercise, setExercise] = useState()
+  const [difficuilty, setDifficuilty] = useState('')
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
+  const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
+  console.log(patient_difficuilty, "difficuilty difficuilty difficuilty difficuilty difficuilty")
   const handleClose = () => {
     setshowAddPateintExercise(false);
     setCategory('')
@@ -87,8 +104,14 @@ const AddPateintExercise = ({
     setExerciseVideo('')
     setExerciseImage('')
     setCategory(val)
-    dispatch(get_exercise_by_category({ category: val }))
+    dispatch(get_exercise_by_category({ category: val, difficuilty: difficuilty }))
   }
+
+  useEffect(() => {
+    if (difficuilty && category) {
+      dispatch(get_exercise_by_category({ category: category, difficuilty }))
+    }
+  }, [difficuilty,category])
 
   const handleSelectExercise = (e) => {
     const selectedValue = e.target.value;
@@ -98,11 +121,15 @@ const AddPateintExercise = ({
 
     if (exercise_data) {
       setExerciseVideo(exercise_data.video_link || "");
-      setExerciseImage(exercise_data.imageUrl || "");
+      setExerciseImage(exercise_data.image_url || "");
     } else {
       console.warn("No matching exercise found for ID:", selectedValue);
     }
   };
+
+  useEffect(() => {
+    dispatch(get_patient_difficuilties({ patientId }))
+  }, [])
 
   useEffect(() => {
     if (exercise_details?.isSuccess) {
@@ -149,6 +176,18 @@ const AddPateintExercise = ({
       setCategoryError("Please select category !")
       return
     }
+    if (!difficuilty) {
+      setDiffError("Please select the difficuilty")
+      return
+    }
+    if (!selectedBodyNames.length) {
+      setBodyError("Please select the body parts")
+      return
+    }
+    if (!selectedMovements.length) {
+      setMoveError("Please select the movements")
+      return
+    }
     const errors = findEmptyFields();
     if (category === "strength exercise" && Object.keys(errors)?.length > 0) {
       return
@@ -183,7 +222,7 @@ const AddPateintExercise = ({
       setWeekError("Please select days")
       return
     }
-    dispatch(create_patient_plan({ category, exerciseId: selectedExercise, patientId, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
+    dispatch(create_patient_plan({ category, exerciseId: selectedExercise, difficulty_level: difficuilty, body_parts: movementResponse, patientId, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
   }
 
   const handleFlexibilityRow = () => {
@@ -325,6 +364,87 @@ const AddPateintExercise = ({
     }
   }, [is_plan_created])
 
+  useEffect(() => {
+    if (patient_difficuilty?.isSuccess) {
+      setDifficuilty(patient_difficuilty?.data?.data?.exercise_difficulty)
+    }
+  }, [patient_difficuilty])
+
+  const handleDifficuilty = (e) => {
+    const val = e.target.value
+    setDifficuilty(val)
+  }
+
+  const handleSelectBody = (selectedList) => {
+    setSelectedBodyNames([...selectedList]);
+  };
+
+  const handleRemoveBody = (selectedList, removedItem) => {
+    setSelectedBodyNames([...selectedList]);
+    const updatedMovements = movementsArray.filter(
+      (movement) => movement.key !== removedItem.name
+    );
+    setMovementsArray(updatedMovements);
+
+    const updatedSelectedMovements = selectedMovements.filter(
+      (movement) => movement.key !== removedItem.name
+    );
+    setSelectedMovements(updatedSelectedMovements);
+  };
+
+  const handleSelectMovements = (selectedList) => {
+    setSelectedMovements([...selectedList]);
+  };
+
+  const handleRemoveMovements = (selectedList) => {
+    setSelectedMovements([...selectedList]);
+  };
+
+
+  useEffect(() => {
+    if (body_parts?.length) {
+      const bodyName = body_parts?.map((part) => ({ name: part.name }));
+      setBodyNames(bodyName);
+    }
+  }, [body_parts]);
+
+  useEffect(() => {
+    if (selectedBodyNames.length && body_parts?.length) {
+      const newMovements = selectedBodyNames?.flatMap((selected) => {
+        const matchingPart = body_parts?.find((el) => el.name === selected.name);
+        return matchingPart?.movements.map((movement) => ({
+          name: movement,
+          key: selected.name,
+        })) || [];
+      });
+
+      setMovementsArray(newMovements);
+    } else {
+      setMovementsArray([]);
+    }
+  }, [selectedBodyNames, body_parts]);
+
+  useEffect(() => {
+    const response = selectedMovements?.reduce((acc, movement) => {
+      const bodyPartIndex = acc.findIndex(
+        (part) => part.name === movement.key
+      );
+
+      if (bodyPartIndex === -1) {
+        acc.push({
+          name: movement.key,
+          movements: [movement.name],
+        });
+      } else {
+        acc[bodyPartIndex].movements.push(movement.name);
+      }
+
+      return acc;
+    }, []);
+
+    setMovementResponse(response);
+  }, [selectedMovements]);
+
   return (
     <Modal
       show={showAddPateintExercise}
@@ -359,13 +479,51 @@ const AddPateintExercise = ({
               <Form.Group className="mb-2">
                 <Form.Label>Category</Form.Label>
                 <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} onChange={(e) => { handleFetchExercise(e); setCategoryError('') }}>
-                  <option>Open this select menu</option>
+                  <option>Please select category</option>
                   {exercise_category?.map((category, i) => (
                     <option key={i} value={category}>{category}</option>
                   ))}
                 </Form.Select>
                 {categoryError && <div className="invalid-feedback">{categoryError}</div>}
               </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
+                <Form.Label>Difficuilty</Form.Label>
+                <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} value={difficuilty} onChange={(e) => { handleDifficuilty(e); setCategoryError('') }}>
+                  <option>Please select difficuilty level</option>
+                  {exerciseDifficuilty?.map((category, i) => (
+                    <option key={i} value={category}>{category}</option>
+                  ))}
+                </Form.Select>
+                {diffError && <div className="invalid-feedback">{diffError}</div>}
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
+                <Form.Label>Select Body Parts</Form.Label>
+                <Multiselect
+                  options={bodyNames}
+                  selectedValues={selectedBodyNames}
+                  onSelect={handleSelectBody}
+                  onRemove={handleRemoveBody}
+                  displayValue="name"
+                />
+              </Form.Group>
+              {bodyError && <div className="invalid-feedback">{bodyError}</div>}
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
+                <Form.Label>Select Movements</Form.Label>
+                <Multiselect
+                  options={movementsArray}
+                  selectedValues={selectedMovements}
+                  onSelect={handleSelectMovements}
+                  onRemove={handleRemoveMovements}
+                  displayValue="name"
+                />
+              </Form.Group>
+              {moveError && <div className="invalid-feedback">{moveError}</div>}
             </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
@@ -384,7 +542,7 @@ const AddPateintExercise = ({
                 <Form.Label>Exercise Video Link</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="https://youtu.be/eqVMAPM00DM?si=sCCrNR"
+                  placeholder="Exercise Video Link"
                   value={exerciseVideo}
                   disabled
                 />

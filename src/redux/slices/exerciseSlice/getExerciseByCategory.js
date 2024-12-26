@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 export const get_exercise_by_category = createAsyncThunk(
     "get_exercise_by_category",
-    async ({ category }, thunkAPI) => {
+    async ({ category, difficuilty }, thunkAPI) => {
         const token = Cookies.get("authToken");
         if (!token) {
             return thunkAPI.rejectWithValue({
@@ -22,7 +22,7 @@ export const get_exercise_by_category = createAsyncThunk(
             };
 
             const response = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/exercises/${category}`,
+                `${process.env.REACT_APP_BACKEND_URL}/exercises?category=${category}&difficulty_level=${difficuilty}`,
                 requestOptions
             );
 

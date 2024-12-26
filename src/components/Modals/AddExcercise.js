@@ -36,9 +36,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   console.log(difficuiltyResponse, "difficuiltyResponse")
 
-  const onRemove = (selectedList) => {
-    setSelectedOptions(selectedList);
-  };
   const handleClose = () => {
     setshowAddExerciseModal(false);
     dispatch(clear_create_exercise_state());
@@ -303,12 +300,12 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             <FormikForm>
               <Row>
                 <Col lg={4}>
-                <Form.Group className="mb-2">
+                  <Form.Group className="mb-2">
                     <Form.Label>Exercise Type</Form.Label>
                     <Field
                       as="select"
                       name="exerciseType"
-                      className="form-control form-select"
+                      className="form-control"
                       onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                     >
                       <option value="">Select exercise type</option>
@@ -317,52 +314,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       })}
                     </Field>
                   </Form.Group>
-               
-                </Col>
-                <Col lg={8}>
-                <Form.Group className="mb-2">
-                    <Form.Label>Difficulty Level 
-                    </Form.Label>
-                    <Multiselect
-                    options={options} 
-                    selectedValues={selectedOptions} 
-                    onSelect={onSelect} 
-                    onRemove={onRemove}
-                    displayValue="name" 
-                  />
-                  </Form.Group>
-                </Col>
-                <Col lg={12} className=" pt-2 border-top border-bottom mb-3 pb-1 pt-3 mt-3">
-                <div className="text-end ">
-                <button className="cmn_btn add_row">Add Row</button>
-                </div>
-                      <div className="d-flex gap-2 w-100">
-                            <Form.Group className="mb-2 flex-grow-1">
-                            <Form.Label>Body Region </Form.Label>
-                            <input
-                        type="text"
-                        name="bodyRedion"
-                        placeholder="Body Region"                       
-                        className="form-control"
-                      />
-                            </Form.Group>
-                            <Form.Group className="mb-2 flex-grow-1"> 
-                            <div className="d-flex align-items-center">
-                            <Form.Label className="flex-grow-1">Movement </Form.Label> 
-                            </div>
-                            <Multiselect
-                    options={options} 
-                    selectedValues={selectedOptions} 
-                    onSelect={onSelect} 
-                    onRemove={onRemove}
-                    displayValue="name" 
-                  />
-                            </Form.Group>
-                            <span className="minus align-self-end mb-3">-</span>
-                      </div>
-                </Col>
-                <Col lg={4}>
-                 
                   <Form.Group className="mb-2">
                     <Form.Label>Exercise Image</Form.Label>
                     <div className="drag_file d-flex align-items-center justify-content-center flex-column">
