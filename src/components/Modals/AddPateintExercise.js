@@ -62,12 +62,15 @@ const AddPateintExercise = ({
   const [fieldErrors, setFieldErrors] = useState({});
   const [cardioError, setCradioError] = useState({});
   const [weekError, setWeekError] = useState('')
+  const [diffError, setDiffError] = useState('')
+  const [bodyError, setBodyError] = useState('')
+  const [moveError, setMoveError] = useState('')
   const [exercise, setExercise] = useState()
   const [difficuilty, setDifficuilty] = useState('')
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
-  console.log(patient_difficuilty, "this is the patient difficuilty")
+  console.log(patient_difficuilty, "difficuilty difficuilty difficuilty difficuilty difficuilty")
   const handleClose = () => {
     setshowAddPateintExercise(false);
     setCategory('')
@@ -105,8 +108,10 @@ const AddPateintExercise = ({
   }
 
   useEffect(() => {
-    dispatch(get_exercise_by_category({ category: category, difficuilty }))
-  }, [difficuilty])
+    if (difficuilty && category) {
+      dispatch(get_exercise_by_category({ category: category, difficuilty }))
+    }
+  }, [difficuilty,category])
 
   const handleSelectExercise = (e) => {
     const selectedValue = e.target.value;
@@ -169,6 +174,18 @@ const AddPateintExercise = ({
   const handleSubmit = () => {
     if (!category) {
       setCategoryError("Please select category !")
+      return
+    }
+    if (!difficuilty) {
+      setDiffError("Please select the difficuilty")
+      return
+    }
+    if (!selectedBodyNames.length) {
+      setBodyError("Please select the body parts")
+      return
+    }
+    if (!selectedMovements.length) {
+      setMoveError("Please select the movements")
       return
     }
     const errors = findEmptyFields();
@@ -347,7 +364,7 @@ const AddPateintExercise = ({
     }
   }, [is_plan_created])
 
-  useState(() => {
+  useEffect(() => {
     if (patient_difficuilty?.isSuccess) {
       setDifficuilty(patient_difficuilty?.data?.data?.exercise_difficulty)
     }
@@ -479,7 +496,7 @@ const AddPateintExercise = ({
                     <option key={i} value={category}>{category}</option>
                   ))}
                 </Form.Select>
-                {categoryError && <div className="invalid-feedback">{categoryError}</div>}
+                {diffError && <div className="invalid-feedback">{diffError}</div>}
               </Form.Group>
             </Col>
             <Col lg={6}>
@@ -493,6 +510,7 @@ const AddPateintExercise = ({
                   displayValue="name"
                 />
               </Form.Group>
+              {bodyError && <div className="invalid-feedback">{bodyError}</div>}
             </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
@@ -505,6 +523,7 @@ const AddPateintExercise = ({
                   displayValue="name"
                 />
               </Form.Group>
+              {moveError && <div className="invalid-feedback">{moveError}</div>}
             </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
