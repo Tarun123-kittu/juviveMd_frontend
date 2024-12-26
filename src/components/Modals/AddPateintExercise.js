@@ -232,15 +232,15 @@ const AddPateintExercise = ({
 
   const handleChangeCardioFields = (i, field, e) => {
     const value = Number(e.target.value);
-    const unit = cardioFields[i][field]?.unit; 
-    
+    const unit = cardioFields[i][field]?.unit;
+
 
     if (unit === "sec" && value > 60) {
-      return; 
+      return;
     }
 
     if (unit === "min" && value > 4) {
-      return; 
+      return;
     }
 
     setCradioFields((prev) =>
@@ -248,7 +248,7 @@ const AddPateintExercise = ({
         index === i
           ? {
             ...item,
-            [field]: { ...item[field], value: value }, 
+            [field]: { ...item[field], value: value },
           }
           : item
       )

@@ -11,10 +11,11 @@ import Loader from "../../../common/Loader/Loader";
 import Nodata from "../../StaticComponents/Nodata";
 import EditPateintExercise from "../../Modals/EditPateintExercise";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showEditPateintExercise, setshowEditPateintExercise] = useState(false)
+  const [planId, setPlanId] = useState(null)
   const [data, setData] = useState([])
   const columns = [
     "Category",
@@ -44,7 +45,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category }) => {
   }, [patientExerciseData])
 
   const handleEditExercise = (id) => {
-    console.log(id)
+    setPlanId(id)
     setshowEditPateintExercise(true)
   }
 
@@ -75,7 +76,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category }) => {
         ))}
 
       </DataTable>
-      <EditPateintExercise setshowEditPateintExercise={setshowEditPateintExercise} showEditPateintExercise={showEditPateintExercise} exercise_category={exercise_category} patientId={patientId}/>
+      {showEditPateintExercise && <EditPateintExercise patientId={patientId} setshowEditPateintExercise={setshowEditPateintExercise} showEditPateintExercise={showEditPateintExercise} exercise_category={exercise_category} planId={planId} setPlanId={setPlanId} weekdays={weekdays}/>}
       <FeedbackModal
         setShowReviewModal={setShowReviewModal}
         showReviewModal={showReviewModal}

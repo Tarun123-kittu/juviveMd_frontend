@@ -33,6 +33,7 @@ import getExerciseByCategory from "./slices/exerciseSlice/getExerciseByCategory"
 import createPatientPlan from "./slices/patientPlan/createPatientPlan"
 import getPatientPlan from "./slices/patientPlan/getPAtientPlan"
 import getSelectedPatientExerciseDetails from "./slices/patientPlan/getSelectedPAtientPlan"
+import update_patient_plan from "./slices/patientPlan/updatePatientPlan"
 
 const AppStore = configureStore({
   reducer: {
@@ -69,7 +70,8 @@ const AppStore = configureStore({
     EXERCISE_BY_CATEGORY: getExerciseByCategory,
     CREATE_PATIENT_PLAN: createPatientPlan,
     GET_PATIENT_PLAN: getPatientPlan,
-    GET_SELECTED_PATIENT_EXERCISE_DETAILS : getSelectedPatientExerciseDetails
+    GET_SELECTED_PATIENT_EXERCISE_DETAILS : getSelectedPatientExerciseDetails,
+    UPDATE_PATIENT_PLAN : update_patient_plan
   },
 })
 
