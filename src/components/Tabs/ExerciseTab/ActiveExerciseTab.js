@@ -18,7 +18,7 @@ import { getRoutePermissions } from '../../../middleware/permissionsMiddleware/g
 import { permission_constants } from '../../../constants/permissionConstants';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty }) => {
 
 
   const navigate = useNavigate()
@@ -230,10 +230,10 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                 {(localStorage?.getItem('user_role') === "ADMIN") && (tab === "rejected") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />} */}
 
-               <div className='d-flex gap-2 justify-content-between'>
-               {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
-               {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
-               </div>
+                <div className='d-flex gap-2 justify-content-between'>
+                  {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
+                  {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                </div>
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (
                     <button
@@ -270,6 +270,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
         setExerciseId={setExerciseId}
         ExercisePermission={ExercisePermission}
         ExercisePermissionApproveReject={ExercisePermissionApproveReject}
+        body_parts={body_parts}
+        exerciseDifficuilty={exerciseDifficuilty}
       />
     </div>
   )

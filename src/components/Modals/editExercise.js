@@ -12,11 +12,13 @@ import { get_exercise, clear_get_single_exercise_state } from "../../redux/slice
 import Loader from "../../common/Loader/Loader";
 import * as Yup from "yup";
 import { update_exercise_draft, clear_update_exercise_draft_state } from "../../redux/slices/exerciseSlice/updateExercideDraft";
+import Multiselect from 'multiselect-react-dropdown';
 
-const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission }) => {
+const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission, body_parts, exerciseDifficuilty }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
+    console.log(is_exercise, "this is the exercise data of single exercise")
     const is_exercise_updated = useSelector((store) => store.UPDATE_EXERCISE_DATA)
     const is_exercise_updated_draft = useSelector((store) => store.UPDATE_DRAFT_EXERCISE)
     const [hasImage, setHasImage] = useState(false)
@@ -27,6 +29,16 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [exerciseVideo, setExerciseVideo] = useState("")
     const [exerciseDescription, setExerciseDescription] = useState("")
     const [exerciseImage, setExerciseImage] = useState("")
+    const [bodyNames, setBodyNames] = useState([])
+    const [selectedBodyNames, setSelectedBodyNames] = useState([]);
+    const [selectedMovements, setSelectedMovements] = useState([]);
+    const [movementsArray, setMovementsArray] = useState([]);
+    const [movementResponse, setMovementResponse] = useState()
+    const [difficulty, setDifficuilty] = useState()
+    const [difficuiltOptions, setDifficuiltOptions] = useState()
+    const [difficuiltyResponse, setDifficuiltyResponse] = useState()
+
+    console.log(movementResponse, "movementResponse movementResponse movementResponse movementResponse movementResponse")
 
     const validationSchema = Yup.object().shape({
         exerciseName: Yup.string()
@@ -58,12 +70,23 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 exerciseDescription: data?.description || "",
                 exerciseImage: data?.imageUrl || "",
             });
-            setImagePreview(data?.imageUrl || DefaultImage);
+            setImagePreview(data?.image_url || DefaultImage);
             setExerciseType(data?.category)
             setExerciseName(data?.exercise_name)
             setExerciseVideo(data?.video_link)
             setExerciseDescription(data?.description)
-            setExerciseImage(data?.imageUrl)
+            setExerciseImage(data?.image_url)
+            const difficuiltValue = data?.difficulty_level?.map((val) => ({ name: val }))
+            setDifficuilty(difficuiltValue)
+            setDifficuiltyResponse(data?.difficulty_level)
+            const selectMovements = data?.body_parts?.map((el) => {
+                return el.movements?.map((move) => ({ name: move, key: el.name }))
+            }).flat();
+            setSelectedMovements(selectMovements)
+            const bodyPart = data?.body_parts?.map((part) => ({ name: part.name }))
+            setSelectedBodyNames(bodyPart)
+            setMovementResponse(data?.body_parts)
+
         }
     }, [is_exercise]);
 
@@ -91,12 +114,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             update_exercise({
                 exercise_name: exerciseName,
                 category: exerciseType,
+                difficulty_level: difficuiltyResponse,
+                body_parts: movementResponse,
                 video_link: exerciseVideo,
-                image: image ? image : exerciseImage,
+                image_url: exerciseImage,
                 description: exerciseDescription,
+                draft: false,
                 id: id,
                 hasImage: hasImage,
-                draft: false
             })
         );
     };
@@ -105,12 +130,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             update_exercise_draft({
                 exercise_name: exerciseName,
                 category: exerciseType,
+                difficulty_level: difficuiltyResponse,
+                body_parts: movementResponse,
                 video_link: exerciseVideo,
-                image: image ? image : exerciseImage,
+                image_url: exerciseImage,
                 description: exerciseDescription,
+                draft: true,
                 id: id,
                 hasImage: hasImage,
-                draft: true
             })
         );
     };
@@ -159,6 +186,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setExerciseName(value);
         setFieldValue("exerciseName", value);
     };
+    const handleExerciseImageChange = (e, setFieldValue) => {
+        const value = e.target.value;
+        setExerciseImage(value);
+        setFieldValue("exerciseImage", value);
+    };
     const handleExerciseVideoChange = (e, setFieldValue) => {
         const value = e.target.value;
         setExerciseVideo(value);
@@ -178,6 +210,94 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             setDraft(true)
         }
     }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, is_exercise])
+
+    useEffect(() => {
+        if (body_parts?.length) {
+            const bodyName = body_parts?.map((part) => ({ name: part.name }));
+            setBodyNames(bodyName);
+        }
+    }, [body_parts]);
+
+    const handleSelect = (selectedList) => {
+        setSelectedBodyNames([...selectedList]);
+    };
+
+    const handleRemove = (selectedList, removedItem) => {
+        setSelectedBodyNames([...selectedList]);
+        const updatedMovements = movementsArray.filter(
+            (movement) => movement.key !== removedItem.name
+        );
+        setMovementsArray(updatedMovements);
+
+        const updatedSelectedMovements = selectedMovements.filter(
+            (movement) => movement.key !== removedItem.name
+        );
+        setSelectedMovements(updatedSelectedMovements);
+    };
+
+    const handleSelectMovements = (selectedList) => {
+        setSelectedMovements([...selectedList]);
+    };
+
+    const handleRemoveMovements = (selectedList) => {
+        setSelectedMovements([...selectedList]);
+    };
+
+    const handleSelectDifficuilt = (selectedList) => {
+        setDifficuilty([...selectedList]);
+        const formattedResponse = selectedList.map((item) => item.name);
+        setDifficuiltyResponse(formattedResponse);
+    };
+
+    const handleRemoveDifficuilt = (selectedList) => {
+        setDifficuilty([...selectedList]);
+        const formattedResponse = selectedList.map((item) => item.name);
+        setDifficuiltyResponse(formattedResponse);
+    };
+
+
+    useEffect(() => {
+        if (selectedBodyNames.length && body_parts?.length) {
+            const newMovements = selectedBodyNames?.flatMap((selected) => {
+                const matchingPart = body_parts?.find((el) => el.name === selected.name);
+                return matchingPart?.movements.map((movement) => ({
+                    name: movement,
+                    key: selected.name,
+                })) || [];
+            });
+
+            setMovementsArray(newMovements);
+        } else {
+            setMovementsArray([]);
+        }
+    }, [selectedBodyNames, body_parts]);
+
+    useEffect(() => {
+        const response = selectedMovements?.reduce((acc, movement) => {
+            const bodyPartIndex = acc.findIndex(
+                (part) => part.name === movement.key
+            );
+
+            if (bodyPartIndex === -1) {
+                acc.push({
+                    name: movement.key,
+                    movements: [movement.name],
+                });
+            } else {
+                acc[bodyPartIndex].movements.push(movement.name);
+            }
+
+            return acc;
+        }, []);
+
+        setMovementResponse(response);
+    }, [selectedMovements]);
+
+    useEffect(() => {
+        const diffcuilty = exerciseDifficuilty?.map((exe) => ({ name: exe }))
+        setDifficuiltOptions(diffcuilty)
+    }, [exerciseDifficuilty])
+
 
     return (
         <Modal
@@ -227,7 +347,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 type="file"
                                                 name="exerciseImage"
                                                 accept="image/png, image/jpg, image/jpeg"
-                                                onChange={(e) => handleImageChange(e, setFieldValue)}
+                                                // onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
                                                 disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
 
@@ -239,6 +359,17 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
                                             />
                                         </div>
+                                    </Form.Group>
+                                    <Form.Group className="mb-2">
+                                        <Form.Label>Exercise Image Url</Form.Label>
+                                        <Field
+                                            type="text"
+                                            name="exerciseImage"
+                                            placeholder="Enter image url"
+                                            className="form-control"
+                                            onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                                            value={exerciseImage}
+                                        />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={8}>
@@ -258,6 +389,18 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </Col>
                                         <Col lg={6}>
                                             <Form.Group className="mb-2">
+                                                <Form.Label>Difficuilty level</Form.Label>
+                                                <Multiselect
+                                                    options={difficuiltOptions}
+                                                    selectedValues={difficulty}
+                                                    onSelect={handleSelectDifficuilt}
+                                                    onRemove={handleRemoveDifficuilt}
+                                                    displayValue="name"
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col lg={6}>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>Exercise Video Link</Form.Label>
                                                 <Field
                                                     type="text"
@@ -266,6 +409,30 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     className="form-control"
                                                     disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                     onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col lg={6}>
+                                            <Form.Group className="mb-2">
+                                                <Form.Label>Select Body Parts</Form.Label>
+                                                <Multiselect
+                                                    options={bodyNames}
+                                                    selectedValues={selectedBodyNames}
+                                                    onSelect={handleSelect}
+                                                    onRemove={handleRemove}
+                                                    displayValue="name"
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col lg={6}>
+                                            <Form.Group className="mb-2">
+                                                <Form.Label>Select Movements</Form.Label>
+                                                <Multiselect
+                                                    options={movementsArray}
+                                                    selectedValues={selectedMovements}
+                                                    onSelect={handleSelectMovements}
+                                                    onRemove={handleRemoveMovements}
+                                                    displayValue="name"
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -286,7 +453,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                             </Row>
-                            {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") &&(
+                            {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
                                 <>
                                     <div className="d-flex justify-content-end align-items-center mt-3 flex-wrap">
                                         {!is_exercise_updated?.isLoading ? (
