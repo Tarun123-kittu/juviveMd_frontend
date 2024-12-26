@@ -8,6 +8,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import Multiselect from 'multiselect-react-dropdown';
 import { updatePatientPlan, clear_update_patient_plan_state } from "../../redux/slices/patientPlan/updatePatientPlan";
 import Loader from "../../common/Loader/Loader";
+import Select from "react-select";
+
 const EditPateintExercise = ({
   showEditPateintExercise,
   setshowEditPateintExercise,
@@ -15,7 +17,9 @@ const EditPateintExercise = ({
   planId,
   weekdays,
   setPlanId,
-  patientId
+  patientId,
+  body_parts,
+  exerciseDifficuilty
 }) => {
   const dispatch = useDispatch()
   const [category, setCategory] = useState('')
@@ -30,6 +34,9 @@ const EditPateintExercise = ({
   const [pace, setPace] = useState('')
   const [selectedWeekdays, setSelectedWeekdays] = useState([])
   const [updatedWeekdays, setUpdatedWeekdays] = useState([])
+  const [data, setData] = useState([]);
+  const [apiData, setApiData] = useState(body_parts);
+  const [diffError, setDiffError] = useState('')
   const [distanceVal, setDistanceVal] = useState({
     value: distance, unit: distanceUnit
   })
@@ -54,6 +61,7 @@ const EditPateintExercise = ({
   const [cardioError, setCradioError] = useState({});
   const [weekError, setWeekError] = useState('')
   const [exercise, setExercise] = useState()
+  const [difficuilty, setDifficuilty] = useState('')
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const patient_exercise_data = useSelector((store) => store.GET_SELECTED_PATIENT_EXERCISE_DETAILS)
   const is_plan_updated = useSelector((store) => store?.UPDATE_PATIENT_PLAN)
@@ -82,6 +90,7 @@ const EditPateintExercise = ({
 
   useEffect(() => {
     if (patient_exercise_data?.isSuccess) {
+      console.log(patient_exercise_data, "this is the patient exercise data please check")
       setCategory(patient_exercise_data?.data?.data?.category)
       setSelectedExercise(patient_exercise_data?.data?.data?.exerciseId)
       setDistance(patient_exercise_data?.data?.data?.distanceGoal?.value)
@@ -104,6 +113,14 @@ const EditPateintExercise = ({
       setFlexibilityField(patient_exercise_data?.data?.data?.sets)
       setCradioFields(patient_exercise_data?.data?.data?.sets)
       setPace(patient_exercise_data?.data?.data?.pace)
+      setDifficuilty(patient_exercise_data?.data?.data?.difficulty_level[0])
+      if (patient_exercise_data?.data?.data?.body_parts) {
+        const formattedData = patient_exercise_data?.data?.data?.body_parts.map((item) => ({
+          name: item.name,
+          movements: item.movements,
+        }));
+        setData(formattedData);
+      }
     }
   }, [patient_exercise_data])
 
@@ -115,7 +132,7 @@ const EditPateintExercise = ({
     setExerciseVideo('')
     setExerciseImage('')
     setCategory(val)
-    dispatch(get_exercise_by_category({ category: val }))
+    dispatch(get_exercise_by_category({ category: val, difficuilty: difficuilty }))
   }
 
   useEffect(() => {
@@ -125,8 +142,10 @@ const EditPateintExercise = ({
   }, [exercise_details, category])
 
   useEffect(() => {
-    dispatch(get_exercise_by_category({ category: category }))
-  }, [category])
+    if (difficuilty && category) {
+      dispatch(get_exercise_by_category({ category: category, difficuilty }))
+    }
+  }, [difficuilty, category])
 
   useEffect(() => {
     const exercise_data = exercise?.find((el) => el.id == selectedExercise);
@@ -137,7 +156,7 @@ const EditPateintExercise = ({
     } else {
       console.warn("No matching exercise found for ID:", selectedExercise);
     }
-  },[selectedExercise])
+  }, [selectedExercise])
 
 
   const handleSelectExercise = (e) => {
@@ -268,6 +287,7 @@ const EditPateintExercise = ({
   };
 
   const handleSubmit = () => {
+    const bodyParts = data.filter((entry) => entry.name);
     if (!category) {
       setCategoryError("Please select category !")
       return
@@ -306,7 +326,7 @@ const EditPateintExercise = ({
       setWeekError("Please select days")
       return
     }
-    dispatch(updatePatientPlan({ id: planId, category,patientId:patientId, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
+    dispatch(updatePatientPlan({ id: planId, category, patientId: patientId, difficulty_level: difficuilty, body_parts: bodyParts, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
   }
 
   const findEmptyFields = () => {
@@ -354,7 +374,47 @@ const EditPateintExercise = ({
   };
 
   const options = weekdays?.map((day) => ({ name: day }));
-  console.log(options,"options")
+  console.log(options, "options")
+
+  const handleNameChange = (index, selectedOption) => {
+    const updatedData = [...data];
+    updatedData[index].name = selectedOption?.value || "";
+    updatedData[index].movements = []; // Reset movements when name changes
+    setData(updatedData);
+  };
+
+  // Handle Movement Change
+  const handleMovementChange = (index, selectedOptions) => {
+    const updatedData = [...data];
+    updatedData[index].movements = selectedOptions.map((option) => option.value);
+    setData(updatedData);
+  };
+
+  // Add a New Field
+  const addNewField = () => {
+    setData([...data, { name: "", movements: [] }]);
+  };
+
+  // Get Available Movements for a Given Body Part
+  const getMovementsForName = (name) => {
+    const selected = apiData.find((item) => item.name === name);
+    return selected
+      ? selected.movements.map((movement) => ({ value: movement, label: movement }))
+      : [];
+  };
+
+  // Get Available Body Parts (Exclude Already Selected Names)
+  const getAvailableNames = () => {
+    const selectedNames = data.map((entry) => entry.name);
+    return apiData
+      .filter((item) => !selectedNames.includes(item.name)) // Exclude selected names
+      .map((item) => ({ value: item.name, label: item.name }));
+  };
+
+  const handleDifficuilty = (e) => {
+    const val = e.target.value
+    setDifficuilty(val)
+  }
 
   return (
     <Modal
@@ -400,6 +460,18 @@ const EditPateintExercise = ({
             </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
+                <Form.Label>Difficuilty</Form.Label>
+                <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} value={difficuilty} onChange={(e) => { handleDifficuilty(e); setCategoryError('') }}>
+                  <option>Please select difficuilty level</option>
+                  {exerciseDifficuilty?.map((category, i) => (
+                    <option key={i} value={category}>{category}</option>
+                  ))}
+                </Form.Select>
+                {diffError && <div className="invalid-feedback">{diffError}</div>}
+              </Form.Group>
+            </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
                 <Form.Label>Exercise Name</Form.Label>
                 <Form.Select aria-label="Default select example" value={selectedExercise} className={selectedExerciseError ? "is-invalid" : ""} onChange={(e) => handleSelectExercise(e)}>
                   <option>Open this select menu</option>
@@ -431,6 +503,73 @@ const EditPateintExercise = ({
             </Col>
           </Row>
         </div>
+
+
+
+        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+          <h3>Edit Body Parts and Movements</h3>
+          {data.map((entry, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "1rem",
+                gap: "10px",
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <label>Select Name:</label>
+                <Select
+                  value={
+                    entry.name
+                      ? { value: entry.name, label: entry.name }
+                      : null
+                  }
+                  options={getAvailableNames()}
+                  onChange={(selectedOption) =>
+                    handleNameChange(index, selectedOption)
+                  }
+                  placeholder="Select Name"
+                />
+              </div>
+              <div style={{ flex: 2 }}>
+                <label>Select Movements:</label>
+                <Select
+                  isMulti
+                  value={entry.movements.map((movement) => ({
+                    value: movement,
+                    label: movement,
+                  }))}
+                  options={getMovementsForName(entry.name)}
+                  onChange={(selectedOptions) =>
+                    handleMovementChange(index, selectedOptions || [])
+                  }
+                  placeholder="Select Movements"
+                  isDisabled={!entry.name}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            onClick={addNewField}
+            style={{
+              marginTop: "1rem",
+              padding: "10px 15px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Add New Field
+          </button>
+        </div>
+
+
+
+
         {category !== "strength exercise" && <div className="modal_card mt-3">
           <div className="d-flex align-items-center mb-2">
             <h5 className="flex-grow-1 mb-0">Steps and Reps</h5>{" "}

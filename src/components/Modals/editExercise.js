@@ -13,6 +13,7 @@ import Loader from "../../common/Loader/Loader";
 import * as Yup from "yup";
 import { update_exercise_draft, clear_update_exercise_draft_state } from "../../redux/slices/exerciseSlice/updateExercideDraft";
 import Multiselect from 'multiselect-react-dropdown';
+import Select from "react-select";
 
 const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission, body_parts, exerciseDifficuilty }) => {
     const dispatch = useDispatch();
@@ -37,6 +38,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [difficulty, setDifficuilty] = useState()
     const [difficuiltOptions, setDifficuiltOptions] = useState()
     const [difficuiltyResponse, setDifficuiltyResponse] = useState()
+    const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+    const [apiData, setApiData] = useState();
 
     console.log(movementResponse, "movementResponse movementResponse movementResponse movementResponse movementResponse")
 
@@ -60,9 +63,17 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         }
     }, [id, dispatch]);
 
+
+    useEffect(() => {
+        if (body_parts && body_parts.length > 0) {
+            setApiData(body_parts); // Set the API data to the state
+        }
+    }, [body_parts]);
+
     useEffect(() => {
         if (is_exercise?.isSuccess) {
             const data = is_exercise?.data?.data;
+            console.log(data, "this is the data")
             setInitialValues({
                 exerciseName: data?.exercise_name || "",
                 exerciseType: data?.category || "",
@@ -86,7 +97,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             const bodyPart = data?.body_parts?.map((part) => ({ name: part.name }))
             setSelectedBodyNames(bodyPart)
             setMovementResponse(data?.body_parts)
-
+            if (data?.body_parts) {
+                const formattedData = data?.body_parts.map((item) => ({
+                    name: item.name,
+                    movements: item.movements,
+                }));
+                setData(formattedData);
+            }
         }
     }, [is_exercise]);
 
@@ -110,12 +127,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
 
     const handleSave = (values) => {
+        const bodyParts = data.filter((entry) => entry.name);
         dispatch(
             update_exercise({
                 exercise_name: exerciseName,
                 category: exerciseType,
                 difficulty_level: difficuiltyResponse,
-                body_parts: movementResponse,
+                body_parts: bodyParts,
                 video_link: exerciseVideo,
                 image_url: exerciseImage,
                 description: exerciseDescription,
@@ -126,12 +144,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         );
     };
     const handleSaveDraft = (values) => {
+        const bodyParts = data.filter((entry) => entry.name);
         dispatch(
             update_exercise_draft({
                 exercise_name: exerciseName,
                 category: exerciseType,
                 difficulty_level: difficuiltyResponse,
-                body_parts: movementResponse,
+                body_parts: bodyParts,
                 video_link: exerciseVideo,
                 image_url: exerciseImage,
                 description: exerciseDescription,
@@ -299,6 +318,46 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }, [exerciseDifficuilty])
 
 
+    const handleNameChange = (index, selectedOption) => {
+        const updatedData = [...data];
+        updatedData[index].name = selectedOption?.value || "";
+        updatedData[index].movements = []; // Reset movements when name changes
+        setData(updatedData);
+    };
+
+    // Handle Movement Change
+    const handleMovementChange = (index, selectedOptions) => {
+        const updatedData = [...data];
+        updatedData[index].movements = selectedOptions.map((option) => option.value);
+        setData(updatedData);
+    };
+
+    // Add a New Field
+    const addNewField = () => {
+        setData([...data, { name: "", movements: [] }]);
+    };
+
+    // Get Available Movements for a Given Body Part
+    const getMovementsForName = (name) => {
+        const selected = apiData?.find((item) => item.name === name);
+        return selected
+            ? selected.movements.map((movement) => ({ value: movement, label: movement }))
+            : [];
+    };
+
+    // Get Available Body Parts (Exclude Already Selected Names)
+    const getAvailableNames = () => {
+        const selectedNames = data.map((entry) => entry.name);
+        return apiData
+            ?.filter((item) => !selectedNames.includes(item.name)) // Exclude selected names
+            .map((item) => ({ value: item.name, label: item.name }));
+    };
+
+    const handleDifficuilty = (e) => {
+        const val = e.target.value
+        setDifficuilty(val)
+    }
+
     return (
         <Modal
             show={showAddExerciseModal}
@@ -412,7 +471,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 />
                                             </Form.Group>
                                         </Col>
-                                        <Col lg={6}>
+                                        {/* <Col lg={6}>
                                             <Form.Group className="mb-2">
                                                 <Form.Label>Select Body Parts</Form.Label>
                                                 <Multiselect
@@ -435,7 +494,73 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     displayValue="name"
                                                 />
                                             </Form.Group>
-                                        </Col>
+                                        </Col> */}
+
+
+
+                                        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+                                            <h3>Edit Body Parts and Movements</h3>
+                                            {data.map((entry, index) => (
+                                                <div
+                                                    key={index}
+                                                    style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        marginBottom: "1rem",
+                                                        gap: "10px",
+                                                    }}
+                                                >
+                                                    <div style={{ flex: 1 }}>
+                                                        <label>Select Name:</label>
+                                                        <Select
+                                                            value={
+                                                                entry.name
+                                                                    ? { value: entry.name, label: entry.name }
+                                                                    : null
+                                                            }
+                                                            options={getAvailableNames()}
+                                                            onChange={(selectedOption) =>
+                                                                handleNameChange(index, selectedOption)
+                                                            }
+                                                            placeholder="Select Name"
+                                                        />
+                                                    </div>
+                                                    <div style={{ flex: 2 }}>
+                                                        <label>Select Movements:</label>
+                                                        <Select
+                                                            isMulti
+                                                            value={entry.movements.map((movement) => ({
+                                                                value: movement,
+                                                                label: movement,
+                                                            }))}
+                                                            options={getMovementsForName(entry.name)}
+                                                            onChange={(selectedOptions) =>
+                                                                handleMovementChange(index, selectedOptions || [])
+                                                            }
+                                                            placeholder="Select Movements"
+                                                            isDisabled={!entry.name}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <button
+                                                onClick={addNewField}
+                                                style={{
+                                                    marginTop: "1rem",
+                                                    padding: "10px 15px",
+                                                    backgroundColor: "#007BFF",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "5px",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                Add New Field
+                                            </button>
+                                        </div>
+
+
+
                                         <Col lg={12}>
                                             <Form.Group className="mb-2">
                                                 <Form.Label>Exercise Description</Form.Label>

@@ -10,9 +10,11 @@ import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
+import Select from "react-select";
 
 
 const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty }) => {
+  console.log(body_parts, "this is the body parts")
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState("");
   const [image, setImage] = useState("");
@@ -33,6 +35,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [difficulty, setDifficuilty] = useState()
   const [difficuiltOptions, setDifficuiltOptions] = useState()
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
+  const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+  const [apiData, setApiData] = useState();
+  console.log(apiData, "this is the api data")
 
   console.log(difficuiltyResponse, "difficuiltyResponse")
 
@@ -48,6 +53,12 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuiltOptions()
     setDifficuiltyResponse()
   };
+
+  useEffect(() => {
+    if (body_parts && body_parts.length > 0) {
+      setApiData(body_parts); // Set the API data to the state
+    }
+  }, [body_parts]);
 
   const initialValues = {
     exerciseName: "",
@@ -279,6 +290,47 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuiltOptions(diffcuilty)
   }, [exerciseDifficuilty])
 
+  useEffect(() => {
+    const bodyParts = data.filter((entry) => entry.name);
+    setMovementResponse(bodyParts);
+  }, [data]);
+
+  // Handle name selection
+  const handleNameChange = (index, selectedOption) => {
+    const updatedData = [...data];
+    updatedData[index].name = selectedOption?.value || "";
+    updatedData[index].movements = []; // Reset movements when name changes
+    setData(updatedData);
+  };
+
+  // Handle movement selection
+  const handleMovementChange = (index, selectedOptions) => {
+    const updatedData = [...data];
+    updatedData[index].movements = selectedOptions.map((option) => option.value);
+    setData(updatedData);
+  };
+
+  // Add new field
+  const addNewField = () => {
+    setData([...data, { name: "", movements: [] }]);
+  };
+
+  // Get movements for the selected name
+  const getMovementsForName = (name) => {
+    const selected = apiData?.find((item) => item.name === name);
+    return selected
+      ? selected.movements.map((movement) => ({ value: movement, label: movement }))
+      : [];
+  };
+
+  // Exclude already selected names
+  const getAvailableNames = () => {
+    const selectedNames = data.map((entry) => entry.name);
+    return apiData
+      ?.filter((item) => !selectedNames.includes(item.name))
+      .map((item) => ({ value: item.name, label: item.name }));
+  };
+
 
   return (
     <Modal
@@ -323,7 +375,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         accept="image/png, image/jpg, image/jpeg"
                         // onChange={(e) => handleImageChange(e, setFieldValue)}
                         className="form-control"
-                        // disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                      // disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                       />
                       <img
                         src={exerciseImage}
@@ -403,7 +455,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         />
                       </Form.Group>
                     </Col>
-                    <Col lg={6}>
+                    {/* <Col lg={6}>
                       <Form.Group className="mb-2">
                         <Form.Label>Select Body Parts</Form.Label>
                         <Multiselect
@@ -426,7 +478,85 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           displayValue="name"
                         />
                       </Form.Group>
-                    </Col>
+                    </Col> */}
+
+
+
+
+
+                    {/* body parts data here */}
+                    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+                      <h3>Body Parts and Movements</h3>
+                      {data?.map((entry, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginBottom: "1rem",
+                            gap: "10px",
+                          }}
+                        >
+                          <div style={{ flex: 1 }}>
+                            <label>Select Name:</label>
+                            <Select
+                              value={
+                                entry.name
+                                  ? { value: entry.name, label: entry.name }
+                                  : null
+                              }
+                              options={getAvailableNames()}
+                              onChange={(selectedOption) =>
+                                handleNameChange(index, selectedOption)
+                              }
+                              placeholder="Select Name"
+                            />
+                          </div>
+                          <div style={{ flex: 2 }}>
+                            <label>Select Movements:</label>
+                            <Select
+                              isMulti
+                              value={entry.movements.map((movement) => ({
+                                value: movement,
+                                label: movement,
+                              }))}
+                              options={getMovementsForName(entry.name)}
+                              onChange={(selectedOptions) =>
+                                handleMovementChange(index, selectedOptions || [])
+                              }
+                              placeholder="Select Movements"
+                              isDisabled={!entry.name}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addNewField();
+                        }}
+                        style={{
+                          marginTop: "1rem",
+                          padding: "10px 15px",
+                          backgroundColor: "#007BFF",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Add New Field
+                      </button>
+                    </div>
+
+
+
+
+
+
+
+
+
                     <Col lg={12}>
                       <Form.Group className="mb-2">
                         <Form.Label>Exercise Description</Form.Label>
@@ -455,6 +585,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           }}
                           disabled={draft}
                           className="btn cmn_btn"
+                          type="submit"
                         >
                           Send For Approval
                         </button>
@@ -477,6 +608,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                             setLoading("second");
                           }}
                           className="btn cmn_btn ms-2"
+                          type="submit"
                         >
                           Save as Draft
                         </button>

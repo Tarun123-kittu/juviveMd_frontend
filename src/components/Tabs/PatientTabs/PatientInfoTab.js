@@ -11,7 +11,7 @@ import Loader from "../../../common/Loader/Loader";
 import Nodata from "../../StaticComponents/Nodata";
 import EditPateintExercise from "../../Modals/EditPateintExercise";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showEditPateintExercise, setshowEditPateintExercise] = useState(false)
@@ -76,7 +76,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays }) => 
         ))}
 
       </DataTable>
-      {showEditPateintExercise && <EditPateintExercise patientId={patientId} setshowEditPateintExercise={setshowEditPateintExercise} showEditPateintExercise={showEditPateintExercise} exercise_category={exercise_category} planId={planId} setPlanId={setPlanId} weekdays={weekdays}/>}
+      {showEditPateintExercise && <EditPateintExercise patientId={patientId} setshowEditPateintExercise={setshowEditPateintExercise} showEditPateintExercise={showEditPateintExercise} exercise_category={exercise_category} planId={planId} setPlanId={setPlanId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />}
       <FeedbackModal
         setShowReviewModal={setShowReviewModal}
         showReviewModal={showReviewModal}

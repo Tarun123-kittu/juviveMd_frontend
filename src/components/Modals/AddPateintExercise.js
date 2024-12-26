@@ -8,6 +8,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import Spinner from 'react-bootstrap/Spinner';
 import toast from "react-hot-toast";
 import { get_patient_difficuilties, clear_patient_difficuilties_state } from "../../redux/slices/patientPlan/getPatientDifficuilties";
+import Select from "react-select";
 
 const AddPateintExercise = ({
   showAddPateintExercise,
@@ -18,7 +19,7 @@ const AddPateintExercise = ({
   body_parts,
   exerciseDifficuilty
 }) => {
-  console.log(exerciseDifficuilty, "this is the exercise difficuilty")
+  console.log(body_parts, "this is the exercise difficuilty")
   const dispatch = useDispatch()
   const [category, setCategory] = useState('')
   const [selectedExercise, setSelectedExercise] = useState('')
@@ -48,6 +49,7 @@ const AddPateintExercise = ({
   const [selectedMovements, setSelectedMovements] = useState([]);
   const [movementsArray, setMovementsArray] = useState([]);
   const [movementResponse, setMovementResponse] = useState()
+  console.log(movementResponse, "movementResponse movementResponse movementResponse movementResponse movementResponse")
   const [difficuiltOptions, setDifficuiltOptions] = useState()
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
   const [categoryError, setCategoryError] = useState('')
@@ -67,10 +69,12 @@ const AddPateintExercise = ({
   const [moveError, setMoveError] = useState('')
   const [exercise, setExercise] = useState()
   const [difficuilty, setDifficuilty] = useState('')
+  const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+  const [apiData, setApiData] = useState(body_parts);
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
-  console.log(patient_difficuilty, "difficuilty difficuilty difficuilty difficuilty difficuilty")
+  console.log(difficuilty, "difficuilty difficuilty difficuilty difficuilty difficuilty")
   const handleClose = () => {
     setshowAddPateintExercise(false);
     setCategory('')
@@ -111,7 +115,7 @@ const AddPateintExercise = ({
     if (difficuilty && category) {
       dispatch(get_exercise_by_category({ category: category, difficuilty }))
     }
-  }, [difficuilty,category])
+  }, [difficuilty, category])
 
   const handleSelectExercise = (e) => {
     const selectedValue = e.target.value;
@@ -172,20 +176,13 @@ const AddPateintExercise = ({
 
 
   const handleSubmit = () => {
+
     if (!category) {
       setCategoryError("Please select category !")
       return
     }
     if (!difficuilty) {
       setDiffError("Please select the difficuilty")
-      return
-    }
-    if (!selectedBodyNames.length) {
-      setBodyError("Please select the body parts")
-      return
-    }
-    if (!selectedMovements.length) {
-      setMoveError("Please select the movements")
       return
     }
     const errors = findEmptyFields();
@@ -445,6 +442,48 @@ const AddPateintExercise = ({
     setMovementResponse(response);
   }, [selectedMovements]);
 
+
+  useEffect(() => {
+    const bodyParts = data.filter((entry) => entry.name);
+    setMovementResponse(bodyParts);
+  }, [data]);
+
+  // Handle name selection
+  const handleNameChange = (index, selectedOption) => {
+    const updatedData = [...data];
+    updatedData[index].name = selectedOption?.value || "";
+    updatedData[index].movements = []; // Reset movements when name changes
+    setData(updatedData);
+  };
+
+  // Handle movement selection
+  const handleMovementChange = (index, selectedOptions) => {
+    const updatedData = [...data];
+    updatedData[index].movements = selectedOptions.map((option) => option.value);
+    setData(updatedData);
+  };
+
+  // Add new field
+  const addNewField = () => {
+    setData([...data, { name: "", movements: [] }]);
+  };
+
+  // Get movements for the selected name
+  const getMovementsForName = (name) => {
+    const selected = apiData.find((item) => item.name === name);
+    return selected
+      ? selected.movements.map((movement) => ({ value: movement, label: movement }))
+      : [];
+  };
+
+  // Exclude already selected names
+  const getAvailableNames = () => {
+    const selectedNames = data.map((entry) => entry.name);
+    return apiData
+      .filter((item) => !selectedNames.includes(item.name))
+      .map((item) => ({ value: item.name, label: item.name }));
+  };
+
   return (
     <Modal
       show={showAddPateintExercise}
@@ -499,7 +538,7 @@ const AddPateintExercise = ({
                 {diffError && <div className="invalid-feedback">{diffError}</div>}
               </Form.Group>
             </Col>
-            <Col lg={6}>
+            {/* <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Select Body Parts</Form.Label>
                 <Multiselect
@@ -524,7 +563,7 @@ const AddPateintExercise = ({
                 />
               </Form.Group>
               {moveError && <div className="invalid-feedback">{moveError}</div>}
-            </Col>
+            </Col> */}
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Name</Form.Label>
@@ -558,6 +597,75 @@ const AddPateintExercise = ({
             </Col>
           </Row>
         </div>
+
+
+
+        {/* body parts data here */}
+        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+          <h3>Body Parts and Movements</h3>
+          {data.map((entry, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "1rem",
+                gap: "10px",
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <label>Select Name:</label>
+                <Select
+                  value={
+                    entry.name
+                      ? { value: entry.name, label: entry.name }
+                      : null
+                  }
+                  options={getAvailableNames()}
+                  onChange={(selectedOption) =>
+                    handleNameChange(index, selectedOption)
+                  }
+                  placeholder="Select Name"
+                />
+              </div>
+              <div style={{ flex: 2 }}>
+                <label>Select Movements:</label>
+                <Select
+                  isMulti
+                  value={entry.movements.map((movement) => ({
+                    value: movement,
+                    label: movement,
+                  }))}
+                  options={getMovementsForName(entry.name)}
+                  onChange={(selectedOptions) =>
+                    handleMovementChange(index, selectedOptions || [])
+                  }
+                  placeholder="Select Movements"
+                  isDisabled={!entry.name}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            onClick={addNewField}
+            style={{
+              marginTop: "1rem",
+              padding: "10px 15px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Add New Field
+          </button>
+        </div>
+
+
+
+
+
         {category !== "strength exercise" && <div className="modal_card mt-3">
           <div className="d-flex align-items-center mb-2">
             <h5 className="flex-grow-1 mb-0">Steps and Reps</h5>{" "}
