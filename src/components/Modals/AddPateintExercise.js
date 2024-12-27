@@ -9,6 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import toast from "react-hot-toast";
 import { get_patient_difficuilties, clear_patient_difficuilties_state } from "../../redux/slices/patientPlan/getPatientDifficuilties";
 import Select from "react-select";
+import { get_patient_plan } from "../../redux/slices/patientPlan/getPAtientPlan";
 
 const AddPateintExercise = ({
   showAddPateintExercise,
@@ -17,7 +18,8 @@ const AddPateintExercise = ({
   patientId,
   weekdays,
   body_parts,
-  exerciseDifficuilty
+  exerciseDifficuilty,
+  weekday
 }) => {
   console.log(body_parts, "this is the exercise difficuilty")
   const dispatch = useDispatch()
@@ -352,6 +354,7 @@ const AddPateintExercise = ({
   useEffect(() => {
     if (is_plan_created?.isSuccess) {
       toast.success(is_plan_created?.data?.message)
+      dispatch(get_patient_plan({ id: patientId, weekday }))
       dispatch(clear_create_patient_plan_state())
       handleClose()
     }
@@ -601,19 +604,24 @@ const AddPateintExercise = ({
 
 
         {/* body parts data here */}
-        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-          <h3>Body Parts and Movements</h3>
+        <div className="pt-3">
+        <div className="d-flex justify-content-between">
+                     <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5> 
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addNewField();
+                        }}
+                       className="cmn_btn add_row"
+                      >
+                        Add New Field
+                      </button>
+                      </div>
           {data.map((entry, index) => (
             <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "1rem",
-                gap: "10px",
-              }}
+            className="row mb-3"
             >
-              <div style={{ flex: 1 }}>
+             <div className="col-lg-6">
                 <label>Select Name:</label>
                 <Select
                   value={
@@ -628,9 +636,10 @@ const AddPateintExercise = ({
                   placeholder="Select Name"
                 />
               </div>
-              <div style={{ flex: 2 }}>
+              <div className="col-lg-6">
                 <label>Select Movements:</label>
-                <Select
+             <div className="d-flex gap-2 align-items-center">
+             <Select
                   isMulti
                   value={entry.movements.map((movement) => ({
                     value: movement,
@@ -642,24 +651,14 @@ const AddPateintExercise = ({
                   }
                   placeholder="Select Movements"
                   isDisabled={!entry.name}
+                  className="flex-grow-1"
                 />
+                <span class="minus align-self-end mb-2">-</span>
+              </div>
               </div>
             </div>
           ))}
-          <button
-            onClick={addNewField}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 15px",
-              backgroundColor: "#007BFF",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Add New Field
-          </button>
+     
         </div>
 
 

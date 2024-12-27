@@ -19,6 +19,7 @@ const PatientData = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
+  console.log(patient_data,"this is the patient_data")
   const [exercise_category, setExercise_category] = useState()
   const [weekdays, setWeekdays] = useState()
   const [currentBmi, setCurrentBmi] = useState('')
@@ -92,6 +93,17 @@ const PatientData = () => {
     dispatch(clear_patient_plan_state())
     setActiveTab(key); // Update active tab when a new tab is clicked
   };
+
+  const daysOfWeek = ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const fullToAbbr = {
+    Sunday: "Sun",
+    Monday: "Mon",
+    Tuesday: "Tue",
+    Wednesday: "Wed",
+    Thursday: "Thu",
+    Friday: "Fri",
+    Saturday: "Sat",
+  };
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -127,12 +139,14 @@ const PatientData = () => {
               <div className="execise_days">
                 <h4 className="info_heading">Weekly Availability:</h4>
                 <ul className="user_select_weeks">
-                  <li>Mon</li>
-                  <li>Tue</li>
-                  <li>Wed</li>
-                  <li>Thu</li>
-                  <li>Fri</li>
-                  <li>Sat</li>
+                  {daysOfWeek.map((day) => (
+                    <li
+                      key={day}
+                      className={patient_data?.exercise_perweek?.includes(Object.keys(fullToAbbr).find(key => fullToAbbr[key] === day)) ? 'selected_day' : ''}
+                    >
+                      {day}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -152,10 +166,10 @@ const PatientData = () => {
                     <strong>Workout Place</strong>
                     <span>{patient_data?.workout_place}</span>
                   </li>
-                  <li>
+                  {patient_data?.fat_percentage?.value && <li>
                     <strong>Body fat %</strong>
                     <span>{patient_data?.fat_percentage?.value}%</span>
-                  </li>
+                  </li>}
                   <li>
                     <strong>Workout Type</strong>
                     <span>{patient_data?.workout_types}</span>
@@ -344,7 +358,7 @@ const PatientData = () => {
           </Tab>
         </Tabs>
       </div>
-      {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />}
+      {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} />}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 export const get_patients_list = createAsyncThunk("get_patients_list", async (params, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
-    
+
     const requestBody = {};
     const fields = ["page", "tab", "date", "username", "trainer", "gender", "goal", "status"];
 
@@ -54,6 +54,16 @@ const getPatientListAPI = createSlice({
         data: [],
         error: null
     },
+    reducers: {
+        clear_all_patient_state: (state) => {
+            state.isLoading = false
+            state.isError = false
+            state.isSuccess = false
+            state.data = []
+            state.error = null
+            return state
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(get_patients_list.pending, (state) => {
@@ -71,5 +81,5 @@ const getPatientListAPI = createSlice({
             });
     }
 });
-
+export const {clear_all_patient_state} = getPatientListAPI.actions
 export default getPatientListAPI.reducer;

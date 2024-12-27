@@ -366,16 +366,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       })}
                     </Field>
                   </Form.Group>
-                  <Form.Group className="mb-2">
+                  {/* <Form.Group className="mb-2">
                     <Form.Label>Exercise Image</Form.Label>
                     <div className="drag_file d-flex align-items-center justify-content-center flex-column">
                       <input
                         type="file"
                         name="exerciseImage"
                         accept="image/png, image/jpg, image/jpeg"
-                        // onChange={(e) => handleImageChange(e, setFieldValue)}
                         className="form-control"
-                      // disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                       />
                       <img
                         src={exerciseImage}
@@ -384,7 +382,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
                       />
                     </div>
-                  </Form.Group>
+                  </Form.Group> */}
                   <Form.Group className="mb-2">
                     <Form.Label>Exercise Image Url</Form.Label>
                     <Field
@@ -395,6 +393,16 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
                     />
                   </Form.Group>
+                  <Form.Group className="mb-2">
+                        <Form.Label>Exercise Video Link</Form.Label>
+                        <Field
+                          type="text"
+                          name="exerciseVideo"
+                          placeholder="https://youtu.be"
+                          className="form-control"
+                          onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
+                        />
+                      </Form.Group>
                   {/* <Form.Group className="mb-2">
                     <Form.Label>Exercise Image</Form.Label>
                     <div className="drag_file d-flex align-items-center justify-content-center flex-column">
@@ -443,18 +451,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         />
                       </Form.Group>
                     </Col>
-                    <Col lg={6}>
-                      <Form.Group className="mb-2">
-                        <Form.Label>Exercise Video Link</Form.Label>
-                        <Field
-                          type="text"
-                          name="exerciseVideo"
-                          placeholder="https://youtu.be"
-                          className="form-control"
-                          onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
-                        />
-                      </Form.Group>
-                    </Col>
+                      
+               
                     {/* <Col lg={6}>
                       <Form.Group className="mb-2">
                         <Form.Label>Select Body Parts</Form.Label>
@@ -485,19 +483,50 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
 
                     {/* body parts data here */}
-                    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-                      <h3>Body Parts and Movements</h3>
+                
+
+
+
+
+
+
+
+                       
+
+                    <Col lg={12}>
+                      <Form.Group className="mb-2">
+                        <Form.Label>Exercise Description</Form.Label>
+                        <Field
+                          as="textarea"
+                          rows={5}
+                          name="exerciseDescription"
+                          placeholder="Enter description"
+                          className="form-control"
+                          onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col lg={12}>
+                        <div>
+                     <div className="d-flex justify-content-between">
+                     <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5> 
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addNewField();
+                        }}
+                       className="cmn_btn add_row"
+                      >
+                        Add New Field
+                      </button>
+                     </div>
                       {data?.map((entry, index) => (
                         <div
-                          key={index}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "1rem",
-                            gap: "10px",
-                          }}
+                         className="row mb-3"
                         >
-                          <div style={{ flex: 1 }}>
+                            <div className="col-lg-6">
                             <label>Select Name:</label>
                             <Select
                               value={
@@ -512,9 +541,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                               placeholder="Select Name"
                             />
                           </div>
-                          <div style={{ flex: 2 }}>
+                          <div className="col-lg-6">
                             <label>Select Movements:</label>
-                            <Select
+                           <div className="d-flex align-items-center gap-2">
+                           <Select
                               isMulti
                               value={entry.movements.map((movement) => ({
                                 value: movement,
@@ -526,52 +556,17 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                               }
                               placeholder="Select Movements"
                               isDisabled={!entry.name}
+                              className="flex-grow-1"
                             />
+                               <span class="minus align-self-end mb-2">-</span>
+
+                           </div>
                           </div>
                         </div>
                       ))}
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addNewField();
-                        }}
-                        style={{
-                          marginTop: "1rem",
-                          padding: "10px 15px",
-                          backgroundColor: "#007BFF",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "5px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Add New Field
-                      </button>
+                     
                     </div>
-
-
-
-
-
-
-
-
-
-                    <Col lg={12}>
-                      <Form.Group className="mb-2">
-                        <Form.Label>Exercise Description</Form.Label>
-                        <Field
-                          as="textarea"
-                          rows={8}
-                          name="exerciseDescription"
-                          placeholder="Enter description"
-                          className="form-control"
-                          onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </Col>
+                        </Col>
               </Row>
               <div className="text-end mt-3">
                 <div>

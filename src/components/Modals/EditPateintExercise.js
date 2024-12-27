@@ -9,6 +9,8 @@ import Multiselect from 'multiselect-react-dropdown';
 import { updatePatientPlan, clear_update_patient_plan_state } from "../../redux/slices/patientPlan/updatePatientPlan";
 import Loader from "../../common/Loader/Loader";
 import Select from "react-select";
+import { get_patient_plan } from "../../redux/slices/patientPlan/getPAtientPlan";
+import toast from "react-hot-toast";
 
 const EditPateintExercise = ({
   showEditPateintExercise,
@@ -19,7 +21,8 @@ const EditPateintExercise = ({
   setPlanId,
   patientId,
   body_parts,
-  exerciseDifficuilty
+  exerciseDifficuilty,
+  weekday
 }) => {
   const dispatch = useDispatch()
   const [category, setCategory] = useState('')
@@ -87,6 +90,19 @@ const EditPateintExercise = ({
   useEffect(() => {
     dispatch(get_selected_patient_exercise_details({ id: planId }))
   }, [])
+
+  useEffect(() => {
+    if (is_plan_updated?.isSuccess) {
+      toast.success("Patient plan updated successfully !!")
+      dispatch(get_patient_plan({ id: patientId, weekday }))
+      dispatch(clear_update_patient_plan_state())
+      handleClose()
+    }
+    if (is_plan_updated.isError) {
+      toast.error(is_plan_updated?.error?.message)
+      dispatch(clear_update_patient_plan_state())
+    }
+  }, [is_plan_updated])
 
   useEffect(() => {
     if (patient_exercise_data?.isSuccess) {
@@ -506,19 +522,25 @@ const EditPateintExercise = ({
 
 
 
-        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-          <h3>Edit Body Parts and Movements</h3>
+        <div className="pt-3">
+          <div className="d-flex justify-content-between">
+                     <h5 className="flex-grow-1 mb-0">Edit Body Parts and Movements</h5> 
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addNewField();
+                        }}
+                       className="cmn_btn add_row"
+                      >
+                        Add New Field
+                      </button>
+                      </div>
           {data.map((entry, index) => (
             <div
               key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "1rem",
-                gap: "10px",
-              }}
+             className="row"
             >
-              <div style={{ flex: 1 }}>
+              <div className="col-lg-6">
                 <label>Select Name:</label>
                 <Select
                   value={
@@ -533,9 +555,10 @@ const EditPateintExercise = ({
                   placeholder="Select Name"
                 />
               </div>
-              <div style={{ flex: 2 }}>
+              <div className="col-lg-6">
                 <label>Select Movements:</label>
-                <Select
+             <div className="d-flex gap-2 align-items-center">
+             <Select
                   isMulti
                   value={entry.movements.map((movement) => ({
                     value: movement,
@@ -547,24 +570,14 @@ const EditPateintExercise = ({
                   }
                   placeholder="Select Movements"
                   isDisabled={!entry.name}
+                  className="flex-grow-1"
                 />
+                <span class="minus align-self-end mb-2">-</span>
+              </div>
               </div>
             </div>
           ))}
-          <button
-            onClick={addNewField}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 15px",
-              backgroundColor: "#007BFF",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Add New Field
-          </button>
+        
         </div>
 
 

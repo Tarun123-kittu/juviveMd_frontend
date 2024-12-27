@@ -1,0 +1,79 @@
+.user_profile img {
+    width: 57px;
+    height: 57px;
+    flex: 0 0 57px;
+}
+.user_profile button {
+    height: 38px;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    gap: 6px;
+    padding: 0px 16px;
+    justify-content: center;
+}
+.user_profile button.delete_photo{
+    border: 1px solid #0C5E62;
+    background-color: transparent;
+    border-radius: 5px;
+    color: #000;
+    font-weight: 500;
+    min-width: 122px;
+}
+.setting_tabs {
+    flex: 0 0 240px;
+    border-right: 1px solid #ddd;
+}
+.setting_pills {
+    flex: 0 0 270px;
+}
+.settings_content {
+    padding-left: 3rem;
+}
+
+
+.settings_content h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 21px;
+}
+.setting_pills {
+    flex: 0 0 270px;
+}
+
+.settings_tabs.nav-pills .nav-link.active {
+    color: #0C5E62;
+    background: transparent;
+}
+.settings_tabs.nav-pills .nav-link{
+    color:#000;
+    font-size:16px;
+    font-weight:500;
+    padding-left: 0;
+}
+
+.setting_wrapper, .notification_card {
+    padding: 2rem;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0,0,0,8%);
+    border: 1px solid #ACC9CB80;
+    border-radius: 6px;
+}
+.notification_card{
+    border-color:#D9D9D98C;
+    align-items: center;
+}
+select.language_selection {
+    background: #ACC9CB;
+    border: unset;
+    border-radius: 4px;
+    padding: 5px;
+    border-right: 5px Solid #ACC9CB;
+    font-size: 14px;
+}
+.settings_tabs.nav-pills .nav-link.active svg path {
+    fill: #0C5E62;
+}
+button.edit_button.cmn_btn svg {
+    fill: #0c5e62;
+}
