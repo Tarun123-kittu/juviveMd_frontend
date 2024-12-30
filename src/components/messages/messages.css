@@ -68,3 +68,6 @@ p.message_dialogue {
     height: calc(100vh - 250px);
     overflow: auto;
 }
+.send_message input:focus{
+    outline: 1px solid var(--primary-color);
+}

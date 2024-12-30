@@ -107,7 +107,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
     useEffect(() => {
         if (selected_staff_detail?.isSuccess && selected_staff_detail?.data?.data) {
             const staffData = selected_staff_detail.data.data;
-            console.log(staffData,"this is the staff data")
+            console.log(staffData, "this is the staff data")
 
             setFirstName(
                 staffData.firstName

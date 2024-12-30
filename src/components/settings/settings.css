@@ -77,3 +77,7 @@ select.language_selection {
 button.edit_button.cmn_btn svg {
     fill: #0c5e62;
 }
+
+span.invalid_input {
+    color: red;
+}

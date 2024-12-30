@@ -1,10 +1,205 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DefaultImage from '../../Images/default_user.svg'
 import './settings.css'
 import Nav from 'react-bootstrap/Nav';
 import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
-const settingsComponents = () => {
+import { change_password, clear_change_password_api_state } from '../../redux/slices/authSlice/changePassword';
+import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import Spinner from 'react-bootstrap/Spinner';
+import { get_single_staff } from '../../redux/slices/staffSlice/getStaffByIdSlice';
+import { update_staff, clear_update_staff_state } from '../../redux/slices/staffSlice/updateStaffSlice';
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
+const SettingsComponents = () => {
+  const dispatch = useDispatch()
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPasswordError, setNewPasswordError] = useState('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [currentPasswordError, setCurrentPasswordError] = useState('')
+  const [profileImage, setProfileImage] = useState('')
+  const [phone, setPhone] = useState('')
+  const [hasImage, setHasImage] = useState(false)
+  const [imageView, setImageView] = useState("")
+  const [editInput, setEditInput] = useState(true)
+  const [firstNameError, setFirstNameError] = useState('')
+  const [lastNameError, setLastNameError] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [phoneError, setPhoneError] = useState('')
+  const [data, setData] = useState({
+    profilePic: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    gender: "",
+    email: "",
+    address: "",
+    roleId: "",
+    countryCode: ""
+  })
+
+  console.log(data, "this is the data")
+
+  const is_Password_changed = useSelector((store) => store.CHANGE_PASSWORD)
+  const user_details = useSelector((store) => store.STAFF_DETAIL)
+  const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
+
+  useEffect(() => {
+    dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
+  }, [])
+
+  useEffect(() => {
+    if (user_details?.isSuccess) {
+      setData({
+        image: user_details?.data?.data?.image,
+        firstName: user_details?.data?.data?.firstName,
+        lastName: user_details?.data?.data?.lastName,
+        phone: user_details?.data?.data?.phone,
+        gender: user_details?.data?.data?.gender,
+        email: user_details?.data?.data?.email,
+        address: user_details?.data?.data?.address,
+        roleId: user_details?.data?.data?.roleId,
+        hasImage: false,
+        countryCode: user_details?.data?.data?.countryCode
+      })
+      setPhone(user_details?.data?.data?.countryCode + user_details?.data?.data?.phone)
+      setImageView(user_details?.data?.data?.image)
+    }
+  }, [user_details])
+
+
+  const handleChangePassword = (e) => {
+    e.preventDefault()
+
+    if (!currentPassword && !newPassword && !confirmPassword) {
+      setCurrentPasswordError("Please enter your current password")
+      setNewPasswordError("Please enter your new password")
+      setConfirmPasswordError("Please enter the confirm password")
+      return
+    }
+    if (!currentPassword) {
+      setCurrentPasswordError("Please enter your current password")
+      return
+    }
+    if (!newPassword) {
+      setNewPasswordError("Please enter your new password")
+      return
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError("Please enter the confirm password")
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirm password are not matched")
+      return
+    }
+    dispatch(change_password({ currentPassword, newPassword, confirmNewPassword: confirmPassword }))
+  }
+
+  useEffect(() => {
+    if (is_Password_changed?.isSuccess) {
+      toast.success("Your password changes successfully !!")
+      dispatch(clear_change_password_api_state())
+      setConfirmPassword('')
+      setNewPassword('')
+      setCurrentPassword('')
+      setConfirmPasswordError('')
+      setCurrentPasswordError('')
+      setNewPasswordError('')
+    }
+    if (is_Password_changed?.isError) {
+      toast.error(is_Password_changed.error.message)
+      dispatch(clear_change_password_api_state())
+    }
+  }, [is_Password_changed])
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setHasImage(true)
+    if (file) {
+      const fileType = file.type;
+      const fileSize = file.size;
+
+      if (!fileType.includes("image/png") && !fileType.includes("image/jpeg")) {
+        toast.error("Only PNG and JPG images are allowed.");
+        setProfileImage("")
+        setImageView("")
+        return;
+      }
+      if (fileSize > 2 * 1024 * 1024) {
+        toast.error("File size must be less than 2MB.");
+        setProfileImage("")
+        setImageView("")
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(file)
+        setData({ ...data, image: file })
+        setImageView(reader.result)
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpdateProfile = (e) => {
+    if (!data.firstName) {
+      setFirstNameError("Please enter firstname")
+      return
+    }
+    if (!data.lastName) {
+      setLastNameError("Please enter lastname")
+      return
+    }
+    if (!data.phone) {
+      setPhoneError("Please enter phone number")
+      return
+    }
+    if (!data.email) {
+      setEmailError("Please enter your email")
+      return
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(data.email)) {
+      setEmailError("Please enter a valid email");
+      return;
+    }
+    dispatch(update_staff({ data: { ...data, hasImage }, id: localStorage.getItem('user_id') }));
+  }
+
+  const handleValidatePhone = (phone) => {
+    const parsedPhone = parsePhoneNumberFromString(phone);
+
+    if (parsedPhone) {
+      setData({
+        ...data,
+        countryCode: parsedPhone.countryCallingCode,
+        phone: parsedPhone.nationalNumber
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (is_staff_updated?.isSuccess) {
+      toast.success("Staff Updated Successfully")
+      dispatch(clear_update_staff_state())
+      dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
+      setEditInput(true)
+    }
+    if (is_staff_updated?.isError) {
+      toast.error(is_staff_updated?.error?.message)
+      dispatch(clear_update_staff_state())
+    }
+  }, [is_staff_updated])
+
+
   return (
     <div>
       <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
@@ -42,34 +237,45 @@ const settingsComponents = () => {
                 </div>
                 <h4>My Profile</h4>
                 <div className='user_profile d-flex align-items-center gap-3'>
-                  <img src={DefaultImage} alt="profile image" /> <div className='position-relative'><input type="file" className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
-                    <button className='cmn_btn'> Upload Photo</button></div> <button className='delete_photo'>Delete</button>
-                  <button className='edit_button cmn_btn ms-auto'><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
+                  <img src={imageView || DefaultImage} alt="profile image" /> <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
+                    {!editInput && <button className='cmn_btn' disabled={editInput}> Upload Photo</button>}
+                  </div> <button className='delete_photo d-none'>Delete</button>
+                  <button className='edit_button cmn_btn ms-auto' onClick={() => setEditInput(!editInput)}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
                     <path d="M10.5689 2.48828H3.81267C3.30071 2.48828 2.80972 2.69166 2.44771 3.05367C2.0857 3.41568 1.88232 3.90667 1.88232 4.41863V17.9311C1.88232 18.443 2.0857 18.934 2.44771 19.296C2.80972 19.658 3.30071 19.8614 3.81267 19.8614H17.3251C17.8371 19.8614 18.3281 19.658 18.6901 19.296C19.0521 18.934 19.2555 18.443 19.2555 17.9311V11.1749" stroke="white" stroke-width="2.0372" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M16.7231 2.12703C17.1071 1.74306 17.6279 1.52734 18.1709 1.52734C18.7139 1.52734 19.2347 1.74306 19.6186 2.12703C20.0026 2.511 20.2183 3.03177 20.2183 3.57479C20.2183 4.1178 20.0026 4.63858 19.6186 5.02255L10.9195 13.7226C10.6903 13.9516 10.4072 14.1192 10.0962 14.21L7.32328 15.0208C7.24023 15.045 7.15219 15.0465 7.06838 15.025C6.98458 15.0035 6.90809 14.9599 6.84691 14.8987C6.78574 14.8376 6.74214 14.7611 6.72066 14.6773C6.69919 14.5935 6.70065 14.5054 6.72487 14.4224L7.53562 11.6494C7.62685 11.3387 7.7948 11.0559 8.024 10.8271L16.7231 2.12703Z" stroke="white" stroke-width="2.0372" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                     Edit</button>
+                  {!editInput && <button className='edit_button cmn_btn' onClick={(e) => handleUpdateProfile(e)}>{is_staff_updated?.isLoading ? <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner> : "Update Profile"}</button>}
                 </div>
                 <div className='row authWrapper row-gap-3 pt-4'>
                   <div className='col-lg-6'>
-                    <label className='d-block form-label' htmlFor="NAME">NAME</label>
-                    <input type="text" placeholder='Name' className='form-control' />
+                    <label className='d-block form-label' htmlFor="NAME">FirstName</label>
+                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => setData({ ...data, firstName: e.target.value })} disabled={editInput} className='form-control' />
+                    {firstNameError && <span className='invalid_input'>{firstNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
-                    <label className='d-block form-label' htmlFor="NAME">Profession </label>
-                    <select name="" id="" className='form-select'>
-                      <option value="">Physiotherapy</option>
-                      <option value="">Physiotherapy</option>
-                      <option value="">Physiotherapy</option>
-                    </select>
+                    <label className='d-block form-label' htmlFor="NAME">LastName</label>
+                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => setData({ ...data, lastName: e.target.value })} disabled={editInput} className='form-control' />
+                    {lastNameError && <span className='invalid_input'>{lastNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Email</label>
-                    <input type="email" placeholder='Email' className='form-control' />
+                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => setData({ ...data, email: e.target.value })} disabled={editInput} className='form-control' />
+                    {emailError && <span className='invalid_input'>{emailError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Phone Number</label>
-                    <input type="tel" placeholder='Phone Number' className='form-control' />
+                    <div className="w-100">
+                      <PhoneInput
+                        defaultCountry="us"
+                        value={phone}
+                        onChange={(phone) => handleValidatePhone(phone)}
+                        disabled={editInput}
+                      />
+                      {phoneError && <span className='invalid_input'>{phoneError}</span>}
+                    </div>
                   </div>
                 </div>
                 <div className='change_password mt-4 border-top mt-3 pt-3'>
@@ -78,19 +284,24 @@ const settingsComponents = () => {
                   <div className='row authWrapper row-gap-3'>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">Current Password</label>
-                      <input type="email" placeholder='Enter Current Password' className='form-control' />
+                      <input type="password" value={currentPassword} onChange={(e) => { setCurrentPassword(e.target.value); setCurrentPasswordError('') }} placeholder='Enter Current Password' className='form-control' />
+                      {currentPasswordError && <span className='invalid_input'>{currentPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">New Password</label>
-                      <input type="email" placeholder='Enter New Password' className='form-control' />
+                      <input type="password" value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError('') }} placeholder='Enter New Password' className='form-control' />
+                      {newPasswordError && <span className='invalid_input'>{newPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">Confirm Password</label>
-                      <input type="email" placeholder='Enter New Password' className='form-control' />
+                      <input type="password" value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setConfirmPasswordError('') }} placeholder='Enter New Password' className='form-control' />
+                      {confirmPasswordError && <span className='invalid_input'>{confirmPasswordError}</span>}
                     </div>
                     <div className='col-lg-6 user_profile '>
                       <label className='d-block form-label opacity-0' htmlFor="NAME">Confirm Password</label>
-                      <button className='cmn_btn'>Change Password</button>
+                      <button className='cmn_btn' onClick={(e) => handleChangePassword(e)}>{is_Password_changed?.isLoading ? <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner> : "Change Password"}</button>
                     </div>
                   </div>
                 </div>
@@ -149,9 +360,9 @@ const settingsComponents = () => {
           </Tab.Content>
 
         </div>
-      </Tab.Container>
-    </div>
+      </Tab.Container >
+    </div >
   )
 }
 
-export default settingsComponents
+export default SettingsComponents

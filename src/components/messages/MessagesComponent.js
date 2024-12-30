@@ -1,81 +1,167 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DefaultImage from '../../Images/default_user.svg'
 import './messages.css'
+import { recent_chats } from '../../redux/slices/chatSlice/recentChats'
+import { useDispatch, useSelector } from 'react-redux'
+import { get_whole_chat, clear_whole_chat_state } from '../../redux/slices/chatSlice/getWholeChat'
+import { send_message, clear_send_message_state } from '../../redux/slices/chatSlice/sendMessages'
+
 const MessagesComponent = () => {
+  const dispatch = useDispatch()
+  const [chats, setChats] = useState([])
+  const [chatData, setChatData] = useState([])
+  const [openChat, setOpenChat] = useState(false)
+  const [openChatName, setOpenChatName] = useState('')
+  const [openChatId, setOpenChatId] = useState('')
+  const [message, setMessage] = useState('')
+  const [messageError, setMessageError] = useState('')
+  const all_chats = useSelector((store) => store.RECENT_CHATS)
+  const wholeChat = useSelector((store) => store.GET_WHOLE_CHAT)
+  const is_message_sent = useSelector((store) => store.SEND_MESSAGE)
+
+  useEffect(() => {
+    dispatch(recent_chats({ page: 1 }))
+  }, [])
+
+  useEffect(() => {
+    if (all_chats?.isSuccess) {
+      setChats(all_chats?.data?.data?.items)
+      if (all_chats?.data?.data?.items?.length > 0) {
+        setOpenChat(true)
+        setOpenChatId(all_chats?.data?.data?.items[0]?.receiverId)
+        setOpenChatName(all_chats?.data?.data?.items[0]?.sender?.firstName)
+      }
+    }
+  }, [all_chats])
+
+  useEffect(() => {
+    if (openChatId) {
+      dispatch(get_whole_chat({ page: 1, receiverId: openChatId }))
+    }
+  }, [openChatId, openChat])
+
+  useEffect(() => {
+    if (wholeChat?.isSuccess) {
+      setChatData(wholeChat?.data?.data?.items)
+    }
+  }, [wholeChat])
+
+  const handleSendMessage = () => {
+    if (!message) {
+      setMessageError("Please enter your message here")
+      return
+    }
+    dispatch(send_message({ receiverId: openChatId, message }))
+  }
+
+  useEffect(() => {
+    if (is_message_sent?.isSuccess) {
+      dispatch(get_whole_chat({ page: 1, receiverId: openChatId }))
+      dispatch(recent_chats({ page: 1 }))
+      dispatch(clear_send_message_state())
+      setMessage('')
+    }
+    if (is_message_sent?.isError) {
+      dispatch(clear_send_message_state())
+      setMessageError("Error While Sending Message")
+    }
+  }, [is_message_sent])
   return (
     <div className='wrapper'>
       <div className='inner_wrapper'>
 
-      <div className='d-flex gap-3'>
-        <div className='messages_list'>
-        <div className="cmn_head mb-3">
-        <h2>Messages</h2>
-        </div>
-        <ul> 
-          <li className='d-flex gap-2 align-items-center active'><img src={DefaultImage} alt="user image" />
-            <div className='message_user flex-grow-1 '>
-              <h6>Aman Deep</h6>
-              <span>Typing...</span>
+        <div className='d-flex gap-3'>
+          <div className='messages_list'>
+            <div className="cmn_head mb-3">
+              <h2>Messages</h2>
             </div>
-            <span className='message_time'>4:30 PM</span>
-          </li>
-          <li className='d-flex gap-2 align-items-center'><img src={DefaultImage} alt="user image" />
-            <div className='message_user flex-grow-1 '>
-              <h6>Aman Deep</h6>
-              <span>Typing...</span>
-            </div>
-            <span className='message_time'>4:30 PM</span>
-          </li>
-        </ul>
-        </div>
-        <div className='messages_content flex-grow-1'>
-        <div className='d-flex gap-2 align-items-center message_head '><img src={DefaultImage} alt="user image" />
-            <div className='message_user flex-grow-1 '>
-              <h6>Aman Deep</h6>
-              <span>Online</span>
-            </div>
-            <span className='message_time'>4:30 PM</span>
+            <ul>
+              {Array.isArray(chats) && chats?.length !== 0 ? chats.map((chat, i) => {
+                return (
+                  <li key={i} className='d-flex gap-2 align-items-center active' onClick={() => { setOpenChat(!openChat); setOpenChatId(chat?.receiverId); setOpenChatName(chat?.sender?.name) }}><img src={DefaultImage} alt="user image" />
+                    <div className='message_user flex-grow-1 '>
+                      <h6>{chat?.sender?.firstName}</h6>
+                      <span>{chat?.message}</span>
+                    </div>
+                    <span className='message_time'>
+                      {new Date(chat?.createdAt)?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+
+                  </li>
+                )
+              }) : <h1>No chat found</h1>}
+            </ul>
           </div>
-         <div className='user_chat'>
-        {/* left message */}
-        <ul className='conversation_list pe-3 ps-3'> 
-            <li className='d-flex gap-2 align-items-start conversation_item w-50'><img src={DefaultImage} alt="user image" />
-            <div className='message_user flex-grow-1'>
-              <div className='d-flex gap-2'>
-
-              <h6>Aman Deep</h6>
-            <span className='message_time'>4:30 PM</span>
+          {openChat && openChatId && <div className='messages_content flex-grow-1'>
+            <div>
+              <div className='d-flex gap-2 align-items-center message_head '><img src={DefaultImage} alt="user image" />
+                <div className='message_user flex-grow-1 '>
+                  <h6>{openChatName}</h6>
+                  {/* <span>Online</span> */}
+                </div>
+                {/* <span className='message_time'>4:30 PM</span> */}
               </div>
-              <p className='message_dialogue'>I need your help</p>
-            </div>
-          </li> 
-            </ul>
-        
-        {/* left message */}
-        {/* right message */}
-        <ul className='conversation_list right_conversation ps-3 pe-3'> 
-            <li className='d-flex gap-2 align-items-start conversation_item w-50 ms-auto'>
-            <div className='message_user flex-grow-1 '>
-              <div className='d-flex gap-2 justify-content-end'>
+              <div className='user_chat'>
+              {Array?.isArray(chatData) && chatData?.length > 0 ? (
+                chatData.map((item) => {
+                  const myId = localStorage.getItem('user_id');
+                  const isSentByMe = item.senderId === myId;
 
-              <h6>Aman Deep</h6>
-            <span className='message_time'>4:30 PM</span>
-              </div>
-              <p className='message_dialogue'>I need your help</p>
+                  return (
+                    <div  key={item.id}>
+                      {isSentByMe ? (
+                        <ul className='conversation_list right_conversation ps-3 pe-3'>
+                          <li className='d-flex gap-2 align-items-start conversation_item w-50 ms-auto'>
+                            <div className='message_user flex-grow-1'>
+                              <div className='d-flex gap-2 justify-content-end'>
+                                <h6>{item.sender?.firstName || 'You'}</h6>
+                                <span className='message_time'>
+                                  {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+                              <p className='message_dialogue'>{item.message}</p>
+                            </div>
+                            <img
+                              src={item.sender?.image || DefaultImage}
+                              alt='Your image'
+                            />
+                          </li>
+                        </ul>
+                      ) : (
+                        <ul className='conversation_list pe-3 ps-3'>
+                          <li className='d-flex gap-2 align-items-start conversation_item w-50'>
+                            <img
+                              src={item.sender?.image || DefaultImage}
+                              alt='Sender image'
+                            />
+                            <div className='message_user flex-grow-1'>
+                              <div className='d-flex gap-2'>
+                                <h6>{item.sender?.firstName || 'Sender'}</h6>
+                                <span className='message_time'>
+                                  {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+                              <p className='message_dialogue'>{item.message}</p>
+                            </div>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <h3 className='p-5 text-center'>No Messages</h3>
+              )}
+                </div>
             </div>
-            <img src={DefaultImage} alt="user image" />
-          </li> 
-            </ul>
-        {/* right message */}
-         </div>
             <div className='send_message'>
-              <input type="text" placeholder='Add a comment...'/> <svg width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0109 0.713947C22.5107 -0.240764 25.0186 2.05791 23.977 4.34922L16.7909 20.1574C15.3855 23.249 10.4422 22.7264 9.84149 19.4228L8.94495 14.4922L3.56576 13.6705C-0.0384809 13.1199 -0.608585 8.58885 2.7643 7.30069L20.0109 0.713947ZM21.7373 3.49386C21.9456 3.0356 21.4441 2.57586 20.9441 2.76681L3.69749 9.35355C2.57319 9.78294 2.76323 11.2933 3.96464 11.4768L9.34383 12.2986C10.3665 12.4548 11.1678 13.1893 11.3382 14.1266L12.2348 19.0572C12.435 20.1584 14.0828 20.3326 14.5512 19.3021L21.7373 3.49386Z" fill="#0C5E62"/>
-          </svg>
+              <input  style={messageError ? { border: "1px solid red" } : {}} type="text" placeholder='Write Message...' value={message} onChange={(e) => { setMessage(e.target.value); setMessageError('') }} /> <svg onClick={() => handleSendMessage()} width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0109 0.713947C22.5107 -0.240764 25.0186 2.05791 23.977 4.34922L16.7909 20.1574C15.3855 23.249 10.4422 22.7264 9.84149 19.4228L8.94495 14.4922L3.56576 13.6705C-0.0384809 13.1199 -0.608585 8.58885 2.7643 7.30069L20.0109 0.713947ZM21.7373 3.49386C21.9456 3.0356 21.4441 2.57586 20.9441 2.76681L3.69749 9.35355C2.57319 9.78294 2.76323 11.2933 3.96464 11.4768L9.34383 12.2986C10.3665 12.4548 11.1678 13.1893 11.3382 14.1266L12.2348 19.0572C12.435 20.1584 14.0828 20.3326 14.5512 19.3021L21.7373 3.49386Z" fill="#0C5E62" />
+              </svg>
 
             </div>
+          </div>}
         </div>
-      </div>
       </div>
     </div>
   )

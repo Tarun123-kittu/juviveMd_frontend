@@ -23,8 +23,14 @@ const Sidebar = () => {
   const { pathname } = location;
   const splitLocation = pathname.split("/");
   const quotes_list = useSelector((store) => store.GET_QUOTES)
-  const current_date = new Date()
-  const day = current_date.getDate() > 30 ? current_date.getDate() - 1 : current_date.getDate()
+  const current_date = new Date();
+  const month = current_date.getMonth() + 1; 
+  const isThirtyDayMonth = [4, 6, 9, 11].includes(month);
+  const day =
+  isThirtyDayMonth || current_date.getDate() >= 30
+  ? current_date.getDate() - 2
+  : current_date.getDate();
+
   const [firstPermissionStaff] = getRoutePermissions(permission_constants?.STAFF);
   const [firstPermissionPatient] = getRoutePermissions(permission_constants?.PATIENT);
   const [firstPermissionExercise] = getRoutePermissions(permission_constants?.EXERCISE);
@@ -40,7 +46,7 @@ const Sidebar = () => {
     if (quotes_list?.isSuccess) {
       setQuotes(quotes_list?.data?.quotes)
     }
-  }, [quotes_list])
+  }, [quotes_list,dispatch])
 
   const handleLogout = () => {
     Cookies.remove('authToken');
@@ -103,9 +109,9 @@ const Sidebar = () => {
                   navigate("/dashboard");
                 }
               }}
-         
-                src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
-              
+
+              src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
+
               alt="user_image"
             />
 
