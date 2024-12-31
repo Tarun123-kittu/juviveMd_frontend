@@ -3,7 +3,7 @@ import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import AddpatientModal from '../../components/Modals/AddPatientModal';
 import EditpatientModal from '../../components/Modals/EditPatientModal';
-import { get_patients_list,clear_all_patient_state } from '../../redux/slices/patientSlice/getPatientList';
+import { get_patients_list, clear_all_patient_state } from '../../redux/slices/patientSlice/getPatientList';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from "../../common/Loader/Loader"
 import Pagination from "../../common/pagination/Pagination"
@@ -24,7 +24,7 @@ import { permission_constants } from "../../constants/permissionConstants";
 import { TiArrowRight } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 
-const Reception_patient_list = () => {
+const Reception_patient_list = ({showButtons}) => {
     const elementRef = useRef(null);
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -229,8 +229,8 @@ const Reception_patient_list = () => {
 
     return (
         <div>
-            <div className='wrapper'>
-                <div className='inner_wrapper'>
+            <div className={showButtons ? 'wrapper' : ''}>
+                <div className={showButtons ? 'inner_wrapper' : ''}>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
                         <h2 className='flex-grow-1'>Patient List</h2>
                     </div>
@@ -240,7 +240,7 @@ const Reception_patient_list = () => {
                             {PatientHealthTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>}
                             {PatientPaymenTabtPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>}
                         </ul>
-                        {PatientPermissions?.canCreate && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>
+                        {PatientPermissions?.canCreate && showButtons && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} {showButtons && <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>}
                         {showFilter &&
 
                             <PatientFilters tab={tab} showFilter={showFilter} username={username} setUsername={setUsername} setGoal={setGoal} goal={goal} setDate={setDate} date={date} setGender={setGender} gender={gender} setStatus={setStatus} status={status} setTrainer={setTrainer} trainer={trainer} trainers={trainers} goalsList={goalsList} handleSearch={handleSearch} page={page} />
@@ -407,7 +407,7 @@ const Reception_patient_list = () => {
                                                 {PatientPermissions?.canDelete && <svg onClick={() => { setShowDeleteModal(true); setPatientId(patient?.id) }} className="me-3" width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3.96355 24C3.28478 24 2.70701 23.7606 2.23026 23.2817C1.7535 22.8028 1.51512 22.223 1.51512 21.5422V2.69372H0V1.17185H6.06048V0H15.1512V1.17185H21.2117V2.69372H19.6965V21.5422C19.6965 22.2422 19.4632 22.8271 18.9966 23.2969C18.5299 23.7666 17.9471 24.001 17.2481 24H3.96355ZM18.1814 2.69372H3.03024V21.5422C3.03024 21.8151 3.11761 22.0393 3.29235 22.2148C3.4671 22.3904 3.69083 22.4781 3.96355 22.4781H17.2496C17.4819 22.4781 17.6956 22.3807 17.8905 22.1859C18.0855 21.9911 18.1824 21.776 18.1814 21.5406V2.69372ZM7.28469 19.4344H8.79981V5.73748H7.28469V19.4344ZM12.4119 19.4344H13.927V5.73748H12.4119V19.4344Z" fill="black" />
                                                 </svg>}
-                                                {PatientPlan?.canRead && tab !== "healthIssue"  && <button onClick={() => navigate("/patientData",{state : {patientId : patient?.id}})} className='cmn_btn fade_color px-0  px-3'><TiArrowRight size={40} /> </button>}
+                                                {PatientPlan?.canRead && tab !== "healthIssue" && showButtons && <button onClick={() => navigate("/patientData", { state: { patientId: patient?.id } })} className='cmn_btn fade_color px-0  px-3'><TiArrowRight size={40} /> </button>}
                                             </div>
                                         </td>
                                     </tr>

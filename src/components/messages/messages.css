@@ -55,10 +55,15 @@ p.message_dialogue {
     position: relative;
 }
 
-.send_message svg {
+.send_message svg, .send_message .spinner-border {
     position: absolute;
     right: 28px;
     top: 27px;
+}
+.send_message .spinner-border{
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
 }
 .messages_content.flex-grow-1 {
     height: calc(100vh - 125px);
@@ -70,4 +75,8 @@ p.message_dialogue {
 }
 .send_message input:focus{
     outline: 1px solid var(--primary-color);
+}
+
+img.round_image {
+    border-radius: 18px;
 }

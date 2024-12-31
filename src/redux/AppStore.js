@@ -39,6 +39,7 @@ import changePasswordAPI from "./slices/authSlice/changePassword"
 import recentChats from "./slices/chatSlice/recentChats"
 import getWholeChat from "./slices/chatSlice/getWholeChat"
 import sendMessages from "./slices/chatSlice/sendMessages"
+import DashboardAPI from "./slices/dashboardSlice/dashboard"
 
 const AppStore = configureStore({
   reducer: {
@@ -81,7 +82,8 @@ const AppStore = configureStore({
     CHANGE_PASSWORD: changePasswordAPI,
     RECENT_CHATS: recentChats,
     GET_WHOLE_CHAT: getWholeChat,
-    SEND_MESSAGE: sendMessages
+    SEND_MESSAGE: sendMessages,
+    DASHBOARD_STATE: DashboardAPI
   },
 })
 

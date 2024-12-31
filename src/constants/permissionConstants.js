@@ -15,4 +15,6 @@ export const permission_constants = {
     PATIENTACTIVETAB: 'PatientActiveTab',
     PATIENTHEALTHISSUETAB: 'PatientHealthIssueTab',
     PATIENTPAYMENTTAB: 'PatientPaymentTab',
+    CHAT: 'Chat',
+    SETTINGS: 'Settings',
 };
