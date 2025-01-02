@@ -103,9 +103,9 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
     if (weight_unit !== unit) {
       let convertedWeight = formik.values.weight;
       if (unit === "kg" && weight_unit === "lbs") {
-        convertedWeight = (parseFloat(formik.values.weight) * 0.453592).toFixed(2);
+        convertedWeight = (parseFloat(formik.values.weight) * 0.453592).toFixed(0);
       } else if (unit === "lbs" && weight_unit === "kg") {
-        convertedWeight = (parseFloat(formik.values.weight) * 2.20462).toFixed(2);
+        convertedWeight = (parseFloat(formik.values.weight) * 2.20462).toFixed(0);
       }
       formik.setFieldValue("weight", convertedWeight);
       setWeight_unit(unit);

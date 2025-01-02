@@ -55,6 +55,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
     },
   });
 
+  console.log(stepThreefullData, "this is the step 3 full data")
 
   const handleOptimalWeightChange = (value) => {
     formik.setFieldValue("optimalWeight", value);
@@ -91,8 +92,16 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
         optimalWeight: convertedWeight,
         weightUnit: unit,
       }));
+
       setThird_step_Weight_unit(unit);
     }
+  };
+
+  const updateStepThreeData = (key, value) => {
+    setStepThreeFullData(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
   };
 
   return (
@@ -134,6 +143,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             )}
           </Form.Group>
         </Col>
+
         <Col lg={6}>
           <Form.Group className="mb-2">
             <Form.Label>What is your Body Fat Percentage? (Optional)</Form.Label>
@@ -141,7 +151,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
               type="text"
               name="bodyFat"
               placeholder="Enter your body fat percentage"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("bodyFat", e.target.value);
+                updateStepThreeData("bodyFat", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.bodyFat}
             />
@@ -157,7 +170,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>Do you have any discomfort or issues with your body?</Form.Label>
             <Form.Select
               name="discomfort"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("discomfort", e.target.value);
+                updateStepThreeData("discomfort", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.discomfort}
             >
@@ -179,7 +195,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>What is your present activity level?</Form.Label>
             <Form.Select
               name="activityLevel"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("activityLevel", e.target.value);
+                updateStepThreeData("activityLevel", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.activityLevel}
             >
@@ -203,7 +222,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>How many hours do you usually sleep each night?</Form.Label>
             <Form.Select
               name="sleepHours"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("sleepHours", e.target.value);
+                updateStepThreeData("sleepHours", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.sleepHours}
             >
@@ -225,7 +247,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>What types of workouts do you enjoy?</Form.Label>
             <Form.Select
               name="workoutTypes"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("workoutTypes", e.target.value);
+                updateStepThreeData("workoutTypes", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.workoutTypes}
             >
@@ -247,7 +272,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>What is your preferred workout place?</Form.Label>
             <Form.Select
               name="workoutPlace"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("workoutPlace", e.target.value);
+                updateStepThreeData("workoutPlace", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.workoutPlace}
             >
@@ -269,7 +297,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>What equipment do you have at home?</Form.Label>
             <Form.Select
               name="homeEquipment"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("homeEquipment", e.target.value);
+                updateStepThreeData("homeEquipment", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.homeEquipment}
             >
@@ -291,7 +322,10 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             <Form.Label>How much time can you work out in one setting?</Form.Label>
             <Form.Select
               name="workoutTime"
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.setFieldValue("workoutTime", e.target.value);
+                updateStepThreeData("workoutTime", e.target.value); // Update state here
+              }}
               onBlur={formik.handleBlur}
               value={formik.values.workoutTime}
             >
@@ -322,7 +356,12 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
                 const selectedValues = selectedOptions
                   ? selectedOptions.map((option) => option.value).join(",")
                   : "";
+
+                // Update Formik state
                 formik.setFieldValue("workoutFrequency", selectedValues);
+
+                // Update the local stepThreefullData state
+                updateStepThreeData("workoutFrequency", selectedValues);
               }}
               onBlur={() => formik.setFieldTouched("workoutFrequency", true)}
               value={

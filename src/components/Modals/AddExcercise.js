@@ -6,7 +6,7 @@ import { create_exercise, clear_create_exercise_state } from "../../redux/slices
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
-import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import { get_exercise,clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
@@ -115,6 +115,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     if (is_exercise_created?.isSuccess) {
       toast.success(is_exercise_created?.message?.message);
       dispatch(clear_create_exercise_state());
+      dispatch(clear_get_single_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview("")
       setSelectedBodyNames([])

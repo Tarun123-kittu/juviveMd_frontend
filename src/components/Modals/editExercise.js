@@ -356,7 +356,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
     const handleDeleteRow = (index) => {
         setData(data.filter((_, i) => i !== index));
-      };
+    };
 
     return (
         <Modal
@@ -444,6 +444,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     onSelect={handleSelectDifficuilt}
                                                     onRemove={handleRemoveDifficuilt}
                                                     displayValue="name"
+                                                    disable={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -470,6 +471,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     className="form-control"
                                                     onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
                                                     value={exerciseImage}
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                 />
                                             </Form.Group>
                                         </Col>
@@ -492,15 +494,16 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                 <Col lg={12}>
                                     <div className="d-flex justify-content-between">
                                         <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
-                                        <button
+                                        {!ExercisePermission?.canUpdate || tab !== "approvalRequest" || tab !== "active" && <button
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 addNewField();
                                             }}
                                             className="cmn_btn add_row"
+                                            disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                         >
                                             Add New Field
-                                        </button>
+                                        </button>}
                                     </div>
                                     {data.map((entry, index) => (
                                         <div
@@ -516,12 +519,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                             : null
                                                     }
                                                     options={getAvailableNames()}
-                                                    onChange={(selectedOption) =>
-                                                        handleNameChange(index, selectedOption)
-                                                    }
+                                                    onChange={(selectedOption) => handleNameChange(index, selectedOption)}
                                                     placeholder="Select Name"
+                                                    isDisabled={
+                                                        !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"
+                                                      }
                                                 />
                                             </div>
+
                                             <div className="col-lg-6">
                                                 <label>Select Movements:</label>
                                                 <div className="d-flex align-items-center gap-2">
@@ -536,7 +541,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                             handleMovementChange(index, selectedOptions || [])
                                                         }
                                                         placeholder="Select Movements"
-                                                        isDisabled={!entry.name}
+                                                        isDisabled={!entry.name || !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                         className="flex-grow-1"
                                                     />
                                                     {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
