@@ -11,7 +11,7 @@ import "./Exercise.css"
 
 const ExerciseView = () => {
   const location = useLocation()
-  const { id,tab } = location?.state ? location?.state : location
+  const { id, tab } = location?.state ? location?.state : location
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
@@ -83,6 +83,18 @@ const ExerciseView = () => {
                         </ul>
                       </Dropdown.Menu> */}
                     </Dropdown>
+                  </div>
+                </li>
+                <li className="table">
+                  <h5>Body parts</h5>{" "}
+                  <div className="patient_dropdown">
+                    {exercise_data?.body_parts?.map((item, i) => (
+                      <span key={i}>
+                        {Array.isArray(item?.name) ? item.name.join(", ") : item?.name}
+                        {i < exercise_data.body_parts.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+
                   </div>
                 </li>
               </ul>

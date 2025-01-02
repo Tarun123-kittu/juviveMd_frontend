@@ -8,7 +8,6 @@ import Reception_patient_list from './patientList'
 const ReceptionDashboardComponent = () => {
     const dispatch = useDispatch()
     const [data, setData] = useState()
-    console.log(data, "this is the data")
     const dashboard_data = useSelector((store) => store.DASHBOARD_STATE)
     const columns = [
         "User Name	",

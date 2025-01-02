@@ -40,6 +40,7 @@ import recentChats from "./slices/chatSlice/recentChats"
 import getWholeChat from "./slices/chatSlice/getWholeChat"
 import sendMessages from "./slices/chatSlice/sendMessages"
 import DashboardAPI from "./slices/dashboardSlice/dashboard"
+import deletePatientPlanAPI from "./slices/patientPlan/deletePatientPlan"
 
 const AppStore = configureStore({
   reducer: {
@@ -83,7 +84,8 @@ const AppStore = configureStore({
     RECENT_CHATS: recentChats,
     GET_WHOLE_CHAT: getWholeChat,
     SEND_MESSAGE: sendMessages,
-    DASHBOARD_STATE: DashboardAPI
+    DASHBOARD_STATE: DashboardAPI,
+    DELETE_PATIENT_PLAN: deletePatientPlanAPI
   },
 })
 

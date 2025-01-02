@@ -120,6 +120,9 @@ li.log_out div {
 .toggle_btn{
     display: none;
 }
+.user_image_round {
+    border-radius : 42px
+}
 @media(max-width:1440px){
     ul.menu_items {
         gap: 10px;

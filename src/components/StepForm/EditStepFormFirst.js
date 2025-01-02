@@ -18,7 +18,6 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       setPhone(fullPhone);
     }
   }, [patient_all_data]);
-  console.log(patient_all_data, "patient_all_data")
   const validationSchema = Yup.object({
     firstName: Yup.string()
       .min(3, "First Name must be at least 3 characters")
@@ -72,7 +71,6 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values,"this is the values")
       setStepOneFullData(values)
       setStep(2)
     },

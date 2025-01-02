@@ -19,7 +19,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
-    console.log(is_exercise, "this is the exercise data of single exercise")
     const is_exercise_updated = useSelector((store) => store.UPDATE_EXERCISE_DATA)
     const is_exercise_updated_draft = useSelector((store) => store.UPDATE_DRAFT_EXERCISE)
     const [hasImage, setHasImage] = useState(false)
@@ -40,8 +39,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [difficuiltyResponse, setDifficuiltyResponse] = useState()
     const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
     const [apiData, setApiData] = useState();
-
-    console.log(movementResponse, "movementResponse movementResponse movementResponse movementResponse movementResponse")
 
     const validationSchema = Yup.object().shape({
         exerciseName: Yup.string()
@@ -73,7 +70,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     useEffect(() => {
         if (is_exercise?.isSuccess) {
             const data = is_exercise?.data?.data;
-            console.log(data, "this is the data")
             setInitialValues({
                 exerciseName: data?.exercise_name || "",
                 exerciseType: data?.category || "",
@@ -358,6 +354,10 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setDifficuilty(val)
     }
 
+    const handleDeleteRow = (index) => {
+        setData(data.filter((_, i) => i !== index));
+      };
+
     return (
         <Modal
             show={showAddExerciseModal}
@@ -406,7 +406,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 type="file"
                                                 name="exerciseImage"
                                                 accept="image/png, image/jpg, image/jpeg"
-                                                // onChange={(e) => handleImageChange(e, setFieldValue)}
                                                 className="form-control"
                                                 disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
 
@@ -419,7 +418,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             />
                                         </div>
                                     </Form.Group>
-                                   
+
                                 </Col>
                                 <Col lg={8}>
                                     <Row>
@@ -462,53 +461,18 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             </Form.Group>
                                         </Col>
                                         <Col lg={6}>
-                                        <Form.Group className="mb-2">
-                                        <Form.Label>Exercise Image Url</Form.Label>
-                                        <Field
-                                            type="text"
-                                            name="exerciseImage"
-                                            placeholder="Enter image url"
-                                            className="form-control"
-                                            onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
-                                            value={exerciseImage}
-                                        />
-                                    </Form.Group>
-                                        </Col>
-
-                                        {/* <Col lg={6}>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>Select Body Parts</Form.Label>
-                                                <Multiselect
-                                                    options={bodyNames}
-                                                    selectedValues={selectedBodyNames}
-                                                    onSelect={handleSelect}
-                                                    onRemove={handleRemove}
-                                                    displayValue="name"
+                                                <Form.Label>Exercise Image Url</Form.Label>
+                                                <Field
+                                                    type="text"
+                                                    name="exerciseImage"
+                                                    placeholder="Enter image url"
+                                                    className="form-control"
+                                                    onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                                                    value={exerciseImage}
                                                 />
                                             </Form.Group>
                                         </Col>
-                                        <Col lg={6}>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>Select Movements</Form.Label>
-                                                <Multiselect
-                                                    options={movementsArray}
-                                                    selectedValues={selectedMovements}
-                                                    onSelect={handleSelectMovements}
-                                                    onRemove={handleRemoveMovements}
-                                                    displayValue="name"
-                                                />
-                                            </Form.Group>
-                                        </Col> */}
-
-
-
-                                       
-                                           
-                                           
-                           
-
-
-
                                         <Col lg={12}>
                                             <Form.Group className="mb-2">
                                                 <Form.Label>Exercise Description</Form.Label>
@@ -526,60 +490,60 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                                 <Col lg={12}>
-                                <div className="d-flex justify-content-between">
-                     <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5> 
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addNewField();
-                        }}
-                       className="cmn_btn add_row"
-                      >
-                        Add New Field
-                      </button>
-                     </div>
-                                {data.map((entry, index) => (
-                                                <div
-                                                    key={index}
-                                                  className="row mb-3"
-                                                >
-                                                    <div className="col-lg-6">
-                                                        <label>Select Name:</label>
-                                                        <Select
-                                                            value={
-                                                                entry.name
-                                                                    ? { value: entry.name, label: entry.name }
-                                                                    : null
-                                                            }
-                                                            options={getAvailableNames()}
-                                                            onChange={(selectedOption) =>
-                                                                handleNameChange(index, selectedOption)
-                                                            }
-                                                            placeholder="Select Name"
-                                                        />
-                                                    </div>
-                                                    <div className="col-lg-6">
-                                                        <label>Select Movements:</label>
-                                                  <div className="d-flex align-items-center gap-2">
-                                                  <Select
-                                                            isMulti
-                                                            value={entry.movements.map((movement) => ({
-                                                                value: movement,
-                                                                label: movement,
-                                                            }))}
-                                                            options={getMovementsForName(entry.name)}
-                                                            onChange={(selectedOptions) =>
-                                                                handleMovementChange(index, selectedOptions || [])
-                                                            }
-                                                            placeholder="Select Movements"
-                                                            isDisabled={!entry.name}
-                                                            className="flex-grow-1"
-                                                        />
-                                                             <span class="minus align-self-end mb-2">-</span>
-                                                  </div>
-                                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                addNewField();
+                                            }}
+                                            className="cmn_btn add_row"
+                                        >
+                                            Add New Field
+                                        </button>
+                                    </div>
+                                    {data.map((entry, index) => (
+                                        <div
+                                            key={index}
+                                            className="row mb-3"
+                                        >
+                                            <div className="col-lg-6">
+                                                <label>Select Name:</label>
+                                                <Select
+                                                    value={
+                                                        entry.name
+                                                            ? { value: entry.name, label: entry.name }
+                                                            : null
+                                                    }
+                                                    options={getAvailableNames()}
+                                                    onChange={(selectedOption) =>
+                                                        handleNameChange(index, selectedOption)
+                                                    }
+                                                    placeholder="Select Name"
+                                                />
+                                            </div>
+                                            <div className="col-lg-6">
+                                                <label>Select Movements:</label>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    <Select
+                                                        isMulti
+                                                        value={entry.movements.map((movement) => ({
+                                                            value: movement,
+                                                            label: movement,
+                                                        }))}
+                                                        options={getMovementsForName(entry.name)}
+                                                        onChange={(selectedOptions) =>
+                                                            handleMovementChange(index, selectedOptions || [])
+                                                        }
+                                                        placeholder="Select Movements"
+                                                        isDisabled={!entry.name}
+                                                        className="flex-grow-1"
+                                                    />
+                                                    {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
                                                 </div>
-                                            ))}</Col>
+                                            </div>
+                                        </div>
+                                    ))}</Col>
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
                                 <>

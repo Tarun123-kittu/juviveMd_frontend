@@ -36,6 +36,11 @@ p.message_dialogue {
     color: #000;
 }
 
+span.message_errors {
+    color: red;
+    font-size: 13px;
+    padding: 6px;
+}
 
 .send_message {
     background: #ACC9CB;

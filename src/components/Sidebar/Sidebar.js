@@ -33,11 +33,11 @@ const Sidebar = () => {
       ? current_date.getDate() - 2
       : current_date.getDate();
 
+  const [firstPermissionChat] = getRoutePermissions(permission_constants?.CHAT);
   const [firstPermissionStaff] = getRoutePermissions(permission_constants?.STAFF);
   const [firstPermissionPatient] = getRoutePermissions(permission_constants?.PATIENT);
   const [firstPermissionExercise] = getRoutePermissions(permission_constants?.EXERCISE);
   const [firstPermissionDashboard] = getRoutePermissions(permission_constants?.DASHBOARD);
-  const [firstPermissionChat] = getRoutePermissions(permission_constants?.CHAT);
   const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const Sidebar = () => {
               }}
 
               src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
-
+              className='user_image_round'
               alt="user_image"
             />
 
@@ -128,7 +128,6 @@ const Sidebar = () => {
           </div>
           <ul className='menu_items d-flex flex-column'>
             {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-              console.log(menus,"menus menus")
               const currentPath = window.location.pathname;
               const isActive = menus.path === currentPath;
               if (menus.role === "Admin" && localStorage?.getItem("user_role") === "Admin") {
@@ -239,6 +238,13 @@ const Sidebar = () => {
                       </li>
                     )}
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
                       <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>

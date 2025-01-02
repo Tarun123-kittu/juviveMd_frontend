@@ -81,3 +81,6 @@ button.edit_button.cmn_btn svg {
 span.invalid_input {
     color: red;
 }
+img.round_image_user {
+    border-radius: 30px;
+}

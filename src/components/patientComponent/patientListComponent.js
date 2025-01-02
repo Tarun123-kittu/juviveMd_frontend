@@ -22,12 +22,14 @@ import Nodata from '../StaticComponents/Nodata';
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
 import { TiArrowRight } from 'react-icons/ti';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 
 const Reception_patient_list = ({showButtons}) => {
     const elementRef = useRef(null);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const location = useLocation()
+    const {pathname} = location
     const [showFilter, setShowFilter] = useState(false)
     const [showPateintModal, setshowPateintModal] = useState(false)
     const [showEditPateintModal, setshowEditPateintModal] = useState(false)
@@ -235,11 +237,11 @@ const Reception_patient_list = ({showButtons}) => {
                         <h2 className='flex-grow-1'>Patient List</h2>
                     </div>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
-                        <ul className='static_tabs flex-grow-1 d-flex mb-0'>
+                        {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
                             {PatientActiveTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>}
                             {PatientHealthTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>}
                             {PatientPaymenTabtPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>}
-                        </ul>
+                        </ul>}
                         {PatientPermissions?.canCreate && showButtons && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} {showButtons && <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>}
                         {showFilter &&
 
@@ -255,7 +257,7 @@ const Reception_patient_list = ({showButtons}) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img src={Default_user} alt="User-image" />
+                                                <img src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40}/>
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
@@ -263,7 +265,7 @@ const Reception_patient_list = ({showButtons}) => {
                                         </td>
                                         <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
-                                        <td className='text-nowrap'>+{patient?.countryCode} {patient?.phone}</td>
+                                        <td className='text-nowrap'>{patient?.countryCode} {patient?.phone}</td>
                                         <td>
                                             {patient?.gender
                                                 ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1).toLowerCase()
@@ -377,7 +379,7 @@ const Reception_patient_list = ({showButtons}) => {
                                             </div>
                                         </td>}
                                         <td>
-                                            {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : ""}
+                                            {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : "Self"}
                                         </td>
 
 

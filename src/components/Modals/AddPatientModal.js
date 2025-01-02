@@ -44,7 +44,6 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
 
     const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
-    console.log(step,step_form_open,"this is the trainer data")
     const handleClose = () => {
         setshowPateintModal(false)
         setStepThreeFullData()

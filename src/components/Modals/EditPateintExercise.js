@@ -31,6 +31,7 @@ const EditPateintExercise = ({
   const [exerciseImage, setExerciseImage] = useState('')
   const [distance, setDistance] = useState('')
   const [distanceUnit, setDistanceUnit] = useState('km')
+  console.log(distanceUnit,distance,"distance distance distance")
   const [heartRate, setHeartRate] = useState({ value: null, unit: "bpm" })
   const [zoneTarget, setZoneTarget] = useState('')
   const [intensity, setIntensity] = useState('')
@@ -41,8 +42,8 @@ const EditPateintExercise = ({
   const [apiData, setApiData] = useState(body_parts);
   const [diffError, setDiffError] = useState('')
   const [distanceVal, setDistanceVal] = useState({
-    value: distance, unit: distanceUnit
   })
+  console.log(distanceVal,"distanceVal distanceVal")
   const [flexibilityField, setFlexibilityField] = useState([{
     reps: "",
     weight: { value: null, unit: "kg" },
@@ -65,6 +66,7 @@ const EditPateintExercise = ({
   const [weekError, setWeekError] = useState('')
   const [exercise, setExercise] = useState()
   const [difficuilty, setDifficuilty] = useState('')
+  const [bodyPartError, setBodyPartError] = useState('')
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const patient_exercise_data = useSelector((store) => store.GET_SELECTED_PATIENT_EXERCISE_DETAILS)
   const is_plan_updated = useSelector((store) => store?.UPDATE_PATIENT_PLAN)
@@ -106,7 +108,6 @@ const EditPateintExercise = ({
 
   useEffect(() => {
     if (patient_exercise_data?.isSuccess) {
-      console.log(patient_exercise_data, "this is the patient exercise data please check")
       setCategory(patient_exercise_data?.data?.data?.category)
       setSelectedExercise(patient_exercise_data?.data?.data?.exerciseId)
       setDistance(patient_exercise_data?.data?.data?.distanceGoal?.value)
@@ -168,7 +169,7 @@ const EditPateintExercise = ({
 
     if (exercise_data) {
       setExerciseVideo(exercise_data.video_link || "");
-      setExerciseImage(exercise_data.imageUrl || "");
+      setExerciseImage(exercise_data.image_url);
     } else {
       console.warn("No matching exercise found for ID:", selectedExercise);
     }
@@ -199,17 +200,19 @@ const EditPateintExercise = ({
   }
 
   const handleChangeCardioUnit = (i, field, unit) => {
-    setCradioFields((prev) =>
-      prev.map((item, index) =>
+    setCradioFields((prev) => {
+      const cardioArray = Array.isArray(prev) ? prev : [];
+      return cardioArray.map((item, index) =>
         index === i
           ? {
             ...item,
             [field]: { ...item[field], unit: unit },
           }
           : item
-      )
-    );
+      );
+    });
   };
+
 
   const handleChangeCardioFields = (i, field, e) => {
     const value = Number(e.target.value);
@@ -225,7 +228,7 @@ const EditPateintExercise = ({
     }
 
     setCradioFields((prev) =>
-      prev.map((item, index) =>
+      prev?.map((item, index) =>
         index === i
           ? {
             ...item,
@@ -273,7 +276,7 @@ const EditPateintExercise = ({
       }
     }
     setFlexibilityField((prev) =>
-      prev.map((item, index) =>
+      prev?.map((item, index) =>
         index === i
           ? {
             ...item,
@@ -285,17 +288,17 @@ const EditPateintExercise = ({
   };
 
   const handleChangeFlexibilityUnit = (i, field, unit) => {
-    setFlexibilityField({})
-    setFlexibilityField((prev) =>
-      prev.map((item, index) =>
+    setFlexibilityField((prev) => {
+      const flexibilityArray = Array.isArray(prev) ? prev : [];
+      return flexibilityArray.map((item, index) =>
         index === i
           ? {
             ...item,
             [field]: { ...item[field], unit: unit },
           }
           : item
-      )
-    );
+      );
+    });
   };
 
   const handleRemoveFlexibilityFields = (i) => {
@@ -316,6 +319,16 @@ const EditPateintExercise = ({
     const cardioerrors = findEmptyCardioFields();
     if (category !== "strength exercise" && Object.keys(cardioerrors)?.length > 0) {
       return
+    }
+    if (!data?.length) {
+      setBodyPartError("Please select the body parts");
+      return;
+    }
+    const invalidEntries = data.filter(item => !item.name || !item.movements.length);
+    
+    if (invalidEntries.length > 0) {
+      setBodyPartError("Each body part must have a name and at least one movement.");
+      return;
     }
     if (!heartRate) {
       setHeartRateError("Please enter heart rate")
@@ -342,7 +355,7 @@ const EditPateintExercise = ({
       setWeekError("Please select days")
       return
     }
-    dispatch(updatePatientPlan({ id: planId, category, patientId: patientId, difficulty_level: difficuilty, body_parts: bodyParts, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: distanceVal, weekdays: updatedWeekdays }))
+    dispatch(updatePatientPlan({ id: planId, category, patientId: patientId, difficulty_level: difficuilty, body_parts: bodyParts, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: {value: distance, unit: distanceUnit}, weekdays: updatedWeekdays }))
   }
 
   const findEmptyFields = () => {
@@ -390,28 +403,26 @@ const EditPateintExercise = ({
   };
 
   const options = weekdays?.map((day) => ({ name: day }));
-  console.log(options, "options")
 
   const handleNameChange = (index, selectedOption) => {
+    setBodyPartError('')
     const updatedData = [...data];
     updatedData[index].name = selectedOption?.value || "";
-    updatedData[index].movements = []; // Reset movements when name changes
+    updatedData[index].movements = [];
     setData(updatedData);
   };
 
-  // Handle Movement Change
   const handleMovementChange = (index, selectedOptions) => {
+    setBodyPartError('')
     const updatedData = [...data];
     updatedData[index].movements = selectedOptions.map((option) => option.value);
     setData(updatedData);
   };
 
-  // Add a New Field
   const addNewField = () => {
     setData([...data, { name: "", movements: [] }]);
   };
 
-  // Get Available Movements for a Given Body Part
   const getMovementsForName = (name) => {
     const selected = apiData.find((item) => item.name === name);
     return selected
@@ -419,11 +430,10 @@ const EditPateintExercise = ({
       : [];
   };
 
-  // Get Available Body Parts (Exclude Already Selected Names)
   const getAvailableNames = () => {
     const selectedNames = data.map((entry) => entry.name);
     return apiData
-      .filter((item) => !selectedNames.includes(item.name)) // Exclude selected names
+      .filter((item) => !selectedNames.includes(item.name))
       .map((item) => ({ value: item.name, label: item.name }));
   };
 
@@ -431,6 +441,10 @@ const EditPateintExercise = ({
     const val = e.target.value
     setDifficuilty(val)
   }
+
+  const handleDeleteRow = (index) => {
+    setData(data.filter((_, i) => i !== index));
+  };
 
   return (
     <Modal
@@ -524,21 +538,21 @@ const EditPateintExercise = ({
 
         <div className="pt-3">
           <div className="d-flex justify-content-between">
-                     <h5 className="flex-grow-1 mb-0">Edit Body Parts and Movements</h5> 
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addNewField();
-                        }}
-                       className="cmn_btn add_row"
-                      >
-                        Add New Field
-                      </button>
-                      </div>
+            <h5 className="flex-grow-1 mb-0">Edit Body Parts and Movements</h5>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                addNewField();
+              }}
+              className="cmn_btn add_row"
+            >
+              Add New Field
+            </button>
+          </div>
           {data.map((entry, index) => (
             <div
               key={index}
-             className="row"
+              className="row"
             >
               <div className="col-lg-6">
                 <label>Select Name:</label>
@@ -557,27 +571,27 @@ const EditPateintExercise = ({
               </div>
               <div className="col-lg-6">
                 <label>Select Movements:</label>
-             <div className="d-flex gap-2 align-items-center">
-             <Select
-                  isMulti
-                  value={entry.movements.map((movement) => ({
-                    value: movement,
-                    label: movement,
-                  }))}
-                  options={getMovementsForName(entry.name)}
-                  onChange={(selectedOptions) =>
-                    handleMovementChange(index, selectedOptions || [])
-                  }
-                  placeholder="Select Movements"
-                  isDisabled={!entry.name}
-                  className="flex-grow-1"
-                />
-                <span class="minus align-self-end mb-2">-</span>
-              </div>
+                <div className="d-flex gap-2 align-items-center">
+                  <Select
+                    isMulti
+                    value={entry.movements.map((movement) => ({
+                      value: movement,
+                      label: movement,
+                    }))}
+                    options={getMovementsForName(entry.name)}
+                    onChange={(selectedOptions) =>
+                      handleMovementChange(index, selectedOptions || [])
+                    }
+                    placeholder="Select Movements"
+                    isDisabled={!entry.name}
+                    className="flex-grow-1"
+                  />
+                  {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
+                </div>
               </div>
             </div>
           ))}
-        
+          {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
         </div>
 
 
@@ -670,41 +684,86 @@ const EditPateintExercise = ({
               <Form.Group className="mb-2">
                 <Form.Label>Heart Rate Target (bpm)</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Heart Rate Target (bpm)"
                   className={heartRateError ? "is-invalid" : ""}
-                  value={heartRate?.value}
-                  onChange={(e) => { setHeartRate({ value: Number(e.target.value), unit: "bpm" }); setHeartRateError('') }}
+                  value={heartRate?.value ?? ""}
+                  onChange={(e) => {
+                    const input = e.target.value;
+
+                    if (input === "" || (Number(input) <= 200 && /^\d+$/.test(input))) {
+                      const value = input === "" ? null : Number(input);
+
+                      if (value !== null && value < 30) {
+                        setHeartRateError("Please enter a heart rate of at least 30 bpm.");
+                      } else {
+                        setHeartRateError("");
+                      }
+
+                      setHeartRate({ value, unit: "bpm" });
+                    }
+                  }}
                 />
                 {heartRateError && <div className="invalid-feedback">{heartRateError}</div>}
               </Form.Group>
             </Col>
+
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Zone Target</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   placeholder="Zone Target"
                   className={zoneTargetError ? "is-invalid" : ""}
-                  value={zoneTarget}
-                  onChange={(e) => { setZoneTarget(Number(e.target.value)); setZoneTargetError('') }}
+                  value={zoneTarget ?? ""}
+                  onChange={(e) => {
+                    const input = e.target.value;
+
+                    if (input === "" || (Number(input) <= 200 && /^\d+$/.test(input))) {
+                      const value = input === "" ? null : Number(input);
+
+                      if (value !== null && value < 30) {
+                        setZoneTargetError("Please enter a zone target of at least 30.");
+                      } else {
+                        setZoneTargetError("");
+                      }
+
+                      setZoneTarget(value);
+                    }
+                  }}
                 />
                 {zoneTargetError && <div className="invalid-feedback">{zoneTargetError}</div>}
               </Form.Group>
             </Col>
+
             <Col lg={6}>
               <Form.Group className="mb-2">
-                <Form.Label>Intensity ( 1-10 )</Form.Label>
+                <Form.Label>Intensity (1-10)</Form.Label>
                 <Form.Control
-                  type="text"
-                  placeholder="Zone Target"
+                  type="number"
+                  placeholder="Intensity (1-10)"
                   className={intensityError ? "is-invalid" : ""}
-                  value={intensity}
-                  onChange={(e) => { setIntensity(Number(e.target.value)); setIntensitErrory('') }}
+                  value={intensity ?? ""}
+                  onChange={(e) => {
+                    const input = e.target.value;
+
+                    if (input === "" || (Number(input) <= 10 && /^\d+$/.test(input))) {
+                      const value = input === "" ? null : Number(input);
+
+                      if (value !== null && (value < 1 || value > 10)) {
+                        setIntensitErrory("Please enter an intensity value between 1 and 10.");
+                      } else {
+                        setIntensitErrory("");
+                      }
+
+                      setIntensity(value);
+                    }
+                  }}
                 />
                 {intensityError && <div className="invalid-feedback">{intensityError}</div>}
               </Form.Group>
             </Col>
+
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Pace</Form.Label>
@@ -717,34 +776,68 @@ const EditPateintExercise = ({
                 {paceError && <div className="invalid-feedback">{paceError}</div>}
               </Form.Group>
             </Col>
-            <Col lg={6}>
-              <Form.Group className="mb-2">
-
-                <div className="d-flex gap-2 align-items-center">
-                  <Form.Label className="flex-grow-1">Distance Goal</Form.Label>
-                  <span
-                    onClick={() => setDistanceUnit("km")}
-                    className={distanceUnit === "km" ? "time" : "time min"}
-                  >
-                    km
-                  </span>{" "}
-                  <span
-                    onClick={() => setDistanceUnit("meter")}
-                    className={distanceUnit === "meter" ? "time" : "time min"}
-                  >
-                    meter
-                  </span>
-                </div>
-                <Form.Control
-                  type="text"
-                  placeholder="Distance Goal ( Km/Meter)"
-                  className={distanceError ? "is-invalid" : ""}
-                  value={distance}
-                  onChange={(e) => { setDistance(Number(e.target.value)); setDistanceError(''); setDistanceVal({ value: Number(e.target.value), unit: distanceUnit }) }}
-                />
-                {distanceError && <div className="invalid-feedback">{distanceError}</div>}
-              </Form.Group>
-            </Col>
+          <Col lg={6}>
+                       <Form.Group className="mb-2">
+                         <div className="d-flex gap-2 align-items-center">
+                           <Form.Label className="flex-grow-1">Distance Goal</Form.Label>
+                           <span
+                             onClick={() => {
+                               setDistanceUnit("km");
+                               if (distanceUnit === "meter") {
+                                 setDistance(distance / 1000);
+                               }
+                             }}
+                             className={distanceUnit === "km" ? "time" : "time min"}
+                           >
+                             km
+                           </span>{" "}
+                           <span
+                             onClick={() => {
+                               setDistanceUnit("meter");
+                               if (distanceUnit === "km") {
+                                 setDistance(distance * 1000); 
+                               }
+                             }}
+                             className={distanceUnit === "meter" ? "time" : "time min"}
+                           >
+                             meter
+                           </span>
+                         </div>
+         
+                         <Form.Control
+                           type="text"
+                           placeholder="Distance Goal (Km/Meter)"
+                           className={distanceError ? "is-invalid" : ""}
+                           value={distance}
+                           onChange={(e) => {
+                             const inputValue = e.target.value;
+                             const numericValue = Number(inputValue);
+         
+                             if (!isNaN(numericValue)) {
+                               let convertedValue = numericValue;
+         
+                               if (distanceUnit === "km") {
+                                 convertedValue = numericValue * 1000; 
+                               }
+         
+                               if (convertedValue < 1) {
+                                 setDistanceError("Distance must be at least 1 meter.");
+                               } else if (convertedValue > 100000) {
+                                 setDistanceError("Distance goal cannot exceed 100 km.");
+                               } else {
+                                 setDistanceError(""); 
+                               }
+         
+                               setDistance(inputValue); 
+                               setDistanceVal({ value: distance, unit: distanceUnit }); 
+                             } else {
+                               setDistanceError("Please enter a valid distance.");
+                             }
+                           }}
+                         />
+                         {distanceError && <div className="invalid-feedback">{distanceError}</div>}
+                       </Form.Group>
+                     </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Weekdays</Form.Label>
@@ -765,7 +858,7 @@ const EditPateintExercise = ({
         </div>
         <div className="d-flex justify-content-center gap-3 mt-3">
           <button className="cmn_btn border-btn ">Cancel</button>
-          <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_updated?.isLoading ? "Submit" : <Spinner animation="border" role="status">
+          <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_updated?.isLoading ? "Update" : <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
           </Spinner>}</button>
         </div>

@@ -8,7 +8,6 @@ export const authMiddleware = (navigate) => {
         try {
             const decodedToken = jwtDecode(token);
             const { user } = decodedToken;
-            console.log(user, "this is the user details")
             localStorage.setItem("user_role", user?.roleName);
             localStorage.setItem("user_name", user.firstName);
             localStorage.setItem("juvive_image_url", user.image);

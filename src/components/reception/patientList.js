@@ -21,10 +21,12 @@ import { formatDate } from '../../common/formatDate/formatDate';
 import Nodata from '../StaticComponents/Nodata';
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
+import { useLocation } from 'react-router-dom';
 
 const Reception_patient_list = ({ show }) => {
     const elementRef = useRef(null);
-
+    const location = useLocation()
+    const {pathname} = location
 
     const dispatch = useDispatch()
     const [showFilter, setShowFilter] = useState(false)
@@ -232,11 +234,11 @@ const Reception_patient_list = ({ show }) => {
                         <h2 className='flex-grow-1'>Patient List</h2>
                     </div>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
-                        <ul className='static_tabs flex-grow-1 d-flex mb-0'>
+                        {pathname !== "/reception/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
                             {PatientActiveTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>}
                             {PatientHealthTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>}
                             {PatientPaymenTabtPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>}
-                        </ul>
+                        </ul>}
                         {PatientPermissions?.canCreate && show === undefined && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} {show === undefined && <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>}
                         {showFilter &&
 
@@ -252,7 +254,7 @@ const Reception_patient_list = ({ show }) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img src={Default_user} alt="User Image" />
+                                                <img src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
@@ -373,7 +375,7 @@ const Reception_patient_list = ({ show }) => {
                                             </div>
                                         </td>}
                                         <td>
-                                            {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : ""}
+                                            {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : "Self"}
                                         </td>
 
 

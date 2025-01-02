@@ -83,10 +83,8 @@ const StaffComponent = () => {
     }, [is_staff_deleted])
 
     const handleStaffDelete = (id, role) => {
-        console.log(role,"this i sthe role")
         if (role === "Trainer") {
             const findExercises = trainers_list?.find((el) => el?.id === id)
-            console.log(findExercises,"this is the find")
             if (Object.keys(findExercises)) {
                 if (findExercises?.totalExercises > 0 || findExercises?.totalPatients > 0) {
                     setReplaced_trainer(true)
@@ -114,13 +112,13 @@ const StaffComponent = () => {
                     <DataTable columns={columns} hasCheckbox={true}>
                         {staff_data?.isLoading ? (
                             <tr>
-                                <td colSpan={5}>
+                                <td colSpan={6}>
                                     <Loader />
                                 </td>
                             </tr>
                         ) : staff_data?.isSuccess && Array.isArray(staff_data?.data?.data?.items) ? (
                             staff_data.data.data.items.length === 0 ? (
-                                <tr><td colSpan={5}> <Nodata /></td></tr>
+                                <tr><td colSpan={6}> <Nodata /></td></tr>
                             ) : (
                                 staff_data.data.data.items.map((staff, i) => (
                                     <tr key={i}>

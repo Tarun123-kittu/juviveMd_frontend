@@ -5,6 +5,9 @@ import { recent_chats } from '../../redux/slices/chatSlice/recentChats'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_whole_chat, clear_whole_chat_state } from '../../redux/slices/chatSlice/getWholeChat'
 import { send_message, clear_send_message_state } from '../../redux/slices/chatSlice/sendMessages'
+import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions'
+import { permission_constants } from '../../constants/permissionConstants'
+import Nodata from "../StaticComponents/Nodata"
 
 const MessagesComponent = () => {
   const dispatch = useDispatch()
@@ -18,9 +21,11 @@ const MessagesComponent = () => {
   const [message, setMessage] = useState('')
   const [messageError, setMessageError] = useState('')
   const [isAtBottom, setIsAtBottom] = useState(true);
+  const [chatIndex, setChatIndex] = useState(0)
   const all_chats = useSelector((store) => store.RECENT_CHATS)
   const wholeChat = useSelector((store) => store.GET_WHOLE_CHAT)
   const is_message_sent = useSelector((store) => store.SEND_MESSAGE)
+  const [firstPermissionChat] = getRoutePermissions(permission_constants?.CHAT);
 
   useEffect(() => {
     dispatch(recent_chats({ page: 1 }))
@@ -59,10 +64,6 @@ const MessagesComponent = () => {
     }
   }, [wholeChat]);
 
-
-
-
-
   const handleSendMessage = () => {
     if (!message) {
       setMessageError("Please enter your message here")
@@ -92,7 +93,7 @@ const MessagesComponent = () => {
       setPage((prevPage) => {
         const newPage = Math.min(totalPages, prevPage + 1);
         if (newPage !== prevPage) {
-          dispatch(get_whole_chat({ page: newPage, receiverId: openChatId }));
+          setPage(newPage)
         }
         return newPage;
       });
@@ -117,7 +118,7 @@ const MessagesComponent = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent form submission or newline
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -132,9 +133,9 @@ const MessagesComponent = () => {
               <h2>Messages</h2>
             </div>
             <ul>
-              {Array.isArray(chats) && chats?.length !== 0 ? chats.map((chat, i) => {
+              {Array.isArray(chats) && chats?.length !== 0 && chats.map((chat, i) => {
                 return (
-                  <li key={i} className='d-flex gap-2 align-items-center active' style={{cursor:"pointer"}} onClick={() => { setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName);setPage(1);setChatData([]);dispatch(clear_whole_chat_state()) }}><img src={DefaultImage} alt="user image" />
+                  <li key={i} className={`d-flex gap-2 align-items-center ${chatIndex === i ? "active" : "shadow p-2 bg-white rounded"}`} style={{ cursor: "pointer" }} onClick={() => { setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img src={DefaultImage} alt="user image" />
                     <div className='message_user flex-grow-1 '>
                       <h6>{chat?.senderId === localStorage.getItem('user_id') ? chat?.receiver?.firstName : chat?.sender?.firstName}</h6>
                       <span>{chat?.message}</span>
@@ -152,7 +153,7 @@ const MessagesComponent = () => {
 
                   </li>
                 )
-              }) : <h1>No chat found</h1>}
+              })}
             </ul>
           </div>
           {openChat && openChatId && <div className='messages_content flex-grow-1'>
@@ -238,7 +239,8 @@ const MessagesComponent = () => {
                 )}
               </div>
             </div>
-            <div className='send_message d-flex gap-2 align-items-center'>
+            {messageError && <span className='message_errors'>{messageError}</span>}
+            {firstPermissionChat?.canCreate && < div className='send_message d-flex gap-2 align-items-center'>
               <input style={messageError ? { border: "1px solid red" } : {}} type="text" placeholder='Write Message...' value={message} onChange={(e) => { setMessage(e.target.value); setMessageError('') }} onKeyDown={handleKeyDown} />
               {!is_message_sent?.isLoading ? <svg onClick={() => handleSendMessage()} width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0109 0.713947C22.5107 -0.240764 25.0186 2.05791 23.977 4.34922L16.7909 20.1574C15.3855 23.249 10.4422 22.7264 9.84149 19.4228L8.94495 14.4922L3.56576 13.6705C-0.0384809 13.1199 -0.608585 8.58885 2.7643 7.30069L20.0109 0.713947ZM21.7373 3.49386C21.9456 3.0356 21.4441 2.57586 20.9441 2.76681L3.69749 9.35355C2.57319 9.78294 2.76323 11.2933 3.96464 11.4768L9.34383 12.2986C10.3665 12.4548 11.1678 13.1893 11.3382 14.1266L12.2348 19.0572C12.435 20.1584 14.0828 20.3326 14.5512 19.3021L21.7373 3.49386Z" fill="#0C5E62" />
@@ -248,11 +250,15 @@ const MessagesComponent = () => {
                   <span class="sr-only"></span>
                 </div>}
 
-            </div>
+            </div>}
+
           </div>}
         </div>
+        {chats?.length === 0 &&<div className='no_messages'>
+            <Nodata />
+          </div>}
       </div>
-    </div>
+    </div >
   )
 }
 

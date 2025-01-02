@@ -16,7 +16,6 @@ const Dashboard = () => {
   const [data, setData] = useState()
   const permissions_data = useSelector((store) => store.PERMISSIONS_DATA)
   const dashboard_data = useSelector((store) => store.DASHBOARD_STATE)
-  console.log(data, "this is the dashboard data")
 
   const handleShow = () => setShow(true);
 
