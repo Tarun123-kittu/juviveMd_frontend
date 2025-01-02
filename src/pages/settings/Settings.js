@@ -3,7 +3,13 @@ import SettingsComponents from '../../components/settings/settingsComponents'
 
 const Settings = () => {
     return (
-        <div><SettingsComponents /></div>
+        <div className='wrapper'>
+        <div className='inner_wrapper'>
+
+            <SettingsComponents />
+            </div>
+            
+            </div>
     )
 }
 

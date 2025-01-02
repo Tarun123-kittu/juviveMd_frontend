@@ -6,10 +6,11 @@ import { create_exercise, clear_create_exercise_state } from "../../redux/slices
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
-import { get_exercise } from "../../redux/slices/exerciseSlice/getExercise";
+import { get_exercise,clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
+import Select from "react-select";
 
 
 const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty }) => {
@@ -33,8 +34,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [difficulty, setDifficuilty] = useState()
   const [difficuiltOptions, setDifficuiltOptions] = useState()
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
-
-  console.log(difficuiltyResponse, "difficuiltyResponse")
+  const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+  const [apiData, setApiData] = useState();
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -47,7 +48,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuilty()
     setDifficuiltOptions()
     setDifficuiltyResponse()
+    setData([{ name: "", movements: [] }])
   };
+
+  useEffect(() => {
+    if (body_parts && body_parts.length > 0) {
+      setApiData(body_parts); // Set the API data to the state
+    }
+  }, [body_parts]);
 
   const initialValues = {
     exerciseName: "",
@@ -107,6 +115,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     if (is_exercise_created?.isSuccess) {
       toast.success(is_exercise_created?.message?.message);
       dispatch(clear_create_exercise_state());
+      dispatch(clear_get_single_exercise_state());
       dispatch(get_exercise({ page: 1, tab }))
       setImagePreview("")
       setSelectedBodyNames([])
@@ -116,6 +125,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setDifficuilty()
       setDifficuiltOptions()
       setDifficuiltyResponse()
+      setData([{ name: "", movements: [] }])
       if (draft) {
         setActiveTab("draft")
       } else {
@@ -279,6 +289,50 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuiltOptions(diffcuilty)
   }, [exerciseDifficuilty])
 
+  useEffect(() => {
+    const bodyParts = data.filter((entry) => entry.name);
+    setMovementResponse(bodyParts);
+  }, [data]);
+
+  // Handle name selection
+  const handleNameChange = (index, selectedOption) => {
+    const updatedData = [...data];
+    updatedData[index].name = selectedOption?.value || "";
+    updatedData[index].movements = []; // Reset movements when name changes
+    setData(updatedData);
+  };
+
+  // Handle movement selection
+  const handleMovementChange = (index, selectedOptions) => {
+    const updatedData = [...data];
+    updatedData[index].movements = selectedOptions.map((option) => option.value);
+    setData(updatedData);
+  };
+
+  // Add new field
+  const addNewField = () => {
+    setData([...data, { name: "", movements: [] }]);
+  };
+
+  // Get movements for the selected name
+  const getMovementsForName = (name) => {
+    const selected = apiData?.find((item) => item.name === name);
+    return selected
+      ? selected.movements.map((movement) => ({ value: movement, label: movement }))
+      : [];
+  };
+
+  // Exclude already selected names
+  const getAvailableNames = () => {
+    const selectedNames = data.map((entry) => entry.name);
+    return apiData
+      ?.filter((item) => !selectedNames.includes(item.name))
+      .map((item) => ({ value: item.name, label: item.name }));
+  };
+
+  const handleDeleteRow = (index) => {
+    setData(data.filter((_, i) => i !== index));
+  };
 
   return (
     <Modal
@@ -314,16 +368,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       })}
                     </Field>
                   </Form.Group>
-                  <Form.Group className="mb-2">
+                  {/* <Form.Group className="mb-2">
                     <Form.Label>Exercise Image</Form.Label>
                     <div className="drag_file d-flex align-items-center justify-content-center flex-column">
                       <input
                         type="file"
                         name="exerciseImage"
                         accept="image/png, image/jpg, image/jpeg"
-                        // onChange={(e) => handleImageChange(e, setFieldValue)}
                         className="form-control"
-                        // disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                       />
                       <img
                         src={exerciseImage}
@@ -332,7 +384,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
                       />
                     </div>
-                  </Form.Group>
+                  </Form.Group> */}
                   <Form.Group className="mb-2">
                     <Form.Label>Exercise Image Url</Form.Label>
                     <Field
@@ -341,6 +393,16 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       placeholder="Enter image url"
                       className="form-control"
                       onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Exercise Video Link</Form.Label>
+                    <Field
+                      type="text"
+                      name="exerciseVideo"
+                      placeholder="https://youtu.be"
+                      className="form-control"
+                      onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                     />
                   </Form.Group>
                   {/* <Form.Group className="mb-2">
@@ -391,19 +453,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         />
                       </Form.Group>
                     </Col>
-                    <Col lg={6}>
-                      <Form.Group className="mb-2">
-                        <Form.Label>Exercise Video Link</Form.Label>
-                        <Field
-                          type="text"
-                          name="exerciseVideo"
-                          placeholder="https://youtu.be"
-                          className="form-control"
-                          onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
-                        />
-                      </Form.Group> 
-                    </Col>
-                    <Col lg={6}>
+
+
+                    {/* <Col lg={6}>
                       <Form.Group className="mb-2">
                         <Form.Label>Select Body Parts</Form.Label>
                         <Multiselect
@@ -426,13 +478,29 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           displayValue="name"
                         />
                       </Form.Group>
-                    </Col>
+                    </Col> */}
+
+
+
+
+
+                    {/* body parts data here */}
+
+
+
+
+
+
+
+
+
+
                     <Col lg={12}>
                       <Form.Group className="mb-2">
                         <Form.Label>Exercise Description</Form.Label>
                         <Field
                           as="textarea"
-                          rows={8}
+                          rows={5}
                           name="exerciseDescription"
                           placeholder="Enter description"
                           className="form-control"
@@ -441,6 +509,65 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       </Form.Group>
                     </Col>
                   </Row>
+                </Col>
+                <Col lg={12}>
+                  <div>
+                    <div className="d-flex justify-content-between">
+                      <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addNewField();
+                        }}
+                        className="cmn_btn add_row"
+                      >
+                        Add New Field
+                      </button>
+                    </div>
+                    {data?.map((entry, index) => (
+                      <div
+                        className="row mb-3"
+                      >
+                        <div className="col-lg-6">
+                          <label>Select Name:</label>
+                          <Select
+                            value={
+                              entry.name
+                                ? { value: entry.name, label: entry.name }
+                                : null
+                            }
+                            options={getAvailableNames()}
+                            onChange={(selectedOption) =>
+                              handleNameChange(index, selectedOption)
+                            }
+                            placeholder="Select Name"
+                          />
+                        </div>
+                        <div className="col-lg-6">
+                          <label>Select Movements:</label>
+                          <div className="d-flex align-items-center gap-2">
+                            <Select
+                              isMulti
+                              value={entry.movements.map((movement) => ({
+                                value: movement,
+                                label: movement,
+                              }))}
+                              options={getMovementsForName(entry.name)}
+                              onChange={(selectedOptions) =>
+                                handleMovementChange(index, selectedOptions || [])
+                              }
+                              placeholder="Select Movements"
+                              isDisabled={!entry.name}
+                              className="flex-grow-1"
+                            />
+                            {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
+
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                  </div>
                 </Col>
               </Row>
               <div className="text-end mt-3">
@@ -455,6 +582,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           }}
                           disabled={draft}
                           className="btn cmn_btn"
+                          type="submit"
                         >
                           Send For Approval
                         </button>
@@ -477,6 +605,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                             setLoading("second");
                           }}
                           className="btn cmn_btn ms-2"
+                          type="submit"
                         >
                           Save as Draft
                         </button>

@@ -1,24 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const upload_exercises = createAsyncThunk("upload_exercises", async ({ file }, thunkAPI) => {
-    const token = Cookies.get("authToken");
+export const change_password = createAsyncThunk("change_password", async ({ currentPassword, newPassword, confirmNewPassword }, thunkAPI) => {
+    const token = Cookies.get('authToken');
+
     const validToken = "Bearer " + token;
     try {
         const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", validToken);
 
-        const formdata = new FormData();
-        formdata.append("file", file);
+        const raw = JSON.stringify({
+            "currentPassword": currentPassword,
+            "newPassword": newPassword,
+            "confirmNewPassword": confirmNewPassword
+        });
 
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
-            body: formdata,
+            body: raw,
             redirect: "follow"
         };
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/upload-exercise`, requestOptions)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/change-password`, requestOptions)
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
@@ -35,41 +40,42 @@ export const upload_exercises = createAsyncThunk("upload_exercises", async ({ fi
     }
 })
 
-const uploadExerciseAPI = createSlice({
-    name: "uploadExerciseAPI",
+const changePasswordAPI = createSlice({
+    name: "createPasswordAPI",
     initialState: {
-        isLoading: false,
-        isError: false,
         isSuccess: false,
-        data: [],
-        error: null
+        isError: false,
+        isLoading: false,
+        error: null,
+        data: null
     },
     reducers: {
-        clear_upload_exercise_state: (state) => {
+        clear_change_password_api_state: (state) => {
+            state.isSuccess = false
             state.isError = false
             state.isLoading = false
-            state.isSuccess = false
-            state.data = []
             state.error = null
+            state.data = null
             return state
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(upload_exercises.pending, (state) => {
+            .addCase(change_password.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(upload_exercises.fulfilled, (state, action) => {
+            .addCase(change_password.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
                 state.data = action.payload
             })
-            .addCase(upload_exercises.rejected, (state, action) => {
+            .addCase(change_password.rejected, (state, action) => {
                 state.isLoading = false
-                state.error = action.payload
                 state.isError = true
+                state.error = action.payload
             })
     }
 })
-export const { clear_upload_exercise_state } = uploadExerciseAPI.actions
-export default uploadExerciseAPI.reducer
+
+export const { clear_change_password_api_state } = changePasswordAPI.actions
+export default changePasswordAPI.reducer

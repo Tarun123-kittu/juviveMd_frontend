@@ -78,7 +78,7 @@ ul.menu_items li a.sidebar_active svg path {
     border-radius: 50%;
 }
 
-span.author_name {font-weight: bold;font-size: 14px;}
+span.author_name {font-weight: bold;font-size: 12px;}
 
 span.notify_dot {
     position: absolute;
@@ -94,7 +94,7 @@ span.notify_dot {
 }
 
 p.quote {
-    font-size: 14px;
+    font-size: 11px;
     padding-top: 3px;
 }
 
@@ -119,6 +119,9 @@ li.log_out div {
 }
 .toggle_btn{
     display: none;
+}
+.user_image_round {
+    border-radius : 42px
 }
 @media(max-width:1440px){
     ul.menu_items {

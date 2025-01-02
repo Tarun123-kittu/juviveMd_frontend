@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const updatePatientPlan = createAsyncThunk("updatePatientPlan", async ({ id, category, exerciseId, patientId, sets, heartRateTarget, zoneTarget, intensity, pace, distanceGoal, weekdays }, thunkAPI) => {
+export const updatePatientPlan = createAsyncThunk("updatePatientPlan", async ({ id, category, exerciseId, difficulty_level, body_parts, patientId, sets, heartRateTarget, zoneTarget, intensity, pace, distanceGoal, weekdays }, thunkAPI) => {
     const token = Cookies.get('authToken');
     if (!token) {
         return thunkAPI.rejectWithValue({ message: "Authentication token is missing" });
@@ -21,6 +21,8 @@ export const updatePatientPlan = createAsyncThunk("updatePatientPlan", async ({ 
         const raw = JSON.stringify({
             "planId": id,
             "category": category,
+            "difficulty_level": [difficulty_level],
+            "body_parts": body_parts,
             "exerciseId": exerciseId,
             "patientId": patientId,
             "sets": sets,

@@ -37,13 +37,18 @@ h4.info_heading {
 }
 ul.user_select_weeks li {
     flex-grow: 1;
-    background: var(--primary-color);
     text-align: center;
     padding: 8px 13px;
-    color: rgba(255, 255, 255, 1);
+    color: #000;
     border-radius: 8px;
     font-size: 14px;
     width: 100%;
+    background: #E1E1E1;
+}
+
+ul.user_select_weeks li.selected_day {
+    color: #fff;
+    background: var(--primary-color);
 }
 
 .execise_days {

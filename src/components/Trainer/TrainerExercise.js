@@ -125,7 +125,7 @@ const TrainerExercise = () => {
                 <div className="filter_list w-100">
                   <input
                     type="text"
-                    placeholder="username"
+                    placeholder="Exercise Name"
                     className="form-control"
                     value={username || ""}
                     onChange={(e) => setUsername(e.target.value)}

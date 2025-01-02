@@ -107,7 +107,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
     useEffect(() => {
         if (selected_staff_detail?.isSuccess && selected_staff_detail?.data?.data) {
             const staffData = selected_staff_detail.data.data;
-            console.log(staffData,"this is the staff data")
 
             setFirstName(
                 staffData.firstName
@@ -161,9 +160,6 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
             setCountryCode(parsedPhone.countryCallingCode)
             setFieldValue('phone', parsedPhone.nationalNumber);
             setFieldValue('countryCode', parsedPhone.countryCallingCode);
-
-            console.log(parsedPhone.nationalNumber, "parsedPhone.nationalNumber");
-            console.log(parsedPhone.countryCallingCode, "parsedPhone.countryCallingCode");
         }
     };
 

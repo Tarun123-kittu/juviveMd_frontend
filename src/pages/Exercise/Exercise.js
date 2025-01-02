@@ -37,7 +37,6 @@ const Exercise = () => {
 
 
   const common_data = useSelector((store) => store.COMMON_DATA);
-  console.log(common_data,"this is the common data api")
 
   useEffect(() => {
     dispatch(common_data_api());

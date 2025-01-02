@@ -4,7 +4,7 @@ import PatientListComponent from '../../components/patientComponent/patientListC
 
 const Patient = () => {
   return (
-   <PatientListComponent />
+    <PatientListComponent showButtons={true} />
   )
 }
 

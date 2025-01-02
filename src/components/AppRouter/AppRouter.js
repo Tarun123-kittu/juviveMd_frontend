@@ -53,17 +53,17 @@ const AppRouter = () => {
                 {
                     path: "/settings",
                     element: (
-                        <ProtectedRoute requiredRole="Admin">
+                        // <ProtectedRoute requiredRole="Admin">
                             <Settings />
-                        </ProtectedRoute>
+                        // </ProtectedRoute>
                     ),
                 },
                 {
                     path: "/messages",
                     element: (
-                        <ProtectedRoute requiredRole="Admin">
+                        // <ProtectedRoute requiredRole="Admin">
                             <Message />
-                        </ProtectedRoute>
+                        // </ProtectedRoute>
                     ),
                 },
                 {

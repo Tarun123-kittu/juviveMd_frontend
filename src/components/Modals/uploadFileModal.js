@@ -9,22 +9,45 @@ import { upload_exercises, clear_upload_exercise_state } from '../../redux/slice
 import { get_exercise } from '../../redux/slices/exerciseSlice/getExercise';
 import Spinner from 'react-bootstrap/Spinner';
 import InfoIcon from '../../Images/info.png'
+
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const dispatch = useDispatch();
     const [fileData, setFileData] = useState(null);
     const [uploadFile, setUploadFile] = useState();
-    const [fileName, setFileName] = useState('');
+    const [fileName, setFileName] = useState('sample.csv');
+    const [showPreview,setShowPreview] = useState(false)
     const [isValidUpload, setIsValidUpload] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [show_close_button, setShow_close_button] = useState(false)
     const [show_success, setShow_success] = useState([])
+    const [csvData, setCsvData] = useState([]);
+    const [hide_download,setHide_download] = useState(true)
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
-    console.log(is_file_uploades, "is_file_uploades is_file_uploades")
+
+    useEffect(() => {
+        if(!showFileUploadModal) return
+        fetch("/exercises - Sheet1 (1).csv")
+            .then((response) => response.text())
+            .then((data) => {
+                const cleanedData = data.replace(/^\uFEFF/, "");
+                Papa.parse(cleanedData, {
+                    complete: (result) => {
+                        setFileData(result.data);
+                    },
+                    header: false,
+                });
+            })
+            .catch((error) => console.error("Error fetching CSV file:", error));
+    }, [showFileUploadModal]);
+
     const handleClose = () => {
         setShowFileUploadModal(false)
         dispatch(clear_upload_exercise_state())
         setShow_close_button(false)
         setShow_success([])
+        setFileData("")
+        setIsValidUpload(false)
+        setShowPreview(false)
     }
 
     const handleFileUpload = (e) => {
@@ -60,7 +83,21 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const parseCSV = (data) => {
         Papa.parse(data, {
             complete: (result) => {
+                const headers = result.data[0]; // Assume the first row contains headers
+                const expectedHeaders = [
+                    'exercise_name', 'category', 'difficulty_level', 'body_parts_and_movements', 'video_link', 'description', 'image_url'
+                ];
+
+                const isValidHeaders = expectedHeaders.every((header) => headers.includes(header));
+                if (!isValidHeaders) {
+                    toast.error('Invalid headers in the CSV file.');
+                    setIsValidUpload(false);
+                    return;
+                }
+
                 setFileData(result.data);
+                setHide_download(false)
+                setShowPreview(true)
                 setFileName(`data_${new Date().toLocaleString()}.csv`);
             },
             header: false,
@@ -72,9 +109,25 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const headers = rows[0];
+
+        const expectedHeaders = [
+            'exercise_name', 'category', 'difficulty_level', 'body_parts_and_movements', 'video_link', 'description', 'image_url'
+        ];
+
+        const isValidHeaders = expectedHeaders.every((header) => headers.includes(header));
+        if (!isValidHeaders) {
+            toast.error('Invalid headers in the Excel file.');
+            setIsValidUpload(false);
+            return;
+        }
+
         setFileData(rows);
+        setShowPreview(true)
+        setHide_download(false)
         setFileName(`data_${new Date().toLocaleString()}.xlsx`);
     };
+
 
     const handleUpload = () => {
         if (!uploadFile) return
@@ -86,14 +139,16 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
             setShow_success(is_file_uploades?.data?.data?.successRecords)
-            dispatch(clear_upload_exercise_state())
         }
         if (is_file_uploades?.isError) {
             toast.error(is_file_uploades?.error?.message, {
-                duration: 2000})
+                duration: 2000
+            })
             dispatch(clear_upload_exercise_state())
         }
     }, [is_file_uploades])
+
+
 
     return (
         <Modal
@@ -139,17 +194,17 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                         onChange={handleFileUpload}
                         className="form-control"
                     />
-                    <div className='info d-flex gap-3 mt-2'>
+                    {fileData !== null  && <div className='info d-flex gap-3 mt-2'>
 
                         <img src={InfoIcon} alt="InfoIcon" />
-                        <h6 >  File must include the following columns: exercise_name, category, video_link, description, imageUrl.</h6>
-                    </div>
+                        <h6 >{!showPreview ? "Preview" : "Uploaded file preview"}</h6>
+                    </div>}
                 </div>
 
                 {!isValidUpload && <div className="text-danger">{errorMessage}</div>}
 
                 <div className='table-responsive'>
-                    {fileData && show_close_button && (
+                    {fileData && fileData?.length > 0 && (
                         <table className="table table-striped table-bordered custom-table">
                             <thead>
                                 <tr>
@@ -164,8 +219,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                                     const isRowMatched = row.some(cell =>
                                         show_success.some(success => success.exercise_name === cell)
                                     );
-
-                                    console.log(isRowMatched, "is row matched");
+                                    console.log(isRowMatched,"this is the row matched")
 
                                     return (
                                         <tr
@@ -217,28 +271,19 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
 
                 </div>
                 <div className='text-end d-flex justify-content-end gap-2'>
-                    {fileData && !show_close_button && (
+                    {fileData !== null && hide_download && (
                         <>
-                            {fileName.endsWith('.csv') ? (
-                                <CSVLink data={fileData} filename={fileName}>
-                                    <button className='cmn_btn'>Download Sample</button>
-                                </CSVLink>
-                            ) : (
-                                <button
-                                    className='cmn_btn'
-                                    onClick={() => {
-                                        const wb = XLSX.utils.book_new();
-                                        const ws = XLSX.utils.aoa_to_sheet(fileData);
-                                        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-                                        XLSX.writeFile(wb, fileName);
-                                    }}
+                            <div>
+                                <a
+                                    href="/exercises - Sheet1 (1).csv"
+                                    download="sample.csv"
                                 >
-                                    Download Sample
-                                </button>
-                            )}
+                                    <button className="cmn_btn">Download Sample</button>
+                                </a>
+                            </div>
                         </>
                     )}
-                    {isValidUpload && !show_close_button && <button className='cmn_btn' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
+                    {isValidUpload && !show_close_button && <button className='cmn_btn mt-3' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}</button>}
                     {show_close_button && <button className='cmn_btn' onClick={handleClose}>Close</button>}

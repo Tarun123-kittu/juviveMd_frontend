@@ -9,7 +9,6 @@ export const getRoutePermissions = (route) => {
         }
 
         const parsed_permissions = JSON.parse(permissions_data);
-        console.log(parsed_permissions,"this is the parsed permission")
 
         if (!Array.isArray(parsed_permissions)) {
             console.warn('Parsed permissions is not an array:', parsed_permissions);

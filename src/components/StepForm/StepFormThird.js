@@ -7,7 +7,6 @@ import "./StepForm.css";
 import Select from "react-select";
 
 const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, setStepThreeFullData, stepThreefullData, setThird_step_Weight_unit, third_step_weight_unit }) => {
-  console.log(stepThreefullData, "stepThreefullData stepThreefullData")
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {

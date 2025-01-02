@@ -6,16 +6,22 @@ import AddUsermodal from "../../components/Modals/AddUsermodal";
 import DataTable from "../../components/DataTable/DataTable";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch, useSelector } from "react-redux";
+import Patient from "../Patient/Patient";
+import { dashboard_api } from "../../redux/slices/dashboardSlice/dashboard";
+import Reception_patient_list from "../../components/patientComponent/patientListComponent";
+
 const Dashboard = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false);
+  const [data, setData] = useState()
   const permissions_data = useSelector((store) => store.PERMISSIONS_DATA)
-  console.log(permissions_data,"this is the permissions")
+  const dashboard_data = useSelector((store) => store.DASHBOARD_STATE)
 
   const handleShow = () => setShow(true);
 
   useEffect(() => {
     dispatch(common_data_api())
+    dispatch(dashboard_api())
   }, [])
   const columns = [
     "User Name	",
@@ -29,9 +35,15 @@ const Dashboard = () => {
     "Action",
   ];
 
+  useEffect(() => {
+    if (dashboard_data?.isSuccess) {
+      setData(dashboard_data?.data?.data)
+    }
+  }, [dashboard_data])
+
   return (
     <div className="wrapper">
-      {/* <div className="inner_wrapper">
+      <div className="inner_wrapper">
         <div className="cmn_head mb-3">
           <h2 className="mb-2">Dashboard</h2>
           <div className="dashboardinfo ">
@@ -56,7 +68,9 @@ const Dashboard = () => {
               </div>
               <h3>Payment Pending </h3>
               <h4>
-                10 <span>Till Today</span>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                  <span class="sr-only"></span>
+                </div> : data?.paymentPending} <span>Till Today</span>
               </h4>
             </div>
             <div className="info_card health-card">
@@ -100,10 +114,12 @@ const Dashboard = () => {
               </div>
               <h3>Health Cases </h3>
               <h4>
-                10 <span>Till Today</span>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                  <span class="sr-only"></span>
+                </div> : data?.healthCases} <span>Till Today</span>
               </h4>
             </div>
-            <div className="info_card plan-card">
+            {/* <div className="info_card plan-card">
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="44"
@@ -150,7 +166,7 @@ const Dashboard = () => {
               <h4>
                 10 <span>Till Today</span>
               </h4>
-            </div>
+            </div> */}
             <div className="info_card exercise-card">
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
@@ -192,16 +208,18 @@ const Dashboard = () => {
               </div>
               <h3>Exercise Approval </h3>
               <h4>
-                10 <span>Till Today</span>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                  <span class="sr-only"></span>
+                </div> : data?.exercisesApproval} <span>Till Today</span>
               </h4>
             </div>
           </div>
         </div>
         <div className="cmn_head mb-2">
-          <h2>Patient List</h2>
+          {/* <h2>Patient List</h2> */}
+          <Reception_patient_list showButtons={false} />
         </div>
-
-        <DataTable columns={columns}>
+        {/* <DataTable columns={columns}>
           <tr>
             <td className="ps-4">
               <div className="d-flex align-items-center table_user">
@@ -252,10 +270,10 @@ const Dashboard = () => {
               </svg>
             </td>
           </tr>
-        </DataTable>
+        </DataTable> */}
 
       </div>
-      <AddUsermodal show={show} setShow={setShow} /> */}
+      <AddUsermodal show={show} setShow={setShow} />
     </div>
   );
 };

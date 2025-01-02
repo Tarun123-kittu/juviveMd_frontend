@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get_quotes } from '../../redux/slices/quotesSlice/quotesSlice'
 import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions'
 import { permission_constants } from '../../constants/permissionConstants'
+import { get_single_staff } from '../../redux/slices/staffSlice/getStaffByIdSlice'
 
 const Sidebar = () => {
 
@@ -23,12 +24,21 @@ const Sidebar = () => {
   const { pathname } = location;
   const splitLocation = pathname.split("/");
   const quotes_list = useSelector((store) => store.GET_QUOTES)
-  const current_date = new Date()
-  const day = current_date.getDate() > 30 ? current_date.getDate() - 1 : current_date.getDate()
+  const user_details = useSelector((store) => store.STAFF_DETAIL)
+  const current_date = new Date();
+  const month = current_date.getMonth() + 1;
+  const isThirtyDayMonth = [4, 6, 9, 11].includes(month);
+  const day =
+    isThirtyDayMonth || current_date.getDate() >= 30
+      ? current_date.getDate() - 2
+      : current_date.getDate();
+
+  const [firstPermissionChat] = getRoutePermissions(permission_constants?.CHAT);
   const [firstPermissionStaff] = getRoutePermissions(permission_constants?.STAFF);
   const [firstPermissionPatient] = getRoutePermissions(permission_constants?.PATIENT);
   const [firstPermissionExercise] = getRoutePermissions(permission_constants?.EXERCISE);
   const [firstPermissionDashboard] = getRoutePermissions(permission_constants?.DASHBOARD);
+  const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
 
   useEffect(() => {
     if (quotes?.length === 0) {
@@ -37,10 +47,14 @@ const Sidebar = () => {
   }, [])
 
   useEffect(() => {
+    dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
+  }, [])
+
+  useEffect(() => {
     if (quotes_list?.isSuccess) {
       setQuotes(quotes_list?.data?.quotes)
     }
-  }, [quotes_list])
+  }, [quotes_list, dispatch])
 
   const handleLogout = () => {
     Cookies.remove('authToken');
@@ -61,7 +75,7 @@ const Sidebar = () => {
     }
   };
 
-  const userImageUrl = localStorage.getItem('juvive_image_url');
+  const userImageUrl = user_details?.data?.data?.image;
   return (
     <div className='sidebar_wrapper'>
       <div className='header d-flex align-items-center gap-2'>
@@ -103,9 +117,9 @@ const Sidebar = () => {
                   navigate("/dashboard");
                 }
               }}
-         
-                src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
-              
+
+              src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
+              className='user_image_round'
               alt="user_image"
             />
 
@@ -147,6 +161,20 @@ const Sidebar = () => {
                         </Link>
                       </li>
                     )}
+                    {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
                   </>
                 );
               }
@@ -175,6 +203,20 @@ const Sidebar = () => {
                         </Link>
                       </li>
                     )}
+                    {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
                   </>
                 )
               }
@@ -196,6 +238,13 @@ const Sidebar = () => {
                       </li>
                     )}
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
+                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                          {menus.icon} <span>{menus.name}</span>
+                        </Link>
+                      </li>
+                    )}
+                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
                       <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
                         <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                           {menus.icon} <span>{menus.name}</span>

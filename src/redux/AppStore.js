@@ -35,6 +35,12 @@ import getPatientPlan from "./slices/patientPlan/getPAtientPlan"
 import getSelectedPatientExerciseDetails from "./slices/patientPlan/getSelectedPAtientPlan"
 import update_patient_plan from "./slices/patientPlan/updatePatientPlan"
 import getPatientDifficuilties from "./slices/patientPlan/getPatientDifficuilties"
+import changePasswordAPI from "./slices/authSlice/changePassword"
+import recentChats from "./slices/chatSlice/recentChats"
+import getWholeChat from "./slices/chatSlice/getWholeChat"
+import sendMessages from "./slices/chatSlice/sendMessages"
+import DashboardAPI from "./slices/dashboardSlice/dashboard"
+import deletePatientPlanAPI from "./slices/patientPlan/deletePatientPlan"
 
 const AppStore = configureStore({
   reducer: {
@@ -73,7 +79,13 @@ const AppStore = configureStore({
     GET_PATIENT_PLAN: getPatientPlan,
     GET_SELECTED_PATIENT_EXERCISE_DETAILS: getSelectedPatientExerciseDetails,
     UPDATE_PATIENT_PLAN: update_patient_plan,
-    PATIENT_DIFFICUILTIES: getPatientDifficuilties
+    PATIENT_DIFFICUILTIES: getPatientDifficuilties,
+    CHANGE_PASSWORD: changePasswordAPI,
+    RECENT_CHATS: recentChats,
+    GET_WHOLE_CHAT: getWholeChat,
+    SEND_MESSAGE: sendMessages,
+    DASHBOARD_STATE: DashboardAPI,
+    DELETE_PATIENT_PLAN: deletePatientPlanAPI
   },
 })
 
