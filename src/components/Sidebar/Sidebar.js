@@ -123,13 +123,14 @@ const Sidebar = () => {
               alt="user_image"
             />
 
-            <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")}>JuviveMD</h6>
+            <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} className='mt-2'>JuviveMD</h6>
             <p>{localStorage.getItem('user_role')}</p>
           </div>
           <ul className='menu_items d-flex flex-column'>
             {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-              const currentPath = window.location.pathname;
-              const isActive = menus.path === currentPath;
+               const currentPath = window.location.pathname;
+               // Check if the current path starts with the menu path
+               const isActive = currentPath.startsWith(menus.path);
               if (menus.role === "Admin" && localStorage?.getItem("user_role") === "Admin") {
                 return (
                   <>

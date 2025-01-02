@@ -88,8 +88,9 @@ const Exercise = () => {
           <h2>Exercise</h2>
         </div>
         <div className="cmn_bg_wrapper exercise_tab">
-          <div className="position-relative">
-            <div className="d-flex gap-2 position-absolute end-0">
+          <div className="">
+            <div className="position-relative w-100" >
+            <div className="d-flex gap-2 position-absolute end-0 cta_exercise">
               {ExerciseUploadPermission?.canCreate &&
                 <button
                   className="cmn_btn filter_btn"
@@ -111,6 +112,7 @@ const Exercise = () => {
               >
                 Filter
               </button>
+            </div>
             </div>
 
             {toggleFilter && (

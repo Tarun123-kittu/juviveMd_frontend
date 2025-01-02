@@ -96,7 +96,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
               <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
               <td><img src={exercise?.imageUrl || PoseImage} width={40} height={40} className='rounded-5' alt="exercise" /></td>
-              <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline'>{exercise?.video_link}</span></a></td>
+              <td><a href={exercise?.video_link} target='blank'><span role="button" className='text-decoration-underline text-truncate d-inline-block' style={{width:'200px'}}>{exercise?.video_link}</span></a></td>
               <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
               <td className={ExercisePermissionApproveReject?.canUpdate ? "" : 'nodropdown'}> <div className='patient_dropdown w-100'>
                 <Dropdown

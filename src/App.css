@@ -211,7 +211,47 @@ li.page-item.active a.page-link {
 input.react-international-phone-input{
   width: 100%;
 }
+div.multiSelectContainer li:hover, .multiSelectContainer .highlightOption {
+  background: var(--primary-color);
+}
 
+.multiSelectContainer li {
+  font-size: 14px;
+  padding: 6px;
+}
+
+.multiSelectContainer span.chip {
+  background: var(--primary-color);
+}
+div.css-13cymwt-control {
+  border-color: var(primary-color);
+}
+
+div.css-t3ipsp-control, div.css-t3ipsp-control:hover {
+  border-color: var(--primary-color);
+  box-shadow: unset;
+}
+span.notFound {
+  font-size: 13px;
+}
+div.css-1p3m7a8-multiValue {
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 35px;
+  display: flex;
+  align-items: center;
+  padding: 2px 10px;
+}
+
+div.css-9jq23d {
+  padding: 0px;
+  color: #fff;
+}
+
+.css-v7duua {
+  padding-right: 0px;
+  margin-right: -5px;
+}
 @media(max-width:1440px){
   .cmn_btn {
 height: 40px;

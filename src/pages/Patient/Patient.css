@@ -1,6 +1,6 @@
 .user-data {
     width: 100%;
-    padding-left:1.5rem;
+    padding-left:1.2rem;
     border-left: 2px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -57,7 +57,7 @@ ul.user_select_weeks li.selected_day {
     margin-top: 19px;
 }
 .table_user_data{
-    padding-right: 1.5rem;
+    padding-right: 1.2rem;
 }
 .user-data li{
     margin-bottom:10px;
@@ -72,6 +72,17 @@ ul.user_select_weeks li.selected_day {
     font-weight: 400;
     padding-right: 10px;
     color: rgba(0, 0, 0, 1);
+    white-space: nowrap;
+}
+.info_flex_grid span {
+    font-size: 14px;
+    color: rgba(107, 110, 123, 1);
+}
+
+.info_flex_grid p {
+    font-size: 14px;
+    font-weight: 500;
+    word-break:break-all
 }
 .bmi_report {
     flex: 0 0 284px;
@@ -90,7 +101,8 @@ ul.user_select_weeks li.selected_day {
 .report_info ul span {
     font-weight: 600;
     color: rgba(0, 0, 0, 1);
-    font-size: 14px;
+    font-size: 13px;
+    white-space: nowrap;
 }
 li.bmi_card {
     background: rgba(255, 255, 255, 1);
@@ -354,10 +366,15 @@ h4.heart_rate span {
 }
 
 .table_user_data img.user_profile {
-    flex: 0 0 160px;
-    width: 160px;
-    height: 160px;
+    flex: 0 0 130px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
+}
+@media(min-width:1599px){
+    .info_flex_grid p {
+        word-break:unset;
+    }
 }
 @media(max-width:1440px){
     .filter_list input, .label,.patient_dropdown button.btn{
