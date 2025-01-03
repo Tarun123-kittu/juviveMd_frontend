@@ -53,6 +53,11 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setData([{ name: "", movements: [] }])
     setBodyPartError('')
     setFieldError('')
+    setExerciseName('')
+    setExerciseType('')
+    setExerciseVideo('')
+    setExerciseDescription('')
+    setExerciseImage()
   };
 
   useEffect(() => {

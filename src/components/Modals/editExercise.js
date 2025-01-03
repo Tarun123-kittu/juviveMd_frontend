@@ -111,6 +111,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setExerciseId(null)
         setBodyPartError('')
         setFieldError('')
+        setExerciseName('')
+        setExerciseType('')
+        setExerciseVideo('')
+        setExerciseDescription('')
+        setExerciseImage()
+        setData([{ name: "", movements: [] }])
+        setDifficuiltyResponse()
     };
 
     const handleImageChange = (event, setFieldValue) => {
