@@ -51,8 +51,8 @@ const TrainerDashboardComponent = () => {
                                 </div>
                                 <h3>Total Patients  </h3>
                                 <h4>
-                                    {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
-                                        <span class="sr-only"></span>
+                                    {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                                        <span className="sr-only"></span>
                                     </div> : data?.totalPatients} <span>Till Today</span>
                                 </h4>
                             </div>
@@ -102,8 +102,8 @@ const TrainerDashboardComponent = () => {
                                 </div>
                                 <h3>Total Exercises</h3>
                                 <h4>
-                                    {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
-                                        <span class="sr-only"></span>
+                                    {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                                        <span className="sr-only"></span>
                                     </div> : data?.totalExercises} <span>Till Today</span>
                                 </h4>
                             </div>
@@ -119,8 +119,8 @@ const TrainerDashboardComponent = () => {
                                 </div>
                                 <h3>Exercise In Draft </h3>
                                 <h4>
-                                    {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
-                                        <span class="sr-only"></span>
+                                    {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                                        <span className="sr-only"></span>
                                     </div> : data?.exercisesInDraft} <span>Till Today</span>
                                 </h4>
                             </div>

@@ -70,8 +70,8 @@ const Dashboard = () => {
               </div>
               <h3>Payment Pending </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
-                  <span class="sr-only"></span>
+                {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
+                  <span className="sr-only"></span>
                 </div> : data?.paymentPending} <span>Till Today</span>
               </h4>
             </div>
@@ -116,8 +116,8 @@ const Dashboard = () => {
               </div>
               <h3>Health Cases </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
-                  <span class="sr-only"></span>
+                {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
+                  <span className="sr-only"></span>
                 </div> : data?.healthCases} <span>Till Today</span>
               </h4>
             </div>
@@ -210,8 +210,8 @@ const Dashboard = () => {
               </div>
               <h3>Exercise Approval </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
-                  <span class="sr-only"></span>
+                {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
+                  <span className="sr-only"></span>
                 </div> : data?.exercisesApproval} <span>Till Today</span>
               </h4>
             </div>
