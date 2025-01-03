@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import DataTable from '../../components/DataTable/DataTable'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 import Default_user from '../../Images/default_user.svg'
 import AddpatientModal from '../../components/Modals/AddPatientModal';
 import EditpatientModal from '../../components/Modals/EditPatientModal';
@@ -442,8 +444,9 @@ const Reception_patient_list = ({ show }) => {
                                         {tab === "healthIssue" && <td>
                                             <div className='health_issue' ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
-                                                    <span className='d-flex align-items-center justify-content-center'>!</span>
-                                                    <div className='tooltip_custom' style={{ left: `${leftPosition}px` }}>
+                                                    <span data-tooltip-id={`my-tooltip-${i}`} className='d-flex align-items-center justify-content-center'>!</span>
+                                                    <ReactTooltip  id={`my-tooltip-${i}`} place="bottom" type="info" effect="solid">
+                                                    <div className='tooltip_custom'>
                                                         <ul>
                                                             {Array?.isArray(patient?.health_issue_text) && patient?.health_issue_text?.map((issue, index) => (
                                                                 <li key={index}>{issue}</li>
@@ -451,6 +454,7 @@ const Reception_patient_list = ({ show }) => {
                                                         </ul>
 
                                                     </div>
+                                                    </ReactTooltip>
                                                 </div>
                                                 <span> View health issue</span>
                                             </div>
