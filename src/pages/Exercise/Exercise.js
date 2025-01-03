@@ -25,7 +25,8 @@ const Exercise = () => {
   const [exercise_category, setExercise_category] = useState();
   const [body_parts, setBody_parts] = useState()
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
-  const [activeTab, setActiveTab] = useState("active");
+  const [activeTab, setActiveTab] = useState( val || "active");
+  const [isTabActive,setIsTabActive] = useState(false)
   const [username, setUsername] = useState("")
   const [category, setCategory] = useState("")
   const [date, setDate] = useState("")
@@ -60,13 +61,13 @@ const Exercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty}  setIsTabActive={setIsTabActive}/>;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} />;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} />;
       default:
         return null;
     }
@@ -188,10 +189,10 @@ const Exercise = () => {
               id="uncontrolled-tab-example"
               className={`mb-3 cmn_tabs ${toggleFilter && "blur_bg"}`}
             >
-              {ExerciseActiveTabPermission?.canRead && <Tab eventKey="active" title="Active" />}
-              {ExerciseApprovalTabPermission?.canRead && <Tab eventKey="approvalRequest" title="Approval Requests" />}
-              {ExerciseDraftTabPermission?.canRead && <Tab eventKey="draft" title="Draft" />}
-              {ExerciseRejectedTabPermission?.canRead && <Tab eventKey="rejected" title="Rejected" />}
+              {ExerciseActiveTabPermission?.canRead && <Tab disabled={isTabActive} eventKey="active" title="Active"/>}
+              {ExerciseApprovalTabPermission?.canRead && <Tab disabled={isTabActive} eventKey="approvalRequest" title="Approval Requests"/>}
+              {ExerciseDraftTabPermission?.canRead && <Tab disabled={isTabActive} eventKey="draft" title="Draft"/>}
+              {ExerciseRejectedTabPermission?.canRead && <Tab disabled={isTabActive} eventKey="rejected" title="Rejected"/>}
             </Tabs>
 
             {renderTabContent()}
@@ -207,7 +208,7 @@ const Exercise = () => {
         tab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} />
+      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} setActiveTab={setActiveTab}/>
     </div>
   );
 };

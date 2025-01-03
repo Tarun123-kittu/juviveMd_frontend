@@ -8,7 +8,7 @@ import { change_password, clear_change_password_api_state } from '../../redux/sl
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import Spinner from 'react-bootstrap/Spinner';
-import { get_single_staff,clear_single_staff_state } from '../../redux/slices/staffSlice/getStaffByIdSlice';
+import { get_single_staff, clear_single_staff_state } from '../../redux/slices/staffSlice/getStaffByIdSlice';
 import { update_staff, clear_update_staff_state } from '../../redux/slices/staffSlice/updateStaffSlice';
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -49,7 +49,7 @@ const SettingsComponents = () => {
   const is_Password_changed = useSelector((store) => store.CHANGE_PASSWORD)
   const user_details = useSelector((store) => store.STAFF_DETAIL)
   const is_staff_updated = useSelector((store) => store.UPDATE_STAFF)
-   const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
+  const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
 
   useEffect(() => {
     dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
@@ -192,6 +192,7 @@ const SettingsComponents = () => {
   useEffect(() => {
     if (is_staff_updated?.isSuccess) {
       toast.success("Staff Updated Successfully")
+      setImageView('')
       dispatch(clear_single_staff_state())
       dispatch(clear_update_staff_state())
       dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
@@ -241,7 +242,7 @@ const SettingsComponents = () => {
                 </div>
                 <h4>My Profile</h4>
                 <div className='user_profile d-flex align-items-center gap-3'>
-                  <img src={imageView || DefaultImage} alt="profile image" className='round_image_user'/> <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
+                  <img src={imageView || DefaultImage} alt="profile image" className='round_image_user' /> <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
                     {!editInput && firstPermissionSettings?.canUpdate && <button className='cmn_btn' disabled={editInput}> Upload Photo</button>}
                   </div> <button className='delete_photo d-none'>Delete</button>
                   {firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn ms-auto' onClick={() => setEditInput(!editInput)}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
@@ -288,17 +289,28 @@ const SettingsComponents = () => {
                   <div className='row authWrapper row-gap-3'>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">Current Password</label>
-                      <input type="password" value={currentPassword} onChange={(e) => { setCurrentPassword(e.target.value); setCurrentPasswordError('') }} placeholder='Enter Current Password' className='form-control' />
+                      <input
+                        type="password"
+                        autocomplete="new-password"
+                        value={currentPassword}
+                        onChange={(e) => {
+                          setCurrentPassword(e.target.value);
+                          setCurrentPasswordError('');
+                        }}
+                        placeholder="Enter Current Password"
+                        className="form-control"
+                      />
                       {currentPasswordError && <span className='invalid_input'>{currentPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">New Password</label>
-                      <input type="password" value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError('') }} placeholder='Enter New Password' className='form-control' />
+
+                      <input type="password" autoComplete={false} value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError('') }} placeholder='Enter New Password' className='form-control' />
                       {newPasswordError && <span className='invalid_input'>{newPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">Confirm Password</label>
-                      <input type="password" value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setConfirmPasswordError('') }} placeholder='Enter New Password' className='form-control' />
+                      <input type="password" autoComplete={false} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setConfirmPasswordError('') }} placeholder='Enter New Password' className='form-control' />
                       {confirmPasswordError && <span className='invalid_input'>{confirmPasswordError}</span>}
                     </div>
                     <div className='col-lg-6 user_profile '>

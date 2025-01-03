@@ -555,7 +555,7 @@ const AddPateintExercise = ({
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Name</Form.Label>
-                <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} onChange={(e) => handleSelectExercise(e)}>
+                <Form.Select aria-label="Default select example" className={categoryError ? "is-invalid" : ""} onChange={(e) => handleSelectExercise(e)} disabled={exercise?.length === 0}>
                   <option>Open this select menu</option>
                   {exercise?.map((exercise, i) => (
                     <option key={i} value={exercise?.id}>{exercise?.exercise_name}</option>
@@ -589,7 +589,7 @@ const AddPateintExercise = ({
 
 
         {/* body parts data here */}
-        <div className="pt-3">
+        {Array.isArray(data) && data[0]?.name && <div className="pt-3">
           <div className="d-flex justify-content-between">
             <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
             <button
@@ -645,7 +645,7 @@ const AddPateintExercise = ({
             </div>
           ))}
           {bodyPartError && <span className="d-none" style={{ color: "red" }}>{bodyPartError}</span>}
-        </div>
+        </div>}
 
 
 

@@ -41,11 +41,12 @@ const Reception_patient_list = ({ show }) => {
     const [status, setStatus] = useState()
     const [trainer, setTrainer] = useState()
     const [page, setPage] = useState(1)
-    const [tab, setTab] = useState("active")
+    const [tab, setTab] = useState(val || "active")
     const [trainers, setTrainers] = useState()
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [index, setIndex] = useState(null)
+    const [isActiveTab, setIsActiveTab] = useState(false)
     const [patientId, setPatientId] = useState(null)
     const [payment_status_pending, setPayment_status_pending] = useState(false)
     const [payment_status_received, setPayment_status_received] = useState(false)
@@ -128,6 +129,7 @@ const Reception_patient_list = ({ show }) => {
     ];
 
     useEffect(() => {
+        setIsActiveTab(true)
         dispatch(get_patients_list({ page, tab }))
         dispatch(common_data_api())
         dispatch(get_trainers())
@@ -136,6 +138,12 @@ const Reception_patient_list = ({ show }) => {
     const handlePageChange = (newPage) => {
         setPage(newPage + 1);
     };
+
+    useEffect(() => {
+        if (patient_data?.isSuccess) {
+            setIsActiveTab(false)
+        }
+    }, [patient_data])
 
     useEffect(() => {
         if (trainers_list?.isSuccess) {
@@ -245,11 +253,10 @@ const Reception_patient_list = ({ show }) => {
                             {PatientActiveTabPermissions?.canRead && (
                                 <li
                                     style={{
-                                        cursor: tab === "active" ? "not-allowed" : "pointer",
-                                        opacity: tab === "active" ? 0.6 : 1,
+                                        cursor: tab === "active" ? "" : "pointer",
                                     }}
                                     onClick={() => {
-                                        if (tab !== "active") {
+                                        if (tab !== "active" && !isActiveTab) {
                                             setTab("active");
                                             handleUpdatePath("active");
                                         }
@@ -262,11 +269,10 @@ const Reception_patient_list = ({ show }) => {
                             {PatientHealthTabPermissions?.canRead && (
                                 <li
                                     style={{
-                                        cursor: tab === "healthIssue" ? "not-allowed" : "pointer",
-                                        opacity: tab === "healthIssue" ? 0.6 : 1,
+                                        cursor: tab === "healthIssue" ? "" : "pointer",
                                     }}
                                     onClick={() => {
-                                        if (tab !== "healthIssue") {
+                                        if (tab !== "healthIssue" && !isActiveTab) {
                                             setTab("healthIssue");
                                             handleUpdatePath("healthIssue");
                                         }
@@ -279,11 +285,10 @@ const Reception_patient_list = ({ show }) => {
                             {PatientPaymenTabtPermissions?.canRead && (
                                 <li
                                     style={{
-                                        cursor: tab === "paymentPending" ? "not-allowed" : "pointer",
-                                        opacity: tab === "paymentPending" ? 0.6 : 1,
+                                        cursor: tab === "paymentPending" ? "" : "pointer",
                                     }}
                                     onClick={() => {
-                                        if (tab !== "paymentPending") {
+                                        if (tab !== "paymentPending" && !isActiveTab) {
                                             setTab("paymentPending");
                                             handleUpdatePath("paymentPending");
                                         }

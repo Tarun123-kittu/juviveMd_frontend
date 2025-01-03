@@ -6,7 +6,7 @@ import { create_exercise, clear_create_exercise_state } from "../../redux/slices
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
-import { get_exercise,clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
+import { get_exercise, clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
 import * as Yup from "yup";
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
 import Multiselect from 'multiselect-react-dropdown';
@@ -33,8 +33,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [movementResponse, setMovementResponse] = useState()
   const [difficulty, setDifficuilty] = useState()
   const [difficuiltOptions, setDifficuiltOptions] = useState()
+  const [bodyPartError, setBodyPartError] = useState('')
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
-  const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+  const [data, setData] = useState([{ name: "", movements: [] }]); 
   const [apiData, setApiData] = useState();
 
   const handleClose = () => {
@@ -49,6 +50,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuiltOptions()
     setDifficuiltyResponse()
     setData([{ name: "", movements: [] }])
+    setBodyPartError('')
   };
 
   useEffect(() => {
@@ -79,6 +81,16 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSave = (values) => {
+    if (!data?.length) {
+      setBodyPartError("Please select the body parts");
+      return;
+    }
+    const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
+
+    if (invalidEntries.length > 0) {
+      setBodyPartError("Each body part must have a name and at least one movement.");
+      return;
+    }
     dispatch(
       create_exercise({
         exercise_name: exerciseName,
@@ -93,6 +105,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     );
   };
   const handleSaveDraaft = (values) => {
+    if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
+      setBodyPartError("Please enter at least one value to save the exercise as a draft");
+      return;
+    }
     dispatch(
       create_exercise_draft({
         exercise_name: exerciseName,
@@ -123,7 +139,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setMovementsArray([])
       setMovementResponse([])
       setDifficuilty()
-      setDifficuiltOptions()
       setDifficuiltyResponse()
       setData([{ name: "", movements: [] }])
       if (draft) {
@@ -334,6 +349,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setData(data.filter((_, i) => i !== index));
   };
 
+  const isButtonDisabled = data.some(
+    (item) => item.name.trim() === "" || item.movements.length === 0
+  );
+
   return (
     <Modal
       show={showAddExerciseModal}
@@ -520,6 +539,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           addNewField();
                         }}
                         className="cmn_btn add_row"
+                        disabled={isButtonDisabled}
                       >
                         Add New Field
                       </button>
@@ -566,7 +586,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         </div>
                       </div>
                     ))}
-
+                    {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
                   </div>
                 </Col>
               </Row>

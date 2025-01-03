@@ -16,11 +16,12 @@ import Pagination from '../../../common/pagination/Pagination';
 import { FaEdit } from "react-icons/fa";
 import { getRoutePermissions } from '../../../middleware/permissionsMiddleware/getRoutePermissions';
 import { permission_constants } from '../../../constants/permissionConstants';
+import { clear_get_single_exercise_state } from '../../../redux/slices/exerciseSlice/getExercise';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive }) => {
 
-
+  console.log(tab, "this is the tab")
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
@@ -48,12 +49,15 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
   useEffect(() => {
     if (tab) {
+      setIsTabActive(true)
+      dispatch(clear_get_single_exercise_state())
       dispatch(get_exercise({ page, tab }))
     }
   }, [tab, page, dispatch])
 
   useEffect(() => {
     if (exercise_data?.isSuccess) {
+      setIsTabActive(false)
       setAllExercise(exercise_data?.data?.data?.items);
       setToggleFilter(false)
     }
@@ -250,7 +254,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
                 <div className='d-flex gap-2 '>
                   {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
-                  {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                  {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                 </div>
                 {/* {showDropdown && tab !== "rejected" && (
                   !is_status_updated?.isLoading ? (

@@ -31,7 +31,6 @@ const EditPateintExercise = ({
   const [exerciseImage, setExerciseImage] = useState('')
   const [distance, setDistance] = useState('')
   const [distanceUnit, setDistanceUnit] = useState('km')
-  console.log(distanceUnit,distance,"distance distance distance")
   const [heartRate, setHeartRate] = useState({ value: null, unit: "bpm" })
   const [zoneTarget, setZoneTarget] = useState('')
   const [intensity, setIntensity] = useState('')
@@ -43,7 +42,7 @@ const EditPateintExercise = ({
   const [diffError, setDiffError] = useState('')
   const [distanceVal, setDistanceVal] = useState({
   })
-  console.log(distanceVal,"distanceVal distanceVal")
+  console.log(distanceVal, "distanceVal distanceVal")
   const [flexibilityField, setFlexibilityField] = useState([{
     reps: "",
     weight: { value: null, unit: "kg" },
@@ -325,7 +324,7 @@ const EditPateintExercise = ({
       return;
     }
     const invalidEntries = data.filter(item => !item.name || !item.movements.length);
-    
+
     if (invalidEntries.length > 0) {
       setBodyPartError("Each body part must have a name and at least one movement.");
       return;
@@ -355,7 +354,7 @@ const EditPateintExercise = ({
       setWeekError("Please select days")
       return
     }
-    dispatch(updatePatientPlan({ id: planId, category, patientId: patientId, difficulty_level: difficuilty, body_parts: bodyParts, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: {value: distance, unit: distanceUnit}, weekdays: updatedWeekdays }))
+    dispatch(updatePatientPlan({ id: planId, category, patientId: patientId, difficulty_level: difficuilty, body_parts: bodyParts, exerciseId: selectedExercise, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: { value: distance, unit: distanceUnit }, weekdays: updatedWeekdays }))
   }
 
   const findEmptyFields = () => {
@@ -503,7 +502,7 @@ const EditPateintExercise = ({
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Name</Form.Label>
-                <Form.Select aria-label="Default select example" value={selectedExercise} className={selectedExerciseError ? "is-invalid" : ""} onChange={(e) => handleSelectExercise(e)}>
+                <Form.Select aria-label="Default select example" value={selectedExercise} className={selectedExerciseError ? "is-invalid" : ""} onChange={(e) => handleSelectExercise(e)} disabled={exercise?.length === 0}>
                   <option>Open this select menu</option>
                   {exercise?.map((exercise, i) => (
                     <option key={i} value={exercise?.id}>{exercise?.exercise_name}</option>
@@ -536,7 +535,7 @@ const EditPateintExercise = ({
 
 
 
-        <div className="pt-3">
+        {Array.isArray(data) && data[0]?.name && <div className="pt-3">
           <div className="d-flex justify-content-between">
             <h5 className="flex-grow-1 mb-0">Edit Body Parts and Movements</h5>
             <button
@@ -592,7 +591,7 @@ const EditPateintExercise = ({
             </div>
           ))}
           {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
-        </div>
+        </div>}
 
 
 
@@ -776,68 +775,68 @@ const EditPateintExercise = ({
                 {paceError && <div className="invalid-feedback">{paceError}</div>}
               </Form.Group>
             </Col>
-          <Col lg={6}>
-                       <Form.Group className="mb-2">
-                         <div className="d-flex gap-2 align-items-center">
-                           <Form.Label className="flex-grow-1">Distance Goal</Form.Label>
-                           <span
-                             onClick={() => {
-                               setDistanceUnit("km");
-                               if (distanceUnit === "meter") {
-                                 setDistance(distance / 1000);
-                               }
-                             }}
-                             className={distanceUnit === "km" ? "time" : "time min"}
-                           >
-                             km
-                           </span>{" "}
-                           <span
-                             onClick={() => {
-                               setDistanceUnit("meter");
-                               if (distanceUnit === "km") {
-                                 setDistance(distance * 1000); 
-                               }
-                             }}
-                             className={distanceUnit === "meter" ? "time" : "time min"}
-                           >
-                             meter
-                           </span>
-                         </div>
-         
-                         <Form.Control
-                           type="text"
-                           placeholder="Distance Goal (Km/Meter)"
-                           className={distanceError ? "is-invalid" : ""}
-                           value={distance}
-                           onChange={(e) => {
-                             const inputValue = e.target.value;
-                             const numericValue = Number(inputValue);
-         
-                             if (!isNaN(numericValue)) {
-                               let convertedValue = numericValue;
-         
-                               if (distanceUnit === "km") {
-                                 convertedValue = numericValue * 1000; 
-                               }
-         
-                               if (convertedValue < 1) {
-                                 setDistanceError("Distance must be at least 1 meter.");
-                               } else if (convertedValue > 100000) {
-                                 setDistanceError("Distance goal cannot exceed 100 km.");
-                               } else {
-                                 setDistanceError(""); 
-                               }
-         
-                               setDistance(inputValue); 
-                               setDistanceVal({ value: distance, unit: distanceUnit }); 
-                             } else {
-                               setDistanceError("Please enter a valid distance.");
-                             }
-                           }}
-                         />
-                         {distanceError && <div className="invalid-feedback">{distanceError}</div>}
-                       </Form.Group>
-                     </Col>
+            <Col lg={6}>
+              <Form.Group className="mb-2">
+                <div className="d-flex gap-2 align-items-center">
+                  <Form.Label className="flex-grow-1">Distance Goal</Form.Label>
+                  <span
+                    onClick={() => {
+                      setDistanceUnit("km");
+                      if (distanceUnit === "meter") {
+                        setDistance(distance / 1000);
+                      }
+                    }}
+                    className={distanceUnit === "km" ? "time" : "time min"}
+                  >
+                    km
+                  </span>{" "}
+                  <span
+                    onClick={() => {
+                      setDistanceUnit("meter");
+                      if (distanceUnit === "km") {
+                        setDistance(distance * 1000);
+                      }
+                    }}
+                    className={distanceUnit === "meter" ? "time" : "time min"}
+                  >
+                    meter
+                  </span>
+                </div>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Distance Goal (Km/Meter)"
+                  className={distanceError ? "is-invalid" : ""}
+                  value={distance}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const numericValue = Number(inputValue);
+
+                    if (!isNaN(numericValue)) {
+                      let convertedValue = numericValue;
+
+                      if (distanceUnit === "km") {
+                        convertedValue = numericValue * 1000;
+                      }
+
+                      if (convertedValue < 1) {
+                        setDistanceError("Distance must be at least 1 meter.");
+                      } else if (convertedValue > 100000) {
+                        setDistanceError("Distance goal cannot exceed 100 km.");
+                      } else {
+                        setDistanceError("");
+                      }
+
+                      setDistance(inputValue);
+                      setDistanceVal({ value: distance, unit: distanceUnit });
+                    } else {
+                      setDistanceError("Please enter a valid distance.");
+                    }
+                  }}
+                />
+                {distanceError && <div className="invalid-feedback">{distanceError}</div>}
+              </Form.Group>
+            </Col>
             <Col lg={6}>
               <Form.Group className="mb-2">
                 <Form.Label>Weekdays</Form.Label>

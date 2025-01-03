@@ -10,22 +10,24 @@ import { get_exercise } from '../../redux/slices/exerciseSlice/getExercise';
 import Spinner from 'react-bootstrap/Spinner';
 import InfoIcon from '../../Images/info.png'
 
-function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
+function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiveTab }) {
     const dispatch = useDispatch();
     const [fileData, setFileData] = useState(null);
+    console.log(fileData, "this is the file data")
     const [uploadFile, setUploadFile] = useState();
     const [fileName, setFileName] = useState('sample.csv');
-    const [showPreview,setShowPreview] = useState(false)
+    const [showPreview, setShowPreview] = useState(false)
     const [isValidUpload, setIsValidUpload] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [show_close_button, setShow_close_button] = useState(false)
     const [show_success, setShow_success] = useState([])
     const [csvData, setCsvData] = useState([]);
-    const [hide_download,setHide_download] = useState(true)
+    const [hide_download, setHide_download] = useState(true)
+
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
 
     useEffect(() => {
-        if(!showFileUploadModal) return
+        if (!showFileUploadModal) return
         fetch("/exercises - Sheet1 (1).csv")
             .then((response) => response.text())
             .then((data) => {
@@ -48,6 +50,8 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
         setFileData("")
         setIsValidUpload(false)
         setShowPreview(false)
+        setHide_download(true)
+        is_file_uploades?.isSuccess && setActiveTab("approvalRequest")
     }
 
     const handleFileUpload = (e) => {
@@ -136,6 +140,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
 
     useEffect(() => {
         if (is_file_uploades?.isSuccess) {
+
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
             setShow_success(is_file_uploades?.data?.data?.successRecords)
@@ -147,6 +152,18 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
             dispatch(clear_upload_exercise_state())
         }
     }, [is_file_uploades])
+
+    const handleCloseUpload = () => {
+        setActiveTab("approvalRequest")
+        setShowFileUploadModal(false)
+        dispatch(clear_upload_exercise_state())
+        setShow_close_button(false)
+        setShow_success([])
+        setFileData("")
+        setIsValidUpload(false)
+        setShowPreview(false)
+        setHide_download(true)
+    }
 
 
 
@@ -194,7 +211,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                         onChange={handleFileUpload}
                         className="form-control"
                     />
-                    {fileData !== null  && <div className='info d-flex gap-3 mt-2'>
+                    {fileData !== null && <div className='info d-flex gap-3 mt-2'>
 
                         <img src={InfoIcon} alt="InfoIcon" />
                         <h6 >{!showPreview ? "Preview" : "Uploaded file preview"}</h6>
@@ -219,7 +236,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                                     const isRowMatched = row.some(cell =>
                                         show_success.some(success => success.exercise_name === cell)
                                     );
-                                    console.log(isRowMatched,"this is the row matched")
+                                    console.log(isRowMatched, "this is the row matched")
 
                                     return (
                                         <tr
@@ -257,16 +274,6 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                     </div>}
                     {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
                         <h6 className='m-0'>File Uploaded Successfully</h6>
-                        {/* <ul>
-
-                            {is_file_uploades?.data?.data?.successRecords?.map((ErrorCur, index) => {
-                                return (
-
-                                    <li key={index}>{ErrorCur?.exercise_name} </li>
-                                )
-                            })
-                            }
-                        </ul> */}
                     </div>}
 
                 </div>
@@ -286,7 +293,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                     {isValidUpload && !show_close_button && <button className='cmn_btn mt-3' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}</button>}
-                    {show_close_button && <button className='cmn_btn' onClick={handleClose}>Close</button>}
+                    {show_close_button && <button className='cmn_btn' onClick={() => handleCloseUpload()}>Close</button>}
                 </div>
             </Modal.Body>
 
