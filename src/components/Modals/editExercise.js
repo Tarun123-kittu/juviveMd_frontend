@@ -37,6 +37,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [bodyPartError, setBodyPartError] = useState('')
     const [movementResponse, setMovementResponse] = useState()
     const [difficulty, setDifficuilty] = useState()
+    const [fieldError, setFieldError] = useState("")
     const [difficuiltOptions, setDifficuiltOptions] = useState()
     const [difficuiltyResponse, setDifficuiltyResponse] = useState()
     const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
@@ -109,6 +110,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setshowAddExerciseModal(false);
         setExerciseId(null)
         setBodyPartError('')
+        setFieldError('')
     };
 
     const handleImageChange = (event, setFieldValue) => {
@@ -134,7 +136,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
         if (invalidEntries.length > 0) {
-            setBodyPartError("Each body part must have a name and at least one movement.");
+            setBodyPartError("");
             return;
         }
         dispatch(
@@ -154,6 +156,10 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
     const handleSaveDraft = (values) => {
         const bodyParts = data.filter((entry) => entry.name);
+        if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
+            setFieldError("Please enter at least one value to save the exercise as a draft");
+            return;
+        }
         dispatch(
             update_exercise_draft({
                 exercise_name: exerciseName,
@@ -568,6 +574,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </div>
                                     ))}
                                     {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
+                                    {fieldError && <span style={{ color: "red" }}>{fieldError}</span>}
                                 </Col>}
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
