@@ -245,9 +245,57 @@ const Reception_patient_list = ({ showButtons }) => {
                     </div>
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
                         {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
-                            {PatientActiveTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("active"); handleUpdatePath("active") }} className={tab === "active" ? 'active' : ""}>Active</li>}
-                            {PatientHealthTabPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("healthIssue"); handleUpdatePath("healthIssue") }} className={tab === "healthIssue" ? 'active' : ""}>Health Issues</li>}
-                            {PatientPaymenTabtPermissions?.canRead && <li style={{ cursor: "pointer" }} onClick={() => { setTab("paymentPending"); handleUpdatePath("paymentPending") }} className={tab === "paymentPending" ? 'active' : ""}>Payment Pending</li>}
+                            {PatientActiveTabPermissions?.canRead && (
+                                <li
+                                    style={{
+                                        cursor: tab === "active" ? "not-allowed" : "pointer",
+                                        opacity: tab === "active" ? 0.6 : 1,
+                                    }}
+                                    onClick={() => {
+                                        if (tab !== "active") {
+                                            setTab("active");
+                                            handleUpdatePath("active");
+                                        }
+                                    }}
+                                    className={tab === "active" ? "active" : ""}
+                                >
+                                    Active
+                                </li>
+                            )}
+                            {PatientHealthTabPermissions?.canRead && (
+                                <li
+                                    style={{
+                                        cursor: tab === "healthIssue" ? "not-allowed" : "pointer",
+                                        opacity: tab === "healthIssue" ? 0.6 : 1,
+                                    }}
+                                    onClick={() => {
+                                        if (tab !== "healthIssue") {
+                                            setTab("healthIssue");
+                                            handleUpdatePath("healthIssue");
+                                        }
+                                    }}
+                                    className={tab === "healthIssue" ? "active" : ""}
+                                >
+                                    Health Issues
+                                </li>
+                            )}
+                            {PatientPaymenTabtPermissions?.canRead && (
+                                <li
+                                    style={{
+                                        cursor: tab === "paymentPending" ? "not-allowed" : "pointer",
+                                        opacity: tab === "paymentPending" ? 0.6 : 1,
+                                    }}
+                                    onClick={() => {
+                                        if (tab !== "paymentPending") {
+                                            setTab("paymentPending");
+                                            handleUpdatePath("paymentPending");
+                                        }
+                                    }}
+                                    className={tab === "paymentPending" ? "active" : ""}
+                                >
+                                    Payment Pending
+                                </li>
+                            )}
                         </ul>}
                         {PatientPermissions?.canCreate && showButtons && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} {showButtons && <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>}
                         {showFilter &&
