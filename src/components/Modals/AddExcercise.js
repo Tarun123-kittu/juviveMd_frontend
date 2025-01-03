@@ -24,7 +24,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [exerciseName, setExerciseName] = useState("")
   const [exerciseVideo, setExerciseVideo] = useState("")
   const [exerciseDescription, setExerciseDescription] = useState("")
-  const [exerciseImage, setExerciseImage] = useState(DefaultImage)
+  const [exerciseImage, setExerciseImage] = useState()
   const [loading, setLoading] = useState("")
   const [bodyNames, setBodyNames] = useState([])
   const [selectedBodyNames, setSelectedBodyNames] = useState([]);
@@ -36,6 +36,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [bodyPartError, setBodyPartError] = useState('')
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
   const [data, setData] = useState([{ name: "", movements: [] }]); 
+  const [fieldError,setFieldError] = useState("")
   const [apiData, setApiData] = useState();
 
   const handleClose = () => {
@@ -51,6 +52,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setDifficuiltyResponse()
     setData([{ name: "", movements: [] }])
     setBodyPartError('')
+    setFieldError('')
   };
 
   useEffect(() => {
@@ -88,7 +90,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
     if (invalidEntries.length > 0) {
-      setBodyPartError("Each body part must have a name and at least one movement.");
+      setBodyPartError("PLease select at least one movement for each body part");
       return;
     }
     dispatch(
@@ -104,9 +106,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       })
     );
   };
-  const handleSaveDraaft = (values) => {
+
+  const handleSaveDraft  = (values) => {
     if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
-      setBodyPartError("Please enter at least one value to save the exercise as a draft");
+      setFieldError("Please enter at least one value to save the exercise as a draft");
       return;
     }
     dispatch(
@@ -118,13 +121,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         video_link: exerciseVideo,
         image_url: exerciseImage,
         description: exerciseDescription,
-        draft: false
+        draft: false,
       })
     );
   };
+  
 
   const handleSubmit = (values) => {
-    handleSave(values);
+    // handleSave(values);
   };
 
   useEffect(() => {
@@ -587,6 +591,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       </div>
                     ))}
                     {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
+                    {fieldError && <span style={{ color: "red" }}>{fieldError}</span>}
                   </div>
                 </Col>
               </Row>
@@ -602,7 +607,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                           }}
                           disabled={draft}
                           className="btn cmn_btn"
-                          type="submit"
                         >
                           Send For Approval
                         </button>
@@ -621,11 +625,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         <button
                           onClick={() => {
                             setDraft(true);
-                            handleSaveDraaft();
+                            handleSaveDraft();
                             setLoading("second");
                           }}
                           className="btn cmn_btn ms-2"
-                          type="submit"
                         >
                           Save as Draft
                         </button>
