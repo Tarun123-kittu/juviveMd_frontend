@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
+
 import DataTable from '../../components/DataTable/DataTable'
 import Default_user from '../../Images/default_user.svg'
 import AddpatientModal from '../../components/Modals/AddPatientModal';
@@ -247,10 +250,7 @@ const Reception_patient_list = ({ showButtons }) => {
                         {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
                             {PatientActiveTabPermissions?.canRead && (
                                 <li
-                                    style={{
-                                        cursor: tab === "active" ? "not-allowed" : "pointer",
-                                        opacity: tab === "active" ? 0.6 : 1,
-                                    }}
+                                   
                                     onClick={() => {
                                         if (tab !== "active") {
                                             setTab("active");
@@ -264,10 +264,7 @@ const Reception_patient_list = ({ showButtons }) => {
                             )}
                             {PatientHealthTabPermissions?.canRead && (
                                 <li
-                                    style={{
-                                        cursor: tab === "healthIssue" ? "not-allowed" : "pointer",
-                                        opacity: tab === "healthIssue" ? 0.6 : 1,
-                                    }}
+                                  
                                     onClick={() => {
                                         if (tab !== "healthIssue") {
                                             setTab("healthIssue");
@@ -281,10 +278,7 @@ const Reception_patient_list = ({ showButtons }) => {
                             )}
                             {PatientPaymenTabtPermissions?.canRead && (
                                 <li
-                                    style={{
-                                        cursor: tab === "paymentPending" ? "not-allowed" : "pointer",
-                                        opacity: tab === "paymentPending" ? 0.6 : 1,
-                                    }}
+                                    
                                     onClick={() => {
                                         if (tab !== "paymentPending") {
                                             setTab("paymentPending");
@@ -441,8 +435,9 @@ const Reception_patient_list = ({ showButtons }) => {
                                         { <td className={`${tab !== "healthIssue" && "d-none"} `}>
                                             <div className='health_issue' ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
-                                                    <span className='d-flex align-items-center justify-content-center'>!</span>
-                                                    <div className='tooltip_custom' style={{ left: `${leftPosition}px` }}>
+                                                    <span data-tooltip-id={`my-tooltip-${i}`} className='d-flex align-items-center justify-content-center'>!</span>
+                                                    <ReactTooltip  id={`my-tooltip-${i}`} place="bottom" type="info" effect="solid">
+                                                    <div className='tooltip_custom'>
                                                         <ul>
                                                             {Array?.isArray(patient?.health_issue_text) && patient?.health_issue_text?.map((issue, index) => (
                                                                 <li key={index}>{issue}</li>
@@ -450,6 +445,8 @@ const Reception_patient_list = ({ showButtons }) => {
                                                         </ul>
 
                                                     </div>
+                                                </ReactTooltip>
+                                                  
                                                 </div>
                                                 <span> View health issue</span>
                                             </div>

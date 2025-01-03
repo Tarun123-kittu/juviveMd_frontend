@@ -68,20 +68,22 @@ font-size: 12px;
 }
 
 .tooltip_wrapper .tooltip_custom {
-    position: absolute;
+    position: relative;
     background: #fff;
     height: unset;
     max-height: unset;
-    left: 50%;
     z-index: 2;
     max-width: 300px;
     padding: 13px;
     border: 1px solid #ACC9CB80;
     border-radius: 10px;
-    opacity: 0;
-    visibility: hidden;
+    /* opacity: 0;
+    visibility: hidden; */
     transition: all .3s;
-    margin-top: 20px;
+}
+div.react-tooltip {
+    background: var(--fade-color);
+    opacity: 1;
 }
 .tooltip_wrapper:hover .tooltip_custom{
     opacity: 1;
@@ -120,7 +122,7 @@ color: #FF0000;
     align-items: center;
     
 }
-.tooltip_custom::after {
+/* .tooltip_custom::after {
     position: absolute;
     content: "";
     width: 0;
@@ -144,5 +146,5 @@ color: #FF0000;
     top: 0;
     left: 50%;
     transform: translate(-50%, -16px);
-}
+} */
 /* tooltip */
