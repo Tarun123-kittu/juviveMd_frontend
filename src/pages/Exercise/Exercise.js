@@ -95,7 +95,7 @@ const Exercise = () => {
         <div className="cmn_head mb-2 ">
           <h2>Exercise</h2>
         </div>
-        <div className="cmn_bg_wrapper exercise_tab">
+        <div className="exercise_tab">
           <div className="">
             <div className="position-relative w-100" >
               <div className="d-flex gap-2 position-absolute end-0 cta_exercise">
