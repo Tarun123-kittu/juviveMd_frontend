@@ -192,6 +192,7 @@ const SettingsComponents = () => {
   useEffect(() => {
     if (is_staff_updated?.isSuccess) {
       toast.success("Staff Updated Successfully")
+      setImageView('')
       dispatch(clear_single_staff_state())
       dispatch(clear_update_staff_state())
       dispatch(get_single_staff({ staffId: localStorage.getItem('user_id') }))
