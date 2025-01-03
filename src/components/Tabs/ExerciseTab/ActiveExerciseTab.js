@@ -16,11 +16,12 @@ import Pagination from '../../../common/pagination/Pagination';
 import { FaEdit } from "react-icons/fa";
 import { getRoutePermissions } from '../../../middleware/permissionsMiddleware/getRoutePermissions';
 import { permission_constants } from '../../../constants/permissionConstants';
+import { clear_get_single_exercise_state } from '../../../redux/slices/exerciseSlice/getExercise';
 
 
 const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty }) => {
 
-
+console.log(tab,"this is the tab")
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
@@ -48,6 +49,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
   useEffect(() => {
     if (tab) {
+      dispatch(clear_get_single_exercise_state())
       dispatch(get_exercise({ page, tab }))
     }
   }, [tab, page, dispatch])

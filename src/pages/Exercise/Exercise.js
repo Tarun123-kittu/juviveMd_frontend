@@ -25,7 +25,7 @@ const Exercise = () => {
   const [exercise_category, setExercise_category] = useState();
   const [body_parts, setBody_parts] = useState()
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
-  const [activeTab, setActiveTab] = useState("active");
+  const [activeTab, setActiveTab] = useState( val || "active");
   const [username, setUsername] = useState("")
   const [category, setCategory] = useState("")
   const [date, setDate] = useState("")

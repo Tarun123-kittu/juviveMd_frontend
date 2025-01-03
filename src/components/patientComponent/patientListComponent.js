@@ -42,7 +42,7 @@ const Reception_patient_list = ({ showButtons }) => {
     const [status, setStatus] = useState()
     const [trainer, setTrainer] = useState()
     const [page, setPage] = useState(1)
-    const [tab, setTab] = useState("active")
+    const [tab, setTab] = useState(val || "active")
     const [trainers, setTrainers] = useState()
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
