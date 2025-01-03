@@ -606,7 +606,7 @@ const EditPateintExercise = ({
             <Form.Group className="mb-2">
               <div className="steps_items d-flex gap-2">
                 <div>
-                  <Form.Label>Step {i + 1}</Form.Label>
+                  <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
                 <div className="flex-grow-1 d-flex gap-2 ">
@@ -637,7 +637,7 @@ const EditPateintExercise = ({
             <Form.Group key={i} className="mb-2">
               <div className="steps_items d-flex gap-2">
                 <div>
-                  <Form.Label>Step {i + 1}</Form.Label>
+                  <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
                 <div className="flex-grow-1">

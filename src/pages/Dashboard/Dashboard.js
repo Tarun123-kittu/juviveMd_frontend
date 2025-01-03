@@ -9,9 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Patient from "../Patient/Patient";
 import { dashboard_api } from "../../redux/slices/dashboardSlice/dashboard";
 import Reception_patient_list from "../../components/patientComponent/patientListComponent";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [show, setShow] = useState(false);
   const [data, setData] = useState()
   const permissions_data = useSelector((store) => store.PERMISSIONS_DATA)
@@ -47,7 +49,7 @@ const Dashboard = () => {
         <div className="cmn_head mb-3">
           <h2 className="mb-2">Dashboard</h2>
           <div className="dashboardinfo ">
-            <div className="info_card payment-card">
+            <div className="info_card payment-card" onClick={() => navigate("/patient", { state: { val: "paymentPending" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -68,12 +70,12 @@ const Dashboard = () => {
               </div>
               <h3>Payment Pending </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
                   <span class="sr-only"></span>
                 </div> : data?.paymentPending} <span>Till Today</span>
               </h4>
             </div>
-            <div className="info_card health-card">
+            <div className="info_card health-card"  onClick={() => navigate("/patient", { state: { val: "healthIssue" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -114,7 +116,7 @@ const Dashboard = () => {
               </div>
               <h3>Health Cases </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
                   <span class="sr-only"></span>
                 </div> : data?.healthCases} <span>Till Today</span>
               </h4>
@@ -167,7 +169,7 @@ const Dashboard = () => {
                 10 <span>Till Today</span>
               </h4>
             </div> */}
-            <div className="info_card exercise-card">
+            <div className="info_card exercise-card" onClick={() => navigate("/exercise", { state: { val: "approvalRequest" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="44"
@@ -208,7 +210,7 @@ const Dashboard = () => {
               </div>
               <h3>Exercise Approval </h3>
               <h4>
-                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{width:"13px",height:"13px"}}>
+                {dashboard_data?.isLoading ? <div class="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
                   <span class="sr-only"></span>
                 </div> : data?.exercisesApproval} <span>Till Today</span>
               </h4>

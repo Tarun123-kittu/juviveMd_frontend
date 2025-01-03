@@ -73,6 +73,7 @@ const AddPateintExercise = ({
   const [data, setData] = useState([{ name: "", movements: [] }]);
   const [apiData, setApiData] = useState(body_parts);
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+  console.log(exercise_details,"this is exercise details")
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
   const handleClose = () => {
@@ -97,6 +98,7 @@ const AddPateintExercise = ({
     setSelectedExerciseError('')
     setFieldErrors({})
     setCradioError({})
+    setData([{ name: "", movements: [] }])
 
   };
 
@@ -138,6 +140,7 @@ const AddPateintExercise = ({
   useEffect(() => {
     if (exercise_details?.isSuccess) {
       setExercise(exercise_details?.data?.data)
+      setData(exercise_details?.data?.data[0]?.body_parts)
     }
   }, [exercise_details])
 
@@ -198,7 +201,7 @@ const AddPateintExercise = ({
       setBodyPartError("Please select the body parts");
       return;
     }
-    const invalidEntries = data.filter(item => !item.name || !item.movements.length);
+    const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
     if (invalidEntries.length > 0) {
       setBodyPartError("Each body part must have a name and at least one movement.");
@@ -330,10 +333,10 @@ const AddPateintExercise = ({
   };
 
   const handleRemoveFlexibilityFields = (i) => {
-    setFlexibilityField((prev) => prev.filter((_, index) => index !== i));
+    setFlexibilityField((prev) => prev?.filter((_, index) => index !== i));
   };
   const handleRemoveCardioFields = (i) => {
-    setCradioFields((prev) => prev.filter((_, index) => index !== i));
+    setCradioFields((prev) => prev?.filter((_, index) => index !== i));
   };
 
   const handleAddCardioFields = () => {
@@ -390,12 +393,12 @@ const AddPateintExercise = ({
 
   const handleRemoveBody = (selectedList, removedItem) => {
     setSelectedBodyNames([...selectedList]);
-    const updatedMovements = movementsArray.filter(
+    const updatedMovements = movementsArray?.filter(
       (movement) => movement.key !== removedItem.name
     );
     setMovementsArray(updatedMovements);
 
-    const updatedSelectedMovements = selectedMovements.filter(
+    const updatedSelectedMovements = selectedMovements?.filter(
       (movement) => movement.key !== removedItem.name
     );
     setSelectedMovements(updatedSelectedMovements);
@@ -456,7 +459,7 @@ const AddPateintExercise = ({
 
 
   useEffect(() => {
-    const bodyParts = data.filter((entry) => entry.name);
+    const bodyParts = data?.filter((entry) => entry.name);
     setMovementResponse(bodyParts);
   }, [data]);
 
@@ -487,12 +490,12 @@ const AddPateintExercise = ({
   const getAvailableNames = () => {
     const selectedNames = data.map((entry) => entry.name);
     return apiData
-      .filter((item) => !selectedNames.includes(item.name))
+      ?.filter((item) => !selectedNames.includes(item.name))
       .map((item) => ({ value: item.name, label: item.name }));
   };
 
   const handleDeleteRow = (index) => {
-    setData(data.filter((_, i) => i !== index));
+    setData(data?.filter((_, i) => i !== index));
   };
 
   return (
@@ -594,17 +597,17 @@ const AddPateintExercise = ({
                 e.preventDefault();
                 addNewField();
               }}
-              className="cmn_btn add_row"
+              className="cmn_btn add_row d-none"
             >
               Add New Field
             </button>
           </div>
-          {data.map((entry, index) => (
+          {data?.map((entry, index) => (
             <div
               className="row mb-3"
             >
               <div className="col-lg-6">
-                <label>Select Name:</label>
+                <label>Selected Name:</label>
                 <Select
                   value={
                     entry.name
@@ -616,10 +619,11 @@ const AddPateintExercise = ({
                     handleNameChange(index, selectedOption)
                   }
                   placeholder="Select Name"
+                  isDisabled={true}
                 />
               </div>
               <div className="col-lg-6">
-                <label>Select Movements:</label>
+                <label>Selected Movements:</label>
                 <div className="d-flex gap-2 align-items-center">
                   <Select
                     isMulti
@@ -632,7 +636,7 @@ const AddPateintExercise = ({
                       handleMovementChange(index, selectedOptions || [])
                     }
                     placeholder="Select Movements"
-                    isDisabled={!entry.name}
+                    isDisabled={!entry.name || true}
                     className="flex-grow-1"
                   />
                   {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
@@ -640,7 +644,7 @@ const AddPateintExercise = ({
               </div>
             </div>
           ))}
-          {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
+          {bodyPartError && <span className="d-none" style={{ color: "red" }}>{bodyPartError}</span>}
         </div>
 
 
@@ -656,7 +660,7 @@ const AddPateintExercise = ({
             <Form.Group className="mb-2">
               <div className="steps_items d-flex gap-2">
                 <div>
-                  <Form.Label>Step {i + 1}</Form.Label>
+                  <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
                 <div className="flex-grow-1 d-flex gap-2 ">
@@ -687,7 +691,7 @@ const AddPateintExercise = ({
             <Form.Group key={i} className="mb-2">
               <div className="steps_items d-flex gap-2">
                 <div>
-                  <Form.Label>Step {i + 1}</Form.Label>
+                  <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
                 <div className="flex-grow-1">

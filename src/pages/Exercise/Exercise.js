@@ -17,13 +17,14 @@ import UploadFileModal from "../../components/Modals/uploadFileModal";
 const Exercise = () => {
   const dispatch = useDispatch();
   const location = useLocation()
+  const { val } = location?.state ? location?.state : location
   const { pathname } = location
   const [toggleFilter, setToggleFilter] = useState(false);
   const [showAddExerciseModal, setshowAddExerciseModal] = useState(false);
   const [showFileUploadModal, setShowFileUploadModal] = useState(false)
   const [exercise_category, setExercise_category] = useState();
-  const [body_parts,setBody_parts] = useState()
-  const [exerciseDifficuilty,setExerciseDifficuilty] = useState()
+  const [body_parts, setBody_parts] = useState()
+  const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [activeTab, setActiveTab] = useState("active");
   const [username, setUsername] = useState("")
   const [category, setCategory] = useState("")
@@ -34,6 +35,12 @@ const Exercise = () => {
   const [ExerciseDraftTabPermission] = getRoutePermissions(permission_constants.EXERCISEDRAFTTAB)
   const [ExerciseRejectedTabPermission] = getRoutePermissions(permission_constants.EXERCISEREJECTEDTTAB)
   const [ExerciseUploadPermission] = getRoutePermissions(permission_constants.EXERCISEUPLOAD)
+
+  useEffect(() => {
+    if (val) {
+      setActiveTab(val)
+    }
+  }, [val])
 
 
   const common_data = useSelector((store) => store.COMMON_DATA);
@@ -53,13 +60,13 @@ const Exercise = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty}/>;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} />;
       default:
         return null;
     }
@@ -90,29 +97,29 @@ const Exercise = () => {
         <div className="cmn_bg_wrapper exercise_tab">
           <div className="">
             <div className="position-relative w-100" >
-            <div className="d-flex gap-2 position-absolute end-0 cta_exercise">
-              {ExerciseUploadPermission?.canCreate &&
-                <button
+              <div className="d-flex gap-2 position-absolute end-0 cta_exercise">
+                {ExerciseUploadPermission?.canCreate &&
+                  <button
+                    className="cmn_btn filter_btn"
+                    onClick={() => setShowFileUploadModal(true)}
+                  >
+                    + Upload File
+                  </button>}
+                {ExercisePermission?.canCreate && <button
                   className="cmn_btn filter_btn"
-                  onClick={() => setShowFileUploadModal(true)}
+                  onClick={() => {
+                    setshowAddExerciseModal(true);
+                  }}
                 >
-                  + Upload File
+                  + Create Exercise
                 </button>}
-              {ExercisePermission?.canCreate && <button
-                className="cmn_btn filter_btn"
-                onClick={() => {
-                  setshowAddExerciseModal(true);
-                }}
-              >
-                + Create Exercise
-              </button>}
-              <button
-                className="cmn_btn px-4 filter_btn"
-                onClick={() => setToggleFilter(!toggleFilter)}
-              >
-                Filter
-              </button>
-            </div>
+                <button
+                  className="cmn_btn px-4 filter_btn"
+                  onClick={() => setToggleFilter(!toggleFilter)}
+                >
+                  Filter
+                </button>
+              </div>
             </div>
 
             {toggleFilter && (

@@ -26,7 +26,8 @@ import { useLocation } from 'react-router-dom';
 const Reception_patient_list = ({ show }) => {
     const elementRef = useRef(null);
     const location = useLocation()
-    const {pathname} = location
+    const { pathname } = location
+    const { val } = location?.state ? location?.state : location
 
     const dispatch = useDispatch()
     const [showFilter, setShowFilter] = useState(false)
@@ -60,6 +61,12 @@ const Reception_patient_list = ({ show }) => {
     const PatientActiveTabPermissions = getRoutePermissions(permission_constants.PATIENTACTIVETAB)?.[0] || {};
     const PatientHealthTabPermissions = getRoutePermissions(permission_constants.PATIENTHEALTHISSUETAB)?.[0] || {};
     const PatientPaymenTabtPermissions = getRoutePermissions(permission_constants.PATIENTPAYMENTTAB)?.[0] || {};
+
+    useEffect(() => {
+        if (val) {
+            setTab(val)
+        }
+    }, [val])
 
     const handelShowFilter = () => {
         setShowFilter(!showFilter)

@@ -16,6 +16,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import Select from "react-select";
 
 const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission, body_parts, exerciseDifficuilty }) => {
+    console.log(ExercisePermission,"ExercisePermission ExercisePermission ExercisePermission ExercisePermission")
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
@@ -494,13 +495,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                 <Col lg={12}>
                                     <div className="d-flex justify-content-between">
                                         <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
-                                        {!ExercisePermission?.canUpdate || tab !== "approvalRequest" || tab !== "active" && <button
+                                        {ExercisePermission?.canUpdate && (tab === "draft" || tab === "rejected") && <button
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 addNewField();
                                             }}
                                             className="cmn_btn add_row"
-                                            disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                            disabled={!ExercisePermission?.canUpdate || tab !== "approvalRequest" || tab !== "active"}
                                         >
                                             Add New Field
                                         </button>}

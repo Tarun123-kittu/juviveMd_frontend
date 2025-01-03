@@ -203,7 +203,7 @@ const PatientData = () => {
                 <ul>
                   <li>
                     <strong>Optimal Weight</strong>
-                    <span>{patient_data?.optimal_weight?.value}{patient_data?.optimal_weight?.unit}</span>
+                    <span>{patient_data?.optimal_weight?.value} {patient_data?.optimal_weight?.unit}</span>
                   </li>
                   <li>
                     <strong>Sleep Time</strong>
@@ -283,7 +283,7 @@ const PatientData = () => {
               />
             </svg>
           </h4>
-          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Patient Plan</button>
+          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Exercise</button>
         </div>
         <Tabs
           activeKey={activeTab}
