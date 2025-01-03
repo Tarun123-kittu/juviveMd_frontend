@@ -307,7 +307,7 @@ const Reception_patient_list = ({ show }) => {
                         }
 
                     </div>
-                    <div className='patient_data'>
+                    <div className={`${patient_data?.data?.data?.totalPages > 1 && "streach_table"} patient_data`}>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
                             {patient_data?.isLoading ? <tr><td colSpan={11}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={11}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                                 return (

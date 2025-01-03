@@ -109,6 +109,7 @@ const StaffComponent = () => {
                     <h2>Users</h2> {firstPermission?.canCreate && <button className="cmn_btn" onClick={handleShow}>+ Add User</button>}
                 </div>
                 <div className="cmn_table dark_btn">
+                <div className={`${staff_data?.data?.data?.totalPages > 1 && "streach_table"}`}>
                     <DataTable columns={columns} hasCheckbox={true}>
                         {staff_data?.isLoading ? (
                             <tr>
@@ -184,6 +185,7 @@ const StaffComponent = () => {
 
 
                     </DataTable>
+                    </div>
                     {staff_data?.isSuccess && staff_data?.data?.data?.totalPages > 1 && <Pagination totalPages={staff_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
                 </div>
             </div>

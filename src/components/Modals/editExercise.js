@@ -423,6 +423,29 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             ))}
                                         </Field>
                                     </Form.Group>
+                                    <Form.Group className="mb-2">
+                                                <Form.Label>Exercise Video Link</Form.Label>
+                                                <Field
+                                                    type="text"
+                                                    name="exerciseVideo"
+                                                    placeholder="https://youtu.be"
+                                                    className="form-control"
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                                    onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group className="mb-2">
+                                                <Form.Label>Exercise Image Url</Form.Label>
+                                                <Field
+                                                    type="text"
+                                                    name="exerciseImage"
+                                                    placeholder="Enter image url"
+                                                    className="form-control"
+                                                    onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                                                    value={exerciseImage}
+                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                                />
+                                            </Form.Group>
                                     {/* <Form.Group className="mb-2">
                                         <Form.Label>Exercise Image</Form.Label>
                                         <div className="drag_file d-flex align-items-center justify-content-center flex-column">
@@ -472,33 +495,9 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 />
                                             </Form.Group>
                                         </Col>
-                                        <Col lg={6}>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>Exercise Video Link</Form.Label>
-                                                <Field
-                                                    type="text"
-                                                    name="exerciseVideo"
-                                                    placeholder="https://youtu.be"
-                                                    className="form-control"
-                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-                                                    onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg={6}>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>Exercise Image Url</Form.Label>
-                                                <Field
-                                                    type="text"
-                                                    name="exerciseImage"
-                                                    placeholder="Enter image url"
-                                                    className="form-control"
-                                                    onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
-                                                    value={exerciseImage}
-                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-                                                />
-                                            </Form.Group>
-                                        </Col>
+                                     
+                                       
+                                       
                                         <Col lg={12}>
                                             <Form.Group className="mb-2">
                                                 <Form.Label>Exercise Description</Form.Label>
