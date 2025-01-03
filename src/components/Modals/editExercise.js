@@ -16,7 +16,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import Select from "react-select";
 
 const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, id, tab, admin, setExerciseId, ExercisePermission, body_parts, exerciseDifficuilty }) => {
-    console.log(ExercisePermission,"ExercisePermission ExercisePermission ExercisePermission ExercisePermission")
+    console.log(ExercisePermission, "ExercisePermission ExercisePermission ExercisePermission ExercisePermission")
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
@@ -34,6 +34,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [selectedBodyNames, setSelectedBodyNames] = useState([]);
     const [selectedMovements, setSelectedMovements] = useState([]);
     const [movementsArray, setMovementsArray] = useState([]);
+    const [bodyPartError, setBodyPartError] = useState('')
     const [movementResponse, setMovementResponse] = useState()
     const [difficulty, setDifficuilty] = useState()
     const [difficuiltOptions, setDifficuiltOptions] = useState()
@@ -107,6 +108,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const handleClose = () => {
         setshowAddExerciseModal(false);
         setExerciseId(null)
+        setBodyPartError('')
     };
 
     const handleImageChange = (event, setFieldValue) => {
@@ -125,6 +127,16 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
     const handleSave = (values) => {
         const bodyParts = data.filter((entry) => entry.name);
+        if (!data?.length) {
+            setBodyPartError("Please select the body parts");
+            return;
+        }
+        const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
+
+        if (invalidEntries.length > 0) {
+            setBodyPartError("Each body part must have a name and at least one movement.");
+            return;
+        }
         dispatch(
             update_exercise({
                 exercise_name: exerciseName,
@@ -142,6 +154,16 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
     const handleSaveDraft = (values) => {
         const bodyParts = data.filter((entry) => entry.name);
+        if (!data?.length) {
+            setBodyPartError("Please select the body parts");
+            return;
+        }
+        const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
+
+        if (invalidEntries.length > 0) {
+            setBodyPartError("Each body part must have a name and at least one movement.");
+            return;
+        }
         dispatch(
             update_exercise_draft({
                 exercise_name: exerciseName,
@@ -359,6 +381,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setData(data.filter((_, i) => i !== index));
     };
 
+    const isButtonDisabled = data.some(
+        (item) => item.name.trim() === "" || item.movements.length === 0
+      );
+    
+
     return (
         <Modal
             show={showAddExerciseModal}
@@ -501,7 +528,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 addNewField();
                                             }}
                                             className="cmn_btn add_row"
-                                            disabled={!ExercisePermission?.canUpdate || tab !== "approvalRequest" || tab !== "active"}
+                                            disabled={isButtonDisabled}
                                         >
                                             Add New Field
                                         </button>}
@@ -524,7 +551,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                     placeholder="Select Name"
                                                     isDisabled={
                                                         !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"
-                                                      }
+                                                    }
                                                 />
                                             </div>
 
