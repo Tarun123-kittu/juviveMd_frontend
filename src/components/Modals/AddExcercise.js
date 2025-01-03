@@ -90,7 +90,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
     if (invalidEntries.length > 0) {
-      setBodyPartError("");
+      setBodyPartError("PLease select at least one movement for each body part");
       return;
     }
     dispatch(
@@ -128,7 +128,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   
 
   const handleSubmit = (values) => {
-    handleSave(values);
+    // handleSave(values);
   };
 
   useEffect(() => {

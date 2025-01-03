@@ -176,9 +176,9 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         );
     };
 
-    const handleSubmit = (values) => {
-        handleSave(values);
-    };
+    // const handleSubmit = (values) => {
+    //     handleSave(values);
+    // };
 
     useEffect(() => {
         if (is_exercise_updated?.isSuccess) {
@@ -400,7 +400,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                 <Formik
                     initialValues={initialValues}
                     enableReinitialize
-                    onSubmit={handleSubmit}
+                    onSubmit={() => console.log("")}
                 >
                     {({ setFieldValue }) => (
                         <FormikForm>
