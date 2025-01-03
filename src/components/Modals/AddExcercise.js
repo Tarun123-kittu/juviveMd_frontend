@@ -105,16 +105,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     );
   };
   const handleSaveDraaft = (values) => {
-    if (!data?.length) {
-      setBodyPartError("Please select the body parts");
-      return;
-    }
-    const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
-
-    if (invalidEntries.length > 0) {
-      setBodyPartError("Each body part must have a name and at least one movement.");
-      return;
-    }
     dispatch(
       create_exercise_draft({
         exercise_name: exerciseName,

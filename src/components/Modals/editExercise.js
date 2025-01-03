@@ -154,16 +154,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
     const handleSaveDraft = (values) => {
         const bodyParts = data.filter((entry) => entry.name);
-        if (!data?.length) {
-            setBodyPartError("Please select the body parts");
-            return;
-        }
-        const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
-
-        if (invalidEntries.length > 0) {
-            setBodyPartError("Each body part must have a name and at least one movement.");
-            return;
-        }
         dispatch(
             update_exercise_draft({
                 exercise_name: exerciseName,
@@ -383,8 +373,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
     const isButtonDisabled = data.some(
         (item) => item.name.trim() === "" || item.movements.length === 0
-      );
-    
+    );
+
 
     return (
         <Modal
@@ -576,7 +566,9 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}</Col>
+                                    ))}
+                                    {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
+                                </Col>
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
                                 <>
