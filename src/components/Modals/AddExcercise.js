@@ -105,6 +105,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     );
   };
   const handleSaveDraaft = (values) => {
+    if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
+      setBodyPartError("Please enter at least one value to save the exercise as a draft");
+      return;
+    }
     dispatch(
       create_exercise_draft({
         exercise_name: exerciseName,
@@ -135,7 +139,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setMovementsArray([])
       setMovementResponse([])
       setDifficuilty()
-      setDifficuiltOptions()
       setDifficuiltyResponse()
       setData([{ name: "", movements: [] }])
       if (draft) {
