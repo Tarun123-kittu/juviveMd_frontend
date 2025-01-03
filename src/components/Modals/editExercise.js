@@ -417,7 +417,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             ))}
                                         </Field>
                                     </Form.Group>
-                                    <Form.Group className="mb-2">
+                                    {/* <Form.Group className="mb-2">
                                         <Form.Label>Exercise Image</Form.Label>
                                         <div className="drag_file d-flex align-items-center justify-content-center flex-column">
                                             <input
@@ -435,7 +435,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
                                             />
                                         </div>
-                                    </Form.Group>
+                                    </Form.Group> */}
 
                                 </Col>
                                 <Col lg={8}>
@@ -509,7 +509,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </Col>
                                     </Row>
                                 </Col>
-                                <Col lg={12}>
+                                {<Col lg={12}>
                                     <div className="d-flex justify-content-between">
                                         <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
                                         {ExercisePermission?.canUpdate && (tab === "draft" || tab === "rejected") && <button
@@ -568,7 +568,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </div>
                                     ))}
                                     {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
-                                </Col>
+                                </Col>}
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
                                 <>

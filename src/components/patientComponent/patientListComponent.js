@@ -258,13 +258,7 @@ const Reception_patient_list = ({ showButtons }) => {
                         {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
                             {PatientActiveTabPermissions?.canRead && (
                                 <li
-<<<<<<< HEAD
                                    
-=======
-                                    style={{
-                                        cursor: tab === "active" ? "" : "pointer",
-                                    }}
->>>>>>> 2de29cfc269a7610f20bd0d268513ed84101e99e
                                     onClick={() => {
                                         if (tab !== "active" && !isActiveTab) {
                                             setTab("active");
@@ -278,13 +272,7 @@ const Reception_patient_list = ({ showButtons }) => {
                             )}
                             {PatientHealthTabPermissions?.canRead && (
                                 <li
-<<<<<<< HEAD
                                   
-=======
-                                    style={{
-                                        cursor: tab === "healthIssue" ? "" : "pointer",
-                                    }}
->>>>>>> 2de29cfc269a7610f20bd0d268513ed84101e99e
                                     onClick={() => {
                                         if (tab !== "healthIssue" && !isActiveTab) {
                                             setTab("healthIssue");
@@ -298,13 +286,7 @@ const Reception_patient_list = ({ showButtons }) => {
                             )}
                             {PatientPaymenTabtPermissions?.canRead && (
                                 <li
-<<<<<<< HEAD
                                     
-=======
-                                    style={{
-                                        cursor: tab === "paymentPending" ? "" : "pointer",
-                                    }}
->>>>>>> 2de29cfc269a7610f20bd0d268513ed84101e99e
                                     onClick={() => {
                                         if (tab !== "paymentPending" && !isActiveTab) {
                                             setTab("paymentPending");
