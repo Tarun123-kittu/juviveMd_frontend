@@ -49,7 +49,7 @@ const Dashboard = () => {
         <div className="cmn_head mb-3">
           <h2 className="mb-2">Dashboard</h2>
           <div className="dashboardinfo ">
-            <div className="info_card payment-card" onClick={() => navigate("/patient", { state: { val: "paymentPending" } })}>
+            <div className="info_card payment-card" title="View Patient payment pending" style={{cursor : "pointer"}} onClick={() => navigate("/patient", { state: { val: "paymentPending" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -75,7 +75,7 @@ const Dashboard = () => {
                 </div> : data?.paymentPending} <span>Till Today</span>
               </h4>
             </div>
-            <div className="info_card health-card"  onClick={() => navigate("/patient", { state: { val: "healthIssue" } })}>
+            <div className="info_card health-card" title="View Health Issus" style={{cursor : "pointer"}}  onClick={() => navigate("/patient", { state: { val: "healthIssue" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -169,7 +169,7 @@ const Dashboard = () => {
                 10 <span>Till Today</span>
               </h4>
             </div> */}
-            <div className="info_card exercise-card" onClick={() => navigate("/exercise", { state: { val: "approvalRequest" } })}>
+            <div className="info_card exercise-card" title="View Approval Requests" style={{cursor : "pointer"}} onClick={() => navigate("/exercise", { state: { val: "approvalRequest" } })}>
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="44"

@@ -13,6 +13,7 @@ import InfoIcon from '../../Images/info.png'
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const dispatch = useDispatch();
     const [fileData, setFileData] = useState(null);
+    console.log(fileData,"this is the file data")
     const [uploadFile, setUploadFile] = useState();
     const [fileName, setFileName] = useState('sample.csv');
     const [showPreview,setShowPreview] = useState(false)
@@ -22,6 +23,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
     const [show_success, setShow_success] = useState([])
     const [csvData, setCsvData] = useState([]);
     const [hide_download,setHide_download] = useState(true)
+
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
 
     useEffect(() => {
@@ -48,6 +50,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
         setFileData("")
         setIsValidUpload(false)
         setShowPreview(false)
+        setHide_download(true)
     }
 
     const handleFileUpload = (e) => {
@@ -257,16 +260,6 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                     </div>}
                     {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
                         <h6 className='m-0'>File Uploaded Successfully</h6>
-                        {/* <ul>
-
-                            {is_file_uploades?.data?.data?.successRecords?.map((ErrorCur, index) => {
-                                return (
-
-                                    <li key={index}>{ErrorCur?.exercise_name} </li>
-                                )
-                            })
-                            }
-                        </ul> */}
                     </div>}
 
                 </div>

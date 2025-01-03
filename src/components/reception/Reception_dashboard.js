@@ -39,7 +39,7 @@ const ReceptionDashboardComponent = () => {
                     <div className="cmn_head mb-3">
                         <h2 className="mb-2">Dashboard</h2>
                         <div className="dashboardinfo tariner_cards">
-                            <div className="info_card payment-card" onClick={() => navigate("/reception/patient", { state: { val: "active" } })}>
+                            <div className="info_card payment-card" title="View Patient" style={{cursor : "pointer"}} onClick={() => navigate("/reception/patient", { state: { val: "active" } })}>
                                 <div className="info_image d-flex align-items-center justify-content-center">
                                     <svg width="49" height="51" viewBox="0 0 49 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M24.3635 0.142057C21.2592 0.666876 18.892 2.83315 18.088 5.89273C16.9602 10.1248 19.7629 16.4784 23.593 18.3767C24.5198 18.8345 24.5756 18.8457 25.6699 18.8457C26.9317 18.8457 27.49 18.6894 28.5285 18.0306C30.8065 16.6124 32.8611 13.2067 33.5087 9.76746C33.8995 7.71285 33.4975 5.36791 32.4702 3.67063C30.8735 1.0577 27.557 -0.393927 24.3635 0.142057Z" fill="black" />
@@ -57,7 +57,7 @@ const ReceptionDashboardComponent = () => {
                                 </h4>
                             </div>
 
-                            <div className="info_card plan-card"  onClick={() => navigate("/reception/patient", { state: { val: "paymentPending" } })}>
+                            <div className="info_card plan-card" title="View Patient payment pending" style={{cursor : "pointer"}}  onClick={() => navigate("/reception/patient", { state: { val: "paymentPending" } })}>
                                 <div className="info_image d-flex align-items-center justify-content-center">
                                     <svg
                                         width="44"
@@ -107,7 +107,7 @@ const ReceptionDashboardComponent = () => {
                                     </div> : data?.paymentPending} <span>Till Today</span>
                                 </h4>
                             </div>
-                            <div className="info_card exercise-card"  onClick={() => navigate("/reception/patient", { state: { val: "healthIssue" } })}>
+                            <div className="info_card exercise-card" title="View Patient Health issues" style={{cursor : "pointer"}}  onClick={() => navigate("/reception/patient", { state: { val: "healthIssue" } })}>
                                 <div className="info_image d-flex align-items-center justify-content-center">
                                     <svg width="43" height="51" viewBox="0 0 43 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M10.9402 0.502018C9.78416 0.806789 8.69119 1.616 7.99758 2.65643C7.36702 3.59175 7.13582 4.44301 7.07276 6.02991L7.0097 7.3751H5.89572C5.27567 7.3751 4.48747 7.44867 4.10914 7.53274C2.19644 7.98464 0.662086 9.49798 0.15764 11.4212C0.0210186 11.9677 0 14.0905 0 28.8351C0 40.6791 0.0315279 45.7866 0.115602 46.1754C0.409863 47.5732 1.5764 49.1391 2.78497 49.7486C4.04608 50.3897 3.20534 50.3581 17.7607 50.3581C32.3056 50.3581 31.654 50.3792 32.8311 49.7486C33.4826 49.4018 34.4495 48.4665 34.8173 47.8254C35.3533 46.9111 35.5319 46.207 35.595 44.7147L35.6581 43.3169H36.772C38.7058 43.3169 39.9879 42.844 41.1019 41.73C41.785 41.0469 42.3945 39.9014 42.5627 39.0186C42.6257 38.6613 42.6678 33.8796 42.6678 26.0922C42.6678 12.4826 42.6888 13.0501 42.0162 11.747C41.7429 11.211 40.8707 10.2967 36.8982 6.31366C34.2603 3.67583 31.8747 1.36378 31.6015 1.17461C31.3177 0.985447 30.8238 0.733223 30.498 0.607113C29.899 0.386417 29.8254 0.386417 20.7033 0.365398C12.9054 0.344379 11.4236 0.365398 10.9402 0.502018ZM28.7114 6.55538C28.7535 9.58205 28.7745 9.89733 28.9847 10.5384C29.426 11.8731 30.3824 12.9976 31.6015 13.6176C32.6734 14.1536 33.1043 14.2061 36.4883 14.2061H39.6201V26.3444C39.6201 39.6387 39.6516 38.882 39.0105 39.5756C38.8529 39.7438 38.5376 39.9644 38.3064 40.0695C37.9071 40.2587 37.3185 40.2692 24.8965 40.2692H11.8965L11.3395 39.975C10.9297 39.7648 10.688 39.5441 10.4568 39.1657L10.1415 38.6613L10.1099 22.1512C10.0889 10.5594 10.1099 5.48343 10.194 5.10509C10.3727 4.25384 11.0453 3.59175 11.9281 3.37106C12.1067 3.32902 15.9426 3.29749 20.4616 3.28698L28.6694 3.27647L28.7114 6.55538ZM35.5004 11.1374C33.2724 11.169 32.9046 11.0849 32.3266 10.4123C31.8327 9.82377 31.7381 9.34034 31.7381 7.24899V5.43088L34.5756 8.26839L37.4131 11.1059L35.5004 11.1374ZM7.04123 24.211C7.04123 32.6395 7.08327 38.2935 7.14633 38.7454C7.4511 40.8998 9.27971 42.8125 11.3921 43.2013C11.8125 43.2749 15.3646 43.3169 22.3007 43.3169H32.5788V44.3258C32.5788 44.8828 32.5263 45.5239 32.4632 45.7446C32.2951 46.27 31.8222 46.848 31.2862 47.1318L30.8448 47.363H17.8133H4.77122L4.25627 47.1003C3.85691 46.8901 3.64673 46.6904 3.3945 46.2595L3.0477 45.692V28.9507C3.0477 10.5909 3.00566 11.81 3.65724 11.1164C4.16168 10.5804 4.65562 10.4228 5.91674 10.4228H7.04123V24.211Z" fill="black" />
