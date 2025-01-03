@@ -545,7 +545,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                         isDisabled={!entry.name || !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                         className="flex-grow-1"
                                                     />
-                                                    {data?.length > 1 && <span class="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
+                                                    {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
                                                 </div>
                                             </div>
                                         </div>

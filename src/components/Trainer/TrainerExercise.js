@@ -206,7 +206,7 @@ const TrainerExercise = () => {
         tab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} tab={activeTab} />
+      <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} tab={activeTab} setActiveTab={setActiveTab}/>
     </div>
   );
 };
