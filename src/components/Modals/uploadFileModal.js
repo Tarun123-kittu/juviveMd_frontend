@@ -278,7 +278,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal }) {
                                     href="/exercises - Sheet1 (1).csv"
                                     download="sample.csv"
                                 >
-                                    <button className="cmn_btn">Download Sample</button>
+                                    <button className="cmn_btn mt-3">Download Sample</button>
                                 </a>
                             </div>
                         </>
