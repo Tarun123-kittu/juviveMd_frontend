@@ -23,11 +23,12 @@ import { formatDate } from '../../common/formatDate/formatDate';
 import Nodata from '../StaticComponents/Nodata';
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
-import { useLocation } from 'react-router-dom';
-
+import { useNavigate, useLocation } from 'react-router-dom';
+import ArrowRight from "../../Images/button_right.svg"
 const TrainerPatients = ({ show }) => {
     const elementRef = useRef(null);
     const location = useLocation()
+    const navigate = useNavigate()
     const { pathname } = location
 
     const dispatch = useDispatch()
@@ -58,6 +59,7 @@ const TrainerPatients = ({ show }) => {
     const is_patient_deleted = useSelector((store) => store.DELETE_PATIENT)
     const is_payment_status_updated = useSelector((store) => store.UPDATE_PATIENT_PAYMENT)
     const PatientPermissions = getRoutePermissions(permission_constants.PATIENT)?.[0] || {};
+        const PatientPlan = getRoutePermissions(permission_constants.PATIENTPLAN)?.[0] || {};
     const PatientPaymentPermissions = getRoutePermissions(permission_constants.PATIENTPAYMENT)?.[0] || {};
     const PatientActiveTabPermissions = getRoutePermissions(permission_constants.PATIENTACTIVETAB)?.[0] || {};
     const PatientHealthTabPermissions = getRoutePermissions(permission_constants.PATIENTHEALTHISSUETAB)?.[0] || {};
@@ -285,7 +287,7 @@ const TrainerPatients = ({ show }) => {
                         }
 
                     </div>
-                     <div className={`${patient_data?.data?.data?.totalPages > 1 && "streach_table"} patient_data`}>
+                    <div className='patient_data'>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
                             {patient_data?.isLoading ? <tr><td colSpan={10}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={10}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                                 return (
@@ -445,6 +447,7 @@ const TrainerPatients = ({ show }) => {
                                                 {PatientPermissions?.canDelete && <svg onClick={() => { setShowDeleteModal(true); setPatientId(patient?.id) }} className="me-3" width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3.96355 24C3.28478 24 2.70701 23.7606 2.23026 23.2817C1.7535 22.8028 1.51512 22.223 1.51512 21.5422V2.69372H0V1.17185H6.06048V0H15.1512V1.17185H21.2117V2.69372H19.6965V21.5422C19.6965 22.2422 19.4632 22.8271 18.9966 23.2969C18.5299 23.7666 17.9471 24.001 17.2481 24H3.96355ZM18.1814 2.69372H3.03024V21.5422C3.03024 21.8151 3.11761 22.0393 3.29235 22.2148C3.4671 22.3904 3.69083 22.4781 3.96355 22.4781H17.2496C17.4819 22.4781 17.6956 22.3807 17.8905 22.1859C18.0855 21.9911 18.1824 21.776 18.1814 21.5406V2.69372ZM7.28469 19.4344H8.79981V5.73748H7.28469V19.4344ZM12.4119 19.4344H13.927V5.73748H12.4119V19.4344Z" fill="black" />
                                                 </svg>}
+                                             { PatientPlan?.canRead &&  <button onClick={() => navigate("/trainer/patient/patientData", { state: { patientId: patient?.id } })} className='cmn_btn fade_color px-2 py-1' style={{ height: "36px" }}> <img width="18" src={ArrowRight} /> </button>}
                                             </div>
                                         </td>
                                     </tr>

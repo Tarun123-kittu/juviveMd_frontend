@@ -180,7 +180,7 @@ const Sidebar = () => {
                 );
               }
 
-              if (menus.role === "Trainer" && localStorage?.getItem("user_role") === "Trainer") {
+              if ((menus.role === "Trainer" && localStorage?.getItem("user_role") === "Trainer") || (menus.role === "Receptionist" && localStorage?.getItem("user_role") === "Receptionist")) {
                 return (
                   <>
                     {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (

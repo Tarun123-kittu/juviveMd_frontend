@@ -3,7 +3,6 @@ import Cookies from 'js-cookie';
 export const getRoutePermissions = (route) => {
     try {
         const permissions_data = localStorage.getItem('permissions');
-        
         if (!permissions_data) {
             return [];
         }

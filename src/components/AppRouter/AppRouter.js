@@ -171,6 +171,12 @@ const AppRouter = () => {
                     )
                 },
                 {
+                    path: "/trainer/patient/patientData",
+                    element: (
+                            <PatientData />
+                    )
+                },
+                {
                     path: "/trainer/exercise",
                     element: (
                         <ProtectedRoute requiredRole="Trainer">
