@@ -53,6 +53,11 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setData([{ name: "", movements: [] }])
     setBodyPartError('')
     setFieldError('')
+    setExerciseName('')
+    setExerciseType('')
+    setExerciseVideo('')
+    setExerciseDescription('')
+    setExerciseImage()
   };
 
   useEffect(() => {
@@ -83,6 +88,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSave = (values) => {
+    
     if (!data?.length) {
       setBodyPartError("Please select the body parts");
       return;
@@ -93,6 +99,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setBodyPartError("PLease select at least one movement for each body part");
       return;
     }
+    dispatch(clear_get_single_exercise_state())
     dispatch(
       create_exercise({
         exercise_name: exerciseName,
@@ -112,6 +119,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setFieldError("Please enter at least one value to save the exercise as a draft");
       return;
     }
+    dispatch(clear_get_single_exercise_state())
     dispatch(
       create_exercise_draft({
         exercise_name: exerciseName,
