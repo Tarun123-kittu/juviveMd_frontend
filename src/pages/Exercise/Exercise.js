@@ -120,8 +120,6 @@ const Exercise = () => {
                   Filter
                 </button>
               </div>
-            </div>
-
             {toggleFilter && (
               <div className="patient_filter">
                 <div className="filter_list w-100">
@@ -182,6 +180,8 @@ const Exercise = () => {
                 </div>
               </div>
             )}
+            </div>
+
             <Tabs
               activeKey={activeTab}
               onSelect={(key) => handleUpdateTab(key)}
