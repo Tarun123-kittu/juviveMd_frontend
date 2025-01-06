@@ -238,15 +238,29 @@ const AddPateintExercise = ({
   }
 
   const handleFlexibilityRow = () => {
-    setFlexibilityField((prev) => [
-      ...prev,
-      {
-        reps: "",
-        weight: { value: 0, unit: "kg" },
-        time: { value: 0, unit: "sec" }
+    setFlexibilityField((prev) => {
+      const isStateValid = prev.every((field) =>
+        Object.entries(field).every(([key, value]) => {
+          if (typeof value === "object") {
+            return Object.values(value).every((nestedValue) => nestedValue !== null && nestedValue !== undefined && nestedValue !== "");
+          }
+          return value !== null && value !== undefined && value !== "";
+        })
+      );
+      if (isStateValid) {
+        return [
+          ...prev,
+          {
+            reps: "",
+            weight: { value: 0, unit: "kg" },
+            time: { value: 0, unit: "sec" }
+          }
+        ];
       }
-    ]);
+      return prev;
+    });
   };
+
 
   const handleChangeFlexibilityFields = (i, field, e) => {
     let { value } = e.target;
@@ -342,13 +356,23 @@ const AddPateintExercise = ({
   };
 
   const handleAddCardioFields = () => {
-    setCradioFields((prev) => [
-      ...prev,
-      {
-        time: { value: 0, unit: "sec" }
+    setCradioFields((prev) => {
+      const isStateValid = prev.every((field) =>
+        Object.values(field.time).every((value) => value !== null && value !== undefined && value !== "")
+      );
+      if (isStateValid) {
+        return [
+          ...prev,
+          {
+            time: { value: 0, unit: "sec" }
+          }
+        ];
       }
-    ]);
-  }
+      return prev;
+    });
+  };
+
+
 
   const handleSelect = (selectedList) => {
     const days = selectedList.map((item) => item.name);
@@ -499,6 +523,7 @@ const AddPateintExercise = ({
   const handleDeleteRow = (index) => {
     setData(data?.filter((_, i) => i !== index));
   };
+
 
   return (
     <Modal
