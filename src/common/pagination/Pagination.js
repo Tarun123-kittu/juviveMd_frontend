@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactPaginate from "react-paginate";
 
-const Pagination = ({ totalPages, onPageChange }) => {
-  const [currentPage, setCurrentPage] = useState(0);
-
-
+const Pagination = ({ totalPages, onPageChange, page, setPage }) => {
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+    setPage(selectedPage.selected); // Update the page state in the parent
     if (onPageChange) {
       onPageChange(selectedPage.selected);
     }
@@ -15,14 +12,15 @@ const Pagination = ({ totalPages, onPageChange }) => {
   return (
     <div>
       <ReactPaginate
-        pageCount={totalPages} 
-        pageRangeDisplayed={5} 
-        marginPagesDisplayed={2} 
+        pageCount={totalPages}
+        pageRangeDisplayed={5}
+        marginPagesDisplayed={2}
         onPageChange={handlePageChange}
         containerClassName="pagination"
-        pageClassName="page-item" 
-        pageLinkClassName="page-link" 
-        activeClassName="active" 
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        activeClassName="active"
+        forcePage={page-1} // Force the active page to match the `page` prop
       />
     </div>
   );

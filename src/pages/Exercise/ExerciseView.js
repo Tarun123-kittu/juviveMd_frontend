@@ -43,7 +43,7 @@ const ExerciseView = () => {
             <Col lg={5} className="ps-0 pe-4">
               <div className="pose_image">
                 <img
-                  src={exercise_data?.imageUrl || PoseImage}
+                  src={exercise_data?.image_url || PoseImage}
                   alt="Exercise_Image"
                   className="exercise_preview_image"
                   style={{ width: '100%', height: '350px', objectFit: 'cover' }}

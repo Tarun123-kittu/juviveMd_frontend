@@ -12,9 +12,10 @@ import { get_quotes } from '../../redux/slices/quotesSlice/quotesSlice'
 import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions'
 import { permission_constants } from '../../constants/permissionConstants'
 import { get_single_staff } from '../../redux/slices/staffSlice/getStaffByIdSlice'
+import DeleteModal from '../Modals/DeleteModal'
 
 const Sidebar = () => {
-
+  const token = Cookies.get('authToken');
   const [toggle, setToggle] = useState(false)
   const dispatch = useDispatch()
 
@@ -22,6 +23,7 @@ const Sidebar = () => {
   const navigate = useNavigate()
   const [quotes, setQuotes] = useState([])
   const { pathname } = location;
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const splitLocation = pathname.split("/");
   const quotes_list = useSelector((store) => store.GET_QUOTES)
   const user_details = useSelector((store) => store.STAFF_DETAIL)
@@ -39,6 +41,10 @@ const Sidebar = () => {
   const [firstPermissionExercise] = getRoutePermissions(permission_constants?.EXERCISE);
   const [firstPermissionDashboard] = getRoutePermissions(permission_constants?.DASHBOARD);
   const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
+
+  if(!token){
+    navigate("/")
+  }
 
   useEffect(() => {
     if (quotes?.length === 0) {
@@ -128,58 +134,58 @@ const Sidebar = () => {
           </div>
           <ul className='menu_items d-flex flex-column'>
             {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-               const currentPath = window.location.pathname;
-               // Check if the current path starts with the menu path
-               const isActive = currentPath.startsWith(menus.path);
-                return (
-                  <>
-                    {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
-                      <li key={`${index}-staff`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                );
+              const currentPath = window.location.pathname;
+              // Check if the current path starts with the menu path
+              const isActive = currentPath.startsWith(menus.path);
+              return (
+                <>
+                  {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
+                    <li key={`${index}-staff`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                  {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
+                    <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                  {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
+                    <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                  {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
+                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                  {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
+                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                  {menus?.name === "Messages" && firstPermissionChat?.canRead && (
+                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                        {menus.icon} <span>{menus.name}</span>
+                      </Link>
+                    </li>
+                  )}
+                </>
+              );
 
             })}
-            <li onClick={() => handleLogout()} className='log_out'>
+            <li onClick={() => setShowDeleteModal(true)} className='log_out'>
               <div className='d-flex align-items-center '>
                 <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2.26849 2.44134H14.6351V10.0159H16.181V2.44134C16.181 2.03136 16.0181 1.63817 15.7282 1.34827C15.4383 1.05837 15.0451 0.895508 14.6351 0.895508H2.26849C1.85851 0.895508 1.46532 1.05837 1.17542 1.34827C0.88552 1.63817 0.722656 2.03136 0.722656 2.44134V20.9913C0.722656 21.4013 0.88552 21.7945 1.17542 22.0844C1.46532 22.3743 1.85851 22.5371 2.26849 22.5371H14.6351C15.0451 22.5371 15.4383 22.3743 15.7282 22.0844C16.0181 21.7945 16.181 21.4013 16.181 20.9913H2.26849V2.44134Z" fill="white" />
@@ -192,6 +198,7 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
+      <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleLogout} loading={false} text={"Are you sure ?"} setShowDeleteModal={setShowDeleteModal} />
     </div>
   )
 }
