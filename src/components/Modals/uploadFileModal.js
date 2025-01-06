@@ -9,6 +9,7 @@ import { upload_exercises, clear_upload_exercise_state } from '../../redux/slice
 import { get_exercise } from '../../redux/slices/exerciseSlice/getExercise';
 import Spinner from 'react-bootstrap/Spinner';
 import InfoIcon from '../../Images/info.png'
+import { RxCross2 } from "react-icons/rx";
 
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiveTab }) {
     const dispatch = useDispatch();
@@ -170,7 +171,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
     return (
         <Modal
             show={showFileUploadModal}
-            className='cmn_modal '
+            className='cmn_modal upoadFile_modal'
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             onHide={() => {
@@ -205,22 +206,25 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
             <Modal.Body>
                 <h2 className="deletmodal_heading">Upload Exercises</h2>
                 <div className="mb-3 pt-3">
+                    <div className='position-relative'>
                     <input
                         type="file"
                         accept=".csv, .xlsx, .xls"
                         onChange={handleFileUpload}
                         className="form-control"
                     />
-                    {fileData !== null && <div className='info d-flex gap-3 mt-2'>
+                    <RxCross2 className="position-absolute end-0 top-0 mt-2 me-2"size={20} type='button'/>
+                    </div>
+                    {fileData !== null && <div className='info d-flex gap-3 mt-3'>
 
                         <img src={InfoIcon} alt="InfoIcon" />
-                        <h6 >{!showPreview ? "Preview" : "Uploaded file preview"}</h6>
+                        <h6>{!showPreview ? "Sample Preview" : "Uploaded file preview"}</h6>
                     </div>}
                 </div>
 
                 {!isValidUpload && <div className="text-danger">{errorMessage}</div>}
 
-                <div className='table-responsive'>
+                <div className='table-responsive uploadTable'>
                     {fileData && fileData?.length > 0 && (
                         <table className="table table-striped table-bordered custom-table">
                             <thead>

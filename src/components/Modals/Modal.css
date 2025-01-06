@@ -503,3 +503,13 @@ span.time.min {
   border-color: rgba(215, 215, 215, 1);
   background: #fff;
 }
+.uploadTable th {
+  font-size: 14px;
+}
+
+.uploadTable td {
+  font-size: 13px;
+}
+.cmn_modal.cmn_modal .modal-dialog {
+  max-width: 82%;
+}
