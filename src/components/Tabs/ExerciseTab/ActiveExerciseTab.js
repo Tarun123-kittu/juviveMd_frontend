@@ -120,7 +120,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
               <tr>
 
                 <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
-                <td><img src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5' alt="exercise" /></td>
+                <td><img src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border' alt="exercise" /></td>
                 <td>
                   {exercise?.video_link ? (
                     <a
