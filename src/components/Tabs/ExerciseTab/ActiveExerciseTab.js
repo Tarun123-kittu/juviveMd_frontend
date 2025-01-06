@@ -260,43 +260,17 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
                     )}
                   </Dropdown>
-
-
-
                 </div></td>
                 <td>
                   {exercise?.trainerName ? exercise?.trainerName?.charAt(0).toUpperCase() + exercise.trainerName.slice(1) : ''}
                 </td>
                 <td>
-                  {/* {(localStorage?.getItem('user_role') === "TRAINER" || localStorage?.getItem('user_role') === "ADMIN") && (tab === "approvalRequest" || tab === "active") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
-                {(localStorage?.getItem('user_role') === "ADMIN") && (tab === "rejected") && <FaRegEye title='View Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
-                {localStorage?.getItem('user_role') === "TRAINER" && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { pathname === "/exercise" ? navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) : setExerciseId(exercise?.id); setEditExerciseModal(true) }} />} */}
-
-                  <div className='d-flex gap-2 '>
-                    {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye className='me-2' title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
-                    {ExercisePermission?.canDelete && <FaRegTrashAlt className='me-2' title='Delete Exercise' size={30} onClick={() => { setShowDeleteModal(true); setExerciseId(exercise?.id) }} />}
+                  <div className='d-flex gap-3'>
+                    {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
                     {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
+                    {ExercisePermission?.canDelete && <FaRegTrashAlt className='me-2' title='Delete Exercise' size={30} onClick={() => { setShowDeleteModal(true); setExerciseId(exercise?.id) }} />}
                   </div>
-                  {/* {showDropdown && tab !== "rejected" && (
-                  !is_status_updated?.isLoading ? (
-                    <button
-                      disabled={!save}
-                      className="cmn_btn border-btn ms-2"
-                      
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button className="cmn_btn border-btn ms-2" disabled>
-                      <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                    </button>
-                  )
-                )} */}
-
                 </td>
-
               </tr>
             )
           })}

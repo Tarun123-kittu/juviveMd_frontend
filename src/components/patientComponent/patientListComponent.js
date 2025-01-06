@@ -27,7 +27,7 @@ import { permission_constants } from "../../constants/permissionConstants";
 import { TiArrowRight } from 'react-icons/ti';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowRight from '../../Images/button_right.svg'
-const Reception_patient_list = ({ showButtons }) => {
+const Reception_patient_list = ({ showButtons,className }) => {
     const elementRef = useRef(null);
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -254,8 +254,8 @@ const Reception_patient_list = ({ showButtons }) => {
                     <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
                         <h2 className='flex-grow-1'>Patient List</h2>
                     </div>
-                    <div className="cmn_head d-flex align-items-center mb-3 position-relative gap-3">
-                        {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex mb-0'>
+                    <div className="cmn_head d-flex align-items-center  position-relative gap-3">
+                        {pathname !== "/dashboard" && <ul className='static_tabs flex-grow-1 d-flex      mb-3'>
                             {PatientActiveTabPermissions?.canRead && (
                                 <li
                                    
