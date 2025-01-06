@@ -174,6 +174,7 @@ const SettingsComponents = () => {
       setEmailError("Please enter a valid email");
       return;
     }
+    if(data?.firstName === user_details?.data?.data?.firstName && data?.lastName === user_details?.data?.data?.lastName && data?.image === user_details?.data?.data?.image && data?.email === user_details?.data?.data?.email && data?.phone === user_details?.data?.data?.phone) return
     dispatch(update_staff({ data: { ...data, hasImage }, id: localStorage.getItem('user_id') }));
   }
 
