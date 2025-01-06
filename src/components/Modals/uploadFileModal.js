@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import * as XLSX from 'xlsx';
 import { CSVLink } from 'react-csv';
@@ -13,8 +13,8 @@ import { RxCross2 } from "react-icons/rx";
 
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiveTab }) {
     const dispatch = useDispatch();
+    const fileInputRef = useRef(null);
     const [fileData, setFileData] = useState(null);
-    console.log(fileData, "this is the file data")
     const [uploadFile, setUploadFile] = useState();
     const [fileName, setFileName] = useState('sample.csv');
     const [showPreview, setShowPreview] = useState(false)
@@ -166,7 +166,26 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
         setHide_download(true)
     }
 
-
+    const refreshField = () => {
+        fetch("/exercises - Sheet1 (1).csv")
+            .then((response) => response.text())
+            .then((data) => {
+                const cleanedData = data.replace(/^\uFEFF/, "");
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = ""; 
+                }
+                setIsValidUpload(false)
+                setShow_close_button(false)
+                setHide_download(true)
+                Papa.parse(cleanedData, {
+                    complete: (result) => {
+                        setFileData(result.data);
+                    },
+                    header: false,
+                });
+            })
+            .catch((error) => console.error("Error fetching CSV file:", error));
+    }
 
     return (
         <Modal
@@ -207,13 +226,14 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                 <h2 className="deletmodal_heading">Upload Exercises</h2>
                 <div className="mb-3 pt-3">
                     <div className='position-relative'>
-                    <input
-                        type="file"
-                        accept=".csv, .xlsx, .xls"
-                        onChange={handleFileUpload}
-                        className="form-control"
-                    />
-                    <RxCross2 className="position-absolute end-0 top-0 mt-2 me-2"size={20} type='button'/>
+                        <input
+                            type="file"
+                            accept=".csv, .xlsx, .xls"
+                            onChange={handleFileUpload}
+                            className="form-control"
+                            ref={fileInputRef}
+                        />
+                        {isValidUpload && !show_close_button && <RxCross2 onClick={() => refreshField()} className="position-absolute end-0 top-0 mt-2 me-2" size={20} type='button' />}
                     </div>
                     {fileData !== null && <div className='info d-flex gap-3 mt-3'>
 
