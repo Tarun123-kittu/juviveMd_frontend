@@ -14,6 +14,8 @@ import { get_patient_plan, clear_patient_plan_state } from "../../redux/slices/p
 import { format } from "date-fns";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../constants/permissionConstants";
 
 import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
@@ -33,6 +35,7 @@ const PatientData = () => {
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
+  const [patientPermissions] = getRoutePermissions(permission_constants.PATIENTREPORTS)
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -134,7 +137,7 @@ const PatientData = () => {
     <div className="wrapper">
       <div className="inner_wrapper">
         {
-          patient_details?.isLoading ? <Skeleton className="skeleton"/> :
+          patient_details?.isLoading ? <Skeleton className="skeleton" /> :
             <div className="d-flex gap-3">
               <div className="report_info flex-grow-1">
                 <div className="user_main table_user_data d-flex flex-column">
@@ -242,14 +245,14 @@ const PatientData = () => {
                         <img src="/height_image.png" alt="email" />
                       </div>
                       <span>Height</span>
-                      <p className="mb-0">{patient_data?.height?.value}{patient_data?.height?.unit}</p>
+                      <p className="mb-0">{patient_data?.height?.value} {patient_data?.height?.unit}</p>
                     </li>
                     <li className="bmi_card flex-grow-1">
                       <div className="link_image d-flex justify-content-center align-items-center">
                         <img src="/weight_image.png" alt="email" />
                       </div>
                       <span>Weight</span>
-                      <p className="mb-0">{patient_data?.weight?.value}{patient_data?.weight?.unit}</p>
+                      <p className="mb-0">{patient_data?.weight?.value} {patient_data?.weight?.unit}</p>
                     </li>
                     <li className="bmi_card flex-grow-1">
                       <div className="link_image d-flex justify-content-center align-items-center">
@@ -272,70 +275,70 @@ const PatientData = () => {
               </div>
             </div>
         }
-      <div className="cmn_head mb-3 mt-4 position-relative">
+        <div className="cmn_head mb-3 mt-4 position-relative">
 
-        <h4>
-          {formatDate(selectedDate)}
-          <svg
-            className="ms-2"
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 15.3C0 16.83 1.17 18 2.7 18H15.3C16.83 18 18 16.83 18 15.3V8.1H0V15.3ZM15.3 1.8H13.5V0.9C13.5 0.36 13.14 0 12.6 0C12.06 0 11.7 0.36 11.7 0.9V1.8H6.3V0.9C6.3 0.36 5.94 0 5.4 0C4.86 0 4.5 0.36 4.5 0.9V1.8H2.7C1.17 1.8 0 2.97 0 4.5V6.3H18V4.5C18 2.97 16.83 1.8 15.3 1.8Z"
-              fill="black"
-            />
-          </svg>
-        </h4>
-        <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Exercise</button>
+          <h4>
+            {formatDate(selectedDate)}
+            <svg
+              className="ms-2"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 15.3C0 16.83 1.17 18 2.7 18H15.3C16.83 18 18 16.83 18 15.3V8.1H0V15.3ZM15.3 1.8H13.5V0.9C13.5 0.36 13.14 0 12.6 0C12.06 0 11.7 0.36 11.7 0.9V1.8H6.3V0.9C6.3 0.36 5.94 0 5.4 0C4.86 0 4.5 0.36 4.5 0.9V1.8H2.7C1.17 1.8 0 2.97 0 4.5V6.3H18V4.5C18 2.97 16.83 1.8 15.3 1.8Z"
+                fill="black"
+              />
+            </svg>
+          </h4>
+          <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Exercise</button>
+        </div>
+        <Tabs
+          activeKey={activeTab}
+          onSelect={handleTabSelect}
+          id="uncontrolled-tab-example"
+          className="mb-3 weekendTabs cmn_tabs"
+        >
+          <Tab eventKey="Sunday" title="Sunday">
+            {activeTab === 'Sunday' && (
+              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Monday" title="Monday">
+            {activeTab === 'Monday' && (
+              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Tuesday" title="Tuesday">
+            {activeTab === 'Tuesday' && (
+              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Wednesday" title="Wednesday">
+            {activeTab === 'Wednesday' && (
+              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Thursday" title="Thursday">
+            {activeTab === 'Thursday' && (
+              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Friday" title="Friday">
+            {activeTab === 'Friday' && (
+              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+          <Tab eventKey="Saturday" title="Saturday">
+            {activeTab === 'Saturday' && (
+              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
+            )}
+          </Tab>
+        </Tabs>
       </div>
-      <Tabs
-        activeKey={activeTab}
-        onSelect={handleTabSelect}
-        id="uncontrolled-tab-example"
-        className="mb-3 weekendTabs cmn_tabs"
-      >
-        <Tab eventKey="Sunday" title="Sunday">
-          {activeTab === 'Sunday' && (
-            <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Monday" title="Monday">
-          {activeTab === 'Monday' && (
-            <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Tuesday" title="Tuesday">
-          {activeTab === 'Tuesday' && (
-            <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Wednesday" title="Wednesday">
-          {activeTab === 'Wednesday' && (
-            <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Thursday" title="Thursday">
-          {activeTab === 'Thursday' && (
-            <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Friday" title="Friday">
-          {activeTab === 'Friday' && (
-            <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-        <Tab eventKey="Saturday" title="Saturday">
-          {activeTab === 'Saturday' && (
-            <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} />
-          )}
-        </Tab>
-      </Tabs>
-    </div>
-      { showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} /> }
+      {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} />}
     </div >
   );
 };

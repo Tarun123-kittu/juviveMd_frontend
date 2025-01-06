@@ -14,7 +14,7 @@ import { delete_patient_plan, clear_delete_patient_plan_state } from "../../../r
 import DeleteModal from "../../Modals/DeleteModal";
 import toast from "react-hot-toast";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty,setLoading }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -37,7 +37,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
       setLoading(true)
       dispatch(clear_patient_plan_state())
     }
-  },[])
+  }, [])
 
   const patientExerciseData = useSelector((store) => store.GET_PATIENT_PLAN)
 
@@ -95,10 +95,10 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
             <td> <img src={exercise?.imageUrl || Training} altDeleteImage="" className="rounded-5" width={50} height={50} /></td>
             <td>{patientPlan?.sets?.length}</td>
             <td>{exercise?.description}</td>
-            <td onClick={() => setShowReviewModal(true)} className="text-decoration-underline">Easy</td>
+            <td className="text-decoration-underline">Easy</td>
             <td>
               <div className="d-flex gap-2">
-                <img src={LinkImage} width={18} alt="" />
+                {/* <img src={LinkImage} width={18} alt="" /> */}
                 <img
                   src={DeleteImage}
                   className="ms-2 me-2"
