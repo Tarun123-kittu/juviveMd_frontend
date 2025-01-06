@@ -113,12 +113,15 @@ span.remove_file {
 
 ul.static_tabs {
   border-bottom: 1px solid #ddd;
+  background: #F6FDFD;
+
 }
 
 ul.static_tabs li {
   padding: 7px 10px;
   font-weight: 500;
   color: #666666;
+  font-size: 14px;
 }
 
 ul.static_tabs li.active {

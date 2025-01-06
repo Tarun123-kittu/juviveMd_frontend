@@ -98,7 +98,7 @@ const Exercise = () => {
         <div className="exercise_tab">
           <div className="">
             <div className="position-relative w-100" >
-              <div className="d-flex gap-2 position-absolute end-0 cta_exercise">
+              <div className="d-flex gap-3 position-absolute end-0 cta_exercise bg-white ps-3">
                 {ExerciseUploadPermission?.canCreate &&
                   <button
                     className="cmn_btn filter_btn"
