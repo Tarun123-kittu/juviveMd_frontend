@@ -131,7 +131,6 @@ const Sidebar = () => {
                const currentPath = window.location.pathname;
                // Check if the current path starts with the menu path
                const isActive = currentPath.startsWith(menus.path);
-              if (menus.role === "Admin" && localStorage?.getItem("user_role") === "Admin") {
                 return (
                   <>
                     {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
@@ -178,83 +177,6 @@ const Sidebar = () => {
                     )}
                   </>
                 );
-              }
-
-              if ((menus.role === "Trainer" && localStorage?.getItem("user_role") === "Trainer") || (menus.role === "Receptionist" && localStorage?.getItem("user_role") === "Receptionist")) {
-                return (
-                  <>
-                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                )
-              }
-              if (menus.role === "Receptionist" && localStorage?.getItem("user_role") === "Receptionist") {
-                return (
-                  <>
-                    {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                      <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                    {menus?.name === "Messages" && firstPermissionChat?.canRead && (
-                      <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
-                        <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                          {menus.icon} <span>{menus.name}</span>
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                )
-              }
 
             })}
             <li onClick={() => handleLogout()} className='log_out'>

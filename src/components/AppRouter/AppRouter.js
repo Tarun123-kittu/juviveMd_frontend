@@ -8,22 +8,15 @@ import Staff from "../../pages/Staff/Staff";
 import Patient from "../../pages/Patient/Patient";
 import PatientData from "../../pages/Patient/PatientData";
 import ProtectedRoute from "../../middleware/authenticationMiddleware/protectedRoutes";
-import Receptionist_patients from "../../pages/Receptionist/Receptionist_patientsa";
-import Reception_dashboard from "../../pages/Receptionist/Reception_dashboard";
 import Exercise from "../../pages/Exercise/Exercise";
 import PatientResetPassword from "../reception/patientResetPassword";
 import ExerciseView from "../../pages/Exercise/ExerciseView";
-import TrainerDashboard from "../Trainer/TrainerDashboard";
-import TrainerExercise from "../Trainer/TrainerExercise";
 import Message from "../../pages/messages/Message";
-import TrainerMessages from "../Trainer/TrainerMessages";
 import Settings from "../../pages/settings/Settings";
-import TrainerPatients from "../Trainer/TrainerPatients";
 import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
-import ReceptionMessages from "../reception/ReceptionMessages";
 import NotFound from "../../common/notFound/NotFound";
-import ReceptionistExercise from "../reception/ReceptionistExercise";
 import PatientReport from "../../pages/Patient/PatientReport";
+
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -45,25 +38,19 @@ const AppRouter = () => {
                 {
                     path: "/dashboard",
                     element: (
-                        <ProtectedRoute requiredRole="Admin">
                             <Dashboard />
-                        </ProtectedRoute>
                     ),
                 },
                 {
                     path: "/settings",
                     element: (
-                        // <ProtectedRoute requiredRole="Admin">
                             <Settings />
-                        // </ProtectedRoute>
                     ),
                 },
                 {
                     path: "/messages",
                     element: (
-                        // <ProtectedRoute requiredRole="Admin">
                             <Message />
-                        // </ProtectedRoute>
                     ),
                 },
                 {
@@ -71,38 +58,6 @@ const AppRouter = () => {
                     element: (
                         <ProtectedRoute requiredRole="Admin">
                             <Staff />
-                        </ProtectedRoute>
-                    ),
-                },
-                {
-                    path: "/reception/patient",
-                    element: (
-                        <ProtectedRoute requiredRole="Receptionist">
-                            <Receptionist_patients />
-                        </ProtectedRoute>
-                    ),
-                },
-                {
-                    path: "/reception/dashboard",
-                    element: (
-                        <ProtectedRoute requiredRole="Receptionist">
-                            <Reception_dashboard />
-                        </ProtectedRoute>
-                    ),
-                },
-                {
-                    path: "/reception/exercise",
-                    element: (
-                        <ProtectedRoute requiredRole="Receptionist">
-                            <ReceptionistExercise />
-                        </ProtectedRoute>
-                    ),
-                },
-                {
-                    path: "/reception/messages",
-                    element: (
-                        <ProtectedRoute requiredRole="Receptionist">
-                            <ReceptionMessages />
                         </ProtectedRoute>
                     ),
                 },
@@ -115,9 +70,7 @@ const AppRouter = () => {
                 {
                     path: "/patient",
                     element: (
-                        <ProtectedRoute requiredRole="Admin">
                             <Patient />
-                        </ProtectedRoute>
                     ),
                 },
                 {
@@ -132,11 +85,9 @@ const AppRouter = () => {
                     element: (
                             <PatientReport />
                     )
-
                 },
                 {
                     path: "/exercise",
-
                     element: <Exercise />
                     
                 },
@@ -144,44 +95,6 @@ const AppRouter = () => {
                     path: "/exerciseView",
                     element: (
                             <ExerciseView />
-                    )
-                },
-                {
-                    path: "/trainer/dashboard",
-                    element: (
-                        <ProtectedRoute requiredRole="Trainer">
-                            <TrainerDashboard />
-                        </ProtectedRoute>
-                    )
-                },
-                {
-                    path: "/trainer/messages",
-                    element: (
-                        <ProtectedRoute requiredRole="Trainer">
-                            <TrainerMessages />
-                        </ProtectedRoute>
-                    )
-                },
-                {
-                    path: "/trainer/patient",
-                    element: (
-                        <ProtectedRoute requiredRole="Trainer">
-                            <TrainerPatients />
-                        </ProtectedRoute>
-                    )
-                },
-                {
-                    path: "/trainer/patient/patientData",
-                    element: (
-                            <PatientData />
-                    )
-                },
-                {
-                    path: "/trainer/exercise",
-                    element: (
-                        <ProtectedRoute requiredRole="Trainer">
-                            <TrainerExercise />
-                        </ProtectedRoute>
                     )
                 },
                 {

@@ -15,13 +15,14 @@ export const authMiddleware = (navigate) => {
 
             fetchPermissions(user.roleId).then((permissions) => {
                 localStorage.setItem("permissions", JSON.stringify(permissions));
-                if (user?.roleName === "Admin") {
+                if (user?.roleName) {
                     navigate("/dashboard");
-                } else if (user.roleName === "Trainer") {
-                    navigate("/trainer/dashboard");
-                } else if (user.roleName === "Receptionist") {
-                    navigate("/reception/dashboard");
                 }
+                //  else if (user.roleName === "Trainer") {
+                //     navigate("/trainer/dashboard");
+                // } else if (user.roleName === "Receptionist") {
+                //     navigate("/reception/dashboard");
+                // }
             }).catch((error) => {
                 console.error('Error fetching permissions:', error);
                 navigate('/');

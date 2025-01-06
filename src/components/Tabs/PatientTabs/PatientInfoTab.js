@@ -14,7 +14,7 @@ import { delete_patient_plan, clear_delete_patient_plan_state } from "../../../r
 import DeleteModal from "../../Modals/DeleteModal";
 import toast from "react-hot-toast";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty,setLoading }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -32,9 +32,17 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
     "Action",
   ];
 
+  useEffect(() => {
+    return () => {
+      setLoading(true)
+      dispatch(clear_patient_plan_state())
+    }
+  },[])
+
   const patientExerciseData = useSelector((store) => store.GET_PATIENT_PLAN)
 
   useEffect(() => {
+    setLoading(true)
     dispatch(clear_patient_plan_state())
     dispatch(get_patient_plan({ id: patientId, weekday }))
   }, [])
@@ -42,6 +50,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   useEffect(() => {
     if (patientExerciseData?.isSuccess) {
       setData(patientExerciseData?.data?.data)
+      setLoading(false)
     }
     if (patientExerciseData?.isError) {
       setData([])

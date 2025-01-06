@@ -8,6 +8,7 @@ import { send_message, clear_send_message_state } from '../../redux/slices/chatS
 import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions'
 import { permission_constants } from '../../constants/permissionConstants'
 import Nodata from "../StaticComponents/Nodata"
+import { read_message, clear_read_message_state } from '../../redux/slices/chatSlice/readMessages'
 
 const MessagesComponent = () => {
   const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const MessagesComponent = () => {
   const wholeChat = useSelector((store) => store.GET_WHOLE_CHAT)
   const is_message_sent = useSelector((store) => store.SEND_MESSAGE)
   const [firstPermissionChat] = getRoutePermissions(permission_constants?.CHAT);
+  const is_message_read = useSelector((store) => store.READ_MESSAGE)
 
   useEffect(() => {
     dispatch(recent_chats({ page: 1 }))
@@ -41,6 +43,10 @@ const MessagesComponent = () => {
       }
     }
   }, [all_chats])
+
+  useEffect(() => {
+    dispatch(read_message({ receiverId: openChatId }))
+  }, [openChatId])
 
   useEffect(() => {
     if (openChatId) {
@@ -254,9 +260,9 @@ const MessagesComponent = () => {
 
           </div>}
         </div>
-        {chats?.length === 0 &&<div className='no_messages'>
-            <Nodata />
-          </div>}
+        {chats?.length === 0 && <div className='no_messages'>
+          <Nodata />
+        </div>}
       </div>
     </div >
   )

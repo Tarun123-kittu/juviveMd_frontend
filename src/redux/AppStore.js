@@ -41,6 +41,7 @@ import getWholeChat from "./slices/chatSlice/getWholeChat"
 import sendMessages from "./slices/chatSlice/sendMessages"
 import DashboardAPI from "./slices/dashboardSlice/dashboard"
 import deletePatientPlanAPI from "./slices/patientPlan/deletePatientPlan"
+import ReadMessageAPI from "./slices/chatSlice/readMessages"
 
 const AppStore = configureStore({
   reducer: {
@@ -85,7 +86,8 @@ const AppStore = configureStore({
     GET_WHOLE_CHAT: getWholeChat,
     SEND_MESSAGE: sendMessages,
     DASHBOARD_STATE: DashboardAPI,
-    DELETE_PATIENT_PLAN: deletePatientPlanAPI
+    DELETE_PATIENT_PLAN: deletePatientPlanAPI,
+    READ_MESSAGE: ReadMessageAPI
   },
 })
 

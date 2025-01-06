@@ -293,7 +293,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                     {isValidUpload && !show_close_button && <button className='cmn_btn mt-3' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}</button>}
-                    {show_close_button && <button className='cmn_btn' onClick={() => handleCloseUpload()}>Close</button>}
+                    {show_close_button && <button className='cmn_btn mt-3' onClick={() => handleCloseUpload()}>Close</button>}
                 </div>
             </Modal.Body>
 

@@ -199,6 +199,9 @@ li.bmi_card p {
 .filter_list input:focus {
 box-shadow: unset;
 }
+span.react-loading-skeleton.skeleton {
+    height: 350px;
+}
 .patient_dropdown .dropdown-menu {
     padding: 0;
     width: 100%;

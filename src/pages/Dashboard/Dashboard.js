@@ -51,7 +51,19 @@ const Dashboard = () => {
         <div className="cmn_head mb-3">
           <h2 className="mb-2">Dashboard</h2>
           <div className="dashboardinfo ">
-            <div className="info_card payment-card" title="View Patient payment pending" style={{ cursor: "pointer" }} onClick={() => { navigate("/patient", { state: { val: "paymentPending" } }); dispatch(clear_all_patient_state()) }}>
+            <div
+              className="info_card payment-card"
+              title="View Patient payment pending"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (data?.paymentPending) {
+                  navigate("/patient", { state: { val: "paymentPending" } });
+                } else {
+                  navigate("/exercise", { state: { val: "active" } });
+                }
+                dispatch(clear_all_patient_state());
+              }}
+            >
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -70,14 +82,26 @@ const Dashboard = () => {
                   />
                 </svg>
               </div>
-              <h3>Payment Pending </h3>
+              <h3>{data?.paymentPending ? "Paymant Pending" : data?.totalExercises ? "Total Exercise" : ""}</h3>
               <h4>
                 {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
                   <span className="sr-only"></span>
-                </div> : data?.paymentPending} <span>Till Today</span>
+                </div> : data?.paymentPending ? data?.paymentPending : data?.totalExercises} <span>Till Today</span>
               </h4>
             </div>
-            <div className="info_card health-card" title="View Health Issus" style={{ cursor: "pointer" }} onClick={() => { navigate("/patient", { state: { val: "healthIssue" } });; dispatch(clear_all_patient_state()) }}>
+            <div
+              className="info_card exercise-card"
+              title="View Patient payment pending"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (data?.healthCases) {
+                  navigate("/patient", { state: { val: "healthIssue" } })
+                } else {
+                  navigate("/exercise", { state: { val: "draft" } });
+                }
+                dispatch(clear_all_patient_state());
+              }}
+            >
               <div className="info_image d-flex align-items-center justify-content-center">
                 <svg
                   width="51"
@@ -116,11 +140,11 @@ const Dashboard = () => {
                   />
                 </svg>
               </div>
-              <h3>Health Cases </h3>
+              <h3>{data?.healthCases ? "Health Cases" : data?.exercisesInDraft ? "Exercise In Draft" : ""}</h3>
               <h4>
                 {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
                   <span className="sr-only"></span>
-                </div> : data?.healthCases} <span>Till Today</span>
+                </div> : data?.healthCases ? data?.healthCases : data?.exercisesInDraft} <span>Till Today</span>
               </h4>
             </div>
             {/* <div className="info_card plan-card">
@@ -171,59 +195,71 @@ const Dashboard = () => {
                 10 <span>Till Today</span>
               </h4>
             </div> */}
-            <div className="info_card exercise-card" title="View Approval Requests" style={{ cursor: "pointer" }} onClick={() =>{ navigate("/exercise", { state: { val: "approvalRequest" } });dispatch(clear_get_single_exercise_state())}}>
-              <div className="info_image d-flex align-items-center justify-content-center">
-                <svg
-                  width="44"
-                  height="51"
-                  viewBox="0 0 44 51"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M17.608 1.09256C16.0159 1.43442 14.4922 2.58698 13.7206 4.0521L13.3005 4.84327H9.26658C4.76377 4.84327 4.37308 4.89211 3.12284 5.54653C2.234 6.01537 1.12051 7.15816 0.671202 8.06654C-0.0222889 9.48282 0.016781 8.23259 0.0460835 28.2168L0.0753859 46.2085L0.29027 46.775C1.02283 48.6797 2.31214 49.9983 4.02145 50.5844L4.6661 50.7992L13.2029 50.8285C17.901 50.8383 21.7299 50.8383 21.7006 50.8188C21.681 50.7992 20.7531 49.9202 19.6396 48.8653L17.6178 46.9411H11.5033C5.69169 46.9411 5.36936 46.9313 5.0275 46.7555C4.56843 46.5211 4.2754 46.2085 4.08005 45.7495C3.95307 45.4271 3.93354 43.4541 3.93354 27.8164V10.2447L4.15819 9.81491C4.28517 9.5805 4.57819 9.2484 4.80284 9.09212L5.22285 8.7991L7.16657 8.7698L9.1103 8.74049V12.5986V16.4666L18.8582 16.447L28.5964 16.4177L28.6257 12.5791L28.6453 8.75026H30.3839C32.2885 8.75026 32.6304 8.83817 33.1578 9.39492C33.695 9.98096 33.6755 9.42422 33.7243 21.2624L33.7732 32.2606L35.7071 30.1117L37.6411 27.9629L37.602 18.8694C37.563 8.78933 37.6118 9.43399 36.9085 8.0177C36.2639 6.72839 35.0723 5.68327 33.6267 5.15583L32.8941 4.89211L28.6355 4.86281L24.3866 4.8335L24.0838 4.22792C23.4978 3.02652 22.3843 1.96186 21.1927 1.44419C20.5773 1.1707 19.415 0.936283 18.7606 0.946049C18.4773 0.946049 17.9596 1.01442 17.608 1.09256ZM19.542 4.99955C19.7373 5.07769 20.0303 5.26327 20.1769 5.40979C20.6848 5.88839 20.7727 6.16188 20.8117 7.50002L20.8508 8.75026H22.7945H24.7383V10.6549V12.5596H18.8778H13.0173V10.6549V8.75026H14.9708H16.9243V7.57816C16.9243 6.73816 16.9634 6.29863 17.0708 6.0349C17.481 5.05816 18.5848 4.58932 19.542 4.99955Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M7.84033 22.3268V24.2803H9.79383H11.7473V22.3268V20.3733H9.79383H7.84033V22.3268Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.6543 22.3268V24.2803L22.7162 24.2607L29.7683 24.2314L29.7976 22.2975L29.8171 20.3733H22.7357H15.6543V22.3268Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M7.84033 30.1403V32.0938L9.82313 32.0742L11.7962 32.0449L11.8255 30.111L11.845 28.1868H9.84266H7.84033V30.1403Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.752 30.1403V32.0938L22.765 32.0742L29.7683 32.0449L29.7976 30.111L29.8171 28.1868H22.7845H15.752V30.1403Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M34.0176 37.8178C30.3352 41.9202 27.2975 45.2802 27.2487 45.2802C27.2096 45.2802 25.4808 43.6588 23.4003 41.676L19.6203 38.0718L18.3896 39.3416C17.7156 40.0448 17.1198 40.6895 17.0612 40.7774C16.9733 40.9043 17.8036 41.7443 22.2184 45.9444L27.4734 50.9453L35.5608 41.9495C40.005 37.0071 43.6385 32.9243 43.6385 32.8755C43.6385 32.768 40.9232 30.3359 40.806 30.3457C40.7571 30.3457 37.6999 33.7057 34.0176 37.8178Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M7.84033 37.9059V39.8105H9.79383H11.7473V37.9059V36.0012H9.79383H7.84033V37.9059Z"
-                    fill="black"
-                  />
-                </svg>
+              <div
+                className="info_card exercise-card"
+                title="View Patient payment pending"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  if (data?.exercisesApproval) {
+                    navigate("/exercise", { state: { val: "approvalRequest" } })
+                  } else {
+                    navigate("/patient", { state: { val: "active" } })
+                  }
+                  dispatch(clear_all_patient_state());
+                }}
+              >
+                <div className="info_image d-flex align-items-center justify-content-center">
+                  <svg
+                    width="44"
+                    height="51"
+                    viewBox="0 0 44 51"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M17.608 1.09256C16.0159 1.43442 14.4922 2.58698 13.7206 4.0521L13.3005 4.84327H9.26658C4.76377 4.84327 4.37308 4.89211 3.12284 5.54653C2.234 6.01537 1.12051 7.15816 0.671202 8.06654C-0.0222889 9.48282 0.016781 8.23259 0.0460835 28.2168L0.0753859 46.2085L0.29027 46.775C1.02283 48.6797 2.31214 49.9983 4.02145 50.5844L4.6661 50.7992L13.2029 50.8285C17.901 50.8383 21.7299 50.8383 21.7006 50.8188C21.681 50.7992 20.7531 49.9202 19.6396 48.8653L17.6178 46.9411H11.5033C5.69169 46.9411 5.36936 46.9313 5.0275 46.7555C4.56843 46.5211 4.2754 46.2085 4.08005 45.7495C3.95307 45.4271 3.93354 43.4541 3.93354 27.8164V10.2447L4.15819 9.81491C4.28517 9.5805 4.57819 9.2484 4.80284 9.09212L5.22285 8.7991L7.16657 8.7698L9.1103 8.74049V12.5986V16.4666L18.8582 16.447L28.5964 16.4177L28.6257 12.5791L28.6453 8.75026H30.3839C32.2885 8.75026 32.6304 8.83817 33.1578 9.39492C33.695 9.98096 33.6755 9.42422 33.7243 21.2624L33.7732 32.2606L35.7071 30.1117L37.6411 27.9629L37.602 18.8694C37.563 8.78933 37.6118 9.43399 36.9085 8.0177C36.2639 6.72839 35.0723 5.68327 33.6267 5.15583L32.8941 4.89211L28.6355 4.86281L24.3866 4.8335L24.0838 4.22792C23.4978 3.02652 22.3843 1.96186 21.1927 1.44419C20.5773 1.1707 19.415 0.936283 18.7606 0.946049C18.4773 0.946049 17.9596 1.01442 17.608 1.09256ZM19.542 4.99955C19.7373 5.07769 20.0303 5.26327 20.1769 5.40979C20.6848 5.88839 20.7727 6.16188 20.8117 7.50002L20.8508 8.75026H22.7945H24.7383V10.6549V12.5596H18.8778H13.0173V10.6549V8.75026H14.9708H16.9243V7.57816C16.9243 6.73816 16.9634 6.29863 17.0708 6.0349C17.481 5.05816 18.5848 4.58932 19.542 4.99955Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M7.84033 22.3268V24.2803H9.79383H11.7473V22.3268V20.3733H9.79383H7.84033V22.3268Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M15.6543 22.3268V24.2803L22.7162 24.2607L29.7683 24.2314L29.7976 22.2975L29.8171 20.3733H22.7357H15.6543V22.3268Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M7.84033 30.1403V32.0938L9.82313 32.0742L11.7962 32.0449L11.8255 30.111L11.845 28.1868H9.84266H7.84033V30.1403Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M15.752 30.1403V32.0938L22.765 32.0742L29.7683 32.0449L29.7976 30.111L29.8171 28.1868H22.7845H15.752V30.1403Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M34.0176 37.8178C30.3352 41.9202 27.2975 45.2802 27.2487 45.2802C27.2096 45.2802 25.4808 43.6588 23.4003 41.676L19.6203 38.0718L18.3896 39.3416C17.7156 40.0448 17.1198 40.6895 17.0612 40.7774C16.9733 40.9043 17.8036 41.7443 22.2184 45.9444L27.4734 50.9453L35.5608 41.9495C40.005 37.0071 43.6385 32.9243 43.6385 32.8755C43.6385 32.768 40.9232 30.3359 40.806 30.3457C40.7571 30.3457 37.6999 33.7057 34.0176 37.8178Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M7.84033 37.9059V39.8105H9.79383H11.7473V37.9059V36.0012H9.79383H7.84033V37.9059Z"
+                      fill="black"
+                    />
+                  </svg>
+                </div>
+                <h3>{data?.exercisesApproval ? "Exercise Approval" : data?.totalPatients ? "Total Patient" : ""}</h3>
+                <h4>
+                  {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
+                    <span className="sr-only"></span>
+                  </div> : data?.exercisesApproval ? data?.exercisesApproval : data?.totalPatients ? data?.totalPatients : ""} <span>Till Today</span>
+                </h4>
               </div>
-              <h3>Exercise Approval </h3>
-              <h4>
-                {dashboard_data?.isLoading ? <div className="spinner-border" role="status" style={{ width: "13px", height: "13px" }}>
-                  <span className="sr-only"></span>
-                </div> : data?.exercisesApproval} <span>Till Today</span>
-              </h4>
             </div>
           </div>
-        </div>
-        <div className="cmn_head mb-2">
-          {/* <h2>Patient List</h2> */}
-          <Reception_patient_list showButtons={false} />
-        </div>
-        {/* <DataTable columns={columns}>
+          <div className="cmn_head mb-2">
+            {/* <h2>Patient List</h2> */}
+            <Reception_patient_list showButtons={false} />
+          </div>
+          {/* <DataTable columns={columns}>
           <tr>
             <td className="ps-4">
               <div className="d-flex align-items-center table_user">
@@ -276,10 +312,10 @@ const Dashboard = () => {
           </tr>
         </DataTable> */}
 
+        </div>
+        <AddUsermodal show={show} setShow={setShow} />
       </div>
-      <AddUsermodal show={show} setShow={setShow} />
-    </div>
-  );
+      );
 };
 
-export default Dashboard;
+      export default Dashboard;

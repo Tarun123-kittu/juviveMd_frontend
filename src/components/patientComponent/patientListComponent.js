@@ -266,6 +266,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                         }
                                     }}
                                     className={tab === "active" ? "active" : ""}
+                                    style={{cursor : "pointer"}}
                                 >
                                     Active
                                 </li>
@@ -280,6 +281,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                         }
                                     }}
                                     className={tab === "healthIssue" ? "active" : ""}
+                                    style={{cursor : "pointer"}}
                                 >
                                     Health Issues
                                 </li>
@@ -294,6 +296,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                         }
                                     }}
                                     className={tab === "paymentPending" ? "active" : ""}
+                                    style={{cursor : "pointer"}}
                                 >
                                     Payment Pending
                                 </li>
@@ -322,7 +325,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                         </td>
                                         <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
-                                        <td className='text-nowrap'>{patient?.countryCode} {patient?.phone}</td>
+                                        <td className='text-nowrap'>+{patient?.countryCode} {patient?.phone}</td>
                                         <td>
                                             {patient?.gender
                                                 ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1).toLowerCase()
