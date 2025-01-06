@@ -236,7 +236,7 @@ const PatientData = () => {
                 <h5 className="mb-0">BMI / Reports</h5>
                 <div className="bmi_data ">
 
-                  <ul className="d-flex gap-2 ">
+                  <ul className="align-items-center d-flex gap-2 h-100">
                     <li className="bmi_card flex-grow-1">
                       <div className="link_image d-flex justify-content-center align-items-center">
                         <img src="/height_image.png" alt="email" />

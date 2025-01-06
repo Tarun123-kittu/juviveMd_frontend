@@ -28,11 +28,15 @@ const ExerciseView = () => {
       setExerciseData(is_exercise?.data?.data)
     }
   }, [is_exercise])
-  return is_exercise?.isLoading ? <Loader /> : (
+  return is_exercise?.isLoading  ? 
+  <div className="wrapper">
+      <div className="inner_wrapper">
+      <Loader wrapclass="full_height"/>
+        </div></div> : (
     <div className="wrapper">
       <div className="inner_wrapper">
         <div className="cmn_head pb-3">
-          <h2>{exercise_data?.exercise_name}</h2>
+          <h2 className="text-capitalize">{exercise_data?.exercise_name}</h2>
         </div>
         <div className="cmn_bg_wrapper">
           <Row className="m-0 ">

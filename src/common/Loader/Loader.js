@@ -1,9 +1,9 @@
 import React from 'react'
 import "./loader.css"
 
-const Loader = () => {
+const Loader = ({wrapclass}) => {
   return (
-    <div className='text-center loader_img'>
+    <div className={`${wrapclass} text-center loader_img`}>
       <div className="loader-container">
         <div className="loader"></div>
       </div>
