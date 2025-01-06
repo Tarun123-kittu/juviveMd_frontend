@@ -394,8 +394,14 @@ h4.heart_rate span {
 
 @media(min-width:1440px){
     .bmi_report {
+        flex: 0 0 310px;
+    }
+}
+@media(min-width:1599px){
+    .bmi_report {
         flex: 0 0 340px;
     }
+      
     .table_user_data img.user_profile {
         flex: 0 0 200px;
         width: 200px;
