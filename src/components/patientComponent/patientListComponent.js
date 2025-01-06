@@ -481,7 +481,7 @@ const Reception_patient_list = ({ showButtons,className }) => {
 
                         </DataTable>
                     </div>
-                    {patient_data?.isSuccess && patient_data?.data?.data?.totalPages > 1 && <Pagination totalPages={patient_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
+                    {patient_data?.isSuccess && patient_data?.data?.data?.totalPages > 1 && <Pagination totalPages={patient_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} page={page}/>}
                 </div>
                 <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_patient_deleted?.isLoading} />
                 <AddpatientModal showPateintModal={showPateintModal} setshowPateintModal={setshowPateintModal} tab={tab} common_data={common_data} setTab={setTab} />

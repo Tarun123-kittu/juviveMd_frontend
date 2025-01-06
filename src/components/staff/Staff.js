@@ -186,7 +186,7 @@ const StaffComponent = () => {
 
                     </DataTable>
                     </div>
-                    {staff_data?.isSuccess && staff_data?.data?.data?.totalPages > 1 && <Pagination totalPages={staff_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} />}
+                    {staff_data?.isSuccess && staff_data?.data?.data?.totalPages > 1 && <Pagination totalPages={staff_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} page={page}/>}
                 </div>
             </div>
             <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setshowDeleteModal} handleDelete={handleDelete} loading={is_staff_deleted?.isLoading} />
