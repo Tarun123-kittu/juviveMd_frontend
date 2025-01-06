@@ -37,6 +37,7 @@
 }
 .table>tbody tr td:last-child svg {
     width: 18px;
+    cursor: pointer;
 }
     .cmn_table table thead tr th:first-child, 
     .cmn_table table tbody tr td:first-child {

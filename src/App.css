@@ -251,6 +251,20 @@ div.css-9jq23d {
   min-height: 80vh;
 }
 
+button.btn.cmn_btn:hover {
+  background: var(--primary-color);
+  color: var(--bs-white);
+}
+button.btn.cmn_btn:disabled:hover {
+  color: var(--bs-btn-disabled-color);
+  background: #ddd;
+}
+.error_input {
+  width: 100%;
+  margin-top: .25rem;
+  font-size: .875em;
+  color: var(--bs-form-invalid-color);
+}
 .css-v7duua {
   padding-right: 0px;
   margin-right: -5px;

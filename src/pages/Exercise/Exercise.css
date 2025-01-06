@@ -7,7 +7,12 @@
     overflow: hidden;
     text-align: center;
 }
-
+.body_parts {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+}
 /* .pose_image img {
     width: 60%;
     margin: auto;
@@ -43,6 +48,7 @@ ul.exercise_status p {
 ul.exercise_status li {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 ul.exercise_status button.btn {
     padding-top: 0;

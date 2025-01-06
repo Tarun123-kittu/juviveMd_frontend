@@ -522,6 +522,8 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                                 {<Col lg={12}>
+                                <div className="modal_card mt-3">
+
                                     <div className="d-flex justify-content-between">
                                         <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
                                         {ExercisePermission?.canUpdate && (tab === "draft" || tab === "rejected") && <button
@@ -574,13 +576,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                         isDisabled={!entry.name || !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
                                                         className="flex-grow-1"
                                                     />
-                                                    {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
+                                                    {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
                                     {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
                                     {fieldError && <span style={{ color: "red" }}>{fieldError}</span>}
+                                </div>
                                 </Col>}
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
@@ -616,7 +619,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                         }}
                                                         className="btn cmn_btn"
                                                     >
-                                                        Edit As Draft
+                                                        Save as draft
                                                     </button>
                                                 )}
                                             </>

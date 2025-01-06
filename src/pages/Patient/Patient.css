@@ -176,7 +176,7 @@ li.bmi_card p {
     border:1px solid #D9D9D9 !important;
 }
 
-.patient_dropdown button:hover {
+.patient_dropdown button.dropdown-toggle:hover {
     background: unset;
     color: #000;
   border: unset;

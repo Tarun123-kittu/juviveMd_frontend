@@ -546,7 +546,7 @@ const EditPateintExercise = ({
                 />
               </Form.Group>
             </Col>
-            <Col lg={6}>
+            <Col lg={12}>
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Image</Form.Label>
                 <div className="exercise_image">
@@ -609,7 +609,7 @@ const EditPateintExercise = ({
                     isDisabled={!entry.name}
                     className="flex-grow-1"
                   />
-                  {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>-</span>}
+                  {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
                 </div>
               </div>
             </div>
@@ -632,6 +632,8 @@ const EditPateintExercise = ({
                   <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
+                <div className="w-100">
+
                 <div className="flex-grow-1 d-flex gap-2 ">
                   <div className="w-100">
                     <div className="d-flex gap-2 align-items-center">
@@ -642,9 +644,11 @@ const EditPateintExercise = ({
                         className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
                     </div>
                     <Form.Control type="text" placeholder="00" value={cardio?.time?.value} className={cardioError[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeCardioFields(i, "time", e)} />
-                    {cardioError[`time-${i}`] && <div className="invalid-feedback">{cardioError[`time-${i}`]}</div>}
+
                   </div>
-                  {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">-</span>}
+                  {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">x</span>}
+                </div>
+                {cardioError[`time-${i}`] && <div className="error_input">{cardioError[`time-${i}`]}</div>}
                 </div>
               </div>
             </Form.Group>
@@ -694,7 +698,7 @@ const EditPateintExercise = ({
                   <Form.Control type="text" placeholder="00" value={val?.time?.value} className={fieldErrors[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeFlexibilityFields(i, "time", e)} />
                   {fieldErrors[`time-${i}`] && <div className="invalid-feedback">{fieldErrors[`time-${i}`]}</div>}
                 </div>
-                {flexibilityField?.length > 1 && <span onClick={() => (handleRemoveFlexibilityFields(i))} className="minus align-self-end mb-2">-</span>}
+                {flexibilityField?.length > 1 && <span onClick={() => (handleRemoveFlexibilityFields(i))} className="minus align-self-end mb-2">x</span>}
               </div>
             </Form.Group>
           ))}

@@ -301,7 +301,7 @@ const Reception_patient_list = ({ show }) => {
                                 </li>
                             )}
                         </ul>}
-                        {PatientPermissions?.canCreate && show === undefined && <button onClick={() => setshowPateintModal(true)} className='cmn_btn'>+ Add Patient</button>} {show === undefined && <button onClick={handelShowFilter} className="cmn_btn px-4">Filter</button>}
+                        {PatientPermissions?.canCreate && show === undefined && <button onClick={() => setshowPateintModal(true)} className='cmn_btn filter_btn'>+ Add Patient</button>} {show === undefined && <button onClick={handelShowFilter} className="cmn_btn filter_btn px-4">Filter</button>}
                         {showFilter &&
 
                             <PatientFilters tab={tab} showFilter={showFilter} username={username} setUsername={setUsername} setGoal={setGoal} goal={goal} setDate={setDate} date={date} setGender={setGender} gender={gender} setStatus={setStatus} status={status} setTrainer={setTrainer} trainer={trainer} trainers={trainers} goalsList={goalsList} handleSearch={handleSearch} page={page} />
