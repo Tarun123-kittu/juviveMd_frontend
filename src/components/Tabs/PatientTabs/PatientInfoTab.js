@@ -13,6 +13,8 @@ import EditPateintExercise from "../../Modals/EditPateintExercise";
 import { delete_patient_plan, clear_delete_patient_plan_state } from "../../../redux/slices/patientPlan/deletePatientPlan";
 import DeleteModal from "../../Modals/DeleteModal";
 import toast from "react-hot-toast";
+import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../../constants/permissionConstants";
 
 const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading }) => {
   const dispatch = useDispatch()
@@ -22,6 +24,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [planId, setPlanId] = useState(null)
   const [data, setData] = useState([])
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
+  const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const columns = [
     "Category",
     "Exercise Name",
@@ -99,14 +102,14 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
             <td>
               <div className="d-flex gap-2">
                 {/* <img src={LinkImage} width={18} alt="" /> */}
-                <img
+                {patientPlanPermissions?.canDelete && <img
                   src={DeleteImage}
                   className="ms-2 me-2"
                   width={18}
                   alt=""
                   onClick={() => handleDeletePlan(patientPlan?.id)}
-                />
-                <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(patientPlan?.id)} />
+                />}
+                {patientPlanPermissions?.canUpdate && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(patientPlan?.id)} />}
               </div>
             </td>
           </tr>

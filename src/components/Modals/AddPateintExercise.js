@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import { get_patient_difficuilties, clear_patient_difficuilties_state } from "../../redux/slices/patientPlan/getPatientDifficuilties";
 import Select from "react-select";
 import { get_patient_plan } from "../../redux/slices/patientPlan/getPAtientPlan";
+import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../constants/permissionConstants";
 
 const AddPateintExercise = ({
   showAddPateintExercise,
@@ -35,7 +37,7 @@ const AddPateintExercise = ({
   const [selectedWeekdays, setSelectedWeekdays] = useState([])
   const [updatedWeekdays, setUpdatedWeekdays] = useState([])
   const [distanceVal, setDistanceVal] = useState({
-   
+
   })
   const [flexibilityField, setFlexibilityField] = useState([{
     reps: "",
@@ -73,9 +75,9 @@ const AddPateintExercise = ({
   const [data, setData] = useState([{ name: "", movements: [] }]);
   const [apiData, setApiData] = useState(body_parts);
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
-  console.log(exercise_details,"this is exercise details")
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
+  const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const handleClose = () => {
     setshowAddPateintExercise(false);
     setCategory('')
@@ -232,7 +234,7 @@ const AddPateintExercise = ({
       setWeekError("Please select days")
       return
     }
-    dispatch(create_patient_plan({ category, exerciseId: selectedExercise, difficulty_level: difficuilty, body_parts: movementResponse, patientId, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: {value: Number(distance), unit: distanceUnit}, weekdays: updatedWeekdays }))
+    dispatch(create_patient_plan({ category, exerciseId: selectedExercise, difficulty_level: difficuilty, body_parts: movementResponse, patientId, sets: category === "strength exercise" ? flexibilityField : cardioFields, heartRateTarget: heartRate, zoneTarget, intensity, pace, distanceGoal: { value: Number(distance), unit: distanceUnit }, weekdays: updatedWeekdays }))
   }
 
   const handleFlexibilityRow = () => {
@@ -846,7 +848,7 @@ const AddPateintExercise = ({
                     onClick={() => {
                       setDistanceUnit("meter");
                       if (distanceUnit === "km") {
-                        setDistance(distance * 1000); 
+                        setDistance(distance * 1000);
                       }
                     }}
                     className={distanceUnit === "meter" ? "time" : "time min"}
@@ -868,7 +870,7 @@ const AddPateintExercise = ({
                       let convertedValue = numericValue;
 
                       if (distanceUnit === "km") {
-                        convertedValue = numericValue * 1000; 
+                        convertedValue = numericValue * 1000;
                       }
 
                       if (convertedValue < 1) {
@@ -876,11 +878,11 @@ const AddPateintExercise = ({
                       } else if (convertedValue > 100000) {
                         setDistanceError("Distance goal cannot exceed 100 km.");
                       } else {
-                        setDistanceError(""); 
+                        setDistanceError("");
                       }
 
-                      setDistance(inputValue); 
-                      setDistanceVal({ value: convertedValue, unit: distanceUnit }); 
+                      setDistance(inputValue);
+                      setDistanceVal({ value: convertedValue, unit: distanceUnit });
                     } else {
                       setDistanceError("Please enter a valid distance.");
                     }
@@ -910,9 +912,9 @@ const AddPateintExercise = ({
         </div>
         <div className="d-flex justify-content-center gap-3 mt-3">
           <button className="cmn_btn border-btn ">Cancel</button>
-          <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_created?.isLoading ? "Submit" : <Spinner animation="border" role="status">
+          {patientPlanPermissions?.canCreate && <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_created?.isLoading ? "Submit" : <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
-          </Spinner>}</button>
+          </Spinner>}</button>}
         </div>
       </Modal.Body>
     </Modal>

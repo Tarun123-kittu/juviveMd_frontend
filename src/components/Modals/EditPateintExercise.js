@@ -11,6 +11,8 @@ import Loader from "../../common/Loader/Loader";
 import Select from "react-select";
 import { get_patient_plan } from "../../redux/slices/patientPlan/getPAtientPlan";
 import toast from "react-hot-toast";
+import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
+import { permission_constants } from "../../constants/permissionConstants";
 
 const EditPateintExercise = ({
   showEditPateintExercise,
@@ -69,6 +71,7 @@ const EditPateintExercise = ({
   const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
   const patient_exercise_data = useSelector((store) => store.GET_SELECTED_PATIENT_EXERCISE_DETAILS)
   const is_plan_updated = useSelector((store) => store?.UPDATE_PATIENT_PLAN)
+  const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
 
   const handleClose = () => {
     setshowEditPateintExercise(false);
@@ -857,9 +860,9 @@ const EditPateintExercise = ({
         </div>
         <div className="d-flex justify-content-center gap-3 mt-3">
           <button className="cmn_btn border-btn ">Cancel</button>
-          <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_updated?.isLoading ? "Update" : <Spinner animation="border" role="status">
+          {patientPlanPermissions?.canUpdate && <button className="cmn_btn" onClick={handleSubmit}>{!is_plan_updated?.isLoading ? "Update" : <Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>
-          </Spinner>}</button>
+          </Spinner>}</button>}
         </div>
       </Modal.Body>}
     </Modal>
