@@ -28,6 +28,7 @@ const PatientData = () => {
   const [exercise_category, setExercise_category] = useState()
   const [weekdays, setWeekdays] = useState()
   const [currentBmi, setCurrentBmi] = useState('')
+  console.log(currentBmi)
   const [expectedBmi, setExpectedBmi] = useState('')
   const [body_parts, setBody_parts] = useState()
   const [loading, setLoading] = useState(true);
@@ -69,14 +70,18 @@ const PatientData = () => {
 
   function calculateBMI(height, weight, heightUnit, weightUnit) {
     if (heightUnit === "cm") {
-      height = height / 100;
-    } else if (heightUnit === "ft") {
-      const [feet, inches = 0] = height.split(".").map(Number);
-      height = (feet * 0.3048) + (inches * 0.0254);
+      height = height / 100; 
+    } else if (heightUnit === "feet") {
+      const [feet, inches = 0] = height.toString().split(".").map(Number);
+      height = (feet * 0.3048) + (inches * 0.0254); 
     }
 
     if (weightUnit === "lbs") {
-      weight = weight * 0.453592;
+      weight = weight * 0.453592; 
+    }
+
+    if (!height || !weight || isNaN(height) || isNaN(weight)) {
+      throw new Error("Invalid height or weight provided.");
     }
 
     const bmi = weight / (height * height);
@@ -94,15 +99,16 @@ const PatientData = () => {
 
     return {
       bmi: bmi.toFixed(2),
-      category: category
+      category: category,
     };
   }
+
 
   useEffect(() => {
     if (patient_details?.isSuccess) {
       setPatient_data(patient_details?.data?.data)
       const bmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.weight?.unit)
-      setCurrentBmi(bmi?.bmi)
+      setCurrentBmi(bmi.bmi)
       const expectbmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.optimal_weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.optimal_weight?.unit)
       setExpectedBmi(expectbmi?.bmi)
     }
