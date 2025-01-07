@@ -35,8 +35,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [difficuiltOptions, setDifficuiltOptions] = useState()
   const [bodyPartError, setBodyPartError] = useState('')
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
-  const [data, setData] = useState([{ name: "", movements: [] }]); 
-  const [fieldError,setFieldError] = useState("")
+  console.log(difficuiltyResponse, "this is the difficuilty response")
+  const [data, setData] = useState([{ name: "", movements: [] }]);
+  const [fieldError, setFieldError] = useState("")
   const [apiData, setApiData] = useState();
 
   const handleClose = () => {
@@ -88,7 +89,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSave = (values) => {
-    
+
     if (!data?.length) {
       setBodyPartError("Please select the body parts");
       return;
@@ -114,7 +115,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     );
   };
 
-  const handleSaveDraft  = (values) => {
+  const handleSaveDraft = (values) => {
     if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
       setFieldError("Please enter at least one value to save the exercise as a draft");
       return;
@@ -133,7 +134,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       })
     );
   };
-  
+
 
   const handleSubmit = (values) => {
     // handleSave(values);
@@ -221,13 +222,13 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   useEffect(() => {
-    if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage) {
+    if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage && !isButtonDisabled && difficuiltyResponse?.length) {
       setDraft(false)
     }
     else {
       setDraft(true)
     }
-  }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage])
+  }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, difficuiltyResponse])
 
   useEffect(() => {
     if (body_parts?.length) {
@@ -474,16 +475,33 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     </Col>
                     <Col lg={6}>
                       <Form.Group className="mb-2">
-                        <Form.Label>Difficuilty level</Form.Label>
-                        <Multiselect
-                          options={difficuiltOptions}
-                          selectedValues={difficulty}
-                          onSelect={handleSelectDifficuilt}
-                          onRemove={handleRemoveDifficuilt}
-                          displayValue="name"
+                        <Form.Label>Difficulty level</Form.Label>
+                        <Select
+                          isMulti
+                          value={
+                            difficulty && difficulty.length > 0
+                              ? difficulty.map((item) => ({
+                                value: item.name,
+                                label: item.name,
+                              }))
+                              : null
+                          }
+                          options={difficuiltOptions?.map((option) => ({
+                            value: option.name,
+                            label: option.name,
+                          }))}
+                          onChange={(selectedOptions) => {
+                            const selectedList = selectedOptions.map((option) => ({
+                              name: option.value,
+                            }));
+                            handleSelectDifficuilt(selectedList);
+                          }}
+                          placeholder="Select Difficulty"
+                          className="flex-grow-1"
                         />
                       </Form.Group>
                     </Col>
+
 
 
                     {/* <Col lg={6}>

@@ -9,7 +9,7 @@ import { update_exercise_status, clear_update_exercise_status_state } from '../.
 import toast from 'react-hot-toast';
 import Spinner from 'react-bootstrap/Spinner';
 import EditExcercise from '../../Modals/editExercise';
-import { FaRegEye,FaRegTrashAlt } from "react-icons/fa";
+import { FaRegEye, FaRegTrashAlt } from "react-icons/fa";
 import Nodata from '../../StaticComponents/Nodata';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../../common/pagination/Pagination';
@@ -21,10 +21,9 @@ import { delete_exercise, clear_delete_exercise_state } from '../../../redux/sli
 import DeleteModal from '../../Modals/DeleteModal';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [page, setPage] = useState(1)
   const [isOpen, setIsOpen] = useState(false);
   const [all_exercise, setAllExercise] = useState()
   const [exerciseId, setExerciseId] = useState(null)
@@ -112,7 +111,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
   return (
     <div >
-      {console.log("all_exercise======>",all_exercise)}
+      {console.log("all_exercise======>", all_exercise)}
       <div className={`${exercise_data?.data?.data?.totalPages > 1 && "streach_table"}`}>
         <DataTable columns={columns}>
           {exercise_data?.isLoading ? <tr><td colSpan={7}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={7}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
@@ -278,7 +277,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
 
         </DataTable>
       </div>
-      {exercise_data?.isSuccess && exercise_data?.data?.data?.totalPages > 1 && <Pagination totalPages={exercise_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} page={page}/>}
+      {exercise_data?.isSuccess && exercise_data?.data?.data?.totalPages > 1 && <Pagination totalPages={exercise_data?.data?.data?.totalPages} onPageChange={handlePageChange} setPage={setPage} page={page} />}
       <EditExcercise
         showAddExerciseModal={editExerciseModal}
         setshowAddExerciseModal={setEditExerciseModal}

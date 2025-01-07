@@ -40,7 +40,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [fieldError, setFieldError] = useState("")
     const [difficuiltOptions, setDifficuiltOptions] = useState()
     const [difficuiltyResponse, setDifficuiltyResponse] = useState()
-    const [data, setData] = useState([{ name: "", movements: [] }]); // User input state
+    const [data, setData] = useState([{ name: "", movements: [] }]);
     const [apiData, setApiData] = useState();
 
     const validationSchema = Yup.object().shape({
@@ -66,7 +66,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
     useEffect(() => {
         if (body_parts && body_parts.length > 0) {
-            setApiData(body_parts); // Set the API data to the state
+            setApiData(body_parts);
         }
     }, [body_parts]);
 
@@ -96,12 +96,14 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             const bodyPart = data?.body_parts?.map((part) => ({ name: part.name }))
             setSelectedBodyNames(bodyPart)
             setMovementResponse(data?.body_parts)
-            if (data?.body_parts) {
+            if (data?.body_parts?.length) {
                 const formattedData = data?.body_parts.map((item) => ({
                     name: item.name,
                     movements: item.movements,
                 }));
                 setData(formattedData);
+            } else {
+                setData([{ name: "", movements: [] }])
             }
         }
     }, [is_exercise]);
@@ -183,10 +185,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         );
     };
 
-    // const handleSubmit = (values) => {
-    //     handleSave(values);
-    // };
-
     useEffect(() => {
         if (is_exercise_updated?.isSuccess) {
             toast.success(is_exercise_updated?.message?.message)
@@ -244,13 +242,13 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
 
     useEffect(() => {
-        if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage) {
+        if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage && !isButtonDisabled && difficuiltyResponse?.length) {
             setDraft(false)
         }
         else {
             setDraft(true)
         }
-    }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, is_exercise])
+    }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, is_exercise, difficuiltyResponse])
 
     useEffect(() => {
         if (body_parts?.length) {
@@ -259,43 +257,11 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         }
     }, [body_parts]);
 
-    const handleSelect = (selectedList) => {
-        setSelectedBodyNames([...selectedList]);
-    };
-
-    const handleRemove = (selectedList, removedItem) => {
-        setSelectedBodyNames([...selectedList]);
-        const updatedMovements = movementsArray.filter(
-            (movement) => movement.key !== removedItem.name
-        );
-        setMovementsArray(updatedMovements);
-
-        const updatedSelectedMovements = selectedMovements.filter(
-            (movement) => movement.key !== removedItem.name
-        );
-        setSelectedMovements(updatedSelectedMovements);
-    };
-
-    const handleSelectMovements = (selectedList) => {
-        setSelectedMovements([...selectedList]);
-    };
-
-    const handleRemoveMovements = (selectedList) => {
-        setSelectedMovements([...selectedList]);
-    };
-
     const handleSelectDifficuilt = (selectedList) => {
         setDifficuilty([...selectedList]);
         const formattedResponse = selectedList.map((item) => item.name);
         setDifficuiltyResponse(formattedResponse);
     };
-
-    const handleRemoveDifficuilt = (selectedList) => {
-        setDifficuilty([...selectedList]);
-        const formattedResponse = selectedList.map((item) => item.name);
-        setDifficuiltyResponse(formattedResponse);
-    };
-
 
     useEffect(() => {
         if (selectedBodyNames.length && body_parts?.length) {
@@ -343,23 +309,20 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const handleNameChange = (index, selectedOption) => {
         const updatedData = [...data];
         updatedData[index].name = selectedOption?.value || "";
-        updatedData[index].movements = []; // Reset movements when name changes
+        updatedData[index].movements = [];
         setData(updatedData);
     };
 
-    // Handle Movement Change
     const handleMovementChange = (index, selectedOptions) => {
         const updatedData = [...data];
         updatedData[index].movements = selectedOptions.map((option) => option.value);
         setData(updatedData);
     };
 
-    // Add a New Field
     const addNewField = () => {
         setData([...data, { name: "", movements: [] }]);
     };
 
-    // Get Available Movements for a Given Body Part
     const getMovementsForName = (name) => {
         const selected = apiData?.find((item) => item.name === name);
         return selected
@@ -367,18 +330,12 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
             : [];
     };
 
-    // Get Available Body Parts (Exclude Already Selected Names)
     const getAvailableNames = () => {
         const selectedNames = data.map((entry) => entry.name);
         return apiData
-            ?.filter((item) => !selectedNames.includes(item.name)) // Exclude selected names
+            ?.filter((item) => !selectedNames.includes(item.name)) 
             .map((item) => ({ value: item.name, label: item.name }));
     };
-
-    const handleDifficuilty = (e) => {
-        const val = e.target.value
-        setDifficuilty(val)
-    }
 
     const handleDeleteRow = (index) => {
         setData(data.filter((_, i) => i !== index));
@@ -387,7 +344,6 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const isButtonDisabled = data.some(
         (item) => item.name.trim() === "" || item.movements.length === 0
     );
-
 
     return (
         <Modal
@@ -431,48 +387,28 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </Field>
                                     </Form.Group>
                                     <Form.Group className="mb-2">
-                                                <Form.Label>Exercise Video Link</Form.Label>
-                                                <Field
-                                                    type="text"
-                                                    name="exerciseVideo"
-                                                    placeholder="https://youtu.be"
-                                                    className="form-control"
-                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-                                                    onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
-                                                />
-                                            </Form.Group>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>Exercise Image Url</Form.Label>
-                                                <Field
-                                                    type="text"
-                                                    name="exerciseImage"
-                                                    placeholder="Enter image url"
-                                                    className="form-control"
-                                                    onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
-                                                    value={exerciseImage}
-                                                    disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-                                                />
-                                            </Form.Group>
-                                    {/* <Form.Group className="mb-2">
-                                        <Form.Label>Exercise Image</Form.Label>
-                                        <div className="drag_file d-flex align-items-center justify-content-center flex-column">
-                                            <input
-                                                type="file"
-                                                name="exerciseImage"
-                                                accept="image/png, image/jpg, image/jpeg"
-                                                className="form-control"
-                                                disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-
-                                            />
-                                            <img
-                                                src={imagePreview}
-                                                className="image_preview"
-                                                alt="preview"
-
-                                            />
-                                        </div>
-                                    </Form.Group> */}
-
+                                        <Form.Label>Exercise Image Url</Form.Label>
+                                        <Field
+                                            type="text"
+                                            name="exerciseImage"
+                                            placeholder="Enter image url"
+                                            className="form-control"
+                                            onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                                            value={exerciseImage}
+                                            disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-2">
+                                        <Form.Label>Exercise Video Link</Form.Label>
+                                        <Field
+                                            type="text"
+                                            name="exerciseVideo"
+                                            placeholder="https://youtu.be"
+                                            className="form-control"
+                                            disabled={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                            onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
+                                        />
+                                    </Form.Group>
                                 </Col>
                                 <Col lg={8}>
                                     <Row>
@@ -491,20 +427,34 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                         </Col>
                                         <Col lg={6}>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>Difficuilty level</Form.Label>
-                                                <Multiselect
-                                                    options={difficuiltOptions}
-                                                    selectedValues={difficulty}
-                                                    onSelect={handleSelectDifficuilt}
-                                                    onRemove={handleRemoveDifficuilt}
-                                                    displayValue="name"
-                                                    disable={!ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                                <Form.Label>Difficulty level</Form.Label>
+                                                <Select
+                                                    isMulti
+                                                    value={difficulty?.map((item) => ({
+                                                        value: item.name,
+                                                        label: item.name,
+                                                    }))}
+                                                    options={difficuiltOptions?.map((option) => ({
+                                                        value: option.name,
+                                                        label: option.name,
+                                                    }))}
+                                                    onChange={(selectedOptions) => {
+                                                        const selectedList = selectedOptions?.map((option) => ({
+                                                            name: option.value,
+                                                        }));
+                                                        handleSelectDifficuilt(selectedList);
+                                                    }}
+                                                    placeholder="Select Difficulty"
+                                                    isDisabled={
+                                                        !ExercisePermission?.canUpdate ||
+                                                        tab === "approvalRequest" ||
+                                                        tab === "active"
+                                                    }
+                                                    className="flex-grow-1"
                                                 />
                                             </Form.Group>
                                         </Col>
-                                     
-                                       
-                                       
+
                                         <Col lg={12}>
                                             <Form.Group className="mb-2">
                                                 <Form.Label>Exercise Description</Form.Label>
@@ -522,68 +472,68 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     </Row>
                                 </Col>
                                 {<Col lg={12}>
-                                <div className="modal_card mt-3">
+                                    <div className="modal_card mt-3">
 
-                                    <div className="d-flex justify-content-between">
-                                        <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
-                                        {ExercisePermission?.canUpdate && (tab === "draft" || tab === "rejected") && <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                addNewField();
-                                            }}
-                                            className="cmn_btn add_row"
-                                            disabled={isButtonDisabled}
-                                        >
-                                            Add New Field
-                                        </button>}
-                                    </div>
-                                    {data.map((entry, index) => (
-                                        <div
-                                            key={index}
-                                            className="row mb-3"
-                                        >
-                                            <div className="col-lg-6">
-                                                <label>Select Name:</label>
-                                                <Select
-                                                    value={
-                                                        entry.name
-                                                            ? { value: entry.name, label: entry.name }
-                                                            : null
-                                                    }
-                                                    options={getAvailableNames()}
-                                                    onChange={(selectedOption) => handleNameChange(index, selectedOption)}
-                                                    placeholder="Select Name"
-                                                    isDisabled={
-                                                        !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"
-                                                    }
-                                                />
-                                            </div>
-
-                                            <div className="col-lg-6">
-                                                <label>Select Movements:</label>
-                                                <div className="d-flex align-items-center gap-2">
+                                        <div className="d-flex justify-content-between">
+                                            <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
+                                            {ExercisePermission?.canUpdate && (tab === "draft" || tab === "rejected") && <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    addNewField();
+                                                }}
+                                                className="cmn_btn add_row"
+                                                disabled={isButtonDisabled}
+                                            >
+                                                Add New Field
+                                            </button>}
+                                        </div>
+                                        {data.map((entry, index) => (
+                                            <div
+                                                key={index}
+                                                className="row mb-3"
+                                            >
+                                                <div className="col-lg-6">
+                                                    <label>Select Name:</label>
                                                     <Select
-                                                        isMulti
-                                                        value={entry.movements.map((movement) => ({
-                                                            value: movement,
-                                                            label: movement,
-                                                        }))}
-                                                        options={getMovementsForName(entry.name)}
-                                                        onChange={(selectedOptions) =>
-                                                            handleMovementChange(index, selectedOptions || [])
+                                                        value={
+                                                            entry.name
+                                                                ? { value: entry.name, label: entry.name }
+                                                                : null
                                                         }
-                                                        placeholder="Select Movements"
-                                                        isDisabled={!entry.name || !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
-                                                        className="flex-grow-1"
+                                                        options={getAvailableNames()}
+                                                        onChange={(selectedOption) => handleNameChange(index, selectedOption)}
+                                                        placeholder="Select Name"
+                                                        isDisabled={
+                                                            !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"
+                                                        }
                                                     />
-                                                    {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
+                                                </div>
+
+                                                <div className="col-lg-6">
+                                                    <label>Select Movements:</label>
+                                                    <div className="d-flex align-items-center gap-2">
+                                                        <Select
+                                                            isMulti
+                                                            value={entry.movements.map((movement) => ({
+                                                                value: movement,
+                                                                label: movement,
+                                                            }))}
+                                                            options={getMovementsForName(entry.name)}
+                                                            onChange={(selectedOptions) =>
+                                                                handleMovementChange(index, selectedOptions || [])
+                                                            }
+                                                            placeholder="Select Movements"
+                                                            isDisabled={!entry.name || !ExercisePermission?.canUpdate || tab === "approvalRequest" || tab === "active"}
+                                                            className="flex-grow-1"
+                                                        />
+                                                        {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                    {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
-                                    {fieldError && <span style={{ color: "red" }}>{fieldError}</span>}
-                                </div>
+                                        ))}
+                                        {bodyPartError && <span style={{ color: "red" }}>{bodyPartError}</span>}
+                                        {fieldError && <span style={{ color: "red" }}>{fieldError}</span>}
+                                    </div>
                                 </Col>}
                             </Row>
                             {ExercisePermission?.canUpdate && (tab !== "approvalRequest" && tab !== "active") && (
