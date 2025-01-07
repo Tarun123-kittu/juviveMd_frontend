@@ -174,7 +174,7 @@ const SettingsComponents = () => {
       setEmailError("Please enter a valid email");
       return;
     }
-    if(data?.firstName === user_details?.data?.data?.firstName && data?.lastName === user_details?.data?.data?.lastName && data?.image === user_details?.data?.data?.image && data?.email === user_details?.data?.data?.email && data?.phone === user_details?.data?.data?.phone) return
+    if (data?.firstName === user_details?.data?.data?.firstName && data?.lastName === user_details?.data?.data?.lastName && data?.image === user_details?.data?.data?.image && data?.email === user_details?.data?.data?.email && data?.phone === user_details?.data?.data?.phone) return
     dispatch(update_staff({ data: { ...data, hasImage }, id: localStorage.getItem('user_id') }));
   }
 
@@ -204,6 +204,24 @@ const SettingsComponents = () => {
       dispatch(clear_update_staff_state())
     }
   }, [is_staff_updated])
+
+  const handleEdit = () => {
+    setEditInput(!editInput)
+    setData({
+      image: user_details?.data?.data?.image,
+      firstName: user_details?.data?.data?.firstName,
+      lastName: user_details?.data?.data?.lastName,
+      phone: user_details?.data?.data?.phone,
+      gender: user_details?.data?.data?.gender,
+      email: user_details?.data?.data?.email,
+      address: user_details?.data?.data?.address,
+      roleId: user_details?.data?.data?.roleId,
+      hasImage: false,
+      countryCode: user_details?.data?.data?.countryCode
+    })
+    setPhone(user_details?.data?.data?.countryCode + user_details?.data?.data?.phone)
+    setImageView(user_details?.data?.data?.image)
+  }
 
 
   return (
@@ -246,29 +264,29 @@ const SettingsComponents = () => {
                   <img src={imageView || DefaultImage} alt="profile image" className='round_image_user' /> <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
                     {!editInput && firstPermissionSettings?.canUpdate && <button className='cmn_btn' disabled={editInput}> Upload Photo</button>}
                   </div> <button className='delete_photo d-none'>Delete</button>
-                  {firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn ms-auto' onClick={() => setEditInput(!editInput)}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
+                  {firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn ms-auto' onClick={() => handleEdit()}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
                     <path d="M10.5689 2.48828H3.81267C3.30071 2.48828 2.80972 2.69166 2.44771 3.05367C2.0857 3.41568 1.88232 3.90667 1.88232 4.41863V17.9311C1.88232 18.443 2.0857 18.934 2.44771 19.296C2.80972 19.658 3.30071 19.8614 3.81267 19.8614H17.3251C17.8371 19.8614 18.3281 19.658 18.6901 19.296C19.0521 18.934 19.2555 18.443 19.2555 17.9311V11.1749" stroke="white" stroke-width="2.0372" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M16.7231 2.12703C17.1071 1.74306 17.6279 1.52734 18.1709 1.52734C18.7139 1.52734 19.2347 1.74306 19.6186 2.12703C20.0026 2.511 20.2183 3.03177 20.2183 3.57479C20.2183 4.1178 20.0026 4.63858 19.6186 5.02255L10.9195 13.7226C10.6903 13.9516 10.4072 14.1192 10.0962 14.21L7.32328 15.0208C7.24023 15.045 7.15219 15.0465 7.06838 15.025C6.98458 15.0035 6.90809 14.9599 6.84691 14.8987C6.78574 14.8376 6.74214 14.7611 6.72066 14.6773C6.69919 14.5935 6.70065 14.5054 6.72487 14.4224L7.53562 11.6494C7.62685 11.3387 7.7948 11.0559 8.024 10.8271L16.7231 2.12703Z" stroke="white" stroke-width="2.0372" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                     Edit</button>}
                   {!editInput && firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn' onClick={(e) => handleUpdateProfile(e)}>Update Profile{is_staff_updated?.isLoading && <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
-                  </Spinner> }</button>}
+                  </Spinner>}</button>}
                 </div>
                 <div className='row authWrapper row-gap-3 pt-4'>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">FirstName</label>
-                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => {setData({ ...data, firstName: e.target.value });setFirstNameError('')}} disabled={editInput} className='form-control' />
+                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => { setData({ ...data, firstName: e.target.value }); setFirstNameError('') }} disabled={editInput} className='form-control' />
                     {firstNameError && <span className='error text-danger'>{firstNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">LastName</label>
-                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => {setData({ ...data, lastName: e.target.value });setLastNameError('')}} disabled={editInput} className='form-control' />
+                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => { setData({ ...data, lastName: e.target.value }); setLastNameError('') }} disabled={editInput} className='form-control' />
                     {lastNameError && <span className='error text-danger'>{lastNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Email</label>
-                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => {setData({ ...data, email: e.target.value });setEmailError('')}} disabled={editInput} className='form-control' />
+                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => { setData({ ...data, email: e.target.value }); setEmailError('') }} disabled={editInput} className='form-control' />
                     {emailError && <span className='error text-danger'>{emailError}</span>}
                   </div>
                   <div className='col-lg-6'>
