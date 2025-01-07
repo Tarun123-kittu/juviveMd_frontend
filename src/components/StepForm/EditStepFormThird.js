@@ -293,57 +293,7 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
           </Form.Group>
         </Col>
         <Col lg={6}>
-          <Form.Group className="mb-2">
-            <Form.Label>What equipment do you have at home?</Form.Label>
-            <Form.Select
-              name="homeEquipment"
-              onChange={(e) => {
-                formik.setFieldValue("homeEquipment", e.target.value);
-                updateStepThreeData("homeEquipment", e.target.value); // Update state here
-              }}
-              onBlur={formik.handleBlur}
-              value={formik.values.homeEquipment}
-            >
-              <option value="">Select option</option>
-              {equipments?.map((issue, i) => {
-                return (
-
-                  <option value={issue}>{issue}</option>
-                )
-              })}
-            </Form.Select>
-            {formik.touched.homeEquipment && formik.errors.homeEquipment && (
-              <div className="error text-danger">{formik.errors.homeEquipment}</div>
-            )}
-          </Form.Group>
-        </Col>
-        <Col lg={6}>
-          <Form.Group className="mb-2">
-            <Form.Label>How much time can you work out in one setting?</Form.Label>
-            <Form.Select
-              name="workoutTime"
-              onChange={(e) => {
-                formik.setFieldValue("workoutTime", e.target.value);
-                updateStepThreeData("workoutTime", e.target.value); // Update state here
-              }}
-              onBlur={formik.handleBlur}
-              value={formik.values.workoutTime}
-            >
-              <option value="">Select option</option>
-              {workout_times?.map((issue, i) => {
-                return (
-
-                  <option value={issue}>{issue}</option>
-                )
-              })}
-            </Form.Select>
-            {formik.touched.workoutTime && formik.errors.workoutTime && (
-              <div className="error text-danger">{formik.errors.workoutTime}</div>
-            )}
-          </Form.Group>
-        </Col>
-        <Col lg={6}>
-          <Form.Group className="mb-2">
+        <Form.Group className="mb-2">
             <Form.Label>How many times per week can you exercise?</Form.Label>
             <Select
               name="workoutFrequency"
@@ -377,6 +327,57 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
             />
             {formik.touched.workoutFrequency && formik.errors.workoutFrequency && (
               <div className="error text-danger">{formik.errors.workoutFrequency}</div>
+            )}
+          </Form.Group>
+          
+        </Col>
+        <Col lg={6}>
+          <Form.Group className="mb-2">
+            <Form.Label>How much time can you work out in one setting?</Form.Label>
+            <Form.Select
+              name="workoutTime"
+              onChange={(e) => {
+                formik.setFieldValue("workoutTime", e.target.value);
+                updateStepThreeData("workoutTime", e.target.value); // Update state here
+              }}
+              onBlur={formik.handleBlur}
+              value={formik.values.workoutTime}
+            >
+              <option value="">Select option</option>
+              {workout_times?.map((issue, i) => {
+                return (
+
+                  <option value={issue}>{issue}</option>
+                )
+              })}
+            </Form.Select>
+            {formik.touched.workoutTime && formik.errors.workoutTime && (
+              <div className="error text-danger">{formik.errors.workoutTime}</div>
+            )}
+          </Form.Group>
+        </Col>
+        <Col lg={6}>
+        <Form.Group className="mb-2">
+            <Form.Label>What equipment do you have at home?</Form.Label>
+            <Form.Select
+              name="homeEquipment"
+              onChange={(e) => {
+                formik.setFieldValue("homeEquipment", e.target.value);
+                updateStepThreeData("homeEquipment", e.target.value); // Update state here
+              }}
+              onBlur={formik.handleBlur}
+              value={formik.values.homeEquipment}
+            >
+              <option value="">Select option</option>
+              {equipments?.map((issue, i) => {
+                return (
+
+                  <option value={issue}>{issue}</option>
+                )
+              })}
+            </Form.Select>
+            {formik.touched.homeEquipment && formik.errors.homeEquipment && (
+              <div className="error text-danger">{formik.errors.homeEquipment}</div>
             )}
           </Form.Group>
         </Col>

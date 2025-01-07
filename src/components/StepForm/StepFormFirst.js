@@ -380,7 +380,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
           </Col>
 
           <Col lg={12} className="text-center mt-4">
-            <button type="submit" className="cmn_btn ps-5 pe-5">
+            <button type="submit" className="cmn_btn ps-5 pe-5 m-auto">
               Next
             </button>
           </Col>

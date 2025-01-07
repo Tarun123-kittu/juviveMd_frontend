@@ -54,7 +54,7 @@ const StepFormSecond = ({
         >
           Back
         </button>
-        {!onboarding_process?.isLoading ? (
+    
           <button
             onClick={() => {
               selected_health_issue.length > 0 ? handleClose() : setStep(3);
@@ -62,14 +62,12 @@ const StepFormSecond = ({
             className="cmn_btn ps-4 pe-4"
           >
             Next
-          </button>
-        ) : (
-          <button className="cmn_btn ps-4 pe-4">
-            <Spinner animation="border" role="status">
+     
+          {onboarding_process?.isLoading  && <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            </Spinner>}
           </button>
-        )}
+       
       </div>
     </div>
   );

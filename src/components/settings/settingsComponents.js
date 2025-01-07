@@ -251,25 +251,25 @@ const SettingsComponents = () => {
                     <path d="M16.7231 2.12703C17.1071 1.74306 17.6279 1.52734 18.1709 1.52734C18.7139 1.52734 19.2347 1.74306 19.6186 2.12703C20.0026 2.511 20.2183 3.03177 20.2183 3.57479C20.2183 4.1178 20.0026 4.63858 19.6186 5.02255L10.9195 13.7226C10.6903 13.9516 10.4072 14.1192 10.0962 14.21L7.32328 15.0208C7.24023 15.045 7.15219 15.0465 7.06838 15.025C6.98458 15.0035 6.90809 14.9599 6.84691 14.8987C6.78574 14.8376 6.74214 14.7611 6.72066 14.6773C6.69919 14.5935 6.70065 14.5054 6.72487 14.4224L7.53562 11.6494C7.62685 11.3387 7.7948 11.0559 8.024 10.8271L16.7231 2.12703Z" stroke="white" stroke-width="2.0372" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                     Edit</button>}
-                  {!editInput && firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn' onClick={(e) => handleUpdateProfile(e)}>{is_staff_updated?.isLoading ? <Spinner animation="border" role="status">
+                  {!editInput && firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn' onClick={(e) => handleUpdateProfile(e)}>Update Profile{is_staff_updated?.isLoading && <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
-                  </Spinner> : "Update Profile"}</button>}
+                  </Spinner> }</button>}
                 </div>
                 <div className='row authWrapper row-gap-3 pt-4'>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">FirstName</label>
                     <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => setData({ ...data, firstName: e.target.value })} disabled={editInput} className='form-control' />
-                    {firstNameError && <span className='invalid_input'>{firstNameError}</span>}
+                    {firstNameError && <span className='error text-danger'>{firstNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">LastName</label>
                     <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => setData({ ...data, lastName: e.target.value })} disabled={editInput} className='form-control' />
-                    {lastNameError && <span className='invalid_input'>{lastNameError}</span>}
+                    {lastNameError && <span className='error text-danger'>{lastNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Email</label>
                     <input type="email" placeholder='Email' value={data?.email} onChange={(e) => setData({ ...data, email: e.target.value })} disabled={editInput} className='form-control' />
-                    {emailError && <span className='invalid_input'>{emailError}</span>}
+                    {emailError && <span className='error text-danger'>{emailError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Phone Number</label>
@@ -280,7 +280,7 @@ const SettingsComponents = () => {
                         onChange={(phone) => handleValidatePhone(phone)}
                         disabled={editInput}
                       />
-                      {phoneError && <span className='invalid_input'>{phoneError}</span>}
+                      {phoneError && <span className='error text-danger'>{phoneError}</span>}
                     </div>
                   </div>
                 </div>
@@ -301,24 +301,24 @@ const SettingsComponents = () => {
                         placeholder="Enter Current Password"
                         className="form-control"
                       />
-                      {currentPasswordError && <span className='invalid_input'>{currentPasswordError}</span>}
+                      {currentPasswordError && <span className='error text-danger'>{currentPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">New Password</label>
 
                       <input type="password" autoComplete={false} value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError('') }} placeholder='Enter New Password' className='form-control' />
-                      {newPasswordError && <span className='invalid_input'>{newPasswordError}</span>}
+                      {newPasswordError && <span className='error text-danger'>{newPasswordError}</span>}
                     </div>
                     <div className='col-lg-6'>
                       <label className='d-block form-label' htmlFor="NAME">Confirm Password</label>
                       <input type="password" autoComplete={false} value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value); setConfirmPasswordError('') }} placeholder='Enter New Password' className='form-control' />
-                      {confirmPasswordError && <span className='invalid_input'>{confirmPasswordError}</span>}
+                      {confirmPasswordError && <span className='error text-danger'>{confirmPasswordError}</span>}
                     </div>
                     <div className='col-lg-6 user_profile '>
                       <label className='d-block form-label opacity-0' htmlFor="NAME">Confirm Password</label>
-                      {firstPermissionSettings?.canUpdate && <button className='cmn_btn' onClick={(e) => handleChangePassword(e)}>{is_Password_changed?.isLoading ? <Spinner animation="border" role="status">
+                      {firstPermissionSettings?.canUpdate && <button className='cmn_btn' onClick={(e) => handleChangePassword(e)}>Change Password{is_Password_changed?.isLoading && <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
-                      </Spinner> : "Change Password"}</button>}
+                      </Spinner>}</button>}
                     </div>
                   </div>
                 </div>

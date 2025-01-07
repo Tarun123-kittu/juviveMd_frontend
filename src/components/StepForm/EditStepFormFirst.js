@@ -361,8 +361,8 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
             </Form.Group>
           </Col>
 
-          <Col lg={12} className="text-center mt-4">
-            <button type="submit" className="cmn_btn ps-5 pe-5">
+          <Col lg={12} className="text-center mt-4 ">
+            <button type="submit" className="cmn_btn ps-5 pe-5 m-auto">
               Next
             </button>
           </Col>

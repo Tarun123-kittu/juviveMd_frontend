@@ -89,14 +89,10 @@ const ForgotPassword = () => {
                   <button
                     type="submit"
                     className="cmn_btn w-100"
-                  >
-                    {!forgot_password_state?.isLoading ? (
-                      "Reset"
-                    ) : (
-                      <Spinner animation="border" role="status">
+                  > Reset {forgot_password_state?.isLoading && <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                    )}
+                      </Spinner>}
+                  
                   </button>
                 </div>
               </Form>

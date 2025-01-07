@@ -197,7 +197,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                     />
                                     Upload Photo
                                 </div>
-                                {imageError && <span className="text-danger">Image is required</span>}
+                                {imageError && <span className="error text-danger">Image is required</span>}
                                 {image && (
                                     <span className="remove_file" onClick={(e) => {
                                         e.stopPropagation();
@@ -251,7 +251,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                             placeholder="Enter first name"
                                             className="form-control"
                                         />
-                                        <ErrorMessage name="firstName" component="div" className="text-danger" />
+                                        <ErrorMessage name="firstName" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={6}>
@@ -263,7 +263,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                             placeholder="Enter last name"
                                             className="form-control"
                                         />
-                                        <ErrorMessage name="lastName" component="div" className="text-danger" />
+                                        <ErrorMessage name="lastName" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={6}>
@@ -276,7 +276,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                                 onChange={(phone) => handleValidatePhone(phone, setFieldValue)}
                                             />
                                         </div>
-                                        <ErrorMessage name="phone" component="div" className="text-danger" />
+                                        <ErrorMessage name="phone" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={6}>
@@ -288,7 +288,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                             <option value="FEMALE">Female</option>
                                             <option value="NON-BINARY">Non-binary</option>
                                         </Field>
-                                        <ErrorMessage name="gender" component="div" className="text-danger" />
+                                        <ErrorMessage name="gender" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>
@@ -300,7 +300,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                             placeholder="Enter email"
                                             className="form-control"
                                         />
-                                        <ErrorMessage name="email" component="div" className="text-danger" />
+                                        <ErrorMessage name="email" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>
@@ -312,7 +312,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                             placeholder="Enter address"
                                             className="form-control"
                                         />
-                                        <ErrorMessage name="address" component="div" className="text-danger" />
+                                        <ErrorMessage name="address" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>
@@ -328,18 +328,16 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
                                                 }
                                             })}
                                         </Field>
-                                        <ErrorMessage name="role" component="div" className="text-danger" />
+                                        <ErrorMessage name="role" component="div" className="error text-danger" />
                                     </Form.Group>
                                 </Col>
                                 <Col lg={12}>
                                     <div className="text-end mt-1">
-                                        <button type="submit" className="cmn_btn px-4">
-                                            {!is_staff_updated?.isLoading ? "Update User" :
+                                        <button type="submit" className="cmn_btn px-4 ms-auto">
+                                            Update User{is_staff_updated?.isLoading &&
                                                 <Spinner animation="border" role="status">
                                                     <span className="visually-hidden">Loading...</span>
-                                                </Spinner>
-
-                                            }
+                                                </Spinner>}
                                         </button>
                                     </div>
                                 </Col>

@@ -6,13 +6,7 @@
   width: 15px;
   cursor: pointer;
 }
-button.cmn_btn {
-  background: var(--primary-color);
-  color: var(--bs-white);
-  font-weight: 500;
-  padding: 0px 0.8rem;
-  font-size: 14px;
-}
+
 .cmn_modal .authWrapper img.img-fluid {
   width: auto;
   height: -webkit-fill-available;
@@ -244,8 +238,8 @@ h5.step_heading {
   }
 }
 input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border: 1px solid #ccc;
   border-radius: 3px;
   cursor: pointer;
