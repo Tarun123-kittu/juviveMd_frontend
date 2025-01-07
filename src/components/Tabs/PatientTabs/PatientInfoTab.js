@@ -95,7 +95,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
           <tr>
             <td>{patientPlan?.category}</td>
             <td>{exercise?.exercise_name}</td>
-            <td> <img src={exercise?.image_rl || Training} altDeleteImage="" className="rounded-5" width={50} height={50} /></td>
+            <td> <img src={exercise?.image_url || Training} altDeleteImage="" className="rounded-5" width={50} height={50} /></td>
             <td>{patientPlan?.sets?.length}</td>
             <td>{exercise?.description}</td>
             <td className="text-decoration-underline">Easy</td>

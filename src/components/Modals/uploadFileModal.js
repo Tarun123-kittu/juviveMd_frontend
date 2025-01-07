@@ -172,7 +172,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
             .then((data) => {
                 const cleanedData = data.replace(/^\uFEFF/, "");
                 if (fileInputRef.current) {
-                    fileInputRef.current.value = ""; 
+                    fileInputRef.current.value = "";
                 }
                 setIsValidUpload(false)
                 setShow_close_button(false)
@@ -283,8 +283,11 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                             </tbody>
                         </table>
                     )}
+                    {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
+                        <h6 className='m-0'>{is_file_uploades?.data?.data?.errorRecords?.length > 0 ? "Some of your exercises has been uploaded Successfully !!" : "Exercises Uploaded Successfully !!"}</h6>
+                    </div>}
                     {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.errorRecords?.length > 0 && <div className='show_errors'>
-                        <h4>Error logs for csv/xml uploads</h4>
+                        <h4>There are some errors in Your file.Please check below</h4>
                         <ul>
 
                             {is_file_uploades?.data?.data?.errorRecords?.map((ErrorCur, index) => {
@@ -296,9 +299,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                             }
                         </ul>
                     </div>}
-                    {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
-                        <h6 className='m-0'>File Uploaded Successfully</h6>
-                    </div>}
+
 
                 </div>
                 <div className='text-end d-flex justify-content-end gap-2'>
