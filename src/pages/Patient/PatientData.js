@@ -152,7 +152,7 @@ const PatientData = () => {
               <div className="report_info flex-grow-1">
                 <div className="user_main table_user_data d-flex flex-column">
                   <div className="d-flex align-items-center flex-grow-1 gap-2">
-                    <img type="button" src={patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User Image" className="user_profile" onClick={() => { setCurrImage(patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
+                    <img type="button" src={patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User" className="user_profile" onClick={() => { setCurrImage(patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
                     <div className="d-inline-grid">
                       <p className="mb-0 patien_name">{patient_data?.firstName} {patient_data?.lastName}</p>
                       <div className="info_flex_grid align-items-center">
