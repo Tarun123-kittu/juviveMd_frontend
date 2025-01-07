@@ -70,7 +70,7 @@ const ForgotPassword = () => {
             }) => (
               <Form noValidate onSubmit={handleSubmit}>
                 <Form.Group className="mb-2 pt-2" controlId="email">
-                  <Form.Label>Email or Phone Number</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
                     placeholder="Registered email or phone number"
                     type="text"
