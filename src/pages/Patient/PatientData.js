@@ -16,9 +16,10 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
-
+import ImagePreview from "../../common/imagePreview/ImagePreviewer";
 import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
+
 const PatientData = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -31,13 +32,14 @@ const PatientData = () => {
   const [body_parts, setBody_parts] = useState()
   const [loading, setLoading] = useState(true);
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
+  const [showPopup, setShowPopup] = useState(false)
+  const [currImage, setCurrImage] = useState("")
   const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [patientReportsPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
-  console.log(patientPlanPermissions,"this is the patient plan permission")
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -144,7 +146,7 @@ const PatientData = () => {
               <div className="report_info flex-grow-1">
                 <div className="user_main table_user_data d-flex flex-column">
                   <div className="d-flex align-items-center flex-grow-1 gap-2">
-                    <img src={patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User Image" className="user_profile" />
+                    <img type="button" src={patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User Image" className="user_profile" onClick={() => { setCurrImage(patient_data?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
                     <div className="d-inline-grid">
                       <p className="mb-0 patien_name">{patient_data?.firstName} {patient_data?.lastName}</p>
                       <div className="info_flex_grid align-items-center">
@@ -339,6 +341,7 @@ const PatientData = () => {
         </Tabs>
       </div>
       {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} />}
+      <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
     </div >
   );
 };

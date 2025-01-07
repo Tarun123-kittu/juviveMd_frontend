@@ -258,17 +258,17 @@ const SettingsComponents = () => {
                 <div className='row authWrapper row-gap-3 pt-4'>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">FirstName</label>
-                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => setData({ ...data, firstName: e.target.value })} disabled={editInput} className='form-control' />
+                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => {setData({ ...data, firstName: e.target.value });setFirstNameError('')}} disabled={editInput} className='form-control' />
                     {firstNameError && <span className='error text-danger'>{firstNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">LastName</label>
-                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => setData({ ...data, lastName: e.target.value })} disabled={editInput} className='form-control' />
+                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => {setData({ ...data, lastName: e.target.value });setLastNameError('')}} disabled={editInput} className='form-control' />
                     {lastNameError && <span className='error text-danger'>{lastNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Email</label>
-                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => setData({ ...data, email: e.target.value })} disabled={editInput} className='form-control' />
+                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => {setData({ ...data, email: e.target.value });setEmailError('')}} disabled={editInput} className='form-control' />
                     {emailError && <span className='error text-danger'>{emailError}</span>}
                   </div>
                   <div className='col-lg-6'>

@@ -15,12 +15,15 @@ import DeleteModal from "../../Modals/DeleteModal";
 import toast from "react-hot-toast";
 import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../../constants/permissionConstants";
+import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 
 const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showEditPateintExercise, setshowEditPateintExercise] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const [currImage, setCurrImage] = useState("")
   const [planId, setPlanId] = useState(null)
   const [data, setData] = useState([])
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
@@ -95,7 +98,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
           <tr>
             <td>{patientPlan?.category}</td>
             <td>{exercise?.exercise_name}</td>
-            <td> <img src={exercise?.image_url || Training} altDeleteImage="" className="rounded-5" width={50} height={50} /></td>
+            <td> <img type="button" src={exercise?.image_url || Training} altDeleteImage="" className="rounded-5" width={50} height={50} onClick={() => { setCurrImage(exercise?.image_url || Training); setShowPopup(true) }} /></td>
             <td>{patientPlan?.sets?.length}</td>
             <td>{exercise?.description}</td>
             <td className="text-decoration-underline">Easy</td>
@@ -122,6 +125,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
         showReviewModal={showReviewModal}
       />
       <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_plan_deleted?.isLoading} />
+      <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
     </>
   );
 };

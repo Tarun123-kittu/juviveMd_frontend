@@ -20,6 +20,7 @@ import { clear_get_single_exercise_state } from '../../../redux/slices/exerciseS
 import { delete_exercise, clear_delete_exercise_state } from '../../../redux/slices/exerciseSlice/deleteExercise';
 import DeleteModal from '../../Modals/DeleteModal';
 import { formatDate } from '../../../common/formatDate/formatDate';
+import ImagePreview from '../../../common/imagePreview/ImagePreviewer';
 
 
 const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page }) => {
@@ -33,6 +34,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   const [status, setStatus] = useState(null)
   const [save, setSave] = useState(false)
   const [index, setIndex] = useState(null)
+  const [showPopup, setShowPopup] = useState(false)
+  const [currImage, setCurrImage] = useState("")
   const [ExercisePermissionApproveReject] = getRoutePermissions(permission_constants.EXERCISEAPPROVEREJECT)
   const is_exercise_deleted = useSelector((store) => store.DELETE_EXERCISE)
 
@@ -121,7 +124,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
               <tr>
 
                 <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
-                <td><img src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border object-fit-cove' alt="exercise" /></td>
+                <td><img type="button" src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border object-fit-cove' alt="exercise" onClick={() => { setCurrImage(exercise?.image_url || PoseImage); setShowPopup(true) }} /></td>
                 <td>
                   {exercise?.video_link ? (
                     <a
@@ -169,7 +172,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                           : exercise?.status === 0
                             ? "Rejected"
                             : "Draft"}
-                      {ExercisePermissionApproveReject?.canUpdate && tab !== "draft" &&  (
+                      {ExercisePermissionApproveReject?.canUpdate && tab !== "draft" && (
                         <svg
                           width="10"
                           height="14"
@@ -297,6 +300,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
         exerciseDifficuilty={exerciseDifficuilty}
       />
       <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_exercise_deleted?.isLoading} />
+      <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
     </div>
   )
 }

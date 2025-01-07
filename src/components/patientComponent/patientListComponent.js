@@ -27,6 +27,8 @@ import { permission_constants } from "../../constants/permissionConstants";
 import { TiArrowRight } from 'react-icons/ti';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowRight from '../../Images/button_right.svg'
+import ImagePreview from '../../common/imagePreview/ImagePreviewer'
+
 const Reception_patient_list = ({ showButtons }) => {
     const elementRef = useRef(null);
     const dispatch = useDispatch()
@@ -56,6 +58,8 @@ const Reception_patient_list = ({ showButtons }) => {
     const [payment_status_received, setPayment_status_received] = useState(false)
     const [leftPosition, setLeftpostion] = useState("")
     const [path, setPath] = useState(["active"])
+    const [showPopup, setShowPopup] = useState(false)
+    const [currImage, setCurrImage] = useState("")
     const patient_data = useSelector((store) => store.GET_PATIENT_LIST)
     const common_data = useSelector((store) => store.COMMON_DATA)
     const trainers_list = useSelector((store) => store.TRAINERS_LIST)
@@ -317,7 +321,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cove'/>
+                                                <img type="button" src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cove' onClick={() => { setCurrImage(patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
@@ -486,6 +490,7 @@ const Reception_patient_list = ({ showButtons }) => {
                 <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_patient_deleted?.isLoading} />
                 <AddpatientModal showPateintModal={showPateintModal} setshowPateintModal={setshowPateintModal} tab={tab} common_data={common_data} setTab={setTab} />
                 <EditpatientModal showPateintModal={showEditPateintModal} setshowPateintModal={setshowEditPateintModal} tab={tab} common_data={common_data} patientId={patientId} page={page} setPatientId={setPatientId} />
+                <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
             </div>
         </div>
     )
