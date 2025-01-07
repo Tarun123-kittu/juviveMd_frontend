@@ -163,7 +163,7 @@ const LoginComponent = () => {
                 </p>
               </Form.Group>
 
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <Form.Check
                   className="remeberPass"
                   inline
@@ -176,21 +176,17 @@ const LoginComponent = () => {
                 <Link to="/forgot-password">Forgot Password?</Link>
               </div>
               <div className="mt-3">
-                {!user_details?.isLoading ? (
+       
                   <button
                     type="submit"
                     className="cmn_btn w-100"
                     disabled={isSubmitting || user_details?.isLoading}
                   >
-                    Log In
-                  </button>
-                ) : (
-                  <button className="cmn_btn w-100" disabled>
-                    <Spinner animation="border" role="status">
+                    Log In  {user_details?.isLoading && <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
-                    </Spinner>
+                    </Spinner>}
                   </button>
-                )}
+            
               </div>
             </Form>
           )}

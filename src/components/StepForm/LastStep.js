@@ -13,11 +13,9 @@ const LastStep = ({ setStep, setStep_four_additional_information, step_four_addi
         </Form.Group>
         <div className='d-flex gap-3 justify-content-center mt-4'>
           <button onClick={() => setStep(3)} className='cmn_btn border-btn ps-4 pe-4'>Back</button>
-          {!onboarding_process?.isLoading ? <button onClick={handleSubmit} className='cmn_btn ps-4 pe-4'>Save</button>
-            :
-            <button className='cmn_btn ps-4 pe-4'><Spinner animation="border" role="status">
+         <button onClick={handleSubmit} className='cmn_btn ps-4 pe-4'>Save {onboarding_process?.isLoading && <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
-            </Spinner></button>}
+            </Spinner>}</button>
         </div>
       </div>
     </div>

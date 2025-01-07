@@ -94,13 +94,18 @@
             margin: 0;
         }
         
+     
         button.cmn_btn {
             background: var(--primary-color);
             color: var(--bs-white);
             font-weight: 500;
             padding: 0px 0.8rem;
             font-size: 14px;
-        }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+          }
         .info_card {
             padding: 1rem;
             box-shadow: 0px 6px 20px rgba(0, 0, 0, 8%);

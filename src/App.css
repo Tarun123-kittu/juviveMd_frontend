@@ -78,6 +78,10 @@ span.text-decoration-underline {
 .loader_img img {
   width: 60px;
 }
+.error.text-danger{
+  font-size: 13px;
+  margin-top: 4px;
+}
 button.cmn_btn.border-btn {
   background: var(--bs-white);
   color: #1a1a1a;
@@ -268,6 +272,10 @@ button.btn.cmn_btn:disabled:hover {
 .css-v7duua {
   padding-right: 0px;
   margin-right: -5px;
+}
+div.css-v7duua:hover {
+  background-color: unset;
+  color: #fff;
 }
 @media(max-width:1440px){
   .cmn_btn {

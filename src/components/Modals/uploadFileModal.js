@@ -308,13 +308,14 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                                 <a
                                     href="/exercises - Sheet1 (1).csv"
                                     download="sample.csv"
+                                    className='text-decoration-none'
                                 >
                                     <button className="cmn_btn mt-3">Download Sample</button>
                                 </a>
                             </div>
                         </>
                     )}
-                    {isValidUpload && !show_close_button && <button className='cmn_btn mt-3' onClick={handleUpload}>{!is_file_uploades?.isLoading ? "Upload" : <Spinner animation="border" role="status">
+                    {isValidUpload && !show_close_button && <button className='cmn_btn mt-3' onClick={handleUpload}>Upload {is_file_uploades?.isLoading && <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}</button>}
                     {show_close_button && <button className='cmn_btn mt-3' onClick={() => handleCloseUpload()}>Close</button>}
