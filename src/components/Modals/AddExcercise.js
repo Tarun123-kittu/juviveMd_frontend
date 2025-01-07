@@ -88,7 +88,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSave = (values) => {
-
+    setLoading("first")
     if (!data?.length) {
       setBodyPartError("Please select the body parts");
       return;
@@ -115,6 +115,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   };
 
   const handleSaveDraft = (values) => {
+    setLoading("second")
     if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
       setFieldError("Please enter at least one value to save the exercise as a draft");
       return;
@@ -193,33 +194,33 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   }, [is_exercise_draft_created]);
 
   const handleExerciseTypeChange = (e, setFieldValue) => {
-    setBodyPartError("")
+    setFieldError("")
     const value = e.target.value;
     setExerciseType(value);
     setFieldValue("exerciseType", value);
   };
   const handleExerciseNameChange = (e, setFieldValue) => {
-    setBodyPartError("")
+    setFieldError("")
     const value = e.target.value;
     setExerciseName(value);
     setFieldValue("exerciseName", value);
   };
 
   const handleExerciseImageChange = (e, setFieldValue) => {
-    setBodyPartError("")
+    setFieldError("")
     const value = e.target.value;
     setExerciseImage(value);
     setFieldValue("exerciseImage", value);
   };
   const handleExerciseVideoChange = (e, setFieldValue) => {
-    setBodyPartError('')
+    setFieldError('')
     const value = e.target.value
     setExerciseVideo(value);
     setFieldValue("exerciseVideo", value);
 
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
-    setBodyPartError('')
+    setFieldError('')
     const value = e.target.value;
     setExerciseDescription(value);
     setFieldValue("exerciseDescription", value);
@@ -242,7 +243,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   }, [body_parts]);
 
   const handleSelectDifficuilt = (selectedList) => {
-    setBodyPartError('')
+    setFieldError('')
     setDifficuilty([...selectedList]);
     const formattedResponse = selectedList.map((item) => item.name);
     setDifficuiltyResponse(formattedResponse);
@@ -378,35 +379,35 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       })}
                     </Field>
                   </Form.Group>
-                  
-                  
+
+
                   <Form.Group className="mb-2">
-                        <Form.Label>Difficulty level</Form.Label>
-                        <Select
-                          isMulti
-                          value={
-                            difficulty && difficulty.length > 0
-                              ? difficulty.map((item) => ({
-                                value: item.name,
-                                label: item.name,
-                              }))
-                              : null
-                          }
-                          options={difficuiltOptions?.map((option) => ({
-                            value: option.name,
-                            label: option.name,
-                          }))}
-                          onChange={(selectedOptions) => {
-                            const selectedList = selectedOptions.map((option) => ({
-                              name: option.value,
-                            }));
-                            handleSelectDifficuilt(selectedList);
-                          }}
-                          placeholder="Select Difficulty"
-                          className="flex-grow-1"
-                        />
-                      </Form.Group>
-                                 </Col>
+                    <Form.Label>Difficulty level</Form.Label>
+                    <Select
+                      isMulti
+                      value={
+                        difficulty && difficulty.length > 0
+                          ? difficulty.map((item) => ({
+                            value: item.name,
+                            label: item.name,
+                          }))
+                          : null
+                      }
+                      options={difficuiltOptions?.map((option) => ({
+                        value: option.name,
+                        label: option.name,
+                      }))}
+                      onChange={(selectedOptions) => {
+                        const selectedList = selectedOptions.map((option) => ({
+                          name: option.value,
+                        }));
+                        handleSelectDifficuilt(selectedList);
+                      }}
+                      placeholder="Select Difficulty"
+                      className="flex-grow-1"
+                    />
+                  </Form.Group>
+                </Col>
                 <Col lg={6}>
                   <Row>
                     <Col lg={12}>
@@ -422,22 +423,22 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       </Form.Group>
                     </Col>
                     <Col lg={12}>
-                    <Form.Group className="mb-2">
-                    <Form.Label>Exercise Image Url</Form.Label>
-                    <Field
-                      type="text"
-                      name="exerciseImage"
-                      placeholder="Enter image url"
-                      className="form-control"
-                      onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
-                    />
-                  </Form.Group>
+                      <Form.Group className="mb-2">
+                        <Form.Label>Exercise Image Url</Form.Label>
+                        <Field
+                          type="text"
+                          name="exerciseImage"
+                          placeholder="Enter image url"
+                          className="form-control"
+                          onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                        />
+                      </Form.Group>
                     </Col>
-                     
+
                   </Row>
                 </Col>
                 <Col lg={12}>
-                <Form.Group className="mb-2">
+                  <Form.Group className="mb-2">
                     <Form.Label>Exercise Video Link</Form.Label>
                     <Field
                       type="text"
@@ -449,22 +450,22 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                   </Form.Group>
                 </Col>
                 <Col lg={12}>
-                      <Form.Group>
-                        <Form.Label>Exercise Description</Form.Label>
-                        <Field
-                          as="textarea"
-                          rows={2}
-                          name="exerciseDescription"
-                          placeholder="Enter description"
-                          className="form-control"
-                          onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col lg={12}>
-                    {bodyPartError && <span className="error text-danger">{bodyPartError}</span>}
-                    {fieldError && <span className="error text-danger">{fieldError}</span>}
-                    </Col>
+                  <Form.Group>
+                    <Form.Label>Exercise Description</Form.Label>
+                    <Field
+                      as="textarea"
+                      rows={2}
+                      name="exerciseDescription"
+                      placeholder="Enter description"
+                      className="form-control"
+                      onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col lg={12}>
+                  {bodyPartError && <span className="error text-danger">{bodyPartError}</span>}
+                  {fieldError && <span className="error text-danger">{fieldError}</span>}
+                </Col>
                 <Col lg={12}>
                   <div className="modal_card mt-3">
                     <div className="d-flex justify-content-between">
@@ -522,46 +523,46 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                         </div>
                       </div>
                     ))}
-                  
+
                   </div>
                 </Col>
               </Row>
               <div className="text-end mt-3">
                 <div className="d-flex justify-content-end gap-2">
-                 
-                  
-                        <button
-                          onClick={() => {
-                            handleSave();
-                            setLoading("first");
-                          }}
-                          disabled={draft || loading === "second"}
-                          className="btn cmn_btn"
-                        >
-                          Send For Approval
-                   
-                     {is_exercise_created?.isLoading &&   <Spinner animation="border" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </Spinner>}
-                      </button>
-                 
-                
-                        <button
-                          onClick={() => {
-                            setDraft(true);
-                            handleSaveDraft();
-                            setLoading("second");
-                          }}
-                          disabled={loading === "first"}
-                          className="btn cmn_btn ms-2"
-                        >
-                          Save as Draft
-                   
-                       {is_exercise_draft_created?.isLoading && <Spinner animation="border" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </Spinner>}
-                      </button>
-                 
+
+
+                  <button
+                    onClick={() => {
+                      handleSave();
+                      setLoading("first");
+                    }}
+                    disabled={draft || loading === "second"}
+                    className="btn cmn_btn"
+                  >
+                    Send For Approval
+
+                    {is_exercise_created?.isLoading && <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>}
+                  </button>
+
+
+                  <button
+                    onClick={() => {
+                      setDraft(true);
+                      handleSaveDraft();
+                      setLoading("second");
+                    }}
+                    disabled={loading === "first"}
+                    className="btn cmn_btn ms-2"
+                  >
+                    Save as Draft
+
+                    {is_exercise_draft_created?.isLoading && <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>}
+                  </button>
+
                 </div>
 
               </div>

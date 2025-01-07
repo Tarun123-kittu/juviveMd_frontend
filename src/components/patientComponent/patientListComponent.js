@@ -96,7 +96,6 @@ const Reception_patient_list = ({ showButtons }) => {
 
     const columns = [
         "User Name",
-        "Date",
         "Age",
         "Phone No.",
         "Gender",
@@ -104,11 +103,11 @@ const Reception_patient_list = ({ showButtons }) => {
         "Assigned Trainer",
         "Status",
         "Created By",
+        "Created At",
         "Action",
     ];
     const columns_one = [
         "User Name",
-        "Date",
         "Age",
         "Phone No.",
         "Gender",
@@ -116,12 +115,12 @@ const Reception_patient_list = ({ showButtons }) => {
         "Assigned Trainer",
         "Status",
         "Created By",
+        "Created At",
         "Health Issue",
         "Action",
     ];
     const columns_two = [
         "User Name",
-        "Date",
         "Age",
         "Phone No.",
         "Gender",
@@ -130,6 +129,7 @@ const Reception_patient_list = ({ showButtons }) => {
         "Status",
         "Payment",
         "Created By",
+        "Created At",
         "Action",
     ];
 
@@ -317,13 +317,12 @@ const Reception_patient_list = ({ showButtons }) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} />
+                                                <img src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cove'/>
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{formatDate(patient?.created_at)}</td>
                                         <td>{calculateAge(patient?.dob)}</td>
                                         <td className='text-nowrap'>+{patient?.countryCode} {patient?.phone}</td>
                                         <td>
@@ -441,6 +440,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                         <td>
                                             {patient?.createdByName ? patient?.createdByName.charAt(0).toUpperCase() + patient.createdByName.slice(1) : "Self"}
                                         </td>
+                                        <td>{patient?.created_at ? formatDate(patient?.created_at) : null}</td>
 
 
                                         {<td className={`${tab !== "healthIssue" && "d-none"} `}>

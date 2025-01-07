@@ -550,7 +550,7 @@ const EditPateintExercise = ({
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Image</Form.Label>
                 <div className="exercise_image">
-                  <img src={exerciseImage || TrainingImage} alt="training image" disabled />
+                  <img src={exerciseImage || TrainingImage} alt="training image" disabled className="img-fluid"/>
                 </div>
               </Form.Group>
             </Col>

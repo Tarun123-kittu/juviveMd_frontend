@@ -19,6 +19,7 @@ import { permission_constants } from '../../../constants/permissionConstants';
 import { clear_get_single_exercise_state } from '../../../redux/slices/exerciseSlice/getExercise';
 import { delete_exercise, clear_delete_exercise_state } from '../../../redux/slices/exerciseSlice/deleteExercise';
 import DeleteModal from '../../Modals/DeleteModal';
+import { formatDate } from '../../../common/formatDate/formatDate';
 
 
 const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page }) => {
@@ -42,6 +43,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     "Category",
     "Exercise Status",
     "Created By",
+    "Created At",
     "Action"
   ];
 
@@ -114,12 +116,12 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
       {console.log("all_exercise======>", all_exercise)}
       <div className={`${exercise_data?.data?.data?.totalPages > 1 && "streach_table"}`}>
         <DataTable columns={columns}>
-          {exercise_data?.isLoading ? <tr><td colSpan={7}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={7}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
+          {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={7}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
             return (
               <tr>
 
                 <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
-                <td><img src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border' alt="exercise" /></td>
+                <td><img src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border object-fit-cove' alt="exercise" /></td>
                 <td>
                   {exercise?.video_link ? (
                     <a
@@ -140,7 +142,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                   )}
                 </td>
                 <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
-                <td className={ExercisePermissionApproveReject?.canUpdate ? "" : 'nodropdown'}> <div className='patient_dropdown w-100'>
+                <td className={ExercisePermissionApproveReject?.canUpdate && tab !== "draft" ? "" : 'nodropdown'}> <div className='patient_dropdown w-100'>
                   <Dropdown
                     show={isOpen}
                     onToggle={(nextOpenState) => {
@@ -167,7 +169,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                           : exercise?.status === 0
                             ? "Rejected"
                             : "Draft"}
-                      {ExercisePermissionApproveReject?.canUpdate && (
+                      {ExercisePermissionApproveReject?.canUpdate && tab !== "draft" &&  (
                         <svg
                           width="10"
                           height="14"
@@ -183,7 +185,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                       )}
                     </Dropdown.Toggle>
 
-                    {ExercisePermissionApproveReject?.canUpdate && index === i && (
+                    {ExercisePermissionApproveReject?.canUpdate && tab !== "draft" && index === i && (
                       <Dropdown.Menu>
                         <ul>
                           {tab !== "active" && (
@@ -263,6 +265,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                 </div></td>
                 <td>
                   {exercise?.trainerName ? exercise?.trainerName?.charAt(0).toUpperCase() + exercise.trainerName.slice(1) : ''}
+                </td>
+                <td>
+                  {exercise?.created_at ? formatDate(exercise?.created_at) : null}
                 </td>
                 <td>
                   <div className='d-flex gap-3'>

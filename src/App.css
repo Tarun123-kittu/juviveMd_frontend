@@ -130,7 +130,7 @@ li.dropdown_search span {
   align-items: center;
   justify-content: center;
 }
-li.previous.disabled a {
+li.previous.disabled a, li.next.disabled a{
   color: #697077;
 }
 

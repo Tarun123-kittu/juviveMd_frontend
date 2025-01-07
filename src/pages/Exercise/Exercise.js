@@ -18,7 +18,6 @@ const Exercise = () => {
   const dispatch = useDispatch();
   const location = useLocation()
   const { val } = location?.state ? location?.state : location
-  console.log(val,"this is the val from the exercise")
   const { pathname } = location
   const [toggleFilter, setToggleFilter] = useState(false);
   const [showAddExerciseModal, setshowAddExerciseModal] = useState(false);
