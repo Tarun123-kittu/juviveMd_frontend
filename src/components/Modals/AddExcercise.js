@@ -35,7 +35,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [difficuiltOptions, setDifficuiltOptions] = useState()
   const [bodyPartError, setBodyPartError] = useState('')
   const [difficuiltyResponse, setDifficuiltyResponse] = useState()
-  console.log(difficuiltyResponse, "this is the difficuilty response")
   const [data, setData] = useState([{ name: "", movements: [] }]);
   const [fieldError, setFieldError] = useState("")
   const [apiData, setApiData] = useState();
@@ -49,7 +48,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setMovementsArray([])
     setMovementResponse([])
     setDifficuilty()
-    setDifficuiltOptions()
     setDifficuiltyResponse()
     setData([{ name: "", movements: [] }])
     setBodyPartError('')
@@ -59,6 +57,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setExerciseVideo('')
     setExerciseDescription('')
     setExerciseImage()
+    setLoading("")
   };
 
   useEffect(() => {
@@ -194,28 +193,33 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   }, [is_exercise_draft_created]);
 
   const handleExerciseTypeChange = (e, setFieldValue) => {
+    setBodyPartError("")
     const value = e.target.value;
     setExerciseType(value);
     setFieldValue("exerciseType", value);
   };
   const handleExerciseNameChange = (e, setFieldValue) => {
+    setBodyPartError("")
     const value = e.target.value;
     setExerciseName(value);
     setFieldValue("exerciseName", value);
   };
 
   const handleExerciseImageChange = (e, setFieldValue) => {
+    setBodyPartError("")
     const value = e.target.value;
     setExerciseImage(value);
     setFieldValue("exerciseImage", value);
   };
   const handleExerciseVideoChange = (e, setFieldValue) => {
+    setBodyPartError('')
     const value = e.target.value
     setExerciseVideo(value);
     setFieldValue("exerciseVideo", value);
 
   };
   const handleExerciseDescriptionChange = (e, setFieldValue) => {
+    setBodyPartError('')
     const value = e.target.value;
     setExerciseDescription(value);
     setFieldValue("exerciseDescription", value);
@@ -237,42 +241,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }
   }, [body_parts]);
 
-  const handleSelect = (selectedList) => {
-    setSelectedBodyNames([...selectedList]);
-  };
-
-  const handleRemove = (selectedList, removedItem) => {
-    setSelectedBodyNames([...selectedList]);
-    const updatedMovements = movementsArray.filter(
-      (movement) => movement.key !== removedItem.name
-    );
-    setMovementsArray(updatedMovements);
-
-    const updatedSelectedMovements = selectedMovements.filter(
-      (movement) => movement.key !== removedItem.name
-    );
-    setSelectedMovements(updatedSelectedMovements);
-  };
-
-  const handleSelectMovements = (selectedList) => {
-    setSelectedMovements([...selectedList]);
-  };
-
-  const handleRemoveMovements = (selectedList) => {
-    setSelectedMovements([...selectedList]);
-  };
-
   const handleSelectDifficuilt = (selectedList) => {
+    setBodyPartError('')
     setDifficuilty([...selectedList]);
     const formattedResponse = selectedList.map((item) => item.name);
     setDifficuiltyResponse(formattedResponse);
   };
 
-  const handleRemoveDifficuilt = (selectedList) => {
-    setDifficuilty([...selectedList]);
-    const formattedResponse = selectedList.map((item) => item.name);
-    setDifficuiltyResponse(formattedResponse);
-  };
+
 
 
   useEffect(() => {
@@ -324,6 +300,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   // Handle name selection
   const handleNameChange = (index, selectedOption) => {
+    setBodyPartError('')
     const updatedData = [...data];
     updatedData[index].name = selectedOption?.value || "";
     updatedData[index].movements = []; // Reset movements when name changes
@@ -332,6 +309,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   // Handle movement selection
   const handleMovementChange = (index, selectedOptions) => {
+    setBodyPartError('')
     const updatedData = [...data];
     updatedData[index].movements = selectedOptions.map((option) => option.value);
     setData(updatedData);
@@ -631,7 +609,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                             handleSave();
                             setLoading("first");
                           }}
-                          disabled={draft}
+                          disabled={draft || loading === "second"}
                           className="btn cmn_btn"
                         >
                           Send For Approval
@@ -654,6 +632,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                             handleSaveDraft();
                             setLoading("second");
                           }}
+                          disabled={loading === "first"}
                           className="btn cmn_btn ms-2"
                         >
                           Save as Draft

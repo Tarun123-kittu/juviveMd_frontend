@@ -32,6 +32,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const [exerciseImage, setExerciseImage] = useState("")
     const [bodyNames, setBodyNames] = useState([])
     const [selectedBodyNames, setSelectedBodyNames] = useState([]);
+    const [loading, setLoading] = useState("")
     const [selectedMovements, setSelectedMovements] = useState([]);
     const [movementsArray, setMovementsArray] = useState([]);
     const [bodyPartError, setBodyPartError] = useState('')
@@ -120,6 +121,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         setExerciseImage()
         setData([{ name: "", movements: [] }])
         setDifficuiltyResponse()
+        setLoading("")
     };
 
     const handleImageChange = (event, setFieldValue) => {
@@ -137,6 +139,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
 
     const handleSave = (values) => {
+        setLoading("first")
         const bodyParts = data.filter((entry) => entry.name);
         if (!data?.length) {
             setBodyPartError("Please select the body parts");
@@ -164,6 +167,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         );
     };
     const handleSaveDraft = (values) => {
+        setLoading("second")
         const bodyParts = data.filter((entry) => entry.name);
         if (!exerciseName && !exerciseType && !difficuiltyResponse && !exerciseVideo && !exerciseImage && !exerciseDescription) {
             setFieldError("Please enter at least one value to save the exercise as a draft");
@@ -216,26 +220,31 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }, [is_exercise_updated_draft])
 
     const handleExerciseTypeChange = (e, setFieldValue) => {
+        setFieldError('')
         const value = e.target.value;
         setExerciseType(value);
         setFieldValue("exerciseType", value);
     };
     const handleExerciseNameChange = (e, setFieldValue) => {
+        setFieldError('')
         const value = e.target.value;
         setExerciseName(value);
         setFieldValue("exerciseName", value);
     };
     const handleExerciseImageChange = (e, setFieldValue) => {
+        setFieldError('')
         const value = e.target.value;
         setExerciseImage(value);
         setFieldValue("exerciseImage", value);
     };
     const handleExerciseVideoChange = (e, setFieldValue) => {
+        setFieldError('')
         const value = e.target.value;
         setExerciseVideo(value);
         setFieldValue("exerciseVideo", value);
     };
     const handleExerciseDescriptionChange = (e, setFieldValue) => {
+        setFieldError('')
         const value = e.target.value;
         setExerciseDescription(value);
         setFieldValue("exerciseDescription", value);
@@ -258,6 +267,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }, [body_parts]);
 
     const handleSelectDifficuilt = (selectedList) => {
+        setFieldError('')
         setDifficuilty([...selectedList]);
         const formattedResponse = selectedList.map((item) => item.name);
         setDifficuiltyResponse(formattedResponse);
@@ -307,6 +317,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
 
     const handleNameChange = (index, selectedOption) => {
+        setBodyPartError('')
         const updatedData = [...data];
         updatedData[index].name = selectedOption?.value || "";
         updatedData[index].movements = [];
@@ -314,6 +325,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     };
 
     const handleMovementChange = (index, selectedOptions) => {
+        setBodyPartError('')
         const updatedData = [...data];
         updatedData[index].movements = selectedOptions.map((option) => option.value);
         setData(updatedData);
@@ -333,7 +345,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const getAvailableNames = () => {
         const selectedNames = data.map((entry) => entry.name);
         return apiData
-            ?.filter((item) => !selectedNames.includes(item.name)) 
+            ?.filter((item) => !selectedNames.includes(item.name))
             .map((item) => ({ value: item.name, label: item.name }));
     };
 
@@ -543,9 +555,9 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                             <>
                                                 {tab !== "approvalRequest" && (
                                                     <button
-                                                        disabled={draft}
+                                                        disabled={draft || loading === "second"}
                                                         className="btn cmn_btn me-2"
-                                                        onClick={() => handleSave()}
+                                                        onClick={() => { handleSave() }}
                                                     >
                                                         {tab === "approvalRequest" ? "Update" : "Send For Approval"}
                                                     </button>
@@ -567,6 +579,7 @@ const EditExercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                                             setDraft(true);
                                                             handleSaveDraft();
                                                         }}
+                                                        disabled={loading === "first"}
                                                         className="btn cmn_btn"
                                                     >
                                                         Save as draft

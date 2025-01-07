@@ -680,7 +680,7 @@ const AddPateintExercise = ({
 
         {category !== "strength exercise" && <div className="modal_card mt-3">
           <div className="d-flex align-items-center mb-2">
-            <h5 className="flex-grow-1 mb-0">Steps and Reps</h5>{" "}
+            <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
             <button onClick={() => handleAddCardioFields()} className="cmn_btn add_row">Add Row</button>
           </div>
           {cardioFields?.map((cardio, i) => (

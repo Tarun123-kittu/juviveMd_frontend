@@ -266,7 +266,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                 </td>
                 <td>
                   <div className='d-flex gap-3'>
-                    {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, tab: tab } }) }} />}
+                    {(ExercisePermission?.canRead && ExercisePermission?.canRead) && <FaRegEye title='View Exercise' size={30} onClick={() => { navigate("/exerciseView", { state: { id: exercise?.id, val: tab } }) }} />}
                     {(ExercisePermission?.canUpdate && ExercisePermission?.canUpdate) && (tab === "draft" || tab === "rejected") && <FaEdit title='Edit Exercise' size={30} onClick={() => { setExerciseId(exercise?.id); setEditExerciseModal(true) }} />}
                     {ExercisePermission?.canDelete && <FaRegTrashAlt className='me-2' title='Delete Exercise' size={30} onClick={() => { setShowDeleteModal(true); setExerciseId(exercise?.id) }} />}
                   </div>
