@@ -44,7 +44,6 @@ const EditPateintExercise = ({
   const [diffError, setDiffError] = useState('')
   const [distanceVal, setDistanceVal] = useState({
   })
-  console.log(distanceVal, "distanceVal distanceVal")
   const [flexibilityField, setFlexibilityField] = useState([{
     reps: "",
     weight: { value: null, unit: "kg" },

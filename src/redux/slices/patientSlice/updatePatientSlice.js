@@ -36,11 +36,11 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
             "health_issue_text": selected_health_issue ? selected_health_issue : patient_details?.health_issue_text,
             "optimal_weight": {
                 "unit": third_step_weight_unit ? third_step_weight_unit : patient_details?.optimal_weight?.unit,
-                "value": stepThreefullData?.optimalWeight ? stepThreefullData?.optimalWeight : patient_details?.optimal_weight?.value
+                "value": stepThreefullData?.optimalWeight ? Number(stepThreefullData?.optimalWeight) : Number(patient_details?.optimal_weight?.value)
             },
             "fat_percentage": {
                 "unit": "perc",
-                "value": stepThreefullData?.bodyFat ? stepThreefullData?.bodyFat : patient_details?.fat_percentage?.value
+                "value": stepThreefullData?.bodyFat ? Number(stepThreefullData?.bodyFat) : Number(patient_details?.fat_percentage?.value)
             },
             "discomfort": stepThreefullData?.discomfort ? stepThreefullData?.discomfort : patient_details?.discomfort,
             "activity_level": stepThreefullData?.activityLevel ? stepThreefullData?.activityLevel : patient_details?.activity_level,

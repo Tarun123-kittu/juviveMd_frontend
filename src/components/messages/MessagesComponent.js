@@ -23,7 +23,7 @@ const MessagesComponent = () => {
   const [message, setMessage] = useState('')
   const [messageError, setMessageError] = useState('')
   const [isAtBottom, setIsAtBottom] = useState(true);
-  const [chatIndex, setChatIndex] = useState(0)
+  const [chatIndex, setChatIndex] = useState(null)
   const all_chats = useSelector((store) => store.RECENT_CHATS)
   const wholeChat = useSelector((store) => store.GET_WHOLE_CHAT)
   const is_message_sent = useSelector((store) => store.SEND_MESSAGE)
@@ -37,11 +37,6 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (all_chats?.isSuccess) {
       setChats(all_chats?.data?.data?.items)
-      if (all_chats?.data?.data?.items?.length > 0) {
-        setOpenChat(true)
-        setOpenChatId(all_chats?.data?.data?.items[0]?.receiverId === localStorage.getItem('user_id') ? all_chats?.data?.data?.items[0]?.senderId : all_chats?.data?.data?.items[0]?.receiverId)
-        setOpenChatName(all_chats?.data?.data?.items[0]?.receiverId === localStorage.getItem('user_id') ? all_chats?.data?.data?.items[0]?.sender?.firstName : all_chats?.data?.data?.items[0]?.receiver?.firstName)
-      }
     }
   }, [all_chats])
 
@@ -151,7 +146,7 @@ const MessagesComponent = () => {
               <ul>
                 {Array.isArray(chats) && chats?.length !== 0 && chats.map((chat, i) => {
                   return (
-                    <li key={i} className={`d-flex gap-2 align-items-center ${chat?.read ? "shadow p-2 bg-white rounded" : "active"}`} style={{ cursor: "pointer" }} onClick={() => { setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img src={DefaultImage} alt="user image" />
+                    <li key={i} className={`d-flex gap-2 align-items-center ${chatIndex === i ? "disabled" : ""} ${chat?.read ? "shadow p-2 bg-white rounded" : "active"}`} aria-disabled="true" style={{ cursor: "pointer" }} onClick={() => {setChatIndex(i); setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img src={DefaultImage} alt="user image" />
                       <div className='message_user flex-grow-1 '>
                         <div className='d-flex'>
                           <h6 className='flex-grow-1'>{chat?.senderId === localStorage.getItem('user_id') ? chat?.receiver?.firstName : chat?.sender?.firstName}</h6>
@@ -174,7 +169,7 @@ const MessagesComponent = () => {
                 })}
               </ul>
             </div>
-            {openChat && openChatId && <div className='messages_content flex-grow-1'>
+            {(openChat && openChatId) ? <div className='messages_content flex-grow-1'>
               <div>
                 <div className='d-flex gap-2 align-items-center message_head '><img src={DefaultImage} alt="user image" />
                   <div className='message_user flex-grow-1 '>
@@ -268,7 +263,7 @@ const MessagesComponent = () => {
 
               </div>}
 
-            </div>}
+            </div> : <h1>No chat selected</h1>}
           </div>
           {chats?.length === 0 && <div className='no_messages'>
             <Nodata />

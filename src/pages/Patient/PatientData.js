@@ -28,7 +28,6 @@ const PatientData = () => {
   const [exercise_category, setExercise_category] = useState()
   const [weekdays, setWeekdays] = useState()
   const [currentBmi, setCurrentBmi] = useState('')
-  console.log(currentBmi)
   const [expectedBmi, setExpectedBmi] = useState('')
   const [body_parts, setBody_parts] = useState()
   const [loading, setLoading] = useState(true);
@@ -205,7 +204,7 @@ const PatientData = () => {
                         <strong>Workout Place</strong>
                         <span>{patient_data?.workout_place}</span>
                       </li>
-                      {patient_data?.fat_percentage?.value && <li>
+                      {patient_data?.fat_percentage?.value > 0 && <li>
                         <strong>Body fat %</strong>
                         <span>{patient_data?.fat_percentage?.value}%</span>
                       </li>}

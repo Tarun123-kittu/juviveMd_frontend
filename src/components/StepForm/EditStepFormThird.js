@@ -55,7 +55,6 @@ const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_r
     },
   });
 
-  console.log(stepThreefullData, "this is the step 3 full data")
 
   const handleOptimalWeightChange = (value) => {
     formik.setFieldValue("optimalWeight", value);

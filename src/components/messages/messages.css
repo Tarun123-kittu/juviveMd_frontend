@@ -20,6 +20,11 @@
 .message_user h6 {
     margin-bottom: 0px;
 }
+.disabled {
+    color: gray;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
 p.message_dialogue {
     background: var(--primary-color);
     padding: 10px;

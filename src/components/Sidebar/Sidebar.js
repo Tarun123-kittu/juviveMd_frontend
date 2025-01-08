@@ -13,6 +13,7 @@ import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getR
 import { permission_constants } from '../../constants/permissionConstants'
 import { get_single_staff } from '../../redux/slices/staffSlice/getStaffByIdSlice'
 import DeleteModal from '../Modals/DeleteModal'
+import { recent_chats } from '../../redux/slices/chatSlice/recentChats'
 
 const Sidebar = () => {
   const token = Cookies.get('authToken');
@@ -24,9 +25,12 @@ const Sidebar = () => {
   const [quotes, setQuotes] = useState([])
   const { pathname } = location;
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [unreadChats, setUnreadChats] = useState([])
+  const [chats, setChats] = useState(false)
   const splitLocation = pathname.split("/");
   const quotes_list = useSelector((store) => store.GET_QUOTES)
   const user_details = useSelector((store) => store.STAFF_DETAIL)
+  const all_chats = useSelector((store) => store.RECENT_CHATS)
   const current_date = new Date();
   const month = current_date.getMonth() + 1;
   const isThirtyDayMonth = [4, 6, 9, 11].includes(month);
@@ -42,9 +46,15 @@ const Sidebar = () => {
   const [firstPermissionDashboard] = getRoutePermissions(permission_constants?.DASHBOARD);
   const [firstPermissionSettings] = getRoutePermissions(permission_constants?.SETTINGS);
 
-  if(!token){
+  if (!token) {
     navigate("/")
   }
+
+  useEffect(() => {
+    if(chats){
+      dispatch(recent_chats({ page: 1 }))
+    }
+  }, [chats])
 
   useEffect(() => {
     if (quotes?.length === 0) {
@@ -80,6 +90,14 @@ const Sidebar = () => {
       return 'Good Evening';
     }
   };
+
+  useEffect(() => {
+    if (all_chats?.isSuccess) {
+      const chatCount = all_chats?.data?.data?.items.filter((el) => el.read === false)
+      setUnreadChats(chatCount)
+      setChats(false)
+    }
+  }, [all_chats])
 
   const userImageUrl = user_details?.data?.data?.image;
   return (
@@ -140,44 +158,47 @@ const Sidebar = () => {
               return (
                 <>
                   {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
-                    <li key={`${index}-staff`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-staff`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>{menus.name}</span>
                       </Link>
                     </li>
                   )}
                   {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                    <li key={`${index}-exercise`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-exercise`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>{menus.name}</span>
                       </Link>
                     </li>
                   )}
                   {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                    <li key={`${index}-patient`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-patient`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>{menus.name}</span>
                       </Link>
                     </li>
                   )}
                   {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>{menus.name}</span>
                       </Link>
                     </li>
                   )}
                   {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>{menus.name}</span>
                       </Link>
                     </li>
                   )}
                   {menus?.name === "Messages" && firstPermissionChat?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => setToggle(!toggle)} className={isActive ? "active_menu" : ""}>
+                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
+                        {menus.icon} <span>
+                        {menus.name} <span className={`${unreadChats?.length > 0 ? "messsage_count" : ""}`}> {`${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`}</span>
+                        </span>
+                        {/* {`${menus.name}<span></span>${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`} */}
                       </Link>
                     </li>
                   )}

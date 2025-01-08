@@ -36,10 +36,6 @@ const EditExercise = ({
     body_parts,
     exerciseDifficuilty,
 }) => {
-    console.log(
-        ExercisePermission,
-        "ExercisePermission ExercisePermission ExercisePermission ExercisePermission"
-    );
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
     const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);

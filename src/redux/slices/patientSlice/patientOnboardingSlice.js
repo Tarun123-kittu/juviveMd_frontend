@@ -32,11 +32,11 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
             "health_issue_text": selected_health_issue,
             "optimal_weight": {
                 "unit": third_step_weight_unit,
-                "value": stepThreefullData?.optimalWeight
+                "value": Number(stepThreefullData?.optimalWeight)
             },
             "fat_percentage": {
                 "unit": "perc",
-                "value": stepThreefullData?.bodyFat
+                "value": Number(stepThreefullData?.bodyFat)
             },
             "discomfort": stepThreefullData?.discomfort,
             "activity_level": stepThreefullData?.activityLevel,

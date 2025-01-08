@@ -123,6 +123,26 @@ li.log_out div {
 .user_image_round {
     border-radius : 42px
 }
+
+span.messsage_count {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 25px;
+    position: relative;
+    top: -5px;
+    margin-left: 4px;
+}
+
+a.sidebar_active span.messsage_count {
+    background: var( --primary-color);
+    color: var(--bs-white);
+}
+
 @media(max-width:1440px){
     ul.menu_items {
         gap: 10px;

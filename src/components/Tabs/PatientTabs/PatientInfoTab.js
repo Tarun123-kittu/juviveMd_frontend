@@ -60,6 +60,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
     }
     if (patientExerciseData?.isError) {
       setData([])
+      setLoading(false)
     }
   }, [patientExerciseData])
 
