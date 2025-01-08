@@ -139,10 +139,7 @@ const MessagesComponent = () => {
       dispatch(clear_read_message_state())
     }
   }, [is_message_read])
-  return all_chats?.isLoading ? <div className="wrapper">
-    <div className="inner_wrapper">
-      <Loader wrapclass="full_height" />
-    </div></div>  : (
+  return (
       <div className='wrapper'>
         <div className='inner_wrapper'>
 
@@ -189,7 +186,7 @@ const MessagesComponent = () => {
                   onScroll={handleScroll}
                   ref={chatRef}
                 >
-                  {wholeChat?.isLoading ? <Loader wrapclass="full_height"/> : Array.isArray(chatData) && chatData.length > 0 ? (
+                  {Array.isArray(chatData) && chatData.length > 0 ? (
                     chatData?.map((item) => {
                       const myId = localStorage.getItem('user_id');
                       const isSentByMe = item.senderId === myId;
