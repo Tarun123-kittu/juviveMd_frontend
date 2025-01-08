@@ -288,30 +288,6 @@ const EditExercise = ({
     };
 
     useEffect(() => {
-        if (
-            exerciseType &&
-            exerciseName &&
-            exerciseVideo &&
-            exerciseDescription &&
-            exerciseImage &&
-            !isButtonDisabled &&
-            difficuiltyResponse?.length
-        ) {
-            setDraft(false);
-        } else {
-            setDraft(true);
-        }
-    }, [
-        exerciseType,
-        exerciseName,
-        exerciseVideo,
-        exerciseDescription,
-        exerciseImage,
-        is_exercise,
-        difficuiltyResponse,
-    ]);
-
-    useEffect(() => {
         if (body_parts?.length) {
             const bodyName = body_parts?.map((part) => ({ name: part.name }));
             setBodyNames(bodyName);
@@ -411,6 +387,28 @@ const EditExercise = ({
     const isButtonDisabled = data.some(
         (item) => item.name.trim() === "" || item.movements.length === 0
     );
+    
+    useEffect(() => {
+        const isValid =
+            exerciseType &&
+            exerciseName &&
+            exerciseVideo &&
+            exerciseDescription &&
+            exerciseImage &&
+            !isButtonDisabled &&
+            Array.isArray(difficuiltyResponse) &&
+            difficuiltyResponse.length > 0;
+
+        setDraft(!isValid);
+    }, [
+        exerciseType,
+        exerciseName,
+        exerciseVideo,
+        exerciseDescription,
+        exerciseImage,
+        isButtonDisabled,
+        difficuiltyResponse,
+    ]);
 
     return (
         <Modal

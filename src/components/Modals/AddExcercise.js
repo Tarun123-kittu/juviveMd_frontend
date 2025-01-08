@@ -226,14 +226,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setFieldValue("exerciseDescription", value);
   };
 
-  useEffect(() => {
-    if (exerciseType && exerciseName && exerciseVideo && exerciseDescription && exerciseImage && !isButtonDisabled && difficuiltyResponse?.length) {
-      setDraft(false)
-    }
-    else {
-      setDraft(true)
-    }
-  }, [exerciseType, exerciseName, exerciseVideo, exerciseDescription, exerciseImage, difficuiltyResponse])
+
+
 
   useEffect(() => {
     if (body_parts?.length) {
@@ -299,16 +293,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setMovementResponse(bodyParts);
   }, [data]);
 
-  // Handle name selection
   const handleNameChange = (index, selectedOption) => {
     setBodyPartError('')
     const updatedData = [...data];
     updatedData[index].name = selectedOption?.value || "";
-    updatedData[index].movements = []; // Reset movements when name changes
+    updatedData[index].movements = [];
     setData(updatedData);
   };
 
-  // Handle movement selection
   const handleMovementChange = (index, selectedOptions) => {
     setBodyPartError('')
     const updatedData = [...data];
@@ -316,12 +308,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setData(updatedData);
   };
 
-  // Add new field
   const addNewField = () => {
     setData([...data, { name: "", movements: [] }]);
   };
 
-  // Get movements for the selected name
   const getMovementsForName = (name) => {
     const selected = apiData?.find((item) => item.name === name);
     return selected
@@ -329,7 +319,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       : [];
   };
 
-  // Exclude already selected names
   const getAvailableNames = () => {
     const selectedNames = data.map((entry) => entry.name);
     return apiData
@@ -344,6 +333,28 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const isButtonDisabled = data.some(
     (item) => item.name.trim() === "" || item.movements.length === 0
   );
+
+  useEffect(() => {
+    const isValid =
+      exerciseType &&
+      exerciseName &&
+      exerciseVideo &&
+      exerciseDescription &&
+      exerciseImage &&
+      !isButtonDisabled &&
+      Array.isArray(difficuiltyResponse) &&
+      difficuiltyResponse.length > 0;
+
+    setDraft(!isValid);
+  }, [
+    exerciseType,
+    exerciseName,
+    exerciseVideo,
+    exerciseDescription,
+    exerciseImage,
+    isButtonDisabled,
+    difficuiltyResponse,
+  ]);
 
   return (
     <Modal
