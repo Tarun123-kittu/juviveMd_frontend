@@ -21,9 +21,10 @@ const Sidebar = () => {
   const dispatch = useDispatch()
 
   const location = useLocation();
+  const { pathname } = location
+  console.log(pathname, "this isthe pathnam")
   const navigate = useNavigate()
   const [quotes, setQuotes] = useState([])
-  const { pathname } = location;
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [unreadChats, setUnreadChats] = useState([])
   const [chats, setChats] = useState(false)
@@ -51,7 +52,7 @@ const Sidebar = () => {
   }
 
   useEffect(() => {
-    if(chats){
+    if (chats && pathname !== "/messages ") {
       dispatch(recent_chats({ page: 1 }))
     }
   }, [chats])
@@ -94,12 +95,21 @@ const Sidebar = () => {
   useEffect(() => {
     if (all_chats?.isSuccess) {
       const chatCount = all_chats?.data?.data?.items.filter((el) => el.read === false)
-      setUnreadChats(chatCount)
+      if (pathname === "/messages") {
+        if (chatCount?.length > 1) {
+          setUnreadChats(chatCount)
+        } else {
+          setUnreadChats([])
+        }
+      } else {
+        setUnreadChats(chatCount)
+      }
       setChats(false)
     }
   }, [all_chats])
 
   const userImageUrl = user_details?.data?.data?.image;
+  localStorage.setItem("juvive_image_url", userImageUrl)
   return (
     <div className='sidebar_wrapper'>
       <div className='header d-flex align-items-center gap-2'>
@@ -134,9 +144,9 @@ const Sidebar = () => {
               onClick={() => {
                 const userRole = localStorage.getItem('user_role');
                 if (userRole === "Trainer") {
-                  navigate("/trainer/dashboard");
+                  navigate("dashboard");
                 } else if (userRole === "Receptionist") {
-                  navigate("/reception/dashboard");
+                  navigate("/dashboard");
                 } else {
                   navigate("/dashboard");
                 }
@@ -196,9 +206,8 @@ const Sidebar = () => {
                     <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
                         {menus.icon} <span>
-                        {menus.name} <span className={`${unreadChats?.length > 0 ? "messsage_count" : ""}`}> {`${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`}</span>
+                          {menus.name} <span className={`${unreadChats?.length > 0 ? "messsage_count" : ""}`}> {`${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`}</span>
                         </span>
-                        {/* {`${menus.name}<span></span>${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`} */}
                       </Link>
                     </li>
                   )}

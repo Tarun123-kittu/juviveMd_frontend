@@ -335,7 +335,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                                 : ''}
                                         </td>
                                         <td>{patient?.goal}</td>
-                                        <td>{patient?.trainerName}</td>
+                                        <td>{patient?.trainerName ? patient?.trainerName : "No Trainer assigned"}</td>
                                         <td>
                                             <button className="btn_info active" style={{
                                                 color: patient?.status === 1 ? '#0c5e62' : 'red',

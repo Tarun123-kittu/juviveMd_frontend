@@ -16,6 +16,7 @@ import Settings from "../../pages/settings/Settings";
 import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 import NotFound from "../../common/notFound/NotFound";
 import PatientReport from "../../pages/Patient/PatientReport";
+import Requests from "../../pages/requests/Requests";
 
 const AppRouter = () => {
     const routes = createBrowserRouter([
@@ -45,6 +46,12 @@ const AppRouter = () => {
                     path: "/settings",
                     element: (
                             <Settings />
+                    ),
+                },
+                {
+                    path: "/requests",
+                    element: (
+                            <Requests />
                     ),
                 },
                 {

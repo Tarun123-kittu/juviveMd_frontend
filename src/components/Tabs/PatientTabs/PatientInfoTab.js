@@ -17,7 +17,7 @@ import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/g
 import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -106,14 +106,14 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
             <td>
               <div className="d-flex gap-2">
                 {/* <img src={LinkImage} width={18} alt="" /> */}
-                {patientPlanPermissions?.canDelete && <img
+                {patientPlanPermissions?.canDelete && !hideItems && <img
                   src={DeleteImage}
                   className="ms-2 me-2"
                   width={18}
                   alt=""
                   onClick={() => handleDeletePlan(patientPlan?.id)}
                 />}
-                {patientPlanPermissions?.canUpdate && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(patientPlan?.id)} />}
+                {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(patientPlan?.id)} />}
               </div>
             </td>
           </tr>

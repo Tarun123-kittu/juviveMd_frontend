@@ -78,8 +78,10 @@ const AddPateintExercise = ({
   const is_plan_created = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
+
   const handleClose = () => {
     setshowAddPateintExercise(false);
+    setData()
     setCategory('')
     setSelectedExercise('')
     setExerciseVideo('')
@@ -100,9 +102,19 @@ const AddPateintExercise = ({
     setSelectedExerciseError('')
     setFieldErrors({})
     setCradioError({})
-    setData([{ name: "", movements: [] }])
 
+    setCategory('')
+    setMovementResponse([])
+    setMovementsArray()
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(clear_create_patient_plan_state())
+      dispatch(clear_exercise_by_category_state())
+      dispatch(clear_patient_difficuilties_state())
+    }
+  }, [])
 
   const handleFetchExercise = (e) => {
     const val = e.target.value
@@ -606,7 +618,7 @@ const AddPateintExercise = ({
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Image</Form.Label>
                 <div className="exercise_image">
-                  <img src={exerciseImage || TrainingImage} alt="training image" disabled className="img-fluid"/>
+                  <img src={exerciseImage || TrainingImage} alt="training image" disabled className="img-fluid" />
                 </div>
               </Form.Group>
             </Col>
@@ -690,23 +702,23 @@ const AddPateintExercise = ({
                   <Form.Label>Set {i + 1}</Form.Label>
                   <span className="step_count">{i + 1}</span>
                 </div>
-               <div className="w-100">
-               <div className="flex-grow-1 d-flex gap-2 ">
-                  <div className="w-100">
-                    <div className="d-flex gap-2 align-items-center">
-                      <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
-                      <span onClick={() => handleChangeCardioUnit(i, "time", "sec")}
-                        className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
-                      <span onClick={() => handleChangeCardioUnit(i, "time", "min")}
-                        className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                <div className="w-100">
+                  <div className="flex-grow-1 d-flex gap-2 ">
+                    <div className="w-100">
+                      <div className="d-flex gap-2 align-items-center">
+                        <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                        <span onClick={() => handleChangeCardioUnit(i, "time", "sec")}
+                          className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                        <span onClick={() => handleChangeCardioUnit(i, "time", "min")}
+                          className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                      </div>
+                      <Form.Control type="text" placeholder="00" value={cardio?.time?.value} className={cardioError[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeCardioFields(i, "time", e)} />
+
                     </div>
-                    <Form.Control type="text" placeholder="00" value={cardio?.time?.value} className={cardioError[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeCardioFields(i, "time", e)} />
-                   
+                    {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">x</span>}
                   </div>
-                  {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">x</span>}
+                  {cardioError[`time-${i}`] && <div className="error_input">{cardioError[`time-${i}`]}</div>}
                 </div>
-                 {cardioError[`time-${i}`] && <div className="error_input">{cardioError[`time-${i}`]}</div>}
-               </div>
               </div>
             </Form.Group>
           ))}

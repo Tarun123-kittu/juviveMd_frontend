@@ -43,6 +43,7 @@ import DashboardAPI from "./slices/dashboardSlice/dashboard"
 import deletePatientPlanAPI from "./slices/patientPlan/deletePatientPlan"
 import ReadMessageAPI from "./slices/chatSlice/readMessages"
 import deleteExercise from "./slices/exerciseSlice/deleteExercise"
+import getDeleteRequests from "./slices/patientSlice/AllDeleteRequests"
 
 const AppStore = configureStore({
   reducer: {
@@ -89,7 +90,8 @@ const AppStore = configureStore({
     DASHBOARD_STATE: DashboardAPI,
     DELETE_PATIENT_PLAN: deletePatientPlanAPI,
     READ_MESSAGE: ReadMessageAPI,
-    DELETE_EXERCISE: deleteExercise
+    DELETE_EXERCISE: deleteExercise,
+    DELETE_REQUESTS: getDeleteRequests
   },
 })
 

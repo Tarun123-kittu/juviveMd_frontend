@@ -1,0 +1,7 @@
+button.account_delete {
+    padding: 7px;
+    background: red;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+}
