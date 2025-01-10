@@ -10,13 +10,13 @@ import { permission_constants } from '../../constants/permissionConstants'
 import Nodata from "../StaticComponents/Nodata"
 import { read_message, clear_read_message_state } from '../../redux/slices/chatSlice/readMessages'
 import NoChats from '../../Images/noChats.svg'
-import Spinner from 'react-bootstrap/Spinner';
+import Loader from "../../common/Loader/Loader";
+
 const MessagesComponent = () => {
   const dispatch = useDispatch()
   const chatRef = useRef(null);
   const [chats, setChats] = useState([])
   const [chatData, setChatData] = useState([])
-  console.log(chatData, "this is the chat data")
   const [openChat, setOpenChat] = useState(true)
   const [page, setPage] = useState(1)
   const [openChatName, setOpenChatName] = useState('')
@@ -57,18 +57,14 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (wholeChat?.isSuccess) {
       const apiMessages = wholeChat?.data?.data?.items || [];
-      console.log("API Messages:", apiMessages);
 
       setChatData((prevChatData) => {
-        console.log("Previous Chat Data:", prevChatData);
 
         const existingMessageIds = new Set(prevChatData.map((msg) => msg.id));
-        console.log("Existing Message IDs:", existingMessageIds);
 
         const newMessages = apiMessages.filter(
           (apiMessage) => !existingMessageIds.has(apiMessage.id)
         );
-        console.log("New Messages After Filtering:", newMessages);
 
         const updatedChatData = prevChatData.map((tempMessage) => {
           if (tempMessage.isTemporary) {
@@ -78,7 +74,6 @@ const MessagesComponent = () => {
                 apiMessage.senderId === tempMessage.senderId &&
                 apiMessage.receiverId === tempMessage.receiverId
             );
-            console.log("Matching API Message for Temporary:", matchingApiMessage);
             if (matchingApiMessage) {
               newMessages.splice(newMessages.indexOf(matchingApiMessage), 1);
               return matchingApiMessage;
@@ -87,13 +82,11 @@ const MessagesComponent = () => {
           return tempMessage;
         });
 
-        console.log("Updated Chat Data:", updatedChatData);
 
         const mergedChatData = [...updatedChatData, ...newMessages].sort(
           (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
         );
 
-        console.log("Merged Chat Data:", mergedChatData);
         return mergedChatData;
       });
     }
@@ -200,6 +193,7 @@ const MessagesComponent = () => {
       dispatch(clear_read_message_state())
     }
   }, [is_message_read])
+  
   return (
     <div className='wrapper'>
       <div className='inner_wrapper'>
@@ -312,7 +306,7 @@ const MessagesComponent = () => {
                     );
                   })
                 ) : (
-                  <h3 className='p-5 text-center'> <Spinner animation="border" variant="info" /></h3>
+                  <h3 className='p-5 text-center'> <Loader /></h3>
                 )}
               </div>
             </div>

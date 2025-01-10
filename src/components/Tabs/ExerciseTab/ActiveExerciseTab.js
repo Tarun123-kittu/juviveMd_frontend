@@ -118,7 +118,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     <div >
       <div className={`${exercise_data?.data?.data?.totalPages > 1 && "streach_table"}`}>
         <DataTable columns={columns}>
-          {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={7}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
+          {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={8}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
             return (
               <tr>
 
