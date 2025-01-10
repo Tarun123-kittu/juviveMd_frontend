@@ -1,5 +1,6 @@
 .messages_list {
-    flex: 0 0 400px;
+    flex: 0 0 350px;
+    width: 350px;
 }
 
 .messages_list li.active, .message_head {
@@ -19,6 +20,8 @@
 
 .message_user h6 {
     margin-bottom: 0px;
+    text-transform: capitalize;
+    font-size: 14px;
 }
 .disabled {
     color: gray;
@@ -27,11 +30,12 @@
   }
 p.message_dialogue {
     background: var(--primary-color);
-    padding: 10px;
+    padding: 7px 10px;
     border-radius: 10px;
     border-top-left-radius: 0px;
     color: #fff;
     margin-top: 6px;
+    font-size: 14px;
 }
 .conversation_item .message_time{
     color: var(--primary-color) ;
@@ -39,6 +43,7 @@ p.message_dialogue {
 .right_conversation p.message_dialogue {
     background: #ACC9CB;
     color: #000;
+    
 }
 
 span.message_errors {
@@ -89,4 +94,17 @@ span.message_errors {
 
 img.round_image {
     border-radius: 18px;
+}
+.no_cahts {
+    height: calc(100vh - 116px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f1f1f1;
+    flex-grow: 1;
+}
+
+.no_cahts img {
+    width: 300px;
 }

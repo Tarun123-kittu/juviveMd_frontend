@@ -9,8 +9,8 @@ import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getR
 import { permission_constants } from '../../constants/permissionConstants'
 import Nodata from "../StaticComponents/Nodata"
 import { read_message, clear_read_message_state } from '../../redux/slices/chatSlice/readMessages'
-import Loader from '../../common/Loader/Loader'
-
+import NoChats from '../../Images/noChats.svg'
+import Spinner from 'react-bootstrap/Spinner';
 const MessagesComponent = () => {
   const dispatch = useDispatch()
   const chatRef = useRef(null);
@@ -255,11 +255,10 @@ const MessagesComponent = () => {
                     return (
                       <div key={item.id}>
                         {isSentByMe ? (
-                          <ul className='conversation_list right_conversation ps-3 pe-3'>
-                            <li className='d-flex gap-2 align-items-start conversation_item w-50 ms-auto'>
+                          <ul className='conversation_list right_conversation ps-5 pe-3 w-50 ms-auto'>
+                            <li className='d-flex gap-2 align-items-start conversation_item '>
                               <div className='message_user flex-grow-1'>
                                 <div className='d-flex gap-2 justify-content-end'>
-                                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
                                   <span className='message_time'>
                                     {new Date(item.createdAt).toLocaleString('en-GB', {
                                       day: '2-digit',
@@ -270,6 +269,7 @@ const MessagesComponent = () => {
                                       hour12: true
                                     }).replace(',', ',')}
                                   </span>
+                                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
                                 </div>
                                 <p className='message_dialogue'>{item.message}</p>
                               </div>
@@ -283,8 +283,8 @@ const MessagesComponent = () => {
                             </li>
                           </ul>
                         ) : (
-                          <ul className='conversation_list pe-3 ps-3'>
-                            <li className='d-flex gap-2 align-items-start conversation_item w-50'>
+                          <ul className='conversation_list pe-5 ps-3 w-50'>
+                            <li className='d-flex gap-2 align-items-start conversation_item'>
                               <img
                                 src={item.sender?.image || DefaultImage}
                                 alt='Sender'
@@ -312,7 +312,7 @@ const MessagesComponent = () => {
                     );
                   })
                 ) : (
-                  <h3 className='p-5 text-center'>No Messages</h3>
+                  <h3 className='p-5 text-center'> <Spinner animation="border" variant="info" /></h3>
                 )}
               </div>
             </div>
@@ -325,7 +325,10 @@ const MessagesComponent = () => {
 
             </div>}
 
-          </div> : <h1>No chat selected</h1>}
+          </div> : <div className='no_cahts'>
+                <img src={NoChats} alt="noChats" className='img-fluid'/>
+          <h5>No chat selected</h5>
+            </div>}
         </div>
         {chats?.length === 0 && <div className='no_messages'>
           <Nodata />
