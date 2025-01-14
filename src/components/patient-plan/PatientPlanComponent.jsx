@@ -1,253 +1,200 @@
-import React, { useState } from 'react';
-import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
-
+import React from "react";
+import { Form, Row, Col, Button, InputGroup } from "react-bootstrap";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import Nav from 'react-bootstrap/Nav';
+import DefaultImage from '../../Images/gallery-add.svg'
+import './style.css'
 const PatientPlanComponent = () => {
-    const [days, setDays] = useState({
-        Monday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-        Tuesday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        time: {
-                            value: 0,
-                            unit: "sec",
-                        },
-                        heartRateTarget: {
-                            value: 0,
-                            unit: "bpm",
-                        },
-                        distanceGoal: {
-                            value: 0,
-                            unit: "meter",
-                        },
-                        pace: "",
-                    },
-                ],
-                pace: "",
-                intensity: 0,
-            },
-        ],
-        Wednesday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-        Thursday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-        Friday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-        Saturday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-        Sunday: [
-            {
-                category: "",
-                exerciseId: "",
-                difficulty_level: [],
-                sets: [
-                    {
-                        weight: {
-                            value: 0,
-                            unit: "kg",
-                        },
-                        reps: 0,
-                    },
-                ],
-                intensity: 0,
-            },
-        ],
-    });
-    return (
-        <div className='wrapper'>
-            <div className='inner_wrapper'>
-                <Form onSubmit={() => alert("Hello form is submitted")}>
-                    <h4>Basic Information</h4>
-                    <Row className="mb-3">
-                        <Col md={6}>
-                            <Form.Group controlId="category">
-                                <Form.Label>Exercise Category</Form.Label>
-                                <Form.Select>
-                                    <option>Strength Exercise</option>
-                                </Form.Select>
-                            </Form.Group>
+  return (
+    <div className="wrapper">
+      <div className="inner_wrapper">
+        <div className="exercise_tab">
+          <Tabs
+            defaultActiveKey="monday"
+            id="uncontrolled-tab-example"
+            className="mb-3 cmn_tabs"
+          >
+            <Tab eventKey="monday" title="Monday">
+              <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+                <div className="d-flex setting_wrapper patient_exercise">
+                  <div className="border-end setting_pills">
+                    <Nav variant="pills" className="flex-column settings_tabs">
+                      <Nav.Item>
+                        <Nav.Link eventKey="first">
+                        Name Exercise
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </div>
+                  <Tab.Content className="settings_content flex-grow-1 ">
+                    <Tab.Pane eventKey="first">
+                     
+                     <Row className="authWrapper ">
+                        <Col lg={12}>
+                        <h5>Basic Information</h5>
                         </Col>
-                        <Col md={6}>
-                            <Form.Group controlId="difficulty">
-                                <Form.Label>Exercise Difficulty</Form.Label>
-                                <Form.Select>
-                                    <option>Easy</option>
-                                </Form.Select>
-                            </Form.Group>
+                        <Col lg={6}>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Category</Form.Label>
+                        <Form.Select aria-label="Default select example">
+                        <option>Select Category</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                        </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Difficuilty</Form.Label>
+                            <Form.Select aria-label="Default select example">
+                            <option>Select Difficuilty</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Exercise Name</Form.Label>
+                            <Form.Select aria-label="Default select example">
+                            <option>Select Exercise Name</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group controlId="exampleForm.ControlInput1">
+                            <Form.Label>Exercise Video Link</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Video Link" />
+                        </Form.Group>
                         </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col md={6}>
-                            <Form.Group controlId="exerciseName">
-                                <Form.Label>Exercise Name</Form.Label>
-                                <Form.Select>
-                                    <option>Leg Press</option>
-                                </Form.Select>
-                            </Form.Group>
+                        <Col lg={6}>
+                        <div className="image_insert">
+                        <Form.Label>Exercise Video Link</Form.Label>
+                        <div className="upload_image position-relative">
+                        <Form.Control type="file" placeholder="Enter Video Link" />
+                                <img src={DefaultImage} alt="dfault image" />
+                        </div>
+                        </div>
                         </Col>
-                        <Col md={6}>
-                            <Form.Group controlId="videoLink">
-                                <Form.Label>Exercise Video Link</Form.Label>
-                                <Form.Control type="url" placeholder="https://youtube/legpressvideo765" />
-                            </Form.Group>
+                     </Row>
+                     <Row className="authWrapper">
+                        <Col lg={12}>
+                            <div className="d-flex justify-content-between align-items-center mt-3">
+                                <h5 className="mb-0">Body Parts and Movements</h5> <button className="cmn_btn add_row">Add Row</button>
+                            </div>
                         </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col md={6}>
-                            <Form.Group controlId="exerciseImage">
-                                <Form.Label>Exercise Image</Form.Label>
-                                <div className="d-flex justify-content-center align-items-center border" style={{ height: '100px' }}>
-                                    <span>Image</span>
+                        <Col lg={6}>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Selected Name:</Form.Label>
+                            <Form.Select aria-label="Default select example">
+                            <option>Select Name</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                            </Form.Select>
+                        </Form.Group>
+                        </Col>
+                        <Col lg={6}>
+                        <div className="d-flex align-items-center gap-2">
+                       <div className="flex-grow-1">
+                       <Form.Label>Selected Movements:</Form.Label>
+                            <Form.Select aria-label="Default select example">
+                            <option>Select Movements</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                            </Form.Select>
+                       </div>
+                            <span className="minus align-self-end mb-2">
+                                x
+                            </span>
+                        </div>
+                        </Col>
+                        <Col lg={12}>
+                            <div className="d-flex justify-content-between align-items-center mt-3">
+                                <h5 className="mb-0">Steps and Reps</h5> <button className="cmn_btn add_row">Add Row</button>
+                            </div>
+                        </Col>
+                        <Col lg={12} className="pt-3">
+                            <Row>
+                            <Col lg={4}>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                            <Form.Label>Set 1</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Set" />
+                            </Form.Group>
+                            </Col> 
+                            <Col lg={4}>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                            <Form.Label>Reps</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Reps" />
+                            </Form.Group>
+                            </Col> 
+                            <Col lg={4}>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                            <div className="d-flex gap-2">
+                                <div className="flex-grow-1">
+                                    <div className="d-flex justify-content-between align-items-center gap-2">
+                                    <Form.Label className="flex-grow-1">Weight</Form.Label> 
+                                    <span className="time">KG</span>
+                                    <span className="time min">LBS</span>
+                                    </div>
+                                      <Form.Control type="text" placeholder="Enter Weight" />
                                 </div>
+                                <span className="minus align-self-end mb-2">x</span>
+                            </div>
                             </Form.Group>
+                            </Col> 
+                            </Row>
                         </Col>
-                    </Row>
-
-                    <h4>Body Parts and Movements</h4>
-                    <Row className="mb-3">
-                        <Col md={6}>
-                            <Form.Group controlId="bodyPart">
-                                <Form.Label>Selected Name</Form.Label>
-                                <Form.Select>
-                                    <option>Ankle</option>
-                                </Form.Select>
+                        <Col lg={12} className="pt-3">
+                        <h5>Heart Rate and Targets</h5>
+                        </Col>
+                        <Col lg={12}>
+                            <Row>
+                            <Col lg={6}>
+                            <Form.Group controlId="exampleForm.ControlInput1">
+                            <Form.Label>Intensity (1-10)</Form.Label>
+                            <Form.Control type="text" placeholder="Intensity (1-10)" />
                             </Form.Group>
+                            </Col> 
+                            
+                            </Row>
                         </Col>
-                        <Col md={6}>
-                            <Form.Group controlId="movements">
-                                <Form.Label>Selected Movements</Form.Label>
-                                <Form.Select>
-                                    <option>Select Movements</option>
-                                </Form.Select>
-                            </Form.Group>
+                        <Col lg={12} className="pt-3">
+                            <div className="d-flex justify-content-end gap-2">
+                                <button className="cmn_btn border-btn">Cancel</button>
+                                <button className="cmn_btn">Add Exercise</button>
+                            </div>
                         </Col>
-                    </Row>
-
-                    <h4>Steps and Reps</h4>
-                    <Row className="mb-3">
-                        <Col md={4}>
-                            <Form.Group controlId="set">
-                                <Form.Label>Set</Form.Label>
-                                <Form.Control type="number" placeholder="Enter Set" />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group controlId="reps">
-                                <Form.Label>Reps</Form.Label>
-                                <Form.Control type="number" placeholder="Enter Set" />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Form.Group controlId="weight">
-                                <Form.Label>Weight</Form.Label>
-                                <InputGroup>
-                                    <Form.Control type="number" placeholder="Enter Weight" />
-                                    <InputGroup.Text>KG</InputGroup.Text>
-                                    <InputGroup.Text>LBS</InputGroup.Text>
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-
-                    <h4>Heart Rate and Targets</h4>
-                    <Row className="mb-3">
-                        <Col md={6}>
-                            <Form.Group controlId="intensity">
-                                <Form.Label>Intensity (1-10)</Form.Label>
-                                <Form.Control type="number" placeholder="Intensity (1-10)" />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col className="d-flex justify-content-between">
-                            <Button variant="secondary">Cancel</Button>
-                            <Button type='submit' variant="primary">Add Exercise</Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </div>
+                     </Row>
+                    </Tab.Pane>
+                  </Tab.Content>
+                </div>
+              </Tab.Container>
+            </Tab>
+            <Tab eventKey="tuesday" title="Tuesday">
+              Tab content for Profile
+            </Tab>
+            <Tab eventKey="wednesday" title="Wednesday">
+              Tab content for Profile
+            </Tab>
+            <Tab eventKey="thursday" title="Thursday">
+              Tab content for Profile
+            </Tab>
+            <Tab eventKey="friday" title="Friday">
+              Tab content for Profile
+            </Tab>
+            <Tab eventKey="saturday" title="Saturday">
+              Tab content for Profile
+            </Tab>
+            <Tab eventKey="sunday" title="Sunday">
+              Tab content for Profile
+            </Tab>
+          </Tabs>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default PatientPlanComponent;
