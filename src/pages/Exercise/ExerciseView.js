@@ -40,18 +40,36 @@ const ExerciseView = () => {
           </div>
           <div className="cmn_bg_wrapper">
             <Row className="m-0 ">
-              <Col lg={5} className="ps-0 pe-4">
+              <Col lg={6} className="ps-0 pe-4 border-end">
+                  <h4 className="exercise_heading text-start">Image</h4>
                 <div className="pose_image">
                   <img
                     src={exercise_data?.image_url || PoseImage}
                     alt="Exercise_Image"
                     className="exercise_preview_image"
-                    style={{ width: '100%', height: '350px', objectFit: 'cover' }}
                   />
 
                 </div>
-                <h4 className="exercise_heading text-center mt-2">Image</h4>
-                <ul className="exercise_status mt-5">
+                <h4 className="exercise_heading mt-3">Video</h4>
+                <div className="exercise_video">
+                  <ReactPlayer
+                    url={exercise_data?.video_link}
+                    width="100%"
+                    height="315px"
+                    controls
+                  />
+                </div>
+              </Col>
+              <Col lg={6} className="pe-0 ps-4">
+               
+              
+                <ul className="exercise_status">
+                  <li>
+                  <h5 className="mb-0">Description</h5>
+                <p>
+                  {exercise_data?.description}
+                </p>
+                  </li>
                   <li className="mb-3">
                     <h5 className="mb-0">Category</h5> <p className="mb-0">{exercise_data?.category}</p>
                   </li>
@@ -75,21 +93,6 @@ const ExerciseView = () => {
                     </div>
                   </li>
                 </ul>
-              </Col>
-              <Col lg={7} className="pe-0 ps-4">
-                <h4 className="exercise_heading">Description</h4>
-                <p>
-                  {exercise_data?.description}
-                </p>
-                <h4 className="exercise_heading mt-5">Exercise video</h4>
-                <div className="exercise_video">
-                  <ReactPlayer
-                    url={exercise_data?.video_link}
-                    width="100%"
-                    height="315px"
-                    controls
-                  />
-                </div>
               </Col>
 
             </Row>
