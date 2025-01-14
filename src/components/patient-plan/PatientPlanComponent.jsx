@@ -25,6 +25,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Tuesday: [
@@ -38,6 +46,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Wednesday: [
@@ -51,6 +67,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Thursday: [
@@ -64,6 +88,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Friday: [
@@ -77,6 +109,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Saturday: [
@@ -90,6 +130,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
     Sunday: [
@@ -103,6 +151,14 @@ const PatientPlanComponent = () => {
         bodyParts: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+          reps: "",
+          weight: { value: null, unit: "kg" },
+          time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+          time: { value: null, unit: "sec" }
+        }]
       },
     ],
   });

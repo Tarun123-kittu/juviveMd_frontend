@@ -18,6 +18,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const id = "b5d8fd71-5eeb-4b91-89ee-73d7df994094"
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+    const cardioData = {
+        time: { value: null, unit: "sec" }
+    }
+    const flexibilityData = {
+        reps: "",
+        weight: { value: null, unit: "kg" },
+        time: { value: null, unit: "sec" }
+    }
 
     const newExerciseData = {
         category: "",
@@ -28,6 +36,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         difficulty_level: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+            reps: "",
+            weight: { value: null, unit: "kg" },
+            time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+            time: { value: null, unit: "sec" }
+        }]
     }
 
     useEffect(() => {
@@ -86,6 +102,25 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         }
     };
 
+    const handleAddIntensity = (val, i) => {
+        if (val) {
+
+            setDays((prevDays) => {
+                const updatedDay = prevDays[eventData].map((item, index) => {
+                    if (index === i) {
+                        return { ...item, intensity: val };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prevDays,
+                    [eventData]: updatedDay,
+                };
+            });
+        }
+    };
+
     const handleSelectExerciseName = (val, i) => {
         const selectedExercise = exercise?.find((exercise) => exercise?.id === val)
         console.log(selectedExercise, "this is the selected exercise")
@@ -117,10 +152,50 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         });
     }
 
+    const addNewFlexibilityToStrength = (i) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+            currentDayExercises[i] = {
+                ...currentDayExercises[i],
+                flexibilityField: [
+                    ...currentDayExercises[i].flexibilityField,
+                    {
+                        reps: "",
+                        weight: { value: null, unit: "kg" },
+                        time: { value: null, unit: "sec" },
+                    },
+                ],
+            };
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
+
+    const addNewFlexibilityToCardio = (i) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+            currentDayExercises[i] = {
+                ...currentDayExercises[i],
+                cardioFields: [
+                    ...currentDayExercises[i].flexibilityField,
+                    {
+                        time: { value: null, unit: "sec" },
+                    },
+                ],
+            };
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
+
+
 
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey={eventData?.toLowerCase()}>
-
+        <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
             <div className="d-flex setting_wrapper patient_exercise">
                 <div className="border-end setting_pills">
                     <Nav variant="pills" className="flex-column settings_tabs">
@@ -137,7 +212,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 </div>
                 <Tab.Content className="settings_content flex-grow-1 ">
                     {Array.isArray(days[eventData]) && days[eventData]?.map((day, i) => {
-                        console.log(day, "this is the day")
+                        console.log(day, i, "this is the day")
                         if (i === selectedIndex) {
                             return (
                                 <Tab.Pane eventKey={i}>
@@ -207,7 +282,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                         ? { value: entry.name, label: entry.name }
                                                                         : null
                                                                 }
-                                                                // options={getAvailableNames()}
                                                                 placeholder="Select Name"
                                                                 isDisabled={true}
                                                             />
@@ -233,43 +307,82 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 </>
                                             )
                                         })}
-
-                                        <Col lg={12}>
-                                            <div className="d-flex justify-content-between align-items-center mt-3">
-                                                <h5 className="mb-0">Steps and Reps</h5> <button className="cmn_btn add_row">Add Row</button>
+                                        {day?.category !== "strength exercise" && <div className="modal_card mt-3">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
+                                                <button onClick={() => addNewFlexibilityToCardio(i)} className="cmn_btn add_row">Add Row</button>
                                             </div>
-                                        </Col>
-                                        <Col lg={12} className="pt-3">
-                                            <Row>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <Form.Label>Set 1</Form.Label>
-                                                        <Form.Control type="text" placeholder="Enter Set" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <Form.Label>Reps</Form.Label>
-                                                        <Form.Control type="text" placeholder="Enter Reps" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <div className="d-flex gap-2">
-                                                            <div className="flex-grow-1">
-                                                                <div className="d-flex justify-content-between align-items-center gap-2">
-                                                                    <Form.Label className="flex-grow-1">Weight</Form.Label>
-                                                                    <span className="time">KG</span>
-                                                                    <span className="time min">LBS</span>
-                                                                </div>
-                                                                <Form.Control type="text" placeholder="Enter Weight" />
-                                                            </div>
-                                                            <span className="minus align-self-end mb-2">x</span>
+                                            {day?.cardioFields?.map((cardio, i) => (
+                                                <Form.Group className="mb-2">
+                                                    <div className="steps_items d-flex gap-2">
+                                                        <div>
+                                                            <Form.Label>Set {i + 1}</Form.Label>
+                                                            <span className="step_count">{i + 1}</span>
                                                         </div>
-                                                    </Form.Group>
-                                                </Col>
-                                            </Row>
-                                        </Col>
+                                                        <div className="w-100">
+                                                            <div className="flex-grow-1 d-flex gap-2 ">
+                                                                <div className="w-100">
+                                                                    <div className="d-flex gap-2 align-items-center">
+                                                                        <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                                                                        <span
+                                                                            className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                                                                        <span
+                                                                            className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                                                                    </div>
+                                                                    <Form.Control type="text" placeholder="00" value={cardio?.time?.value} />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Form.Group>
+                                            ))}
+                                        </div>}
+                                        {day?.category === "strength exercise" && <div className="modal_card mt-3">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
+                                                <button onClick={() => addNewFlexibilityToStrength(i)} className="cmn_btn add_row">Add Row</button>
+                                            </div>
+                                            {day?.flexibilityField?.map((val, i) => (
+                                                <Form.Group key={i} className="mb-2">
+                                                    <div className="steps_items d-flex gap-2">
+                                                        <div>
+                                                            <Form.Label>Set {i + 1}</Form.Label>
+                                                            <span className="step_count">{i + 1}</span>
+                                                        </div>
+                                                        <div className="flex-grow-1">
+                                                            <div className="d-flex gap-2 align-items-center">
+                                                                <Form.Label className="flex-grow-1">Reps</Form.Label>{" "}
+
+                                                            </div>
+                                                            <Form.Control type="text" placeholder="00" value={val?.reps} />
+                                                        </div>
+                                                        <div className="flex-grow-1">
+                                                            <div className="d-flex gap-2 align-items-center">
+                                                                <Form.Label className="flex-grow-1">Weight</Form.Label>{" "}
+                                                                <span
+                                                                    className={val?.weight?.unit === "kg" ? "time" : "time min"}>Kg</span>{" "}
+                                                                <span
+                                                                    className={val?.weight?.unit === "lbs" ? "time" : "time min"}>Lbs</span>
+                                                            </div>
+                                                            <Form.Control type="text" placeholder="00" value={val?.weight?.value} />
+
+                                                        </div>
+                                                        <div className="flex-grow-1">
+                                                            <div className="d-flex gap-2 align-items-center">
+                                                                <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                                                                <span
+                                                                    className={val?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                                                                <span
+                                                                    className={val?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                                                            </div>
+                                                            <Form.Control type="text" placeholder="00" value={val?.time?.value} />
+                                                        </div>
+                                                    </div>
+                                                </Form.Group>
+                                            ))}
+
+                                        </div>}
                                         <Col lg={12} className="pt-3">
                                             <h5>Heart Rate and Targets</h5>
                                         </Col>
@@ -278,7 +391,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 <Col lg={6}>
                                                     <Form.Group controlId="exampleForm.ControlInput1">
                                                         <Form.Label>Intensity (1-10)</Form.Label>
-                                                        <Form.Control type="text" placeholder="Intensity (1-10)" />
+                                                        <Form.Control type="text" placeholder="Intensity (1-10)" value={day?.intensity} onChange={(e) => handleAddIntensity(e.target.value, i)} />
                                                     </Form.Group>
                                                 </Col>
 
