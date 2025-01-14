@@ -17,6 +17,7 @@ import NotAuthorised from "../../common/notAuthorized/NotAuthorised";
 import NotFound from "../../common/notFound/NotFound";
 import PatientReport from "../../pages/Patient/PatientReport";
 import Requests from "../../pages/requests/Requests";
+import PatientPlan from "../../pages/patient-plan/PatientPlan";
 
 const AppRouter = () => {
     const routes = createBrowserRouter([
@@ -84,6 +85,13 @@ const AppRouter = () => {
                     path: "/patientData",
                     element: (
                             <PatientData />
+                    )
+
+                },
+                {
+                    path: "/patient-plan",
+                    element: (
+                            <PatientPlan />
                     )
 
                 },

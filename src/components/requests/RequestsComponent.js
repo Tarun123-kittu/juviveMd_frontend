@@ -24,7 +24,6 @@ const RequestComponent = ({ showButtons }) => {
     const all_deleted_requests = useSelector((store) => store.DELETE_REQUESTS)
     const is_patient_deleted = useSelector((store) => store.DELETE_PATIENT)
     const [patientId, setPatientId] = useState(null)
-    console.log(deleted_requests, "this is the all deleted requests")
     const columns_two = [
         "User Name",
         "Age",
@@ -86,7 +85,7 @@ const RequestComponent = ({ showButtons }) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img type="button" src={request?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cove' />
+                                                <img type="button" src={request?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cover' />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{request?.firstName ? request.firstName.charAt(0).toUpperCase() + request.firstName.slice(1) : ''} {request?.lastName}</p>
                                                 </div>
@@ -107,14 +106,13 @@ const RequestComponent = ({ showButtons }) => {
                                         <td className='text-center'>
                                             <div className="d-flex gap-3 w-100 align-items-center">
 
-                                                <button onClick={() => navigate("/patientData", { state: { patientId: request?.id, hideItems: true } })} className='cmn_btn px-2 py-1' style={{ height: "36px" }}> <img width="18" src={ArrowRight} /> </button>
+                                                <button onClick={() => navigate("/patientData", { state: { patientId: request?.id, hideItems: true } })} className='cmn_btn px-2 py-1' style={{ height: "36px" }}> <img width="18" src={ArrowRight} alt='arrow'/> </button>
                                             </div>
                                         </td>
                                         <td><button className='account_delete' onClick={() => { setShowDeleteModal(true); setPatientId(request?.id) }}> Account Delete</button></td>
                                     </tr>
                                 )
                             })}
-
                         </DataTable>
                     </div>
                     <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_patient_deleted?.isLoading} />

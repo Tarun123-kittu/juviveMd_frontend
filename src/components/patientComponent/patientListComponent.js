@@ -321,7 +321,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                     <tr>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img type="button" src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cove' onClick={() => { setCurrImage(patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
+                                                <img type="button" src={patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" width={40} height={40} className='object-fit-cover' onClick={() => { setCurrImage(patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
