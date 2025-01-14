@@ -1,7 +1,137 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
 
 const PatientPlanComponent = () => {
+    const [days, setDays] = useState({
+        Monday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+        Tuesday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        time: {
+                            value: 0,
+                            unit: "sec",
+                        },
+                        heartRateTarget: {
+                            value: 0,
+                            unit: "bpm",
+                        },
+                        distanceGoal: {
+                            value: 0,
+                            unit: "meter",
+                        },
+                        pace: "",
+                    },
+                ],
+                pace: "",
+                intensity: 0,
+            },
+        ],
+        Wednesday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+        Thursday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+        Friday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+        Saturday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+        Sunday: [
+            {
+                category: "",
+                exerciseId: "",
+                difficulty_level: [],
+                sets: [
+                    {
+                        weight: {
+                            value: 0,
+                            unit: "kg",
+                        },
+                        reps: 0,
+                    },
+                ],
+                intensity: 0,
+            },
+        ],
+    });
     return (
         <div className='wrapper'>
             <div className='inner_wrapper'>
@@ -116,7 +246,7 @@ const PatientPlanComponent = () => {
                     </Row>
                 </Form>
             </div>
-        </div> 
+        </div>
     );
 };
 
