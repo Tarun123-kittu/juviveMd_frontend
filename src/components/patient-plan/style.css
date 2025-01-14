@@ -1,0 +1,44 @@
+.setting_wrapper.patient_exercise .settings_tabs.nav-pills .nav-link.active {
+    background: var(--primary-color);
+    color: var(--bs-white);
+}
+
+.setting_wrapper.patient_exercise .settings_tabs.nav-pills .nav-link {
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+.setting_wrapper.patient_exercise {
+    padding: 20px;
+}
+
+.patient_exercise .setting_pills {
+    padding-right: 20px;
+}
+.patient_exercise .settings_content {
+    padding-left: 20px;
+}
+
+.image_insert .upload_image {
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(204, 204, 204, 1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.image_insert {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.authWrapper .upload_image input.form-control {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    opacity: 0;
+}
