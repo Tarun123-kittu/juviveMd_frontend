@@ -116,7 +116,7 @@ const PatientPlanComponent = () => {
                     </Row>
                 </Form>
             </div>
-        </div>
+        </div> 
     );
 };
 
