@@ -7,7 +7,12 @@
     background: #0C5E62;
     color: #fff;
 }
-
+.conversation_item img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 .messages_list li, .message_head {
     padding: 10px 15px;
     border-radius: 5px;
@@ -35,7 +40,7 @@ p.message_dialogue {
     border-top-left-radius: 0px;
     color: #fff;
     margin-top: 6px;
-    font-size: 14px;
+    font-size: 12px;
 }
 .conversation_item .message_time{
     color: var(--primary-color) ;
