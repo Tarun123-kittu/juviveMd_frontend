@@ -18,6 +18,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const id = "b5d8fd71-5eeb-4b91-89ee-73d7df994094"
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+    const [cardioFields, setCradioFields] = useState([{
+        time: { value: null, unit: "sec" }
+    },])
+      const [flexibilityField, setFlexibilityField] = useState([{
+    reps: "",
+    weight: { value: null, unit: "kg" },
+    time: { value: null, unit: "sec" }
+  },])
 
     const newExerciseData = {
         category: "",
@@ -88,7 +96,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     const handleSelectExerciseName = (val, i) => {
         const selectedExercise = exercise?.find((exercise) => exercise?.id === val)
-        console.log(selectedExercise, "this is the selected exercise")
         if (val && Object.keys(selectedExercise)) {
 
             setDays((prevDays) => {
@@ -119,7 +126,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey={eventData?.toLowerCase()}>
+        <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
 
             <div className="d-flex setting_wrapper patient_exercise">
                 <div className="border-end setting_pills">
@@ -137,8 +144,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 </div>
                 <Tab.Content className="settings_content flex-grow-1 ">
                     {Array.isArray(days[eventData]) && days[eventData]?.map((day, i) => {
-                        console.log(day, "this is the day")
-                        if (i === selectedIndex) {
+                        if (i == selectedIndex) {
                             return (
                                 <Tab.Pane eventKey={i}>
                                     <Row className="authWrapper ">
@@ -207,7 +213,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                         ? { value: entry.name, label: entry.name }
                                                                         : null
                                                                 }
-                                                                // options={getAvailableNames()}
                                                                 placeholder="Select Name"
                                                                 isDisabled={true}
                                                             />
