@@ -6,13 +6,14 @@ import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDl
 import { useDispatch, useSelector } from "react-redux";
 import './style.css'
 import { useLocation } from "react-router-dom";
-
+import SavePlanModal from "../Modals/SavePlanModal";
 const PatientPlanComponent = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const patientId = location.state.patientId
   console.log(patientId,"this is the patient id")
   const common_data = useSelector((store) => store.COMMON_DATA)
+   const [savePlanModal, setSavePlanModal] = useState(false)
   const [exercise_category, setExercise_category] = useState()
   const [body_parts, setBody_parts] = useState()
   const [activeTab, setActiveTab] = useState("Monday")
@@ -185,7 +186,10 @@ const PatientPlanComponent = () => {
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
-        <div className="exercise_tab">
+        <div className="exercise_tab position-relative">
+          <div className="position-absolute end-0 ps-3 bg-white">
+          <button className="cmn_btn filter_btn px-4 " onClick={()=>{setSavePlanModal(true)}}>Save Plan</button>
+          </div>
           <Tabs
             activeKey={activeTab}
             onSelect={(k) => setActiveTab(k)}
@@ -211,6 +215,7 @@ const PatientPlanComponent = () => {
           </Tabs>
         </div>
       </div>
+     {savePlanModal && <SavePlanModal savePlanModal={savePlanModal} setSavePlanModal={setSavePlanModal} />}
     </div>
   );
 };

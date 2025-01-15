@@ -395,7 +395,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 </>
                                             )
                                         })}
-                                        {day?.category !== "strength exercise" && <div className="modal_card mt-3">
+                                        {day?.category !== "strength exercise" && <div className="mt-3">
                                             <div className="d-flex align-items-center mb-2">
                                                 <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                                                 <button onClick={() => addNewFlexibilityToCardio(i)} className="cmn_btn add_row">Add Row</button>
@@ -408,8 +408,9 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                             <span className="step_count">{index + 1}</span>
                                                         </div>
                                                         <div className="w-100">
-                                                            <div className="flex-grow-1 d-flex gap-2 ">
-                                                                <div className="w-100">
+                                                            <div className="flex-grow-1">
+                                                               <div className='d-flex gap-2 mb-3'>
+                                                               <div className="w-100">
                                                                     <div className="d-flex gap-2 align-items-center">
                                                                         <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
                                                                         <span onClick={() => handleChangeCardioUnit(i, index, "time", "sec")}
@@ -423,13 +424,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                 <div className="w-100">
                                                                     <div className="d-flex gap-2 align-items-center">
                                                                         <Form.Label className="flex-grow-1">HeartRate Target</Form.Label>{" "}
-                                                                        <span
-                                                                            className={cardio?.heartRateTarget?.unit === "bpm" ? "time" : "time min"}>bpm</span>{" "}
+                                                                     
                                                                     </div>
                                                                     <Form.Control type="text" placeholder="00" value={cardio?.heartRateTarget?.value} onChange={(e) => handleChangeCardioFields(i, index, "heartRateTarget", e)} />
 
                                                                 </div>
-                                                                <div className="w-100">
+                                                               </div>
+                                                              <div className='d-flex gap-2'>
+                                                              <div className="w-50">
                                                                     <div className="d-flex gap-2 align-items-center">
                                                                         <Form.Label className="flex-grow-1">Distance Goal</Form.Label>{" "}
                                                                         <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "km")}
@@ -440,24 +442,25 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                     <Form.Control type="text" placeholder="00" value={cardio?.distanceGoal?.value} onChange={(e) => handleChangeCardioFields(i, index, "distanceGoal", e)} />
 
                                                                 </div>
-                                                                <div className="w-100">
+                                                                <div className="w-50">
                                                                     <div className="d-flex gap-2 align-items-center">
                                                                         <Form.Label className="flex-grow-1">Pace</Form.Label>{" "}
                                                                     </div>
                                                                     <Form.Select aria-label="Default select example" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} >
-                                                                        <option value="" disabled selected>Please select pace</option>
+                                                                        <option value="" disabled selected>Select pace</option>
                                                                         <option value="moderate">Moderate</option>
                                                                         <option value="medium">Medium</option>
                                                                         <option value="vigorous">Vigorous</option>
                                                                     </Form.Select>
                                                                 </div>
+                                                              </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </Form.Group>
                                             ))}
                                         </div>}
-                                        {day?.category === "strength exercise" && <div className="modal_card mt-3">
+                                        {day?.category === "strength exercise" && <div className="mt-3 ">
                                             <div className="d-flex align-items-center mb-2">
                                                 <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                                                 <button onClick={() => addNewFlexibilityToStrength(i)} className="cmn_btn add_row">Add Row</button>
