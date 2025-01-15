@@ -28,6 +28,7 @@ ul.exercise_status .patient_dropdown button.btn {
     font-size: 14px;
     color: #404040;
 }
+
 ul.exercise_status h5 {
     font-size: 16px;
 }
@@ -81,4 +82,8 @@ ul.exercise_status li p {
 
 ul.exercise_status {
     color: rgba(102, 102, 102, 1);
+}
+img.exercise_selected_iamge {
+    max-width: 100%;
+    max-height: 100%;
 }
