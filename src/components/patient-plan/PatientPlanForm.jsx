@@ -7,8 +7,9 @@ import { get_exercise_by_category, clear_exercise_by_category_state } from '../.
 import { get_patient_difficuilties, clear_patient_difficuilties_state } from '../../redux/slices/patientPlan/getPatientDifficuilties';
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import toast from 'react-hot-toast';
 
-const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty,patientId }) => {
+const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId }) => {
     const dispatch = useDispatch()
     const [selectedCategory, setSelectedCategory] = useState()
     const [difficuilty, setDifficuilty] = useState('')
@@ -127,23 +128,27 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     };
 
     const handleAddIntensity = (val, i) => {
-        if (val) {
-
-            setDays((prevDays) => {
-                const updatedDay = prevDays[eventData].map((item, index) => {
-                    if (index === i) {
-                        return { ...item, intensity: Number(val) };
-                    }
-                    return item;
-                });
-
-                return {
-                    ...prevDays,
-                    [eventData]: updatedDay,
-                };
-            });
+        const numericVal = Number(val);
+    
+        if (isNaN(numericVal) || numericVal < 1 || numericVal > 10) {
+            return; 
         }
+    
+        setDays((prevDays) => {
+            const updatedDay = prevDays[eventData].map((item, index) => {
+                if (index === i) {
+                    return { ...item, intensity: numericVal };
+                }
+                return item;
+            });
+    
+            return {
+                ...prevDays,
+                [eventData]: updatedDay,
+            };
+        });
     };
+    
 
     const handleSelectExerciseName = (val, i) => {
         const selectedExercise = exercise?.find((exercise) => exercise?.id === val)
@@ -167,13 +172,44 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     const handleAddExercise = () => {
         setDays((prevDays) => {
+            const lastExercise = prevDays[eventData]?.[prevDays[eventData]?.length - 1];
+
+            const isValidExerciseData = () => {
+                if (!lastExercise) return true;
+                if (lastExercise.exerciseName === "Untitled") {
+                    return false
+                }
+
+                if (lastExercise.category === "strength exercise") {
+                    const hasEmptyFlexibilityField = lastExercise.flexibilityField.some((item) =>
+                        item.reps === "" || item.weight.value === null
+                    );
+                    if (hasEmptyFlexibilityField) return false;
+                } else {
+                    const hasEmptyCardioField = lastExercise.cardioFields.some((item) =>
+                        item.time.value === null ||
+                        item.heartRateTarget.value === null ||
+                        item.distanceGoal.value === null ||
+                        item.pace === ""
+                    );
+                    if (hasEmptyCardioField) return false;
+                }
+                return true
+            };
+
+            if (!isValidExerciseData()) {
+                toast.error("Please fill all the fields")
+                return prevDays;
+            }
+
             const updatedDay = [...prevDays[eventData], newExerciseData];
             return {
                 ...prevDays,
                 [eventData]: updatedDay,
             };
         });
-    }
+    };
+
 
     const addNewFlexibilityToStrength = (i) => {
         setDays((prevDays) => {
