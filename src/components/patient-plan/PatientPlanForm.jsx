@@ -18,14 +18,16 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const id = "b5d8fd71-5eeb-4b91-89ee-73d7df994094"
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
-    const [cardioFields, setCradioFields] = useState([{
-        time: { value: null, unit: "sec" }
-    },])
-      const [flexibilityField, setFlexibilityField] = useState([{
-    reps: "",
-    weight: { value: null, unit: "kg" },
-    time: { value: null, unit: "sec" }
-  },])
+    const cardioData = {
+        time: { value: null, unit: "sec" },
+        heartRateTarget: { value: null, unit: "bpm" },
+        distanceGoal: { value: null, unit: "km" },
+        pace: "",
+    }
+    const flexibilityData = {
+        reps: "",
+        weight: { value: null, unit: "kg" },
+    }
 
     const newExerciseData = {
         category: "",
@@ -36,6 +38,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         difficulty_level: [],
         sets: [],
         intensity: 0,
+        flexibilityField: [{
+            reps: "",
+            weight: { value: null, unit: "kg" },
+            time: { value: null, unit: "sec" }
+        }],
+        cardioFields: [{
+            time: { value: null, unit: "sec" }
+        }]
     }
 
     useEffect(() => {
@@ -94,6 +104,25 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         }
     };
 
+    const handleAddIntensity = (val, i) => {
+        if (val) {
+
+            setDays((prevDays) => {
+                const updatedDay = prevDays[eventData].map((item, index) => {
+                    if (index === i) {
+                        return { ...item, intensity: val };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prevDays,
+                    [eventData]: updatedDay,
+                };
+            });
+        }
+    };
+
     const handleSelectExerciseName = (val, i) => {
         const selectedExercise = exercise?.find((exercise) => exercise?.id === val)
         if (val && Object.keys(selectedExercise)) {
@@ -124,10 +153,104 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         });
     }
 
+    const addNewFlexibilityToStrength = (i) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+            currentDayExercises[i] = {
+                ...currentDayExercises[i],
+                flexibilityField: [
+                    ...currentDayExercises[i].flexibilityField,
+                    {
+                        reps: "",
+                        weight: { value: null, unit: "kg" },
+                    },
+                ],
+            };
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
+
+    const addNewFlexibilityToCardio = (i) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+            currentDayExercises[i] = {
+                ...currentDayExercises[i],
+                cardioFields: [
+                    ...currentDayExercises[i].cardioFields,
+                    {
+                        time: { value: null, unit: "sec" },
+                        heartRateTarget: { value: null, unit: "bpm" },
+                        distanceGoal: { value: null, unit: "km" },
+                        pace: "",
+                    },
+                ],
+            };
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
+
+    const handleChangeCardioUnit = (i, index, field, unit) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const targetField = updatedDays[eventData][i].cardioFields[index][field];
+            if (targetField && typeof targetField === 'object') {
+                targetField.unit = unit;
+            } else {
+                console.error(`Expected object for ${field}, but got`, targetField);
+            }
+            return updatedDays;
+        });
+    };
+
+
+    const handleChangeFlexibilityUnit = (i, index, field, unit) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const targetField = updatedDays[eventData][i].flexibilityField[index][field];
+            if (targetField && typeof targetField === 'object') {
+                targetField.unit = unit;
+            } else {
+                console.error(`Expected object for ${field}, but got`, targetField);
+            }
+            return updatedDays;
+        });
+    };
+
+
+    const handleChangeCardioFields = (i, index, field, e) => {
+        if(field === "pace"){
+            setDays((prevDays) => {
+                const updatedDays = { ...prevDays };
+                updatedDays[eventData][i].cardioFields[index][field] = e.target.value;
+                return updatedDays;
+            });
+        }else{
+            setDays((prevDays) => {
+                const updatedDays = { ...prevDays };
+                updatedDays[eventData][i].cardioFields[index][field].value = e.target.value;
+                return updatedDays;
+            });
+        }
+    };
+
+    const handleChangeFlexibilityFields = (i, index, field, e) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            updatedDays[eventData][i].flexibilityField[index][field].value = e.target.value;
+            return updatedDays;
+        });
+    };
+
+
 
     return (
         <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
-
             <div className="d-flex setting_wrapper patient_exercise">
                 <div className="border-end setting_pills">
                     <Nav variant="pills" className="flex-column settings_tabs">
@@ -187,10 +310,10 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                         </Col>
                                         <Col lg={6}>
                                             <div className="image_insert">
-                                                <Form.Label>Exercise Video Link</Form.Label>
+                                                <Form.Label>Exercise Image</Form.Label>
                                                 <div className="upload_image position-relative">
                                                     <Form.Control type="file" placeholder="Enter Video Link" />
-                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} alt="dfault image" />
+                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" />
                                                 </div>
                                             </div>
                                         </Col>
@@ -238,43 +361,99 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 </>
                                             )
                                         })}
-
-                                        <Col lg={12}>
-                                            <div className="d-flex justify-content-between align-items-center mt-3">
-                                                <h5 className="mb-0">Steps and Reps</h5> <button className="cmn_btn add_row">Add Row</button>
+                                        {day?.category !== "strength exercise" && <div className="modal_card mt-3">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
+                                                <button onClick={() => addNewFlexibilityToCardio(i)} className="cmn_btn add_row">Add Row</button>
                                             </div>
-                                        </Col>
-                                        <Col lg={12} className="pt-3">
-                                            <Row>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <Form.Label>Set 1</Form.Label>
-                                                        <Form.Control type="text" placeholder="Enter Set" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <Form.Label>Reps</Form.Label>
-                                                        <Form.Control type="text" placeholder="Enter Reps" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg={4}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <div className="d-flex gap-2">
-                                                            <div className="flex-grow-1">
-                                                                <div className="d-flex justify-content-between align-items-center gap-2">
-                                                                    <Form.Label className="flex-grow-1">Weight</Form.Label>
-                                                                    <span className="time">KG</span>
-                                                                    <span className="time min">LBS</span>
-                                                                </div>
-                                                                <Form.Control type="text" placeholder="Enter Weight" />
-                                                            </div>
-                                                            <span className="minus align-self-end mb-2">x</span>
+                                            {day?.cardioFields?.map((cardio, index) => (
+                                                <Form.Group className="mb-2">
+                                                    <div className="steps_items d-flex gap-2">
+                                                        <div>
+                                                            <Form.Label>Set {index + 1}</Form.Label>
+                                                            <span className="step_count">{index + 1}</span>
                                                         </div>
-                                                    </Form.Group>
-                                                </Col>
-                                            </Row>
-                                        </Col>
+                                                        <div className="w-100">
+                                                            <div className="flex-grow-1 d-flex gap-2 ">
+                                                                <div className="w-100">
+                                                                    <div className="d-flex gap-2 align-items-center">
+                                                                        <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "time", "sec")}
+                                                                            className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "time", "min")}
+                                                                            className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                                                                    </div>
+                                                                    <Form.Control type="text" placeholder="00" value={cardio?.time?.value} onChange={(e) => handleChangeCardioFields(i, index, "time", e)} />
+
+                                                                </div>
+                                                                <div className="w-100">
+                                                                    <div className="d-flex gap-2 align-items-center">
+                                                                        <Form.Label className="flex-grow-1">HeartRate Target</Form.Label>{" "}
+                                                                        <span
+                                                                            className={cardio?.heartRateTarget?.unit === "bpm" ? "time" : "time min"}>bpm</span>{" "}
+                                                                    </div>
+                                                                    <Form.Control type="text" placeholder="00" value={cardio?.heartRateTarget?.value} onChange={(e) => handleChangeCardioFields(i, index, "heartRateTarget", e)} />
+
+                                                                </div>
+                                                                <div className="w-100">
+                                                                    <div className="d-flex gap-2 align-items-center">
+                                                                        <Form.Label className="flex-grow-1">Distance Goal</Form.Label>{" "}
+                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "km")}
+                                                                            className={cardio?.distanceGoal?.unit === "km" ? "time" : "time min"}>KM</span>{" "}
+                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "meter")}
+                                                                            className={cardio?.distanceGoal?.unit === "meter" ? "time" : "time min"}>Meter</span>{" "}
+                                                                    </div>
+                                                                    <Form.Control type="text" placeholder="00" value={cardio?.distanceGoal?.value} onChange={(e) => handleChangeCardioFields(i, index, "distanceGoal", e)} />
+
+                                                                </div>
+                                                                <div className="w-100">
+                                                                    <div className="d-flex gap-2 align-items-center">
+                                                                        <Form.Label className="flex-grow-1">PAce</Form.Label>{" "}
+                                                                    </div>
+                                                                    <Form.Control type="text" placeholder="00" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Form.Group>
+                                            ))}
+                                        </div>}
+                                        {day?.category === "strength exercise" && <div className="modal_card mt-3">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
+                                                <button onClick={() => addNewFlexibilityToStrength(i)} className="cmn_btn add_row">Add Row</button>
+                                            </div>
+                                            {day?.flexibilityField?.map((val, index) => (
+                                                <Form.Group key={i} className="mb-2">
+                                                    <div className="steps_items d-flex gap-2">
+                                                        <div>
+                                                            <Form.Label>Set {index + 1}</Form.Label>
+                                                            <span className="step_count">{index + 1}</span>
+                                                        </div>
+                                                        <div className="flex-grow-1">
+                                                            <div className="d-flex gap-2 align-items-center">
+                                                                <Form.Label className="flex-grow-1">Reps</Form.Label>{" "}
+
+                                                            </div>
+                                                            <Form.Control type="text" placeholder="00" value={val?.reps} onChange={(e) => handleChangeFlexibilityFields(i, index, "reps", e)} />
+                                                        </div>
+                                                        <div className="flex-grow-1">
+                                                            <div className="d-flex gap-2 align-items-center">
+                                                                <Form.Label className="flex-grow-1">Weight</Form.Label>{" "}
+                                                                <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "kg")}
+                                                                    className={val?.weight?.unit === "kg" ? "time" : "time min"}>Kg</span>{" "}
+                                                                <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "lbs")}
+                                                                    className={val?.weight?.unit === "lbs" ? "time" : "time min"}>Lbs</span>
+                                                            </div>
+                                                            <Form.Control type="text" placeholder="00" value={val?.weight?.value} onChange={(e) => handleChangeFlexibilityFields(i, index, "weight", e)} />
+
+                                                        </div>
+                                                    </div>
+                                                </Form.Group>
+                                            ))}
+
+                                        </div>}
                                         <Col lg={12} className="pt-3">
                                             <h5>Heart Rate and Targets</h5>
                                         </Col>
@@ -283,7 +462,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 <Col lg={6}>
                                                     <Form.Group controlId="exampleForm.ControlInput1">
                                                         <Form.Label>Intensity (1-10)</Form.Label>
-                                                        <Form.Control type="text" placeholder="Intensity (1-10)" />
+                                                        <Form.Control type="text" placeholder="Intensity (1-10)" value={day?.intensity} onChange={(e) => handleAddIntensity(e.target.value, i)} />
                                                     </Form.Group>
                                                 </Col>
 
