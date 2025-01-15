@@ -8,14 +8,13 @@ import { get_patient_difficuilties, clear_patient_difficuilties_state } from '..
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
-const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty }) => {
+const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty,patientId }) => {
     const dispatch = useDispatch()
     const [selectedCategory, setSelectedCategory] = useState()
     const [difficuilty, setDifficuilty] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [exercise, setExercise] = useState()
     const [data, setData] = useState([{ name: "", movements: [] }]);
-    const id = "b5d8fd71-5eeb-4b91-89ee-73d7df994094"
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
     const cardioData = {
@@ -35,28 +34,51 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         exerciseName: "Untitled",
         exerciseImage: "",
         exerciseVideo: "",
-        difficulty_level: [],
+        difficulty_level: [patient_difficuilty?.data?.data?.exercise_difficulty],
         sets: [],
         intensity: 0,
         flexibilityField: [{
             reps: "",
-            weight: { value: null, unit: "kg" },
-            time: { value: null, unit: "sec" }
+            weight: { value: null, unit: "kg" }
         }],
         cardioFields: [{
-            time: { value: null, unit: "sec" }
+            time: { value: null, unit: "sec" },
+            heartRateTarget: { value: null, unit: "bpm" },
+            distanceGoal: { value: null, unit: "km" },
+            pace: "",
         }]
     }
 
     useEffect(() => {
-        dispatch(get_patient_difficuilties({ patientId: id }))
+        dispatch(get_patient_difficuilties({ patientId: patientId }))
     }, [])
 
     useEffect(() => {
         if (patient_difficuilty?.data?.data?.exercise_difficulty && selectedCategory) {
-            dispatch(get_exercise_by_category({ category: selectedCategory, difficuilty: patient_difficuilty?.data?.data?.exercise_difficulty }))
+            dispatch(
+                get_exercise_by_category({
+                    category: selectedCategory,
+                    difficuilty: patient_difficuilty?.data?.data?.exercise_difficulty,
+                })
+            )
         }
-    }, [patient_difficuilty, selectedCategory])
+        if (days[eventData][0]?.difficulty_level?.length === 0 && patient_difficuilty?.data?.data?.exercise_difficulty) {
+            setDays((prevDays) => {
+                const updatedDay = prevDays[eventData].map((item, index) => {
+                    if (index === 0) {
+                        return { ...item, difficulty_level: [patient_difficuilty?.data?.data?.exercise_difficulty] };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prevDays,
+                    [eventData]: updatedDay,
+                };
+            });
+        }
+    }, [patient_difficuilty, selectedCategory]);
+
 
     useEffect(() => {
         if (exercise_details?.isSuccess) {
@@ -110,7 +132,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
             setDays((prevDays) => {
                 const updatedDay = prevDays[eventData].map((item, index) => {
                     if (index === i) {
-                        return { ...item, intensity: val };
+                        return { ...item, intensity: Number(val) };
                     }
                     return item;
                 });
@@ -224,28 +246,40 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     const handleChangeCardioFields = (i, index, field, e) => {
-        if(field === "pace"){
-            setDays((prevDays) => {
-                const updatedDays = { ...prevDays };
+        console.log(e.target.value, "this is from the cardio fields value")
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+
+            if (field === "pace") {
                 updatedDays[eventData][i].cardioFields[index][field] = e.target.value;
-                return updatedDays;
-            });
-        }else{
-            setDays((prevDays) => {
-                const updatedDays = { ...prevDays };
+            } else {
                 updatedDays[eventData][i].cardioFields[index][field].value = e.target.value;
-                return updatedDays;
-            });
-        }
+            }
+
+            updatedDays[eventData][i].sets = [...updatedDays[eventData][i].cardioFields];
+
+            return updatedDays;
+        });
     };
+
+
 
     const handleChangeFlexibilityFields = (i, index, field, e) => {
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
-            updatedDays[eventData][i].flexibilityField[index][field].value = e.target.value;
+
+            if (field === "reps") {
+                updatedDays[eventData][i].flexibilityField[index][field] = e.target.value;
+            } else {
+                updatedDays[eventData][i].flexibilityField[index][field].value = e.target.value;
+            }
+
+            updatedDays[eventData][i].sets = [...updatedDays[eventData][i].flexibilityField];
+
             return updatedDays;
         });
     };
+
 
 
 
@@ -408,10 +442,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                 </div>
                                                                 <div className="w-100">
                                                                     <div className="d-flex gap-2 align-items-center">
-                                                                        <Form.Label className="flex-grow-1">PAce</Form.Label>{" "}
+                                                                        <Form.Label className="flex-grow-1">Pace</Form.Label>{" "}
                                                                     </div>
-                                                                    <Form.Control type="text" placeholder="00" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} />
-
+                                                                    <Form.Select aria-label="Default select example" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} >
+                                                                        <option value="" disabled selected>Please select pace</option>
+                                                                        <option value="moderate">Moderate</option>
+                                                                        <option value="medium">Medium</option>
+                                                                        <option value="vigorous">Vigorous</option>
+                                                                    </Form.Select>
                                                                 </div>
                                                             </div>
                                                         </div>

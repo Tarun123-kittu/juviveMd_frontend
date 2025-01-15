@@ -301,7 +301,7 @@ const PatientData = () => {
               />
             </svg>
           </h4>
-          {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => { setshowAddPateintExercise(true) }}>+ Add Exercise</button>}
+          {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => navigate("/patient-plan",{state : {patientId : patientId}})}>+ Add Exercise</button>}
         </div>
         <Tabs
           activeKey={activeTab}
