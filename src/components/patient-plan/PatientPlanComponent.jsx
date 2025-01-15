@@ -5,9 +5,13 @@ import Tabs from "react-bootstrap/Tabs";
 import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDlice";
 import { useDispatch, useSelector } from "react-redux";
 import './style.css'
+import { useLocation } from "react-router-dom";
 
 const PatientPlanComponent = () => {
   const dispatch = useDispatch()
+  const location = useLocation()
+  const patientId = location.state.patientId
+  console.log(patientId,"this is the patient id")
   const common_data = useSelector((store) => store.COMMON_DATA)
   const [exercise_category, setExercise_category] = useState()
   const [body_parts, setBody_parts] = useState()
@@ -199,6 +203,7 @@ const PatientPlanComponent = () => {
                     exercise_category={exercise_category}
                     body_parts={body_parts}
                     exerciseDifficuilty={exerciseDifficuilty}
+                    patientId={patientId}
                   />
                 )}
               </Tab>
