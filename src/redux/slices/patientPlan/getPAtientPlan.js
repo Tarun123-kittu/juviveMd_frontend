@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const get_patient_plan = createAsyncThunk("get_patient_plan", async ({ id, weekday }, thunkAPI) => {
+export const get_patient_plan = createAsyncThunk("get_patient_plan", async ({ id, currentDate }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -14,7 +14,7 @@ export const get_patient_plan = createAsyncThunk("get_patient_plan", async ({ id
             redirect: "follow"
         };
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/patient-exercises?patientId=${id}&weekday=${weekday}`, requestOptions);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/patient-exercises?patientId=${id}&currentDate=${currentDate}`, requestOptions);
 
         if (!response.ok) {
             const errorMessage = await response.json();

@@ -17,7 +17,7 @@ import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/g
 import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems }) => {
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -29,11 +29,11 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const columns = [
-    "Category",
     "Exercise Name",
-    "Image",
-    "Sets",
-    "Description",
+    "Set/Reps",
+    "Weight/Time",
+    "Achieved Set/Reps",
+    "Achieved weight.Time",
     "Patient Review",
     "Action",
   ];
@@ -50,8 +50,10 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   useEffect(() => {
     setLoading(true)
     dispatch(clear_patient_plan_state())
-    dispatch(get_patient_plan({ id: patientId, weekday }))
-  }, [])
+    if (formattedDate) {
+      dispatch(get_patient_plan({ id: patientId, currentDate: formattedDate }))
+    }
+  }, [formattedDate])
 
   useEffect(() => {
     if (patientExerciseData?.isSuccess) {
@@ -84,7 +86,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
       dispatch(clear_delete_patient_plan_state())
       dispatch(clear_patient_plan_state())
       setShowDeleteModal(false)
-      dispatch(get_patient_plan({ id: patientId, weekday }))
+      dispatch(get_patient_plan({ id: patientId, currentDate: formattedDate }))
     }
     if (is_plan_deleted?.isError) {
       toast.error(is_plan_deleted?.error?.message)
@@ -95,29 +97,60 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   return (
     <>
       <DataTable columns={columns}>
-        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Array.isArray(data) && data?.map(({ exercise, patient, patientPlan }, i) => (
-          <tr>
-            <td>{patientPlan?.category}</td>
-            <td>{exercise?.exercise_name}</td>
-            <td> <img type="button" src={exercise?.image_url || Training} altDeleteImage="" className="rounded-5" width={50} height={50} onClick={() => { setCurrImage(exercise?.image_url || Training); setShowPopup(true) }} /></td>
-            <td>{patientPlan?.sets?.length}</td>
-            <td>{exercise?.description}</td>
-            <td className="text-decoration-underline">Easy</td>
-            <td>
-              <div className="d-flex gap-2">
-                {/* <img src={LinkImage} width={18} alt="" /> */}
-                {patientPlanPermissions?.canDelete && !hideItems && <img
-                  src={DeleteImage}
-                  className="ms-2 me-2"
-                  width={18}
-                  alt=""
-                  onClick={() => handleDeletePlan(patientPlan?.id)}
-                />}
-                {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(patientPlan?.id)} />}
-              </div>
-            </td>
-          </tr>
-        ))}
+        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise
+        }, i) => {
+          return (
+            <tr key={i}>
+              <td>{exerciseDetails?.exercise_name}</td>
+              {exerciseDetails?.category !== "strength exercise" ? (
+                <td>
+                  {planExercise?.sets?.length} /
+                  {planExercise?.sets
+                    ?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`)
+                    .join('-') || "N/A"}
+                </td>
+              ) : (
+                <td>
+                  {planExercise?.sets?.length} /
+                  {planExercise?.sets
+                    ?.map((set) => `${set?.reps?.value}`)
+                    .join('-') || "N/A"}
+                </td>
+              )}
+
+              {exerciseDetails?.category !== "strength exercise" ? (
+                <td>
+                  {planExercise?.sets
+                    ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
+                    .join('-') || "N/A"}
+                </td>
+              ) : (
+                <td>
+                  {planExercise?.sets
+                    ?.map((set) => `${set?.weight?.value}${" "}${set?.weight?.unit}`)
+                    .join('-') || "N/A"}
+                </td>
+              )}
+              <td>{planExercise?.sets?.length}</td>
+              <td>{exerciseDetails?.description}</td>
+              <td className="text-decoration-underline">Easy</td>
+              <td>
+                <div className="d-flex gap-2">
+                  {/* <img src={LinkImage} width={18} alt="" /> */}
+                  {patientPlanPermissions?.canDelete && !hideItems && <img
+                    src={DeleteImage}
+                    className="ms-2 me-2"
+                    width={18}
+                    alt=""
+                    onClick={() => handleDeletePlan(exerciseDetails?.id)}
+                  />}
+                  {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />}
+                </div>
+              </td>
+            </tr>
+          )
+        })
+        }
 
       </DataTable>
       {showEditPateintExercise && <EditPateintExercise patientId={patientId} setshowEditPateintExercise={setshowEditPateintExercise} showEditPateintExercise={showEditPateintExercise} exercise_category={exercise_category} planId={planId} setPlanId={setPlanId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={weekday} />}

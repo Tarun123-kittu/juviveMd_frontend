@@ -1,3 +1,7 @@
+.modal-content .cmn_btn {
+  height: 35px;
+  font-size: 13px;
+}
 .fade.cmn_modal.modal {
   background: #f9fafbd4;
 }
@@ -220,6 +224,12 @@ h5.step_heading {
 .replaces_trainer .trainer_delete {
   font-size: 14px;
 }
+
+/* save modal */
+.cmn_modal.savePlanModal .modal-dialog {
+  max-width: 503px;
+}
+/* media query */
 @media (max-width: 1440px) {
   .deletmodal_heading {
     font-size: 20px;

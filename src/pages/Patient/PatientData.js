@@ -22,7 +22,7 @@ import Phone from '../../Images/phone.svg'
 
 const PatientData = () => {
   const location = useLocation()
-  const {hideItems} = location?.state ? location?.state : location
+  const { hideItems } = location?.state ? location?.state : location
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
@@ -57,10 +57,23 @@ const PatientData = () => {
   const currentDay = dayOfWeek[currentDate.getDay()];
   const [activeTab, setActiveTab] = useState(currentDay);
   const [selectedDate, setSelectedDate] = useState(getDateForDay(currentDay));
-
+  const [formattedDate, setFormattedDate] = useState("");
+  console.log(formattedDate, "this is the formatted date")
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const current = new Date();
-  const formattedDate = current.toLocaleDateString('en-GB', options);
+
+  const formatDateValue = (date) => {
+    if (!(date instanceof Date)) {
+      throw new Error("Invalid date object provided.");
+    }
+    return date.toISOString().slice(0, 10);
+  };
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const formatted = formatDateValue(currentDate);
+    setFormattedDate(formatted);
+  }, []);
 
 
   useEffect(() => {
@@ -70,14 +83,14 @@ const PatientData = () => {
 
   function calculateBMI(height, weight, heightUnit, weightUnit) {
     if (heightUnit === "cm") {
-      height = height / 100; 
+      height = height / 100;
     } else if (heightUnit === "feet") {
       const [feet, inches = 0] = height.toString().split(".").map(Number);
-      height = (feet * 0.3048) + (inches * 0.0254); 
+      height = (feet * 0.3048) + (inches * 0.0254);
     }
 
     if (weightUnit === "lbs") {
-      weight = weight * 0.453592; 
+      weight = weight * 0.453592;
     }
 
     if (!height || !weight || isNaN(height) || isNaN(weight)) {
@@ -124,10 +137,18 @@ const PatientData = () => {
   }, [common_data])
 
   const handleTabSelect = (dayName) => {
-    if (loading) return
+    if (loading) return;
     setActiveTab(dayName);
-    setSelectedDate(getDateForDay(dayName));
+
+    const selectedDate = getDateForDay(dayName);
+
+    setSelectedDate(selectedDate);
+    // Format the date to YYYY-MM-DD
+    const formattedDate = new Date(selectedDate).toISOString().slice(0, 10);
+    setFormattedDate(formattedDate)
   };
+
+
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("en-US", { weekday: "long", day: "numeric", month: "long" }).format(date);
@@ -286,6 +307,7 @@ const PatientData = () => {
         <div className="cmn_head mb-3 mt-4 position-relative">
 
           <h4>
+            {console.log(formatDate(selectedDate), "this is the selected date")}
             {formatDate(selectedDate)}
             <svg
               className="ms-2"
@@ -301,7 +323,7 @@ const PatientData = () => {
               />
             </svg>
           </h4>
-          {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => navigate("/patient-plan",{state : {patientId : patientId}})}>+ Add Exercise</button>}
+          {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId } })}>+ Add Exercise</button>}
         </div>
         <Tabs
           activeKey={activeTab}
@@ -311,37 +333,37 @@ const PatientData = () => {
         >
           <Tab eventKey="Sunday" title="Sunday">
             {activeTab === 'Sunday' && (
-              <PatientInfoTab patientId={patientId} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Monday" title="Monday">
             {activeTab === 'Monday' && (
-              <PatientInfoTab patientId={patientId} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Tuesday" title="Tuesday">
             {activeTab === 'Tuesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Tuesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Wednesday" title="Wednesday">
             {activeTab === 'Wednesday' && (
-              <PatientInfoTab patientId={patientId} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Wednesday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Thursday" title="Thursday">
             {activeTab === 'Thursday' && (
-              <PatientInfoTab patientId={patientId} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Thursday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Friday" title="Friday">
             {activeTab === 'Friday' && (
-              <PatientInfoTab patientId={patientId} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Friday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
           <Tab eventKey="Saturday" title="Saturday">
             {activeTab === 'Saturday' && (
-              <PatientInfoTab patientId={patientId} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems}/>
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
         </Tabs>

@@ -129,11 +129,11 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     const handleAddIntensity = (val, i) => {
         const numericVal = Number(val);
-    
+
         if (isNaN(numericVal) || numericVal < 1 || numericVal > 10) {
-            return; 
+            return;
         }
-    
+
         setDays((prevDays) => {
             const updatedDay = prevDays[eventData].map((item, index) => {
                 if (index === i) {
@@ -141,14 +141,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 }
                 return item;
             });
-    
+
             return {
                 ...prevDays,
                 [eventData]: updatedDay,
             };
         });
     };
-    
+
 
     const handleSelectExerciseName = (val, i) => {
         const selectedExercise = exercise?.find((exercise) => exercise?.id === val)
@@ -184,6 +184,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                     const hasEmptyFlexibilityField = lastExercise.flexibilityField.some((item) =>
                         item.reps === "" || item.weight.value === null
                     );
+                    console.log(hasEmptyFlexibilityField, "this is the has empty flexibility field")
                     if (hasEmptyFlexibilityField) return false;
                 } else {
                     const hasEmptyCardioField = lastExercise.cardioFields.some((item) =>
@@ -192,6 +193,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                         item.distanceGoal.value === null ||
                         item.pace === ""
                     );
+                    console.log(hasEmptyCardioField, "this is the has empty cardio field")
                     if (hasEmptyCardioField) return false;
                 }
                 return true
@@ -215,43 +217,64 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
             const currentDayExercises = [...updatedDays[eventData]];
-            currentDayExercises[i] = {
-                ...currentDayExercises[i],
-                flexibilityField: [
-                    ...currentDayExercises[i].flexibilityField,
-                    {
-                        reps: "",
-                        weight: { value: null, unit: "kg" },
-                    },
-                ],
-            };
-            updatedDays[eventData] = currentDayExercises;
+            const currentExercise = currentDayExercises[i];
 
+            const hasEmptyFlexibilityField = currentExercise.flexibilityField.some((field) =>
+                field.reps === "" || field.weight.value === null
+            );
+
+            if (hasEmptyFlexibilityField) {
+                console.warn("Cannot add new flexibility field, some values are empty in the previous fields.");
+                return prevDays;
+            }
+
+            currentExercise.flexibilityField = [
+                ...currentExercise.flexibilityField,
+                {
+                    reps: "",
+                    weight: { value: null, unit: "kg" },
+                },
+            ];
+
+            updatedDays[eventData] = currentDayExercises;
             return updatedDays;
         });
     };
+
 
     const addNewFlexibilityToCardio = (i) => {
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
             const currentDayExercises = [...updatedDays[eventData]];
-            currentDayExercises[i] = {
-                ...currentDayExercises[i],
-                cardioFields: [
-                    ...currentDayExercises[i].cardioFields,
-                    {
-                        time: { value: null, unit: "sec" },
-                        heartRateTarget: { value: null, unit: "bpm" },
-                        distanceGoal: { value: null, unit: "km" },
-                        pace: "",
-                    },
-                ],
-            };
-            updatedDays[eventData] = currentDayExercises;
+            const currentExercise = currentDayExercises[i];
 
+            const hasEmptyCardioField = currentExercise.cardioFields.some((field) =>
+                field.time.value === null ||
+                field.heartRateTarget.value === null ||
+                field.distanceGoal.value === null ||
+                field.pace === ""
+            );
+
+            if (hasEmptyCardioField) {
+                console.warn("Cannot add new cardio field, some values are empty in the previous fields.");
+                return prevDays;
+            }
+
+            currentExercise.cardioFields = [
+                ...currentExercise.cardioFields,
+                {
+                    time: { value: null, unit: "sec" },
+                    heartRateTarget: { value: null, unit: "bpm" },
+                    distanceGoal: { value: null, unit: "km" },
+                    pace: "",
+                },
+            ];
+
+            updatedDays[eventData] = currentDayExercises;
             return updatedDays;
         });
     };
+
 
     const handleChangeCardioUnit = (i, index, field, unit) => {
         setDays((prevDays) => {
@@ -282,14 +305,59 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     const handleChangeCardioFields = (i, index, field, e) => {
-        console.log(e.target.value, "this is from the cardio fields value")
+        let value = e.target.value;
+
+        if (field === "time") {
+            const unit = days[eventData][i].cardioFields[index].time.unit;
+            value = Number(value);
+
+            if (unit === "sec") {
+                if (value < 1 || value > 60 || isNaN(value)) {
+                    console.warn("Time must be between 1 and 60 seconds.");
+                    return;
+                }
+            } else if (unit === "min") {
+                if (value < 1 || value > 60 || isNaN(value)) {
+                    console.warn("Time must be between 1 and 60 minutes.");
+                    return;
+                }
+            }
+        } else if (field === "heartRateTarget") {
+            value = Number(value);
+            if (value < 0 || value > 200 || isNaN(value)) {
+                console.warn("Heart rate target must be between 30 and 200 bpm.");
+                return;
+            }
+        } else if (field === "distanceGoal") {
+            const unit = days[eventData][i].cardioFields[index].distanceGoal.unit;
+            value = Number(value);
+
+            if (unit === "km") {
+                if (value <= 0 || isNaN(value)) {
+                    console.warn("Distance goal must be a positive number (in km).");
+                    return;
+                }
+            } else if (unit === "mile") {
+                if (value <= 0 || isNaN(value)) {
+                    console.warn("Distance goal must be a positive number (in miles).");
+                    return;
+                }
+            }
+        }
+
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
 
             if (field === "pace") {
-                updatedDays[eventData][i].cardioFields[index][field] = e.target.value;
+                updatedDays[eventData][i].cardioFields[index][field] = value;
+            } else if (field === "time") {
+                updatedDays[eventData][i].cardioFields[index][field].value = value;
+            } else if (field === "heartRateTarget") {
+                updatedDays[eventData][i].cardioFields[index][field].value = value;
+            } else if (field === "distanceGoal") {
+                updatedDays[eventData][i].cardioFields[index][field].value = value;
             } else {
-                updatedDays[eventData][i].cardioFields[index][field].value = e.target.value;
+                updatedDays[eventData][i].cardioFields[index][field].value = value;
             }
 
             updatedDays[eventData][i].sets = [...updatedDays[eventData][i].cardioFields];
@@ -300,14 +368,21 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
 
+
     const handleChangeFlexibilityFields = (i, index, field, e) => {
+        const value = Number(e.target.value);
+
+        if (isNaN(value) || value <= 0 || value >= 100) {
+            return; 
+        }
+
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
 
             if (field === "reps") {
-                updatedDays[eventData][i].flexibilityField[index][field] = e.target.value;
+                updatedDays[eventData][i].flexibilityField[index][field] = value;
             } else {
-                updatedDays[eventData][i].flexibilityField[index][field].value = e.target.value;
+                updatedDays[eventData][i].flexibilityField[index][field].value = value;
             }
 
             updatedDays[eventData][i].sets = [...updatedDays[eventData][i].flexibilityField];
@@ -316,6 +391,33 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         });
     };
 
+
+
+    const handleRemoveCardioFields = (i, index) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+
+            currentDayExercises[i].cardioFields = currentDayExercises[i].cardioFields.filter((_, idx) => idx !== index);
+
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
+
+    const handleRemoveFlexibilityFields = (i, index) => {
+        setDays((prevDays) => {
+            const updatedDays = { ...prevDays };
+            const currentDayExercises = [...updatedDays[eventData]];
+
+            currentDayExercises[i].flexibilityField = currentDayExercises[i].flexibilityField.filter((_, idx) => idx !== index);
+
+            updatedDays[eventData] = currentDayExercises;
+
+            return updatedDays;
+        });
+    };
 
 
 
@@ -431,7 +533,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 </>
                                             )
                                         })}
-                                        {day?.category !== "strength exercise" && <div className="modal_card mt-3">
+                                        {day?.category !== "strength exercise" && <div className="mt-3">
                                             <div className="d-flex align-items-center mb-2">
                                                 <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                                                 <button onClick={() => addNewFlexibilityToCardio(i)} className="cmn_btn add_row">Add Row</button>
@@ -444,56 +546,60 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                             <span className="step_count">{index + 1}</span>
                                                         </div>
                                                         <div className="w-100">
-                                                            <div className="flex-grow-1 d-flex gap-2 ">
-                                                                <div className="w-100">
-                                                                    <div className="d-flex gap-2 align-items-center">
-                                                                        <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
-                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "time", "sec")}
-                                                                            className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
-                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "time", "min")}
-                                                                            className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
-                                                                    </div>
-                                                                    <Form.Control type="text" placeholder="00" value={cardio?.time?.value} onChange={(e) => handleChangeCardioFields(i, index, "time", e)} />
+                                                            <div className="flex-grow-1">
+                                                                <div className='d-flex gap-2 mb-3'>
+                                                                    <div className="w-100">
+                                                                        <div className="d-flex gap-2 align-items-center">
+                                                                            <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "time", "sec")}
+                                                                                className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "time", "min")}
+                                                                                className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                                                                        </div>
+                                                                        <Form.Control type="text" placeholder="00" value={cardio?.time?.value} onChange={(e) => handleChangeCardioFields(i, index, "time", e)} />
 
-                                                                </div>
-                                                                <div className="w-100">
-                                                                    <div className="d-flex gap-2 align-items-center">
-                                                                        <Form.Label className="flex-grow-1">HeartRate Target</Form.Label>{" "}
-                                                                        <span
-                                                                            className={cardio?.heartRateTarget?.unit === "bpm" ? "time" : "time min"}>bpm</span>{" "}
                                                                     </div>
-                                                                    <Form.Control type="text" placeholder="00" value={cardio?.heartRateTarget?.value} onChange={(e) => handleChangeCardioFields(i, index, "heartRateTarget", e)} />
+                                                                    <div className="w-100">
+                                                                        <div className="d-flex gap-2 align-items-center">
+                                                                            <Form.Label className="flex-grow-1">HeartRate Target</Form.Label>{" "}
 
-                                                                </div>
-                                                                <div className="w-100">
-                                                                    <div className="d-flex gap-2 align-items-center">
-                                                                        <Form.Label className="flex-grow-1">Distance Goal</Form.Label>{" "}
-                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "km")}
-                                                                            className={cardio?.distanceGoal?.unit === "km" ? "time" : "time min"}>KM</span>{" "}
-                                                                        <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "meter")}
-                                                                            className={cardio?.distanceGoal?.unit === "meter" ? "time" : "time min"}>Meter</span>{" "}
-                                                                    </div>
-                                                                    <Form.Control type="text" placeholder="00" value={cardio?.distanceGoal?.value} onChange={(e) => handleChangeCardioFields(i, index, "distanceGoal", e)} />
+                                                                        </div>
+                                                                        <Form.Control type="text" placeholder="00" value={cardio?.heartRateTarget?.value} onChange={(e) => handleChangeCardioFields(i, index, "heartRateTarget", e)} />
 
-                                                                </div>
-                                                                <div className="w-100">
-                                                                    <div className="d-flex gap-2 align-items-center">
-                                                                        <Form.Label className="flex-grow-1">Pace</Form.Label>{" "}
                                                                     </div>
-                                                                    <Form.Select aria-label="Default select example" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} >
-                                                                        <option value="" disabled selected>Please select pace</option>
-                                                                        <option value="moderate">Moderate</option>
-                                                                        <option value="medium">Medium</option>
-                                                                        <option value="vigorous">Vigorous</option>
-                                                                    </Form.Select>
+                                                                </div>
+                                                                <div className='d-flex gap-2'>
+                                                                    <div className="w-50">
+                                                                        <div className="d-flex gap-2 align-items-center">
+                                                                            <Form.Label className="flex-grow-1">Distance Goal</Form.Label>{" "}
+                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "km")}
+                                                                                className={cardio?.distanceGoal?.unit === "km" ? "time" : "time min"}>KM</span>{" "}
+                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "meter")}
+                                                                                className={cardio?.distanceGoal?.unit === "meter" ? "time" : "time min"}>Meter</span>{" "}
+                                                                        </div>
+                                                                        <Form.Control type="text" placeholder="00" value={cardio?.distanceGoal?.value} onChange={(e) => handleChangeCardioFields(i, index, "distanceGoal", e)} />
+
+                                                                    </div>
+                                                                    <div className="w-50">
+                                                                        <div className="d-flex gap-2 align-items-center">
+                                                                            <Form.Label className="flex-grow-1">Pace</Form.Label>{" "}
+                                                                        </div>
+                                                                        <Form.Select aria-label="Default select example" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} >
+                                                                            <option value="" disabled selected>Select pace</option>
+                                                                            <option value="moderate">Moderate</option>
+                                                                            <option value="medium">Medium</option>
+                                                                            <option value="vigorous">Vigorous</option>
+                                                                        </Form.Select>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        {day?.cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i, index))} className="minus align-self-end mb-2">x</span>}
                                                     </div>
                                                 </Form.Group>
                                             ))}
                                         </div>}
-                                        {day?.category === "strength exercise" && <div className="modal_card mt-3">
+                                        {day?.category === "strength exercise" && <div className="mt-3 ">
                                             <div className="d-flex align-items-center mb-2">
                                                 <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                                                 <button onClick={() => addNewFlexibilityToStrength(i)} className="cmn_btn add_row">Add Row</button>
@@ -523,6 +629,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                             <Form.Control type="text" placeholder="00" value={val?.weight?.value} onChange={(e) => handleChangeFlexibilityFields(i, index, "weight", e)} />
 
                                                         </div>
+                                                        {day?.flexibilityField?.length > 1 && <span onClick={() => (handleRemoveFlexibilityFields(i, index))} className="minus align-self-end mb-2">x</span>}
                                                     </div>
                                                 </Form.Group>
                                             ))}
