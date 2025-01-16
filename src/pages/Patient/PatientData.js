@@ -19,6 +19,7 @@ import { permission_constants } from "../../constants/permissionConstants";
 import ImagePreview from "../../common/imagePreview/ImagePreviewer";
 import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
+import { isPatientPlanEditable, clear_is_patient_plan_editable } from "../../redux/slices/patientPlan/editPatientPlan";
 
 const PatientData = () => {
   const location = useLocation()
@@ -35,12 +36,36 @@ const PatientData = () => {
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [showPopup, setShowPopup] = useState(false)
   const [currImage, setCurrImage] = useState("")
+  const [isPatientPlanEditableDate, setIsPatientPlanEditableDate] = useState('')
+  const [canEditPatientPlan, setCanEditPatientPlan] = useState(false)
   const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
+  const [planStartAt, setPlanStartAt] = useState('')
+  const [planEndAt, setPlanEndAt] = useState('')
+  const [exercisePlanId, setExercisePlanId] = useState(null)
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
+  const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [patientReportsPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
+
+  useEffect(() => {
+    if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
+      const planStartDate = isPatientPlanEditableResponse?.data?.data?.planValidFrom;
+      const planEndDate = isPatientPlanEditableResponse?.data?.data?.planValidTo;
+      setPlanStartAt(planStartDate)
+      setPlanEndAt(planEndDate)
+      setExercisePlanId(isPatientPlanEditableResponse?.data?.data?.id)
+
+
+      if (isPatientPlanEditableDate > planStartDate && isPatientPlanEditableDate < planEndDate) {
+        setCanEditPatientPlan(true);
+      } else if (isPatientPlanEditableDate === planEndDate) {
+        setCanEditPatientPlan(false);
+      }
+    }
+  }, [isPatientPlanEditableResponse, isPatientPlanEditableDate]);
+
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -58,7 +83,6 @@ const PatientData = () => {
   const [activeTab, setActiveTab] = useState(currentDay);
   const [selectedDate, setSelectedDate] = useState(getDateForDay(currentDay));
   const [formattedDate, setFormattedDate] = useState("");
-  console.log(formattedDate, "this is the formatted date")
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const current = new Date();
 
@@ -72,12 +96,14 @@ const PatientData = () => {
   useEffect(() => {
     const currentDate = new Date();
     const formatted = formatDateValue(currentDate);
+    setIsPatientPlanEditableDate(formatted)
     setFormattedDate(formatted);
   }, []);
 
 
   useEffect(() => {
     dispatch(get_selected_patient({ id: patientId }))
+    dispatch(isPatientPlanEditable({ id: patientId }))
     dispatch(common_data_api())
   }, [])
 
@@ -307,7 +333,6 @@ const PatientData = () => {
         <div className="cmn_head mb-3 mt-4 position-relative">
 
           <h4>
-            {console.log(formatDate(selectedDate), "this is the selected date")}
             {formatDate(selectedDate)}
             <svg
               className="ms-2"
@@ -323,7 +348,10 @@ const PatientData = () => {
               />
             </svg>
           </h4>
-          {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn position-absolute end-0 filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId } })}>+ Add Exercise</button>}
+          <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
+            {patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Exercise</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, } })}>+ Add Exercise</button>}
+          </div>
         </div>
         <Tabs
           activeKey={activeTab}

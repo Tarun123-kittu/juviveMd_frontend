@@ -17,7 +17,8 @@ import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/g
 import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 
-const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate }) => {
+
+const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate, exercisePlanId, setExercisePlanId }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -97,8 +98,9 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   return (
     <>
       <DataTable columns={columns}>
-        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise
+        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs
         }, i) => {
+
           return (
             <tr key={i}>
               <td>{exerciseDetails?.exercise_name}</td>
@@ -113,7 +115,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                 <td>
                   {planExercise?.sets?.length} /
                   {planExercise?.sets
-                    ?.map((set) => `${set?.reps?.value}`)
+                    ?.map((set) => `${set?.reps}`)
                     .join('-') || "N/A"}
                 </td>
               )}
@@ -131,19 +133,44 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                     .join('-') || "N/A"}
                 </td>
               )}
-              <td>{planExercise?.sets?.length}</td>
-              <td>{exerciseDetails?.description}</td>
+              {exerciseDetails?.category !== "strength exercise" ? (
+                <td>
+                  {logs?.length > 0 ? logs?.length+"/" : "------"} 
+                  {logs?.map((log) => log?.sets?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`).join('-'))}
+                </td>
+              ) : (
+                <td>
+                   {logs?.length > 0 ? logs?.length+"/" : "------"} 
+                  {logs?.map((log) => log?.sets?.map((set) => `${set?.reps}`).join('-'))}
+                </td>
+              )}
+
+              {exerciseDetails?.category !== "strength exercise" ? (
+                <td>
+                  {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
+                </td>
+              ) : (
+                <td>
+                  {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.weight?.value}${" "}${set?.weight?.unit}`).join('-')) : "------"}
+                </td>
+              )}
+              {/* <td>{planExercise?.sets?.length}</td>
+              <td>{exerciseDetails?.description}</td> */}
               <td className="text-decoration-underline">Easy</td>
               <td>
                 <div className="d-flex gap-2">
                   {/* <img src={LinkImage} width={18} alt="" /> */}
-                  {patientPlanPermissions?.canDelete && !hideItems && <img
+                  {/* {patientPlanPermissions?.canDelete && !hideItems && <img
                     src={DeleteImage}
                     className="ms-2 me-2"
                     width={18}
                     alt=""
                     onClick={() => handleDeletePlan(exerciseDetails?.id)}
-                  />}
+                  />} */}
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={planExercise?.active} />
+                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                  </div>
                   {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />}
                 </div>
               </td>

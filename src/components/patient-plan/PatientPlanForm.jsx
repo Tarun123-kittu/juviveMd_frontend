@@ -8,9 +8,12 @@ import { get_patient_difficuilties, clear_patient_difficuilties_state } from '..
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import toast from 'react-hot-toast';
+import { parse } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [selectedCategory, setSelectedCategory] = useState()
     const [difficuilty, setDifficuilty] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
@@ -18,16 +21,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const [data, setData] = useState([{ name: "", movements: [] }]);
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
-    const cardioData = {
-        time: { value: null, unit: "sec" },
-        heartRateTarget: { value: null, unit: "bpm" },
-        distanceGoal: { value: null, unit: "km" },
-        pace: "",
-    }
-    const flexibilityData = {
-        reps: "",
-        weight: { value: null, unit: "kg" },
-    }
 
     const newExerciseData = {
         category: "",
@@ -36,6 +29,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         exerciseImage: "",
         exerciseVideo: "",
         difficulty_level: [patient_difficuilty?.data?.data?.exercise_difficulty],
+        active: true,
         sets: [],
         intensity: 0,
         flexibilityField: [{
@@ -184,7 +178,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                     const hasEmptyFlexibilityField = lastExercise.flexibilityField.some((item) =>
                         item.reps === "" || item.weight.value === null
                     );
-                    console.log(hasEmptyFlexibilityField, "this is the has empty flexibility field")
                     if (hasEmptyFlexibilityField) return false;
                 } else {
                     const hasEmptyCardioField = lastExercise.cardioFields.some((item) =>
@@ -193,7 +186,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                         item.distanceGoal.value === null ||
                         item.pace === ""
                     );
-                    console.log(hasEmptyCardioField, "this is the has empty cardio field")
                     if (hasEmptyCardioField) return false;
                 }
                 return true
@@ -203,7 +195,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 toast.error("Please fill all the fields")
                 return prevDays;
             }
-
             const updatedDay = [...prevDays[eventData], newExerciseData];
             return {
                 ...prevDays,
@@ -305,66 +296,48 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     const handleChangeCardioFields = (i, index, field, e) => {
-        let value = e.target.value;
+        let value
+        if (field === "pace") {
+            value = e.target.value
+        } else {
+            value = Number(e.target.value);
+        }
+        const cardioField = days[eventData][i].cardioFields[index];
 
         if (field === "time") {
-            const unit = days[eventData][i].cardioFields[index].time.unit;
-            value = Number(value);
-
-            if (unit === "sec") {
-                if (value < 1 || value > 60 || isNaN(value)) {
-                    console.warn("Time must be between 1 and 60 seconds.");
-                    return;
-                }
-            } else if (unit === "min") {
-                if (value < 1 || value > 60 || isNaN(value)) {
-                    console.warn("Time must be between 1 and 60 minutes.");
-                    return;
-                }
+            const unit = cardioField.time.unit;
+            if (isNaN(value) || value < 1 || value > 60) {
+                console.warn(`Time must be between 1 and 60 ${unit === "sec" ? "seconds" : "minutes"}.`);
+                return;
             }
         } else if (field === "heartRateTarget") {
-            value = Number(value);
-            if (value < 0 || value > 200 || isNaN(value)) {
-                console.warn("Heart rate target must be between 30 and 200 bpm.");
+            if (isNaN(value) || value < 0 || value > 200) {
+                console.warn("Heart rate target must be between 0 and 200 bpm.");
                 return;
             }
         } else if (field === "distanceGoal") {
-            const unit = days[eventData][i].cardioFields[index].distanceGoal.unit;
-            value = Number(value);
-
-            if (unit === "km") {
-                if (value <= 0 || isNaN(value)) {
-                    console.warn("Distance goal must be a positive number (in km).");
-                    return;
-                }
-            } else if (unit === "mile") {
-                if (value <= 0 || isNaN(value)) {
-                    console.warn("Distance goal must be a positive number (in miles).");
-                    return;
-                }
+            const unit = cardioField.distanceGoal.unit;
+            if (isNaN(value) || value <= 0) {
+                console.warn(`Distance goal must be a positive number (in ${unit}).`);
+                return;
             }
         }
 
         setDays((prevDays) => {
-            const updatedDays = { ...prevDays };
+            const updatedDays = JSON.parse(JSON.stringify(prevDays));
+            const targetField = updatedDays[eventData][i].cardioFields[index][field];
 
-            if (field === "pace") {
-                updatedDays[eventData][i].cardioFields[index][field] = value;
-            } else if (field === "time") {
-                updatedDays[eventData][i].cardioFields[index][field].value = value;
-            } else if (field === "heartRateTarget") {
-                updatedDays[eventData][i].cardioFields[index][field].value = value;
-            } else if (field === "distanceGoal") {
-                updatedDays[eventData][i].cardioFields[index][field].value = value;
+            if (field === "time" || field === "heartRateTarget" || field === "distanceGoal") {
+                targetField.value = value;
             } else {
-                updatedDays[eventData][i].cardioFields[index][field].value = value;
+                updatedDays[eventData][i].cardioFields[index][field] = value;
             }
 
             updatedDays[eventData][i].sets = [...updatedDays[eventData][i].cardioFields];
-
             return updatedDays;
         });
     };
+
 
 
 
@@ -372,17 +345,19 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const handleChangeFlexibilityFields = (i, index, field, e) => {
         const value = Number(e.target.value);
 
-        if (isNaN(value) || value <= 0 || value >= 100) {
-            return; 
+        if (isNaN(value) || value <= 0 || value > 100) {
+            console.warn("Value must be between 1 and 100.");
+            return;
         }
 
         setDays((prevDays) => {
-            const updatedDays = { ...prevDays };
+            const updatedDays = JSON.parse(JSON.stringify(prevDays)); // Deep copy to avoid mutations
+            const flexibilityField = updatedDays[eventData][i].flexibilityField[index];
 
             if (field === "reps") {
-                updatedDays[eventData][i].flexibilityField[index][field] = value;
+                flexibilityField[field] = value;
             } else {
-                updatedDays[eventData][i].flexibilityField[index][field].value = value;
+                flexibilityField[field].value = value;
             }
 
             updatedDays[eventData][i].sets = [...updatedDays[eventData][i].flexibilityField];
@@ -390,6 +365,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
             return updatedDays;
         });
     };
+
 
 
 
@@ -422,7 +398,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
+        <Tab.Container id="left-tabs-example" defaultActiveKey={selectedIndex || 0}>
             <div className="d-flex setting_wrapper patient_exercise">
                 <div className="border-end setting_pills">
                     <Nav variant="pills" className="flex-column settings_tabs">
@@ -651,7 +627,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                         </Col>
                                         <Col lg={12} className="pt-3">
                                             <div className="d-flex justify-content-end gap-2">
-                                                <button className="cmn_btn border-btn">Cancel</button>
+                                                <button className="cmn_btn border-btn" onClick={() => navigate(-1)}>Cancel</button>
                                                 <button className="cmn_btn" onClick={() => handleAddExercise()}>Add Exercise</button>
                                             </div>
                                         </Col>
