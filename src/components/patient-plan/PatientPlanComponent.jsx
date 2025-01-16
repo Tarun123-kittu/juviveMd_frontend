@@ -431,7 +431,7 @@ const PatientPlanComponent = () => {
       setPlanValidTo(isPlanExercise.data.data.planValidTo);
     }
   }, [isPlanExercise]);
-  
+
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -464,7 +464,7 @@ const PatientPlanComponent = () => {
           </Tabs>
         </div>}
       </div>
-      {savePlanModal && <SavePlanModal savePlanModal={savePlanModal} setSavePlanModal={setSavePlanModal} setPlanValidFrom={setPlanValidFrom} setPlanValidTo={setPlanValidTo} planValidFrom={planValidFrom} planValidTo={planValidTo} handleSavePlan={handleSavePlan} loading={isPlanCreated?.isLoading} editable={editable} />}
+      {savePlanModal && <SavePlanModal savePlanModal={savePlanModal} setSavePlanModal={setSavePlanModal} setPlanValidFrom={setPlanValidFrom} setPlanValidTo={setPlanValidTo} planValidFrom={planValidFrom} planValidTo={planValidTo} handleSavePlan={handleSavePlan} loading={isPlanCreated?.isLoading || isPlanUpdated?.isLoading} editable={editable} />}
     </div>
   );
 };
