@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from 'react-bootstrap/Form';
 import { getDay, getDate, setDate, setHours } from "date-fns";
+import Spinner from 'react-bootstrap/Spinner';
 
-const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan }) => {
+const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading }) => {
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -17,17 +18,17 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
   const getStartOfWeek = (date) => {
     const d = new Date(date);
     const day = d.getDay();
-    const diff = day === 0 ? -6 : 1 - day; // If Sunday (day 0), move back 6 days to get Monday.
-    d.setDate(d.getDate() + diff); // Set to Monday of the selected week.
-    return d.toISOString().split('T')[0]; // Return date in 'YYYY-MM-DD' format without time.
+    const diff = day === 0 ? -6 : 1 - day; 
+    d.setDate(d.getDate() + diff); 
+    return d.toISOString().split('T')[0]; 
   };
   
   const getEndOfWeek = (date) => {
     const d = new Date(date);
     const day = d.getDay();
-    const diff = day === 0 ? 0 : 7 - day; // If Sunday, it's already the end of the week.
-    d.setDate(d.getDate() + diff); // Set to Sunday of the selected week.
-    return d.toISOString().split('T')[0]; // Return date in 'YYYY-MM-DD' format without time.
+    const diff = day === 0 ? 0 : 7 - day; 
+    d.setDate(d.getDate() + diff);
+    return d.toISOString().split('T')[0]; 
   };
   
   const handleStartDateChange = (e) => {
@@ -100,7 +101,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
             </Form.Group>
             <div class="d-flex justify-content-end gap-2">
               <button class="cmn_btn border-btn" onClick={handleClose}>Cancel</button>
-              <button class="cmn_btn" onClick={handleSavePlan}>Save Plan</button></div>
+              <button class="cmn_btn" onClick={handleSavePlan}>{loading ? <Spinner animation="border" variant="light" size="sm" /> : "Save Plan"}</button></div>
           </div>
         </Modal.Body>
       </Modal>
