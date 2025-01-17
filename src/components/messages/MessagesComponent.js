@@ -206,7 +206,7 @@ const MessagesComponent = () => {
             <ul>
               {Array.isArray(chats) && chats?.length !== 0 && chats.map((chat, i) => {
                 return (
-                  <li key={i} className={`d-flex gap-2 align-items-center ${chatIndex === i ? "disabled" : ""} ${chat?.read || chatIndex === i ? "shadow p-2 bg-white rounded" : "active"}`} aria-disabled="true" style={{ cursor: "pointer" }} onClick={() => { setChatIndex(i); setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img src={DefaultImage} alt="user image" />
+                  <li key={i} className={`d-flex gap-2 align-items-center ${chatIndex === i ? "disabled" : ""} ${chat?.read || chatIndex === i ? "shadow p-2 bg-white rounded" : "active"}`} aria-disabled="true" style={{ cursor: "pointer" }} onClick={() => { setChatIndex(i); setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img height={35} width={35} className='round_image' src={chat?.receiver?.image || DefaultImage} alt="user image" />
                     <div className='message_user flex-grow-1 '>
                       <div className='d-flex'>
                         <h6 className='flex-grow-1'>{chat?.senderId === localStorage.getItem('user_id') ? chat?.receiver?.firstName : chat?.sender?.firstName}</h6>

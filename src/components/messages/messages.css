@@ -56,6 +56,9 @@ span.message_errors {
     font-size: 13px;
     padding: 6px;
 }
+.round_image{
+    border-radius: 50%;
+}
 
 .send_message {
     background: #ACC9CB;

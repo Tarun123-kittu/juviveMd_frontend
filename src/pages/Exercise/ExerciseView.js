@@ -81,16 +81,15 @@ const ExerciseView = () => {
                       {exercise_data?.status === 3 && "Draft"}</p>
                   </li>
                   <li>
-                    <h5 className="mb-0">Body parts</h5>{" "}
-                    <div className="body_parts">
-                      {exercise_data?.body_parts?.map((item, i) => (
-                        <span key={i}>
-                          {Array.isArray(item?.name) ? item.name.join(", ") : item?.name}
-                          {i < exercise_data.body_parts.length - 1 ? ", " : ""}
-                        </span>
+                    <h5 className="mb-3">Body parts</h5>{" "}
+               
+                 
+                      {exercise_data?.body_parts?.map((item, i) => (  
+                        <>
+                        <h5 key={i} className="mb-1">{item?.name}</h5> <p className="mb-2">{item?.movements?.join(", ")}</p>
+                        </>   
                       ))}
 
-                    </div>
                   </li>
                 </ul>
               </Col>

@@ -38,7 +38,7 @@ const getSingleStaffAPI = createSlice({
         isLoading: false,
         isError: false,
         isSuccess: false,
-        data: {},
+        data: null,
         error: null
     },
     reducers: {
@@ -46,7 +46,7 @@ const getSingleStaffAPI = createSlice({
             state.isLoading = false
             state.isError = false
             state.isSuccess = false
-            state.data = {}
+            state.data = null
             state.error = null
         }
     },

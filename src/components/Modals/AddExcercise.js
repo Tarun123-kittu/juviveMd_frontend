@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Row, Col, Form } from "react-bootstrap";
 import { Formik, Field, Form as FormikForm } from "formik";
-import DefaultImage from "../../Images/file.png";
 import { create_exercise, clear_create_exercise_state } from "../../redux/slices/exerciseSlice/createExercise";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import Spinner from 'react-bootstrap/Spinner';
 import { get_exercise, clear_get_single_exercise_state } from "../../redux/slices/exerciseSlice/getExercise";
-import * as Yup from "yup";
 import { create_exercise_draft, clear_create_exercise_draft_state } from "../../redux/slices/exerciseSlice/createAsDraft";
-import Multiselect from 'multiselect-react-dropdown';
 import Select from "react-select";
 
 
@@ -74,19 +71,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     exerciseImage: null,
   };
 
-  const handleImageChange = (event, setFieldValue) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFieldValue("exerciseImage", file);
-      setExerciseImage(file)
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSave = (values) => {
     setLoading("first")
     if (!data?.length) {
@@ -143,9 +127,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   useEffect(() => {
     if (is_exercise_created?.isSuccess) {
       toast.success(is_exercise_created?.message?.message);
+      setActiveTab("approvalRequest")
       dispatch(clear_create_exercise_state());
       dispatch(clear_get_single_exercise_state());
-      dispatch(get_exercise({ page: 1, tab }))
+      dispatch(get_exercise({ page: 1, tab : "approvalRequest" }))
       setImagePreview("")
       setSelectedBodyNames([])
       setSelectedMovements([])
@@ -154,11 +139,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setDifficuilty()
       setDifficuiltyResponse()
       setData([{ name: "", movements: [] }])
-      if (draft) {
-        setActiveTab("draft")
-      } else {
-        setActiveTab("approvalRequest")
-      }
+      setActiveTab("approvalRequest")
       handleClose();
     }
     if (is_exercise_created?.isError) {
@@ -170,8 +151,10 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   useEffect(() => {
     if (is_exercise_draft_created?.isSuccess) {
       toast.success(is_exercise_draft_created?.message?.message);
+      setActiveTab("draft")
       dispatch(clear_create_exercise_draft_state());
-      dispatch(get_exercise({ page: 1, tab }))
+      dispatch(clear_get_single_exercise_state());
+      dispatch(get_exercise({ page: 1, tab : "draft" }))
       setImagePreview("")
       setSelectedBodyNames([])
       setSelectedMovements([])
@@ -179,12 +162,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setMovementResponse([])
       setDifficuilty()
       setDifficuiltOptions()
-      setDifficuiltyResponse()
-      if (draft) {
-        setActiveTab("draft")
-      } else {
-        setActiveTab("approvalRequest")
-      }
+      setData([{ name: "", movements: [] }])
+      setActiveTab("draft")
       handleClose();
     }
     if (is_exercise_draft_created?.isError) {

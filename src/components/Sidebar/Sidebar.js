@@ -14,6 +14,8 @@ import { permission_constants } from '../../constants/permissionConstants'
 import { get_single_staff } from '../../redux/slices/staffSlice/getStaffByIdSlice'
 import DeleteModal from '../Modals/DeleteModal'
 import { recent_chats } from '../../redux/slices/chatSlice/recentChats'
+import Skeleton from 'react-loading-skeleton'
+import src from 'react-select'
 
 const Sidebar = () => {
   const token = Cookies.get('authToken');
@@ -139,7 +141,11 @@ const Sidebar = () => {
 
           <div className='user_info'>
 
-            <img
+            {user_details?.isLoading ? <Skeleton
+              width={65}
+              height={65}
+              style={{ borderRadius: '50px' }}
+            /> : <img
               style={{ cursor: "pointer" }}
               onClick={() => {
                 const userRole = localStorage.getItem('user_role');
@@ -151,11 +157,11 @@ const Sidebar = () => {
                   navigate("/dashboard");
                 }
               }}
+              src={`${(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}?nocache=${Math.random()}`}
 
-              src={(!userImageUrl || userImageUrl === "null") ? UserImage : userImageUrl}
               className='user_image_round'
               alt="user_image"
-            />
+            />}
 
             <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} className='mt-2'>JuviveMD</h6>
             <p>{localStorage.getItem('user_role')}</p>

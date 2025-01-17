@@ -373,7 +373,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                                     </Dropdown.Toggle>
                                                     {PatientPaymentPermissions?.canUpdate && <Dropdown.Menu>
                                                         <ul>
-                                                            <Dropdown.Item
+                                                            {/* <Dropdown.Item
                                                                 className="d-flex gap-2"
                                                                 onClick={() => {
                                                                     setPayment_status_pending(true);
@@ -391,7 +391,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                                                 />
                                                                 Pending
 
-                                                            </Dropdown.Item>
+                                                            </Dropdown.Item> */}
                                                             <Dropdown.Item
                                                                 className="d-flex gap-2"
                                                                 onClick={() => {
@@ -402,7 +402,7 @@ const Reception_patient_list = ({ showButtons }) => {
 
                                                                 <input
                                                                     type="checkbox"
-                                                                    checked={payment_status_received}
+                                                                    checked={payment_status_received || patient?.payment}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation(); // Prevents triggering the parent onClick
                                                                         setPayment_status_received(true);
@@ -448,10 +448,10 @@ const Reception_patient_list = ({ showButtons }) => {
                                         <td>{patient?.created_at ? formatDate(patient?.created_at) : null}</td>
 
 
-                                        {<td className={`${tab !== "healthIssue" && "d-none"} `}>
-                                            <div className='health_issue' ref={elementRef}>
+                                        {<td  className={`${tab !== "healthIssue" && "d-none"} cursor-pointer`}>
+                                            <div className='health_issue' data-tooltip-id={`my-tooltip-${i}`}  ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
-                                                    <span data-tooltip-id={`my-tooltip-${i}`} className='d-flex align-items-center justify-content-center'>!</span>
+                                                    <span className='d-flex align-items-center justify-content-center'>!</span>
                                                     <ReactTooltip id={`my-tooltip-${i}`} place="bottom" type="info" effect="solid">
                                                         <div className='tooltip_custom'>
                                                             <ul>
@@ -464,7 +464,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                                     </ReactTooltip>
 
                                                 </div>
-                                                <span> View health issue</span>
+                                                <span > View health issue</span>
                                             </div>
                                         </td>}
 

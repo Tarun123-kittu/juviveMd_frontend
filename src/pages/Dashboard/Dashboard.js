@@ -87,9 +87,9 @@ const Dashboard = () => {
                   />
                 </svg>
               </div>
-              <h3>{data?.paymentPending >=0 ? "Paymant Pending" : data?.totalExercises >= 0 ? "Total Exercise" : ""}</h3>
+              <h3>{data?.paymentPending >=0 ? "Paymant Pending" : data?.totalExercises >= 0 ? "Total Exercise" : "0"}</h3>
               <h4>
-                {data?.paymentPending ? data?.paymentPending : data?.totalExercises} <span>Till Today</span>
+                {data?.paymentPending ? data?.paymentPending : data?.totalExercises ? data?.totalExercises : "0"} <span>Till Today</span>
               </h4>
             </div>}
             {dashboard_data?.isLoading ? <Skeleton className="info_card exercise-card" height={200} /> : <div
@@ -145,7 +145,7 @@ const Dashboard = () => {
               </div>
               <h3>{data?.healthCases >= 0 ? "Health Cases" : data?.exercisesInDraft >= 0 ? "Exercise In Draft" : ""}</h3>
               <h4>
-                {data?.healthCases ? data?.healthCases : data?.exercisesInDraft} <span>Till Today</span>
+                {data?.healthCases ? data?.healthCases : data?.exercisesInDraft ? data?.exercisesInDraft : "0"} <span>Till Today</span>
               </h4>
             </div>}
             {dashboard_data?.isLoading ? <Skeleton className="info_card exercise-card" height={200} /> : <div
@@ -201,7 +201,7 @@ const Dashboard = () => {
               </div>
               <h3>{data?.exercisesApproval >= 0 ? "Exercise Approval" : data?.totalPatients >= 0 ? "Total Patient" : ""}</h3>
               <h4>
-                {data?.exercisesApproval ? data?.exercisesApproval : data?.totalPatients ? data?.totalPatients : ""} <span>Till Today</span>
+                {data?.exercisesApproval ? data?.exercisesApproval : data?.totalPatients ? data?.totalPatients : "0"} <span>Till Today</span>
               </h4>
             </div>}
           </div>

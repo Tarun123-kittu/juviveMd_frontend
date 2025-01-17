@@ -15,6 +15,8 @@ import "react-international-phone/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getRoutePermissions';
 import { permission_constants } from '../../constants/permissionConstants';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const SettingsComponents = () => {
   const dispatch = useDispatch()
@@ -57,6 +59,7 @@ const SettingsComponents = () => {
 
   useEffect(() => {
     if (user_details?.isSuccess) {
+      setImageView('')
       setData({
         image: user_details?.data?.data?.image,
         firstName: user_details?.data?.data?.firstName,
@@ -131,13 +134,13 @@ const SettingsComponents = () => {
       if (!fileType.includes("image/png") && !fileType.includes("image/jpeg")) {
         toast.error("Only PNG and JPG images are allowed.");
         setProfileImage("")
-        setImageView("")
+        setImageView(user_details?.data?.data?.image)
         return;
       }
       if (fileSize > 2 * 1024 * 1024) {
         toast.error("File size must be less than 2MB.");
         setProfileImage("")
-        setImageView("")
+        setImageView(user_details?.data?.data?.image)
         return;
       }
 
@@ -192,7 +195,7 @@ const SettingsComponents = () => {
 
   useEffect(() => {
     if (is_staff_updated?.isSuccess) {
-      toast.success("Staff Updated Successfully")
+      toast.success("Profile Updated Successfully")
       setImageView('')
       dispatch(clear_single_staff_state())
       dispatch(clear_update_staff_state())
@@ -261,7 +264,21 @@ const SettingsComponents = () => {
                 </div>
                 <h4>My Profile</h4>
                 <div className='user_profile d-flex align-items-center gap-3'>
-                  <img src={imageView || DefaultImage} alt="profile image" className='round_image_user' /> <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
+                  {user_details?.isLoading ? (
+                    <Skeleton
+                      width={55}
+                      height={50}
+                      style={{ borderRadius: '50px' }}
+                    />
+                  ) : (
+                    <img
+                      key={imageView || DefaultImage}
+                      src={imageView || DefaultImage}
+                      alt="profile"
+                      className="round_image_user"
+                    />
+                  )}
+                  <div className='position-relative'><input type="file" disabled={editInput} onChange={handleFileChange} className='opacity-0 position-absolute w-100 h-100 start-0 end-0 top-0 bottom-0' />
                     {!editInput && firstPermissionSettings?.canUpdate && <button className='cmn_btn' disabled={editInput}> Upload Photo</button>}
                   </div> <button className='delete_photo d-none'>Delete</button>
                   {firstPermissionSettings?.canUpdate && <button className='edit_button cmn_btn ms-auto' onClick={() => handleEdit()}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
@@ -276,28 +293,28 @@ const SettingsComponents = () => {
                 <div className='row authWrapper row-gap-3 pt-4'>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">FirstName</label>
-                    <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => { setData({ ...data, firstName: e.target.value }); setFirstNameError('') }} disabled={editInput} className='form-control' />
+                    {user_details?.isLoading ? <Skeleton height={40} count={1} style={{ borderRadius: '10px' }} /> : <input type="text" placeholder='Name' value={data?.firstName} onChange={(e) => { setData({ ...data, firstName: e.target.value }); setFirstNameError('') }} disabled={editInput} className='form-control' />}
                     {firstNameError && <span className='error text-danger'>{firstNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">LastName</label>
-                    <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => { setData({ ...data, lastName: e.target.value }); setLastNameError('') }} disabled={editInput} className='form-control' />
+                    {user_details?.isLoading ? <Skeleton height={40} count={1} style={{ borderRadius: '10px' }} /> : <input type="text" placeholder='Name' value={data?.lastName} onChange={(e) => { setData({ ...data, lastName: e.target.value }); setLastNameError('') }} disabled={editInput} className='form-control' />}
                     {lastNameError && <span className='error text-danger'>{lastNameError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Email</label>
-                    <input type="email" placeholder='Email' value={data?.email} onChange={(e) => { setData({ ...data, email: e.target.value }); setEmailError('') }} disabled={editInput} className='form-control' />
+                    {user_details?.isLoading ? <Skeleton height={40} count={1} style={{ borderRadius: '10px' }} /> : <input type="email" placeholder='Email' value={data?.email} onChange={(e) => { setData({ ...data, email: e.target.value }); setEmailError('') }} disabled={editInput} className='form-control' />}
                     {emailError && <span className='error text-danger'>{emailError}</span>}
                   </div>
                   <div className='col-lg-6'>
                     <label className='d-block form-label' htmlFor="NAME">Phone Number</label>
                     <div className="w-100">
-                      <PhoneInput
+                      {user_details?.isLoading ? <Skeleton height={40} count={1} style={{ borderRadius: '10px' }} /> : <PhoneInput
                         defaultCountry="us"
                         value={phone}
                         onChange={(phone) => handleValidatePhone(phone)}
                         disabled={editInput}
-                      />
+                      />}
                       {phoneError && <span className='error text-danger'>{phoneError}</span>}
                     </div>
                   </div>
