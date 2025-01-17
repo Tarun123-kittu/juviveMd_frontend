@@ -47,6 +47,22 @@ ul.exercise_status p {
     clip-path: inset(0% 0% 0% 0% round 12px);
 }
 
+.status_dropdown_wrapper select {
+    border: 1px solid var(--primary-color);;
+    padding: 7px;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 170px;
+}
+
+.status_dropdown_wrapper select:focus {
+    outline: unset;
+}
+
+.status_dropdown_wrapper select option:checked {
+    background: var(--primary-color);
+}
+
 ul.exercise_status button.btn {
     padding-top: 0;
 }

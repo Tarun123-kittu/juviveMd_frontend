@@ -8,13 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../common/Loader/Loader";
 import ReactPlayer from 'react-player';
 import "./Exercise.css"
+import { update_exercise_status, clear_update_exercise_status_state } from "../../redux/slices/exerciseSlice/updateExerciseStatus";
+import toast from "react-hot-toast";
+
 
 const ExerciseView = () => {
   const location = useLocation()
   const { id, val } = location?.state ? location?.state : location
   const navigate = useNavigate()
   const dispatch = useDispatch();
+  const [disableDropdown, setDisableDropdown] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [selectedOption, setSelectedOption] = useState(null);
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
+  const is_status_updated = useSelector((store) => store.UPDATE_EXERCISE_STATUS)
   const [exercise_data, setExerciseData] = useState()
 
   useEffect(() => {
@@ -26,22 +33,64 @@ const ExerciseView = () => {
   useEffect(() => {
     if (is_exercise?.isSuccess) {
       setExerciseData(is_exercise?.data?.data)
+      setSelectedOption(is_exercise?.data?.data?.status)
+      setIsLoading(false)
+    }
+    if (is_exercise?.isError) {
+      toast.error("Something went wrong")
+      setExerciseData(null)
+      setIsLoading(false)
     }
   }, [is_exercise])
-  return is_exercise?.isLoading ?
+
+  let loadingToastId;
+
+  const handleChange = (e) => {
+    setDisableDropdown(true)
+    loadingToastId = toast.loading("Updating status...");
+    dispatch(update_exercise_status({ id, status: Number(e.target.value) }))
+  };
+
+  useEffect(() => {
+    if (is_status_updated?.isSuccess) {
+      toast.dismiss(loadingToastId)
+      toast.success("Status updated successfully")
+      dispatch(get_single_exercise({ id }));
+      dispatch(clear_update_exercise_status_state())
+      setDisableDropdown(false)
+    }
+    if (is_status_updated?.isError) {
+      toast.dismiss(loadingToastId)
+      toast.error("Something went wrong")
+      dispatch(clear_update_exercise_status_state())
+      setDisableDropdown(false)
+    }
+  }, [is_status_updated])
+
+  return is_exercise?.isLoading && isLoading ?
     <div className="wrapper">
       <div className="inner_wrapper">
         <Loader wrapclass="full_height" />
       </div></div> : (
       <div className="wrapper">
         <div className="inner_wrapper">
-          <div className="cmn_head pb-3">
+          <div className="cmn_head pb-3 d-flex justify-content-between">
             <h2 className="text-capitalize">{exercise_data?.exercise_name}</h2>
+            <div className="status_dropdown_wrapper">
+              <select value={selectedOption} onChange={handleChange} name="cars" id="cars">
+                <option disabled>Please select status</option>
+                <option value={0} disabled={disableDropdown}>Reject</option>
+                <option value={1} disabled={disableDropdown}>Approve</option>
+                <option disabled value={2} className="d-none">Pending</option>
+                <option disabled value={3} className="d-none">Draft</option>
+              </select>
+            </div>
+
           </div>
           <div className="cmn_bg_wrapper">
             <Row className="m-0 ">
               <Col lg={6} className="ps-0 pe-4 border-end">
-                  <h4 className="exercise_heading text-start">Image</h4>
+                <h4 className="exercise_heading text-start">Image</h4>
                 <div className="pose_image">
                   <img
                     src={exercise_data?.image_url || PoseImage}
@@ -61,14 +110,14 @@ const ExerciseView = () => {
                 </div>
               </Col>
               <Col lg={6} className="pe-0 ps-4">
-               
-              
+
+
                 <ul className="exercise_status">
                   <li>
-                  <h5 className="mb-0">Description</h5>
-                <p>
-                  {exercise_data?.description}
-                </p>
+                    <h5 className="mb-0">Description</h5>
+                    <p>
+                      {exercise_data?.description}
+                    </p>
                   </li>
                   <li className="mb-3">
                     <h5 className="mb-0">Category</h5> <p className="mb-0">{exercise_data?.category}</p>
@@ -82,13 +131,13 @@ const ExerciseView = () => {
                   </li>
                   <li>
                     <h5 className="mb-3">Body parts</h5>{" "}
-               
-                 
-                      {exercise_data?.body_parts?.map((item, i) => (  
-                        <>
+
+
+                    {exercise_data?.body_parts?.map((item, i) => (
+                      <>
                         <h5 key={i} className="mb-1">{item?.name}</h5> <p className="mb-2">{item?.movements?.join(", ")}</p>
-                        </>   
-                      ))}
+                      </>
+                    ))}
 
                   </li>
                 </ul>
