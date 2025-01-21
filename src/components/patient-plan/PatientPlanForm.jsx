@@ -11,16 +11,24 @@ import toast from 'react-hot-toast';
 import { parse } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
-const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId }) => {
+const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [selectedCategory, setSelectedCategory] = useState()
     const [difficuilty, setDifficuilty] = useState('')
+    console.log(difficuilty,"this is the difficuilty")
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const [selectedCategory, setSelectedCategory] = useState('')
     const [exercise, setExercise] = useState()
     const [data, setData] = useState([{ name: "", movements: [] }]);
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+
+    useEffect(() => {
+        if(editable){
+            setSelectedCategory(days[eventData][selectedIndex].category)
+            setDifficuilty(days[eventData][selectedIndex].difficulty_level[0])
+        }
+    }, [days,selectedIndex])
 
     const newExerciseData = {
         category: "",
@@ -28,7 +36,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         exerciseName: "Untitled",
         exerciseImage: "",
         exerciseVideo: "",
-        difficulty_level: [patient_difficuilty?.data?.data?.exercise_difficulty],
+        difficulty_level: [difficuilty ? difficuilty : patient_difficuilty?.data?.data?.exercise_difficulty],
         active: true,
         sets: [],
         intensity: 0,
@@ -46,14 +54,14 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     useEffect(() => {
         dispatch(get_patient_difficuilties({ patientId: patientId }))
-    }, [])
+    }, [selectedCategory])
 
     useEffect(() => {
         if (patient_difficuilty?.data?.data?.exercise_difficulty && selectedCategory) {
             dispatch(
                 get_exercise_by_category({
                     category: selectedCategory,
-                    difficuilty: patient_difficuilty?.data?.data?.exercise_difficulty,
+                    difficuilty: difficuilty ? difficuilty : patient_difficuilty?.data?.data?.exercise_difficulty,
                 })
             )
         }
@@ -72,7 +80,8 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 };
             });
         }
-    }, [patient_difficuilty, selectedCategory]);
+
+    }, [patient_difficuilty, selectedCategory, difficuilty]);
 
 
     useEffect(() => {
@@ -80,7 +89,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
             setExercise(exercise_details?.data?.data)
             setData(exercise_details?.data?.data[0]?.body_parts)
         }
-    }, [exercise_details])
+    }, [exercise_details, selectedCategory])
 
     const handleSelectCategory = (val, i) => {
         if (val) {
@@ -104,7 +113,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     const handleSelectDifficuilty = (val, i) => {
         if (val) {
-
+            setDifficuilty(val)
             setDays((prevDays) => {
                 const updatedDay = prevDays[eventData].map((item, index) => {
                     if (index === i) {
@@ -195,6 +204,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                 toast.error("Please fill all the fields")
                 return prevDays;
             }
+            setDifficuilty(patient_difficuilty?.data?.data?.exercise_difficulty)
             const updatedDay = [...prevDays[eventData], newExerciseData];
             return {
                 ...prevDays,
@@ -398,7 +408,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey={selectedIndex || 0}>
+        <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
             <div className="d-flex setting_wrapper patient_exercise">
                 <div className="border-end setting_pills">
                     <Nav variant="pills" className="flex-column settings_tabs">
@@ -435,7 +445,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             </Form.Group>
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Difficuilty</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={day?.difficuilty ? day?.difficuilty : patient_difficuilty?.data?.data?.exercise_difficulty} onChange={(e) => handleSelectDifficuilty(e.target.value, i)}>
+                                                <Form.Select aria-label="Default select example" value={day?.difficulty_level[0] ? day?.difficulty_level[0] : patient_difficuilty?.data?.data?.exercise_difficulty} onChange={(e) => handleSelectDifficuilty(e.target.value, i)}>
                                                     <option value="" disabled selected>Please select difficuilty level</option>
                                                     {exerciseDifficuilty?.map((category, i) => (
                                                         <option key={i} value={category}>{category}</option>

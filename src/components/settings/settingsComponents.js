@@ -74,7 +74,6 @@ const SettingsComponents = () => {
       })
       setPhone(user_details?.data?.data?.countryCode + user_details?.data?.data?.phone)
       setImageView(user_details?.data?.data?.image)
-
     }
   }, [user_details])
 

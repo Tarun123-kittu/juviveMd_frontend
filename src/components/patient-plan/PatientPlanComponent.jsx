@@ -13,6 +13,33 @@ import { get_patient_exercise_plan, clear_get_patient_exercise_plan_state } from
 import Loader from "../../common/Loader/Loader";
 import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } from "../../redux/slices/patientPlan/updatePatientExercisePlan";
 
+const daysData = {
+  category: "",
+  exerciseId: "",
+  exerciseName: "Untitled",
+  exerciseImage: "",
+  exerciseVideo: "",
+  difficulty_level: [],
+  active: true,
+  bodyParts: [],
+  sets: [],
+  intensity: 0,
+  flexibilityField: [
+    {
+      reps: "",
+      weight: { value: null, unit: "kg" },
+    },
+  ],
+  cardioFields: [
+    {
+      time: { value: null, unit: "sec" },
+      heartRateTarget: { value: null, unit: "bpm" },
+      distanceGoal: { value: null, unit: "km" },
+      pace: "",
+    },
+  ],
+}
+
 const PatientPlanComponent = () => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -41,174 +68,13 @@ const PatientPlanComponent = () => {
   const [planValidFrom, setPlanValidFrom] = useState('')
   const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
   const [days, setDays] = useState({
-    Monday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Tuesday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Wednesday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Thursday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Friday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Saturday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
-    Sunday: [
-      {
-        category: "",
-        exerciseId: "",
-        exerciseName: "",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-          reps: "",
-          weight: { value: null, unit: "kg" },
-        }],
-        cardioFields: [{
-          time: { value: null, unit: "sec" },
-          heartRateTarget: { value: null, unit: "bpm" },
-          distanceGoal: { value: null, unit: "km" },
-          pace: "",
-        }]
-      },
-    ],
+    Monday: [daysData],
+    Tuesday: [daysData],
+    Wednesday: [daysData],
+    Thursday: [daysData],
+    Friday: [daysData],
+    Saturday: [daysData],
+    Sunday: [daysData],
   });
   console.log(days, "this is the days")
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
@@ -343,32 +209,7 @@ const PatientPlanComponent = () => {
 
   useEffect(() => {
     if (isPlanExercise?.isSuccess) {
-      const daysData = {
-        category: "",
-        exerciseId: "",
-        exerciseName: "Untitled",
-        exerciseImage: "",
-        exerciseVideo: "",
-        difficulty_level: [],
-        active: true,
-        bodyParts: [],
-        sets: [],
-        intensity: 0,
-        flexibilityField: [
-          {
-            reps: "",
-            weight: { value: null, unit: "kg" },
-          },
-        ],
-        cardioFields: [
-          {
-            time: { value: null, unit: "sec" },
-            heartRateTarget: { value: null, unit: "bpm" },
-            distanceGoal: { value: null, unit: "km" },
-            pace: "",
-          },
-        ],
-      }
+
       const staticDays = {
         Monday: [daysData],
         Tuesday: [daysData],
@@ -384,6 +225,7 @@ const PatientPlanComponent = () => {
           if (exercise.category === "strength exercise") {
             return {
               ...exercise,
+              exerciseId : exercise.exerciseDetails?.id,
               exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
               exerciseImage: exercise.exerciseDetails?.image_url,
               exerciseVideo: exercise.exerciseDetails?.video_link,
@@ -403,6 +245,7 @@ const PatientPlanComponent = () => {
           } else {
             return {
               ...exercise,
+              exerciseId : exercise.exerciseDetails?.id,
               exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
               exerciseImage: exercise.exerciseDetails?.image_url,
               exerciseVideo: exercise.exerciseDetails?.video_link,
@@ -457,6 +300,7 @@ const PatientPlanComponent = () => {
                     body_parts={body_parts}
                     exerciseDifficuilty={exerciseDifficuilty}
                     patientId={patientId}
+                    editable={editable}
                   />
                 )}
               </Tab>
