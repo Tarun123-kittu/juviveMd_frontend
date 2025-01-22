@@ -11,7 +11,7 @@ import { common_data_api } from "../../redux/slices/commonDataSlice/commonDataDl
 import { formatDate } from "../../common/formatDate/formatDate";
 import AddPateintExercise from "../../components/Modals/AddPateintExercise";
 import { get_patient_plan, clear_patient_plan_state } from "../../redux/slices/patientPlan/getPAtientPlan";
-import { format } from "date-fns";
+import { format, getDate, getDay, setDate } from "date-fns";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
@@ -69,13 +69,26 @@ const PatientData = () => {
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const currentDate = new Date(); // Today's date
     const currentDayIndex = currentDate.getDay();
     const targetDayIndex = daysOfWeek.indexOf(dayName);
-    const dayDifference = targetDayIndex - currentDayIndex;
-    const selectedDate = new Date(currentDate);
-    selectedDate.setDate(currentDate.getDate() + dayDifference);
-    return selectedDate;
-  }
+
+    // Calculate the start of the week (Monday)
+    const startOfWeek = new Date(currentDate);
+    const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1; // Handle Sunday as the last day
+    startOfWeek.setDate(currentDate.getDate() - dayOffset);
+
+    // Calculate the target date
+    const targetDate = new Date(startOfWeek);
+    targetDate.setDate(startOfWeek.getDate() + (targetDayIndex === 0 ? 6 : targetDayIndex - 1));
+
+    return targetDate;
+  };
+
+
+
+
+
 
   const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currentDate = new Date();
@@ -359,11 +372,6 @@ const PatientData = () => {
           id="uncontrolled-tab-example"
           className="mb-3 weekendTabs cmn_tabs"
         >
-          <Tab eventKey="Sunday" title="Sunday">
-            {activeTab === 'Sunday' && (
-              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
-            )}
-          </Tab>
           <Tab eventKey="Monday" title="Monday">
             {activeTab === 'Monday' && (
               <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Monday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
@@ -392,6 +400,11 @@ const PatientData = () => {
           <Tab eventKey="Saturday" title="Saturday">
             {activeTab === 'Saturday' && (
               <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Saturday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
+            )}
+          </Tab>
+          <Tab eventKey="Sunday" title="Sunday">
+            {activeTab === 'Sunday' && (
+              <PatientInfoTab patientId={patientId} formattedDate={formattedDate} weekday="Sunday" exercise_category={exercise_category} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setLoading={setLoading} hideItems={hideItems} />
             )}
           </Tab>
         </Tabs>

@@ -34,7 +34,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
     "Set/Reps",
     "Weight/Time",
     "Achieved Set/Reps",
-    "Achieved weight.Time",
+    "Achieved weight Time",
     "Patient Review",
     "Action",
   ];

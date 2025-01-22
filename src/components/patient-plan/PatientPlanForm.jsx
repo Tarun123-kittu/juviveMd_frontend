@@ -12,10 +12,10 @@ import { parse } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable }) => {
+    console.log(days[eventData],"this is the days")
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [difficuilty, setDifficuilty] = useState('')
-    console.log(difficuilty,"this is the difficuilty")
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [selectedCategory, setSelectedCategory] = useState('')
     const [exercise, setExercise] = useState()
