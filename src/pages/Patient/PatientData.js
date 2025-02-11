@@ -66,29 +66,21 @@ const PatientData = () => {
     }
   }, [isPatientPlanEditableResponse, isPatientPlanEditableDate]);
 
-
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDate = new Date(); // Today's date
+    const currentDate = new Date(); 
     const currentDayIndex = currentDate.getDay();
     const targetDayIndex = daysOfWeek.indexOf(dayName);
 
-    // Calculate the start of the week (Monday)
     const startOfWeek = new Date(currentDate);
-    const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1; // Handle Sunday as the last day
+    const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1; 
     startOfWeek.setDate(currentDate.getDate() - dayOffset);
 
-    // Calculate the target date
     const targetDate = new Date(startOfWeek);
     targetDate.setDate(startOfWeek.getDate() + (targetDayIndex === 0 ? 6 : targetDayIndex - 1));
 
     return targetDate;
   };
-
-
-
-
-
 
   const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currentDate = new Date();

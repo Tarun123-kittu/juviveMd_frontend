@@ -3,7 +3,7 @@ import ReactPaginate from "react-paginate";
 
 const Pagination = ({ totalPages, onPageChange, page, setPage }) => {
   const handlePageChange = (selectedPage) => {
-    setPage(selectedPage.selected); // Update the page state in the parent
+    setPage(selectedPage.selected); 
     if (onPageChange) {
       onPageChange(selectedPage.selected);
     }
@@ -20,7 +20,7 @@ const Pagination = ({ totalPages, onPageChange, page, setPage }) => {
         pageClassName="page-item"
         pageLinkClassName="page-link"
         activeClassName="active"
-        forcePage={page-1} // Force the active page to match the `page` prop
+        forcePage={page-1} 
       />
     </div>
   );

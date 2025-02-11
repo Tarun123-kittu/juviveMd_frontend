@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef  } from 'react'
 import { Form, Row, Col, Button, InputGroup, Container } from "react-bootstrap";
 import Nav from 'react-bootstrap/Nav';
 import Tab from "react-bootstrap/Tab";
@@ -12,16 +12,19 @@ import { parse } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable }) => {
-    console.log(days[eventData],"this is the days")
+    console.log(days[eventData],"this is the daus")
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [difficuilty, setDifficuilty] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [selectedCategory, setSelectedCategory] = useState('')
     const [exercise, setExercise] = useState()
+    console.log(exercise,"this is the exercisess")
     const [data, setData] = useState([{ name: "", movements: [] }]);
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
+    console.log(exercise_details,"this is the exercise difficuilty")
+    const hasRun = useRef(false);
 
     useEffect(() => {
         if(editable){
@@ -361,7 +364,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         }
 
         setDays((prevDays) => {
-            const updatedDays = JSON.parse(JSON.stringify(prevDays)); // Deep copy to avoid mutations
+            const updatedDays = JSON.parse(JSON.stringify(prevDays)); 
             const flexibilityField = updatedDays[eventData][i].flexibilityField[index];
 
             if (field === "reps") {
@@ -454,7 +457,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             </Form.Group>
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise Name</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={day?.exerciseId} onChange={(e) => handleSelectExerciseName(e.target.value, i)}>
+                                                <Form.Select aria-label="Default select example" value={~exercise_details?.isSuccess ? "Please select exercise name" : day?.exerciseId} onChange={(e) => handleSelectExerciseName(e.target.value, i)}>
                                                     <option value="" disabled selected>Please select exercise name</option>
                                                     {exercise?.map((exercise, i) => (
                                                         <option key={i} value={exercise?.id}>{exercise?.exercise_name}</option>
