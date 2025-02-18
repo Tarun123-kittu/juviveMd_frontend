@@ -224,7 +224,21 @@ h5.step_heading {
 .replaces_trainer .trainer_delete {
   font-size: 14px;
 }
+.exercise_view_image {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.image_view  div {
+  height: calc(100% - 13px);
+}
+
+.exercise_view_image {
+  border: 1px solid rgba(204, 204, 204, 1);
+  border-radius: 8px;
+}
 /* save modal */
 .cmn_modal.savePlanModal .modal-dialog {
   max-width: 503px;
@@ -460,9 +474,9 @@ tr.rowmatched td {
 } */
 
 .modal_card {
-  box-shadow: 0px 4px 12px rgba(0,0,0,8%);
   padding: 1rem;
   border-radius: 4px;
+  background: rgba(251, 251, 251, 1);
 }
 button.cmn_btn.add_row {
   height: 30px;

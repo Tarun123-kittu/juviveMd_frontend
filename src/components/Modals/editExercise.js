@@ -469,41 +469,7 @@ const EditExercise = ({
                                                 ))}
                                             </Field>
                                         </Form.Group>
-
                                         <Form.Group className="mb-2">
-                                            <Form.Label>Difficulty level</Form.Label>
-                                            <Select
-                                                isMulti
-                                                value={difficulty?.map((item) => ({
-                                                    value: item.name,
-                                                    label: item.name,
-                                                }))}
-                                                options={difficuiltOptions?.map((option) => ({
-                                                    value: option.name,
-                                                    label: option.name,
-                                                }))}
-                                                onChange={(selectedOptions) => {
-                                                    const selectedList = selectedOptions?.map(
-                                                        (option) => ({
-                                                            name: option.value,
-                                                        })
-                                                    );
-                                                    handleSelectDifficuilt(selectedList);
-                                                }}
-                                                placeholder="Select Difficulty"
-                                                isDisabled={
-                                                    !ExercisePermission?.canUpdate ||
-                                                    tab === "approvalRequest" ||
-                                                    tab === "active"
-                                                }
-                                                className="flex-grow-1"
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col lg={6}>
-                                        <Row>
-                                            <Col lg={12}>
-                                                <Form.Group className="mb-2">
                                                     <Form.Label>Exercise Name</Form.Label>
                                                     <Field
                                                         type="text"
@@ -520,8 +486,7 @@ const EditExercise = ({
                                                         }
                                                     />
                                                 </Form.Group>
-                                            </Col>
-                                            <Col lg={12}>
+                                            
                                                 <Form.Group className="mb-2">
                                                     <Form.Label>Exercise Image Url</Form.Label>
                                                     <Field
@@ -540,10 +505,7 @@ const EditExercise = ({
                                                         }
                                                     />
                                                 </Form.Group>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    <Col lg={12}>
+                                       
                                         <Form.Group className="mb-2">
                                             <Form.Label>Exercise Video Link</Form.Label>
                                             <Field
@@ -562,7 +524,91 @@ const EditExercise = ({
                                             />
                                         </Form.Group>
                                     </Col>
+                                  <Col lg={6} className="image_view">
+                                                    <Row>
+                                                      <Col lg={12}>
+                                                      <Form.Label>Exercise Image</Form.Label>
+                                                      <div className="exercise_view_image">
+                                                          {/* {AddIMage} */}
+                                                          <img src={exerciseImage} className="img-fluid"/>
+                                                          
+                                                      </div>
+                                                      </Col>
+                                                      </Row>
+                                                      </Col>
                                     <Col lg={12}>
+                  <div className="modal_card mt-3">
+                  <h5 className="flex-grow-1 mb-2">Categories and Blocks</h5>
+                      <Row>
+                        <Col lg={6}>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Difficulty level</Form.Label>
+                            <Select
+                              isMulti
+                              value={
+                                difficulty && difficulty.length > 0
+                                  ? difficulty.map((item) => ({
+                                    value: item.name,
+                                    label: item.name,
+                                  }))
+                                  : null
+                              }
+                              options={difficuiltOptions?.map((option) => ({
+                                value: option.name,
+                                label: option.name,
+                              }))}
+                              onChange={(selectedOptions) => {
+                                const selectedList = selectedOptions.map((option) => ({
+                                  name: option.value,
+                                }));
+                                handleSelectDifficuilt(selectedList);
+                              }}
+                              placeholder="Select Difficulty"
+                              className="flex-grow-1"
+                            />
+                          </Form.Group>
+                        </Col>
+              
+                        <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
+                        <button class="cmn_btn add_row" disabled="">Add Categories</button>
+                        </Col>
+                        <Col lg={6}>
+                            <label>Blocks</label>
+                            <select name="" id="" className="form-select">
+                              <option value="" >Select Block</option>
+                            </select>
+                        </Col>
+                        <Col lg={6}>                     
+                          <div className="d-flex align-items-center gap-2">
+                            <div>
+                              <label>Sets</label>
+                              <Field
+                                  type="text"
+                                  name="sets"
+                                  placeholder="2"
+                                  className="form-control"
+                                
+                                />
+                            </div>
+                            <div>
+                              <label>Reps</label>
+                              <Field
+                                  type="text"
+                                  name="sets"
+                                  placeholder="Enter Reps"
+                                  className="form-control"
+                                
+                                />
+                            </div>
+                              <span className="minus align-self-end mb-2 cursor-pointer">x</span>
+                              <span className="minus plus align-self-end mb-2 cursor-pointer">+</span>
+                          </div>
+                        </Col>
+                   
+                      </Row>
+                      </div>
+                </Col>
+                                    {/* <Col lg={12}>
                                         <Form.Group className="">
                                             <Form.Label>Exercise Description</Form.Label>
                                             <Field
@@ -581,7 +627,7 @@ const EditExercise = ({
                                                 }
                                             />
                                         </Form.Group>
-                                    </Col>
+                                    </Col> */}
                                     <Col lg={12}>
                                         {bodyPartError && (
                                             <span className="error text-danger">{bodyPartError}</span>
