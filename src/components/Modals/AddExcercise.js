@@ -59,7 +59,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   useEffect(() => {
     if (body_parts && body_parts.length > 0) {
-      setApiData(body_parts); // Set the API data to the state
+      setApiData(body_parts); 
     }
   }, [body_parts]);
 
@@ -80,7 +80,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
     if (invalidEntries.length > 0) {
-      setBodyPartError("PLease select at least one movement for each body part");
+      setBodyPartError("Please select at least one movement for each body part");
       return;
     }
     dispatch(clear_get_single_exercise_state())
@@ -121,7 +121,6 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
 
   const handleSubmit = (values) => {
-    // handleSave(values);
   };
 
   useEffect(() => {
@@ -433,7 +432,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     <Field
                       type="text"
                       name="exerciseVideo"
-                      placeholder="https://youtu.be"
+                      placeholder="https://youtube.com"
                       className="form-control"
                       onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                     />
