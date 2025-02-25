@@ -31,6 +31,8 @@ const Exercise = () => {
   const [category, setCategory] = useState("")
   const [date, setDate] = useState("")
   const [page, setPage] = useState(1)
+  const [commonData, setCommonData] = useState([])
+  const [trainingType, setTrainingType] = useState([])
   const [ExercisePermission] = getRoutePermissions(permission_constants.EXERCISE)
   const [ExerciseActiveTabPermission] = getRoutePermissions(permission_constants.EXERCISEACTIVETAB)
   const [ExerciseApprovalTabPermission] = getRoutePermissions(permission_constants.EXERCISEAPPROVALTAB)
@@ -56,19 +58,21 @@ const Exercise = () => {
       setExercise_category(common_data?.data?.data?.exercise_category);
       setBody_parts(common_data?.data?.data?.bodyParts)
       setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
+      setCommonData(common_data?.data?.data?.patient_category)
+      setTrainingType(common_data?.data?.data?.training_type)
     }
   }, [common_data]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "active":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"active"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} commonData={commonData} trainingType={trainingType} setActiveTab={setActiveTab}/>;
       case "approvalRequest":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"approvalRequest"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} commonData={commonData} trainingType={trainingType} setActiveTab={setActiveTab}/>;
       case "draft":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"draft"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} commonData={commonData} trainingType={trainingType} setActiveTab={setActiveTab}/>;
       case "rejected":
-        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} />;
+        return <ActiveExerciseTab setToggleFilter={setToggleFilter} tab={"rejected"} exercise_category={exercise_category} username={username} category={category} date={date} ExercisePermission={ExercisePermission} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} setIsTabActive={setIsTabActive} setPage={setPage} page={page} commonData={commonData} trainingType={trainingType} setActiveTab={setActiveTab}/>;
       default:
         return null;
     }
@@ -205,6 +209,8 @@ const Exercise = () => {
         exerciseDifficuilty={exerciseDifficuilty}
         tab={activeTab}
         setActiveTab={setActiveTab}
+        commonData={commonData}
+        trainingType={trainingType}
       />
       <UploadFileModal setShowFileUploadModal={setShowFileUploadModal} showFileUploadModal={showFileUploadModal} setActiveTab={setActiveTab} />
     </div>

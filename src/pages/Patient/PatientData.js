@@ -42,12 +42,19 @@ const PatientData = () => {
   const [planStartAt, setPlanStartAt] = useState('')
   const [planEndAt, setPlanEndAt] = useState('')
   const [exercisePlanId, setExercisePlanId] = useState(null)
+  const [hasPlan, setHasPlan] = useState()
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
   const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [patientReportsPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
+
+  useEffect(() => {
+    return () => {
+      setCanEditPatientPlan(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
@@ -64,16 +71,20 @@ const PatientData = () => {
         setCanEditPatientPlan(false);
       }
     }
+    if (isPatientPlanEditableResponse?.isError) {
+      setCanEditPatientPlan(false)
+      dispatch(clear_is_patient_plan_editable())
+    }
   }, [isPatientPlanEditableResponse, isPatientPlanEditableDate]);
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDate = new Date(); 
+    const currentDate = new Date();
     const currentDayIndex = currentDate.getDay();
     const targetDayIndex = daysOfWeek.indexOf(dayName);
 
     const startOfWeek = new Date(currentDate);
-    const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1; 
+    const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
     startOfWeek.setDate(currentDate.getDate() - dayOffset);
 
     const targetDate = new Date(startOfWeek);
@@ -151,6 +162,7 @@ const PatientData = () => {
   useEffect(() => {
     if (patient_details?.isSuccess) {
       setPatient_data(patient_details?.data?.data)
+      setHasPlan(patient_details?.data?.data?.has_plan)
       const bmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.weight?.unit)
       setCurrentBmi(bmi.bmi)
       const expectbmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.optimal_weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.optimal_weight?.unit)
@@ -174,7 +186,6 @@ const PatientData = () => {
     const selectedDate = getDateForDay(dayName);
 
     setSelectedDate(selectedDate);
-    // Format the date to YYYY-MM-DD
     const formattedDate = new Date(selectedDate).toISOString().slice(0, 10);
     setFormattedDate(formattedDate)
   };
@@ -354,8 +365,8 @@ const PatientData = () => {
             </svg>
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Exercise</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, } })}>+ Add Exercise</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan && isPatientPlanEditableResponse?.isSuccess) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan } })}>+Create Plan</button>}
           </div>
         </div>
         <Tabs

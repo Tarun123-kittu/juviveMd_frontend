@@ -10,7 +10,8 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, stepOnefullData, setTrainer_name }) => {
+const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_data, height_unit, weight_unit, setHeight_unit, setWeight_unit, loading, setStepOneFullData, stepOnefullData, setTrainer_name, categoryData }) => {
+
   const [phone, setPhone] = useState()
   useEffect(() => {
     if (patient_all_data?.phone && patient_all_data?.countryCode) {
@@ -59,7 +60,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
     initialValues: {
       firstName: stepOnefullData?.firstName || patient_all_data?.firstName || "",
       lastName: stepOnefullData?.lastName || patient_all_data?.lastName || "",
-      tel: stepOnefullData?.tel || patient_all_data?.phone || "", 
+      tel: stepOnefullData?.tel || patient_all_data?.phone || "",
       countryCode: stepOnefullData?.countryCode || patient_all_data?.countryCode || "",
       email: stepOnefullData?.email || patient_all_data?.email || "",
       date: stepOnefullData?.date || patient_all_data?.dob || "",
@@ -68,6 +69,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
       goal: stepOnefullData?.goal || patient_all_data?.goal || "",
       gender: stepOnefullData?.gender || patient_all_data?.gender || "",
       trainer: stepOnefullData?.trainer || patient_all_data?.trainerID || "",
+      patient_category: stepOnefullData?.patient_category || patient_all_data?.patient_category || "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -238,7 +240,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
         <Row>
 
 
-          <Col lg={6}>
+          <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Date of birth</Form.Label>
               <Form.Control
@@ -255,7 +257,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={6}>
+          <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Assign the trainer to him or her.</Form.Label>
               <Form.Select
@@ -284,6 +286,22 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
                 {formik.errors.trainer}
               </Form.Control.Feedback>
             </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <label>Category</label>
+            <select
+              name="patient_category"
+              className="form-select"
+              value={formik.values.patient_category}
+              onChange={formik.handleChange}
+            >
+              <option value="">Select Block</option>
+              {categoryData?.map((data, index) => (
+                <option key={index} value={data}>
+                  {data}
+                </option>
+              ))}
+            </select>
           </Col>
 
         </Row>

@@ -35,6 +35,9 @@ const EditExercise = ({
     ExercisePermission,
     body_parts,
     exerciseDifficuilty,
+    commonData,
+    trainingType,
+    setActiveTab
 }) => {
     const dispatch = useDispatch();
     const [imagePreview, setImagePreview] = useState(DefaultImage);
@@ -66,6 +69,29 @@ const EditExercise = ({
     const [difficuiltyResponse, setDifficuiltyResponse] = useState();
     const [data, setData] = useState([{ name: "", movements: [] }]);
     const [apiData, setApiData] = useState();
+    const [unit, setUnit] = useState('')
+    const [categories, setCategories] = useState([
+        {
+            category: "",
+            start_point: {
+                sets: null,
+                reps: 0,
+                time: 0,
+            }
+        }
+    ])
+    const [training_type_data, setTraining_type_data] = useState([])
+    const [selectedTrainingType, setSelectedTrainingType] = useState([]);
+
+    const options = trainingType.map((type) => ({
+        value: type,
+        label: type,
+    }));
+
+    useEffect(() => {
+        setSelectedTrainingType(training_type_data.map((type) => ({ value: type, label: type })));
+    }, [training_type_data])
+
 
     const validationSchema = Yup.object().shape({
         exerciseName: Yup.string()
@@ -107,10 +133,13 @@ const EditExercise = ({
                 exerciseImage: data?.imageUrl || "",
             });
             setImagePreview(data?.image_url || DefaultImage);
-            setExerciseType(data?.category);
+            setUnit(data?.unit)
+            setExerciseType(data?.exercise_type);
             setExerciseName(data?.exercise_name);
             setExerciseVideo(data?.video_link);
             setExerciseDescription(data?.description);
+            setCategories(data?.categories)
+            setTraining_type_data(data?.training_type)
             setExerciseImage(data?.image_url);
             const difficuiltValue = data?.difficulty_level?.map((val) => ({
                 name: val,
@@ -168,29 +197,18 @@ const EditExercise = ({
     };
 
     const handleSave = (values) => {
-        const bodyParts = data.filter((entry) => entry.name);
-        if (!data?.length) {
-            setBodyPartError("Please select the body parts");
-            return;
-        }
-        const invalidEntries = data?.filter(
-            (item) => !item.name || !item.movements.length
-        );
 
-        if (invalidEntries.length > 0) {
-            setBodyPartError("");
-            return;
-        }
         dispatch(
             update_exercise({
                 exercise_name: exerciseName,
-                category: exerciseType,
-                difficulty_level: difficuiltyResponse,
-                body_parts: bodyParts,
+                exercise_type: exerciseType,
+                categories: categories,
                 video_link: exerciseVideo,
                 image_url: exerciseImage,
                 description: exerciseDescription,
+                unit:unit,
                 draft: false,
+                training_type: training_type_data,
                 id: id,
                 hasImage: hasImage,
             })
@@ -214,13 +232,14 @@ const EditExercise = ({
         dispatch(
             update_exercise_draft({
                 exercise_name: exerciseName,
-                category: exerciseType,
-                difficulty_level: difficuiltyResponse,
-                body_parts: bodyParts,
+                exercise_type: exerciseType,
+                categories: categories,
                 video_link: exerciseVideo,
                 image_url: exerciseImage,
                 description: exerciseDescription,
                 draft: true,
+                unit:unit,
+                training_type: training_type_data,
                 id: id,
                 hasImage: hasImage,
             })
@@ -235,6 +254,7 @@ const EditExercise = ({
             dispatch(clear_update_exercise_state());
             setHasImage(false);
             setExerciseId(null);
+            setActiveTab("approvalRequest")
         }
         if (is_exercise_updated?.isError) {
             toast.error(is_exercise_updated?.error?.message);
@@ -267,16 +287,38 @@ const EditExercise = ({
         setExerciseName(value);
         setFieldValue("exerciseName", value);
     };
-    const handleExerciseImageChange = (e, setFieldValue) => {
+    const handleExerciseImageChange = async (e, setFieldValue) => {
+        setFieldError("");
         const value = e.target.value;
-        setExerciseImage(value);
-        setFieldValue("exerciseImage", value);
+        const isValid = await checkImageExists(value);
+        if (!isValid) {
+            toast.error("Invalid image URL. Please enter a valid image link.");
+            setExerciseImage("")
+            setFieldValue("exerciseImage", "");
+            return
+        } else {
+            setExerciseImage(value)
+            setFieldValue("exerciseImage", value);
+        }
     };
+
+    const checkImageExists = (url) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+        });
+    };
+
     const handleExerciseVideoChange = (e, setFieldValue) => {
-        const value = e.target.value;
+        setFieldError('')
+        const value = e.target.value
         setExerciseVideo(value);
         setFieldValue("exerciseVideo", value);
+
     };
+
     const handleExerciseDescriptionChange = (e, setFieldValue) => {
         const value = e.target.value;
         setExerciseDescription(value);
@@ -290,14 +332,24 @@ const EditExercise = ({
         }
     }, [body_parts]);
 
-    const handleSelectDifficuilt = (selectedList) => {
-        setDifficuilty([...selectedList]);
+
+    const handleSelectDifficuilt = (index, selectedList) => {
+        setFieldError('');
+
         const formattedResponse = selectedList.map((item) => item.name);
+
+        setCategories((prevCategories) => {
+            return prevCategories.map((category, idx) =>
+                idx === index ? { ...category, category: formattedResponse[0] } : category
+            );
+        });
+
+        setDifficuilty([...selectedList]);
         setDifficuiltyResponse(formattedResponse);
     };
 
     useEffect(() => {
-        if (selectedBodyNames.length && body_parts?.length) {
+        if (selectedBodyNames?.length && body_parts?.length) {
             const newMovements = selectedBodyNames?.flatMap((selected) => {
                 const matchingPart = body_parts?.find(
                     (el) => el.name === selected.name
@@ -340,60 +392,26 @@ const EditExercise = ({
         setDifficuiltOptions(diffcuilty);
     }, [exerciseDifficuilty]);
 
-    const handleNameChange = (index, selectedOption) => {
-        const updatedData = [...data];
-        updatedData[index].name = selectedOption?.value || "";
-        updatedData[index].movements = [];
-        setData(updatedData);
-    };
-
-    const handleMovementChange = (index, selectedOptions) => {
-        const updatedData = [...data];
-        updatedData[index].movements = selectedOptions.map(
-            (option) => option.value
-        );
-        setData(updatedData);
-    };
-
-    const addNewField = () => {
-        setData([...data, { name: "", movements: [] }]);
-    };
-
-    const getMovementsForName = (name) => {
-        const selected = apiData?.find((item) => item.name === name);
-        return selected
-            ? selected.movements.map((movement) => ({
-                value: movement,
-                label: movement,
-            }))
-            : [];
-    };
-
-    const getAvailableNames = () => {
-        const selectedNames = data.map((entry) => entry.name);
-        return apiData
-            ?.filter((item) => !selectedNames.includes(item.name))
-            .map((item) => ({ value: item.name, label: item.name }));
-    };
-
-    const handleDeleteRow = (index) => {
-        setData(data.filter((_, i) => i !== index));
-    };
-
-    const isButtonDisabled = data.some(
-        (item) => item.name.trim() === "" || item.movements.length === 0
-    );
-    
     useEffect(() => {
+        const areCategoriesValid =
+            categories.length > 0 &&
+            categories.every(
+                (cat) =>
+                    cat.category &&
+                    cat.category.trim() !== "" &&
+                    cat.start_point &&
+                    cat.start_point.sets !== null &&
+                    (cat.start_point.reps !== 0 || cat.start_point.time !== 0)
+            );
+
         const isValid =
             exerciseType &&
             exerciseName &&
             exerciseVideo &&
             exerciseDescription &&
             exerciseImage &&
-            !isButtonDisabled &&
-            Array.isArray(difficuiltyResponse) &&
-            difficuiltyResponse.length > 0;
+            training_type_data.length > 0 &&
+            areCategoriesValid;
 
         setDraft(!isValid);
     }, [
@@ -402,9 +420,81 @@ const EditExercise = ({
         exerciseVideo,
         exerciseDescription,
         exerciseImage,
-        isButtonDisabled,
-        difficuiltyResponse,
+        categories,
+        training_type_data
     ]);
+
+    const handleAddNewCategory = () => {
+        const areFieldsFilled = categories.every(category =>
+            category.category !== "" &&
+            category.start_point.sets !== null &&
+            (category.start_point.reps !== 0 || category.start_point.time !== 0)
+        );
+
+        if (!areFieldsFilled) {
+            toast.error("Please fill all fields before adding a new category.");
+            return;
+        }
+
+        let newCategory = {
+            category: "",
+            start_point: {
+                sets: null,
+                reps: null
+            }
+        };
+        setCategories((prevCategories) => {
+            const allCategories = [...prevCategories];
+            allCategories.push(newCategory);
+            return allCategories;
+        });
+    };
+
+    const handleSetCategory = (i, value) => {
+        setCategories((prevCategories) => {
+            return prevCategories.map((category, index) => {
+                if (index === i) {
+                    return {
+                        ...category,
+                        category: value
+                    }
+                }
+                return category
+            })
+        })
+    }
+
+    const handleUpdateStartPoint = (i, field, value) => {
+        setCategories((prevCategories) =>
+            prevCategories.map((category, index) => {
+                if (index === i) {
+                    let updatedStartPoint = {
+                        ...category.start_point,
+                        [field]: value,
+                    };
+
+                    if (field === "unit") {
+                        if (value === "sec") {
+                            updatedStartPoint.reps = 0;
+                        } else {
+                            updatedStartPoint.time = 0;
+                        }
+                    }
+
+                    return {
+                        ...category,
+                        start_point: updatedStartPoint,
+                    };
+                }
+                return category;
+            })
+        );
+    };
+
+    const handleSetTrainingType = (selectedOptions) => {
+        const selectedValues = selectedOptions.map((option) => option.value);
+        setTraining_type_data(selectedValues);
+    };
 
     return (
         <Modal
@@ -452,6 +542,7 @@ const EditExercise = ({
                                                 as="select"
                                                 name="exerciseType"
                                                 className="form-control"
+                                                value={exerciseType}
                                                 disabled={
                                                     !ExercisePermission?.canUpdate ||
                                                     tab === "approvalRequest" ||
@@ -470,42 +561,42 @@ const EditExercise = ({
                                             </Field>
                                         </Form.Group>
                                         <Form.Group className="mb-2">
-                                                    <Form.Label>Exercise Name</Form.Label>
-                                                    <Field
-                                                        type="text"
-                                                        name="exerciseName"
-                                                        placeholder="Enter exercise name"
-                                                        className="form-control"
-                                                        disabled={
-                                                            !ExercisePermission?.canUpdate ||
-                                                            tab === "approvalRequest" ||
-                                                            tab === "active"
-                                                        }
-                                                        onChange={(e) =>
-                                                            handleExerciseNameChange(e, setFieldValue)
-                                                        }
-                                                    />
-                                                </Form.Group>
-                                            
-                                                <Form.Group className="mb-2">
-                                                    <Form.Label>Exercise Image Url</Form.Label>
-                                                    <Field
-                                                        type="text"
-                                                        name="exerciseImage"
-                                                        placeholder="Enter image url"
-                                                        className="form-control"
-                                                        onChange={(e) =>
-                                                            handleExerciseImageChange(e, setFieldValue)
-                                                        }
-                                                        value={exerciseImage}
-                                                        disabled={
-                                                            !ExercisePermission?.canUpdate ||
-                                                            tab === "approvalRequest" ||
-                                                            tab === "active"
-                                                        }
-                                                    />
-                                                </Form.Group>
-                                       
+                                            <Form.Label>Exercise Name</Form.Label>
+                                            <Field
+                                                type="text"
+                                                name="exerciseName"
+                                                placeholder="Enter exercise name"
+                                                className="form-control"
+                                                disabled={
+                                                    !ExercisePermission?.canUpdate ||
+                                                    tab === "approvalRequest" ||
+                                                    tab === "active"
+                                                }
+                                                onChange={(e) =>
+                                                    handleExerciseNameChange(e, setFieldValue)
+                                                }
+                                            />
+                                        </Form.Group>
+
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>Exercise Image Url</Form.Label>
+                                            <Field
+                                                type="text"
+                                                name="exerciseImage"
+                                                placeholder="Enter image url"
+                                                className="form-control"
+                                                onChange={(e) =>
+                                                    handleExerciseImageChange(e, setFieldValue)
+                                                }
+                                                value={exerciseImage}
+                                                disabled={
+                                                    !ExercisePermission?.canUpdate ||
+                                                    tab === "approvalRequest" ||
+                                                    tab === "active"
+                                                }
+                                            />
+                                        </Form.Group>
+
                                         <Form.Group className="mb-2">
                                             <Form.Label>Exercise Video Link</Form.Label>
                                             <Field
@@ -524,91 +615,19 @@ const EditExercise = ({
                                             />
                                         </Form.Group>
                                     </Col>
-                                  <Col lg={6} className="image_view">
-                                                    <Row>
-                                                      <Col lg={12}>
-                                                      <Form.Label>Exercise Image</Form.Label>
-                                                      <div className="exercise_view_image">
-                                                          {/* {AddIMage} */}
-                                                          <img src={exerciseImage} className="img-fluid"/>
-                                                          
-                                                      </div>
-                                                      </Col>
-                                                      </Row>
-                                                      </Col>
+                                    <Col lg={6} className="image_view">
+                                        <Row>
+                                            <Col lg={12}>
+                                                <Form.Label>Exercise Image</Form.Label>
+                                                <div className="exercise_view_image">
+                                                    {/* {AddIMage} */}
+                                                    <img src={exerciseImage} className="img-fluid" />
+
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </Col>
                                     <Col lg={12}>
-                  <div className="modal_card mt-3">
-                  <h5 className="flex-grow-1 mb-2">Categories and Blocks</h5>
-                      <Row>
-                        <Col lg={6}>
-                        <Form.Group className="mb-2">
-                            <Form.Label>Difficulty level</Form.Label>
-                            <Select
-                              isMulti
-                              value={
-                                difficulty && difficulty.length > 0
-                                  ? difficulty.map((item) => ({
-                                    value: item.name,
-                                    label: item.name,
-                                  }))
-                                  : null
-                              }
-                              options={difficuiltOptions?.map((option) => ({
-                                value: option.name,
-                                label: option.name,
-                              }))}
-                              onChange={(selectedOptions) => {
-                                const selectedList = selectedOptions.map((option) => ({
-                                  name: option.value,
-                                }));
-                                handleSelectDifficuilt(selectedList);
-                              }}
-                              placeholder="Select Difficulty"
-                              className="flex-grow-1"
-                            />
-                          </Form.Group>
-                        </Col>
-              
-                        <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
-                        <button class="cmn_btn add_row" disabled="">Add Categories</button>
-                        </Col>
-                        <Col lg={6}>
-                            <label>Blocks</label>
-                            <select name="" id="" className="form-select">
-                              <option value="" >Select Block</option>
-                            </select>
-                        </Col>
-                        <Col lg={6}>                     
-                          <div className="d-flex align-items-center gap-2">
-                            <div>
-                              <label>Sets</label>
-                              <Field
-                                  type="text"
-                                  name="sets"
-                                  placeholder="2"
-                                  className="form-control"
-                                
-                                />
-                            </div>
-                            <div>
-                              <label>Reps</label>
-                              <Field
-                                  type="text"
-                                  name="sets"
-                                  placeholder="Enter Reps"
-                                  className="form-control"
-                                
-                                />
-                            </div>
-                              <span className="minus align-self-end mb-2 cursor-pointer">x</span>
-                              <span className="minus plus align-self-end mb-2 cursor-pointer">+</span>
-                          </div>
-                        </Col>
-                   
-                      </Row>
-                      </div>
-                </Col>
-                                    {/* <Col lg={12}>
                                         <Form.Group className="">
                                             <Form.Label>Exercise Description</Form.Label>
                                             <Field
@@ -627,7 +646,111 @@ const EditExercise = ({
                                                 }
                                             />
                                         </Form.Group>
-                                    </Col> */}
+                                    </Col>
+                                    <Col lg={12}>
+                                        <div className="modal_card mt-3">
+                                            <h5 className="flex-grow-1 mb-2">Exercise Type</h5>
+                                            <Row>
+                                                <Col lg={6}>
+                                                    <label>Exercise Unit</label>
+                                                    <Col lg={6}>
+                                                        <label>Unit</label>
+                                                        <select className="form-select" onChange={(e) => setUnit(e.target.value)} value={unit}>
+                                                            <option value="" selected>Select Unit</option>
+                                                            <option value="rotations">Rotations</option>
+                                                            <option value="sec">Sec</option>
+                                                            <option value="side">Side</option>
+                                                            <option value="steps">Steps</option>
+                                                            <option value="plane">Plane</option>
+                                                        </select>
+                                                    </Col>
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </Col>
+
+                                    <Col lg={12}>
+                                        <div className="modal_card mt-3">
+                                            <h5 className="flex-grow-1 mb-2">Categories and Blocks</h5>
+                                            <Row>
+                                                {categories?.map((list, i) => {
+                                                    let val = [list.category]
+                                                    return (
+                                                        <>
+                                                            <Col lg={6}>
+                                                                <label>Category</label>
+                                                                <select onChange={(e) => handleSetCategory(i, e.target.value)} className="form-select" value={categories[i]?.category}>
+                                                                    <option value="" selected>Select Category</option>
+                                                                    {commonData?.map((data) => {
+                                                                        return <option value={data}>{data}</option>;
+                                                                    })}
+                                                                </select>
+                                                            </Col>
+
+                                                            <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
+                                                                {i === 0 && <button class="cmn_btn add_row" onClick={() => handleAddNewCategory()}>Add Categories</button>}
+                                                            </Col>
+
+                                                            <Col lg={9}>
+                                                                <div className="d-flex align-items-center gap-2">
+                                                                    <div>
+                                                                        <label>Sets</label>
+                                                                        <Field
+                                                                            type="text"
+                                                                            name="sets"
+                                                                            placeholder="Enter sets"
+                                                                            className="form-control"
+                                                                            value={categories[i]?.start_point?.sets}
+                                                                            onChange={(e) => handleUpdateStartPoint(i, "sets", Number(e.target.value))}
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label>Reps</label>
+                                                                        <Field
+                                                                            type="text"
+                                                                            name="sets"
+                                                                            placeholder="Enter Reps"
+                                                                            className="form-control"
+                                                                            disabled={categories[i]?.start_point?.unit === "sec"}
+                                                                            value={categories[i]?.start_point?.reps}
+                                                                            onChange={(e) => handleUpdateStartPoint(i, "reps", Number(e.target.value))}
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label>Time</label>
+                                                                        <Field
+                                                                            type="text"
+                                                                            name="sets"
+                                                                            placeholder="Enter Time"
+                                                                            className="form-control"
+                                                                            disabled={categories[i]?.start_point?.unit !== "sec"}
+                                                                            value={categories[i]?.start_point?.time}
+                                                                            onChange={(e) => handleUpdateStartPoint(i, "time", Number(e.target.value))}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </Col>
+                                                            {/* <Col lg={3}>
+                                                                <label>Unit</label>
+                                                                <select className="form-select" onChange={(e) => handleUpdateStartPoint(i, "unit", e.target.value)} value={categories[i]?.start_point?.unit}>
+                                                                    <option value="" selected>Select Unit</option>
+                                                                    <option value="rotations">Rotations</option>
+                                                                    <option value="sec">Sec</option>
+                                                                    <option value="side">Side</option>
+                                                                    <option value="steps">Steps</option>
+                                                                    <option value="plane">Plane</option>
+                                                                </select>
+                                                            </Col> */}
+
+                                                        </>
+                                                    )
+                                                })}
+
+
+                                            </Row>
+                                        </div>
+                                    </Col>
+
                                     <Col lg={12}>
                                         {bodyPartError && (
                                             <span className="error text-danger">{bodyPartError}</span>
@@ -636,91 +759,26 @@ const EditExercise = ({
                                             <span className="error text-danger">{fieldError}</span>
                                         )}
                                     </Col>
-                                    {
-                                        <Col lg={12}>
-                                            <div className="modal_card mt-3">
-                                                <div className="d-flex justify-content-between">
-                                                    <h5 className="flex-grow-1 mb-0">
-                                                        Body Parts and Movements
-                                                    </h5>
-                                                    {ExercisePermission?.canUpdate &&
-                                                        (tab === "draft" || tab === "rejected") && (
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    addNewField();
-                                                                }}
-                                                                className="cmn_btn add_row"
-                                                                disabled={isButtonDisabled}
-                                                            >
-                                                                Add New Field
-                                                            </button>
-                                                        )}
-                                                </div>
-                                                {data.map((entry, index) => (
-                                                    <div key={index} className="row mb-3">
-                                                        <div className="col-lg-6">
-                                                            <label>Select Name:</label>
-                                                            <Select
-                                                                value={
-                                                                    entry.name
-                                                                        ? { value: entry.name, label: entry.name }
-                                                                        : null
-                                                                }
-                                                                options={getAvailableNames()}
-                                                                onChange={(selectedOption) =>
-                                                                    handleNameChange(index, selectedOption)
-                                                                }
-                                                                placeholder="Select Name"
-                                                                isDisabled={
-                                                                    !ExercisePermission?.canUpdate ||
-                                                                    tab === "approvalRequest" ||
-                                                                    tab === "active"
-                                                                }
-                                                            />
-                                                        </div>
 
-                                                        <div className="col-lg-6">
-                                                            <label>Select Movements:</label>
-                                                            <div className="d-flex align-items-center gap-2">
-                                                                <Select
-                                                                    isMulti
-                                                                    value={entry.movements.map((movement) => ({
-                                                                        value: movement,
-                                                                        label: movement,
-                                                                    }))}
-                                                                    options={getMovementsForName(entry.name)}
-                                                                    onChange={(selectedOptions) =>
-                                                                        handleMovementChange(
-                                                                            index,
-                                                                            selectedOptions || []
-                                                                        )
-                                                                    }
-                                                                    placeholder="Select Movements"
-                                                                    isDisabled={
-                                                                        !entry.name ||
-                                                                        !ExercisePermission?.canUpdate ||
-                                                                        tab === "approvalRequest" ||
-                                                                        tab === "active"
-                                                                    }
-                                                                    className="flex-grow-1"
-                                                                />
-                                                                {data?.length > 1 && (
-                                                                    <span
-                                                                        className="minus align-self-end mb-2"
-                                                                        style={{ cursor: "pointer" }}
-                                                                        onClick={() => handleDeleteRow(index)}
-                                                                    >
-                                                                        x
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </Col>
-                                    }
+                                    <Col lg={12}>
+                                        <div className="modal_card mt-3">
+                                            <h5 className="flex-grow-1 mb-2">Training Type</h5>
+                                            <Row>
+                                                <Col lg={6}>
+                                                    <label>Training Type</label>
+                                                    <Select
+                                                        options={options}
+                                                        isMulti
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                        placeholder="Select Training type"
+                                                        value={selectedTrainingType}
+                                                        onChange={handleSetTrainingType}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </Col>
                                 </Row>
                                 {ExercisePermission?.canUpdate &&
                                     tab !== "approvalRequest" &&
@@ -746,7 +804,6 @@ const EditExercise = ({
                                                     </button>
                                                 )}
 
-                                                {/* Edit As Draft Button */}
                                                 {tab !== "active" &&
                                                     tab !== "approvalRequest" &&
                                                     !admin && (
@@ -757,7 +814,7 @@ const EditExercise = ({
                                                             }}
                                                             className="btn cmn_btn"
                                                         >
-                                                            Save as draft{" "}
+                                                            Edit as draft{" "}
                                                             {is_exercise_updated_draft?.isLoading && (
                                                                 <Spinner animation="border" role="status">
                                                                     <span className="visually-hidden">

@@ -34,6 +34,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
     const [stepThreefullData, setStepThreeFullData] = useState()
     const [is_health_issue, setIs_health_issue] = useState(false)
     const [selected_health_issue, setSelected_health_issue] = useState([])
+    const [categoryData,setCategoryData] = useState([])
     const [height_unit, setHeight_unit] = useState("cm")
     const [weight_unit, setWeight_unit] = useState("kg")
     const [trainer_name, setTrainer_name] = useState("")
@@ -73,6 +74,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
             setWorkout_place(common_data?.data?.data?.workout_place)
             setWorkout_times(common_data?.data?.data?.workout_times)
             setWorkout_type(common_data?.data?.data?.workout_types)
+            setCategoryData(common_data?.data?.data?.patient_category)
         }
     }, [common_data])
     useEffect(() => {
@@ -173,7 +175,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
                                 })}
                                 </ul>
                             )}
-                    {step === 1 && step_form_open && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} setStepOneFullData={setStepOneFullData} stepOnefullData={stepOnefullData} setHeight_unit={setHeight_unit} height_unit={height_unit} setWeight_unit={setWeight_unit} weight_unit={weight_unit} setTrainer_name={setTrainer_name} />}
+                    {step === 1 && step_form_open && <StepFormFirst gender={gender} goal={goal} trainers_list={trainers_list} setStep={setStep} setStepOneFullData={setStepOneFullData} stepOnefullData={stepOnefullData} setHeight_unit={setHeight_unit} height_unit={height_unit} setWeight_unit={setWeight_unit} weight_unit={weight_unit} setTrainer_name={setTrainer_name} categoryData={categoryData}/>}
                     {step === 2 && step_form_open && <StepFormSecond health_issue={health_issue} setStep={setStep} setIs_health_issue={setIs_health_issue} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} is_health_issue={is_health_issue}  setStep_form_open={setStep_form_open}/>}
                     {step === 3 && step_form_open && <StepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} setStepThreeFullData={setStepThreeFullData} stepThreefullData={stepThreefullData}  setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} />}
                     {step === 4 && step_form_open && <LastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleSubmit={handleSubmit} onboarding_process={onboarding_process} />}

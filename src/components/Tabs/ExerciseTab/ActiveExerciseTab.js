@@ -23,7 +23,7 @@ import { formatDate } from '../../../common/formatDate/formatDate';
 import ImagePreview from '../../../common/imagePreview/ImagePreviewer';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, setActiveTab, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page, commonData, trainingType }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false);
@@ -297,6 +297,9 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
         ExercisePermissionApproveReject={ExercisePermissionApproveReject}
         body_parts={body_parts}
         exerciseDifficuilty={exerciseDifficuilty}
+        commonData={commonData}
+        trainingType={trainingType}
+        setActiveTab={setActiveTab}
       />
       <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_exercise_deleted?.isLoading} />
       <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />

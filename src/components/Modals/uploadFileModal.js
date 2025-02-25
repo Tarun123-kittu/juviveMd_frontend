@@ -260,7 +260,6 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                                     const isRowMatched = row.some(cell =>
                                         show_success.some(success => success.exercise_name === cell)
                                     );
-                                    console.log(isRowMatched, "this is the row matched")
 
                                     return (
                                         <tr

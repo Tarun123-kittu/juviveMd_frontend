@@ -8,7 +8,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name }) => {
+const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name, categoryData }) => {
   const [phone, setPhone] = useState('');
   const [trainer_names, setTrainer_names] = useState([])
   const validationSchema = Yup.object({
@@ -116,10 +116,10 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
 
 
   const handleValidatePhone = (val, setFieldValue, values) => {
-  
+
     setPhone(val);
-    const parsedPhone = parsePhoneNumberFromString(val); 
-  
+    const parsedPhone = parsePhoneNumberFromString(val);
+
     if (parsedPhone) {
       setFieldValue('tel', parsedPhone.nationalNumber);
       if (values.countryCode !== parsedPhone.countryCallingCode) {
@@ -256,7 +256,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
           </Col>
         </Row>
         <Row>
-          <Col lg={6}>
+          <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Date of birth</Form.Label>
               <Form.Control
@@ -273,7 +273,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={6}>
+          <Col lg={4}>
             <Form.Group className="mb-2">
               <Form.Label>Assign the trainer to him or her.</Form.Label>
               <Form.Select
@@ -302,6 +302,23 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+          <Col lg={4}>
+            <label>Category</label>
+            <select
+              name="patient_category"
+              className="form-select"
+              value={stepOnefullData?.patient_category}
+              onChange={formik.handleChange}
+            >
+              <option value="">Select Block</option>
+              {categoryData?.map((data, index) => (
+                <option key={index} value={data}>
+                  {data}
+                </option>
+              ))}
+            </select>
+          </Col>
+
         </Row>
         <Row>
           <Col lg={6}>

@@ -24,7 +24,6 @@ const Sidebar = () => {
 
   const location = useLocation();
   const { pathname } = location
-  console.log(pathname, "this isthe pathnam")
   const navigate = useNavigate()
   const [quotes, setQuotes] = useState([])
   const [showDeleteModal, setShowDeleteModal] = useState(false)

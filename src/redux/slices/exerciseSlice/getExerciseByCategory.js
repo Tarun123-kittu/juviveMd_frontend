@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 export const get_exercise_by_category = createAsyncThunk(
     "get_exercise_by_category",
-    async ({ category, difficuilty }, thunkAPI) => {
+    async ({ category, patient_category, training_type }, thunkAPI) => {
         const token = Cookies.get("authToken");
         if (!token) {
             return thunkAPI.rejectWithValue({
@@ -12,29 +12,35 @@ export const get_exercise_by_category = createAsyncThunk(
         }
 
         const validToken = "Bearer " + token;
+
         try {
+            const body = JSON.stringify({
+                 patient_category: patient_category,
+                exercise_type: category,
+                training_types: training_type 
+            });
+
             const requestOptions = {
-                method: "GET",
+                method: "POST", 
                 headers: {
                     Authorization: validToken,
+                    "Content-Type": "application/json" 
                 },
-                redirect: "follow",
+                body: body,
             };
 
             const response = await fetch(
-                `${process.env.REACT_APP_BACKEND_URL}/exercises?category=${category}&difficulty_level=${difficuilty}`,
+                `${process.env.REACT_APP_BACKEND_URL}/exercises`,
                 requestOptions
             );
-
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType?.includes("application/json")) {
-                throw new Error(
-                    `Unexpected response: ${response.statusText || "Error"}`
-                );
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API Error: ${response.status} - ${errorText}`);
             }
 
             const result = await response.json();
             return result;
+
         } catch (error) {
             return thunkAPI.rejectWithValue({
                 message: error.message || "Unknown error occurred.",
@@ -42,7 +48,6 @@ export const get_exercise_by_category = createAsyncThunk(
         }
     }
 );
-
 
 const getExerciseByCategory = createSlice({
     name: "getExerciseByCategory",

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const update_exercise_draft = createAsyncThunk("update_exercise_draft", async ({ exercise_name, category, video_link, image_url, description, id, hasImage, draft, difficulty_level, body_parts }, thunkAPI) => {
+export const update_exercise_draft = createAsyncThunk("update_exercise_draft", async ({ exercise_name, exercise_type, video_link,unit, categories, image_url, description, draft, training_type, id, hasImage }, thunkAPI) => {
     const token = Cookies.get("authToken");
     const validToken = "Bearer " + token;
     try {
@@ -10,15 +10,16 @@ export const update_exercise_draft = createAsyncThunk("update_exercise_draft", a
         myHeaders.append("Content-Type", "application/json"); 
         const body = {
             exercise_name,
-            category,
+            exercise_type,
             video_link,
             image_url, 
             description,
             id,
             hasImage,
+            unit,
             draft,
-            difficulty_level, 
-            body_parts 
+            categories, 
+            training_type 
         };
 
         const requestOptions = {

@@ -12,9 +12,13 @@ import toast from "react-hot-toast";
 import { get_patient_exercise_plan, clear_get_patient_exercise_plan_state } from "../../redux/slices/patientPlan/getPatientExercisePlan";
 import Loader from "../../common/Loader/Loader";
 import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } from "../../redux/slices/patientPlan/updatePatientExercisePlan";
+import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
+import { set } from "date-fns";
 
 const daysData = {
   category: "",
+  patient_category: "",
+  training_type: [],
   exerciseId: "",
   exerciseName: "Untitled",
   exerciseImage: "",
@@ -22,22 +26,13 @@ const daysData = {
   difficulty_level: [],
   active: true,
   bodyParts: [],
-  sets: [],
-  intensity: 0,
-  flexibilityField: [
+  sets: [
     {
-      reps: "",
-      weight: { value: null, unit: "kg" },
-    },
-  ],
-  cardioFields: [
-    {
-      time: { value: null, unit: "sec" },
-      heartRateTarget: { value: null, unit: "bpm" },
-      distanceGoal: { value: null, unit: "km" },
-      pace: "",
-    },
-  ],
+      reps: 0,
+      time: { value: 0, unit: "sec" },
+      weight: { value: 0, unit: "kg" },
+    }
+  ]
 }
 
 const PatientPlanComponent = () => {
@@ -52,6 +47,7 @@ const PatientPlanComponent = () => {
   const navigate = useNavigate()
   const patientId = location.state.patientId
   const editable = location.state.editable
+  const hasPlan = location.state.hasPlan
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
   const exercisePlanId = location.state.exercisePlanId
@@ -63,6 +59,10 @@ const PatientPlanComponent = () => {
   const [savePlanModal, setSavePlanModal] = useState(false)
   const [exercise_category, setExercise_category] = useState()
   const [body_parts, setBody_parts] = useState()
+  const [patient_category, setPatient_category] = useState([])
+  const [training_type, setTraining_type] = useState([])
+  const [selected_patient_category, setSelected_patient_category] = useState()
+  const [selected_training_type, setSelected_training_type] = useState()
   const [activeTab, setActiveTab] = useState("Monday")
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [planValidFrom, setPlanValidFrom] = useState('')
@@ -76,9 +76,25 @@ const PatientPlanComponent = () => {
     Saturday: [daysData],
     Sunday: [daysData],
   });
-  console.log(days, "this is the days")
+
+  useEffect(() => {
+    return () => {
+      setDays({
+        Monday: [daysData],
+        Tuesday: [daysData],
+        Wednesday: [daysData],
+        Thursday: [daysData],
+        Friday: [daysData],
+        Saturday: [daysData],
+        Sunday: [daysData],
+      })
+    }
+  }, [])
+
+
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
+  const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
 
   useEffect(() => {
     dispatch(common_data_api())
@@ -95,70 +111,37 @@ const PatientPlanComponent = () => {
       setExercise_category(common_data?.data?.data?.exercise_category)
       setBody_parts(common_data?.data?.data?.bodyParts)
       setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
+      setPatient_category(common_data?.data?.data?.patient_category)
+      setTraining_type(common_data?.data?.data?.training_type)
     }
   }, [common_data])
+
+  useEffect(() => {
+    if (!hasPlan && !editable) {
+      dispatch(fetchPlanSuggestions({ patientId }))
+    }
+  }, [hasPlan])
 
   const handleSavePlan = () => {
     try {
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
-        // Filter exercises that pass all validations
-        const validExercises = days[day].filter((exercise) => {
-          // Check if category is present
-          if (!exercise.category) return false;
+        const validExercises = days[day]
+          .map((exercise) => ({
+            exerciseId: exercise.exerciseId,
+            sets: exercise.sets.map((set) => ({
+              time: {
+                value: set.time.value,
+                unit: set.time.unit,
+              },
+              weight: {
+                value: set.weight.value,
+                unit: set.weight.unit,
+              },
+              reps: set.reps,
+            })),
+          }))
+          .filter(exercise => exercise.exerciseId);
 
-          // Validation based on category
-          if (exercise.category === "strength exercise") {
-            // Validate flexibilityField
-            const isFlexibilityValid = exercise.flexibilityField.every((field) =>
-              Object.values(field).every(
-                (value) => value !== null && value !== "" && value !== undefined
-              )
-            );
-
-            if (!isFlexibilityValid) {
-              throw new Error(
-                `Validation failed for a strength exercise in ${day}. Ensure all flexibilityField values are provided.`
-              );
-            }
-          } else if (exercise.category === "cardio exercise") {
-            // Validate cardioFields
-            const isCardioValid = exercise.cardioFields.every((field, index) => {
-
-              return Object.entries(field).every(([key, value]) => {
-                if (key === "heartRateTarget") {
-                  return (
-                    value &&
-                    typeof value === "object" &&
-                    value.value !== null &&
-                    value.value !== "" &&
-                    value.value !== undefined &&
-                    value.unit !== null &&
-                    value.unit !== "" &&
-                    value.unit !== undefined
-                  );
-                }
-                return value !== null && value !== "" && value !== undefined;
-              });
-            });
-
-            if (!isCardioValid) {
-              throw new Error(
-                `Validation failed for a cardio exercise in ${day}. Ensure all cardioFields values are provided.`
-              );
-            }
-          }
-
-          // Check other required fields
-          return (
-            exercise.exerciseId &&
-            exercise.exerciseName &&
-            exercise.exerciseImage !== "" &&
-            exercise.exerciseVideo !== "" &&
-            exercise.intensity >= 0
-          );
-        });
-
-        // Include the day if it has valid exercises
         if (validExercises.length > 0) {
           acc[day] = validExercises;
         }
@@ -170,18 +153,25 @@ const PatientPlanComponent = () => {
         alert("No valid exercises found. Please ensure all required fields are completed.");
         return;
       }
+
+      const payload = {
+        patientId,
+        planValidFrom,
+        planValidTo,
+        days: validatedPlan
+      };
+
       if (editable && exercisePlanId) {
-        dispatch(updatePatientExercisePlan({ planId: exercisePlanId, patientId, planValidFrom, planValidTo, days: validatedPlan }))
+        dispatch(updatePatientExercisePlan({ planId: exercisePlanId, ...payload }));
       } else {
-        dispatch(
-          create_patient_plan({ patientId, planValidFrom, planValidTo, days: validatedPlan })
-        );
+        dispatch(create_patient_plan({ payload }));
       }
     } catch (error) {
       console.error("Error during plan validation:", error.message);
       alert(error.message);
     }
   };
+
 
   useEffect(() => {
     if (isPlanCreated?.isSuccess) {
@@ -221,48 +211,24 @@ const PatientPlanComponent = () => {
       };
 
       const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
-        acc[day] = isPlanExercise.data.data.days[day].map((exercise) => {
-          if (exercise.category === "strength exercise") {
-            return {
-              ...exercise,
-              exerciseId : exercise.exerciseDetails?.id,
-              exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
-              exerciseImage: exercise.exerciseDetails?.image_url,
-              exerciseVideo: exercise.exerciseDetails?.video_link,
-              active: true,
-              bodyParts: exercise.exerciseDetails?.body_parts,
-              flexibilityField: exercise.sets.map((val) => ({
-                reps: val.reps,
-                weight: { value: val.weight.value, unit: val.weight.unit },
-              })),
-              cardioFields: [{
-                time: { value: null, unit: "sec" },
-                heartRateTarget: { value: null, unit: "bpm" },
-                distanceGoal: { value: null, unit: "km" },
-                pace: "",
-              }],
-            };
-          } else {
-            return {
-              ...exercise,
-              exerciseId : exercise.exerciseDetails?.id,
-              exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
-              exerciseImage: exercise.exerciseDetails?.image_url,
-              exerciseVideo: exercise.exerciseDetails?.video_link,
-              active: true,
-              bodyParts: exercise.exerciseDetails?.body_parts,
-              cardioFields: exercise.sets.map((val) => ({
-                time: { value: val.time.value, unit: val.time.unit },
-                heartRateTarget: { value: val.heartRateTarget.value, unit: "bpm" },
-                distanceGoal: { value: val.distanceGoal.value, unit: val.distanceGoal.unit },
-                pace: val.pace,
-              })),
-              flexibilityField: [{
-                reps: "",
-                weight: { value: null, unit: "kg" },
-              }],
-            };
-          }
+        acc[day] = isPlanExercise.data.data.days[day].map((exercise, i) => {
+          return {
+            ...exercise,
+            exerciseId: exercise.exerciseDetails?.id,
+            category: exercise.exerciseDetails?.exercise_type,
+            exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
+            patient_category: exercise?.exerciseDetails?.categories[i]?.category,
+            exerciseImage: exercise.exerciseDetails?.image_url,
+            exerciseVideo: exercise.exerciseDetails?.video_link,
+            training_type: exercise.exerciseDetails?.training_type,
+            active: true,
+            bodyParts: exercise.exerciseDetails?.body_parts,
+            sets: exercise.sets.map((val) => ({
+              reps: val.reps,
+              weight: { value: val.weight.value, unit: val.weight.unit },
+              time: { value: val.time.value, unit: val.time.unit },
+            })),
+          };
         });
         return acc;
       }, {});
@@ -272,8 +238,58 @@ const PatientPlanComponent = () => {
       setDays(updatedDays);
       setPlanValidFrom(isPlanExercise.data.data.planValidFrom);
       setPlanValidTo(isPlanExercise.data.data.planValidTo);
+      setSelected_patient_category(isPlanExercise.data.data.patient_category);
+      setSelected_training_type(isPlanExercise.data.data.training_type);
     }
   }, [isPlanExercise]);
+
+
+  useEffect(() => {
+    if (suggested_plans?.isSuccess && !editable) {
+      const staticDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+      const updatedDays = staticDays.reduce((acc, day) => {
+        const dayExercises = suggested_plans?.data?.data?.days?.[day] || [];
+
+        acc[day] = dayExercises.length
+          ? dayExercises.map((exercise) => ({
+            category: exercise.exercise_type || "",
+            patient_category: exercise?.patient_category || "A",
+            training_type: exercise.training_type || [],
+            exerciseId: exercise.id || "",
+            exerciseName: exercise.exercise_name || "Untitled",
+            exerciseImage: exercise.image_url || "",
+            exerciseVideo: exercise.video_link || "",
+            difficulty_level: [],
+            active: true,
+            bodyParts: [],
+            sets: exercise.categories?.length
+              ? exercise.categories.map((category) => ({
+                reps: category.start_point?.reps || 0,
+                time: { value: category.start_point?.time || 0, unit: "sec" },
+                weight: { value: category.start_point?.weight || 0, unit: "kg" },
+              }))
+              : [
+                {
+                  reps: 0,
+                  time: { value: 0, unit: "sec" },
+                  weight: { value: 0, unit: "kg" },
+                },
+              ],
+          }))
+          : [daysData];
+
+        return acc;
+      }, {});
+      setDays(updatedDays);
+
+      const firstExercise = suggested_plans?.data?.data?.days?.Monday?.[0];
+      if (firstExercise) {
+        setSelected_patient_category(firstExercise.patient_category || "A");
+        setSelected_training_type(firstExercise.training_type || []);
+      }
+    }
+  }, [suggested_plans, editable]);
 
   return (
     <div className="wrapper">
@@ -301,6 +317,12 @@ const PatientPlanComponent = () => {
                     exerciseDifficuilty={exerciseDifficuilty}
                     patientId={patientId}
                     editable={editable}
+                    patient_category={patient_category}
+                    training_type={training_type}
+                    setSelected_patient_category={setSelected_patient_category}
+                    selected_patient_category={selected_patient_category}
+                    setSelected_training_type={setSelected_training_type}
+                    selected_training_type={selected_training_type}
                   />
                 )}
               </Tab>

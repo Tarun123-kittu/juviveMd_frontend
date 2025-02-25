@@ -22,6 +22,7 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
                 "unit": height_unit ? height_unit : patient_details?.height?.unit,
                 "value": stepOnefullData?.height ? stepOnefullData?.height : patient_details?.height?.value
             },
+            "patient_category": stepOnefullData?.patient_category ? stepOnefullData?.patient_category : patient_details?.patient_category,
             "weight": {
                 "unit": weight_unit ? weight_unit : patient_details?.weight?.unit,
                 "value": stepOnefullData?.weight ? stepOnefullData?.weight : patient_details?.weight?.value

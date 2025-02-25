@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef  } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Form, Row, Col, Button, InputGroup, Container } from "react-bootstrap";
 import Nav from 'react-bootstrap/Nav';
 import Tab from "react-bootstrap/Tab";
@@ -8,83 +8,63 @@ import { get_patient_difficuilties, clear_patient_difficuilties_state } from '..
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import toast from 'react-hot-toast';
-import { parse } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
-const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable }) => {
-    console.log(days[eventData],"this is the daus")
+const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable, patient_category, training_type, setSelected_patient_category, selected_patient_category, setSelected_training_type, selected_training_type }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [difficuilty, setDifficuilty] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
     const [selectedCategory, setSelectedCategory] = useState('')
     const [exercise, setExercise] = useState()
-    console.log(exercise,"this is the exercisess")
     const [data, setData] = useState([{ name: "", movements: [] }]);
     const patient_difficuilty = useSelector((store) => store.PATIENT_DIFFICUILTIES)
     const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY)
-    console.log(exercise_details,"this is the exercise difficuilty")
     const hasRun = useRef(false);
 
+    const options = training_type.map((type) => ({
+        value: type,
+        label: type,
+    }));
+
     useEffect(() => {
-        if(editable){
+        if (editable) {
             setSelectedCategory(days[eventData][selectedIndex].category)
-            setDifficuilty(days[eventData][selectedIndex].difficulty_level[0])
         }
-    }, [days,selectedIndex])
+    }, [days, selectedIndex])
 
     const newExerciseData = {
         category: "",
+        patient_category: "",
+        training_type: [],
         exerciseId: "",
         exerciseName: "Untitled",
         exerciseImage: "",
         exerciseVideo: "",
-        difficulty_level: [difficuilty ? difficuilty : patient_difficuilty?.data?.data?.exercise_difficulty],
+        difficulty_level: [],
         active: true,
-        sets: [],
-        intensity: 0,
-        flexibilityField: [{
-            reps: "",
-            weight: { value: null, unit: "kg" }
-        }],
-        cardioFields: [{
-            time: { value: null, unit: "sec" },
-            heartRateTarget: { value: null, unit: "bpm" },
-            distanceGoal: { value: null, unit: "km" },
-            pace: "",
-        }]
+        bodyParts: [],
+        sets: [
+            {
+                reps: 0,
+                time: { value: 0, unit: "sec" },
+                weight: { value: 0, unit: "kg" },
+            }
+        ]
     }
 
     useEffect(() => {
-        dispatch(get_patient_difficuilties({ patientId: patientId }))
-    }, [selectedCategory])
+        dispatch(get_patient_difficuilties({ patientId: patientId }));
 
-    useEffect(() => {
-        if (patient_difficuilty?.data?.data?.exercise_difficulty && selectedCategory) {
-            dispatch(
-                get_exercise_by_category({
-                    category: selectedCategory,
-                    difficuilty: difficuilty ? difficuilty : patient_difficuilty?.data?.data?.exercise_difficulty,
-                })
-            )
+        if (selectedCategory || selected_patient_category || (selected_training_type && selected_training_type?.length > 0)) {
+            dispatch(get_exercise_by_category({
+                category: selectedCategory || null,
+                patient_category: selected_patient_category || null,
+                training_type: selected_training_type?.length > 0 ? selected_training_type : null
+            }));
         }
-        if (days[eventData][0]?.difficulty_level?.length === 0 && patient_difficuilty?.data?.data?.exercise_difficulty) {
-            setDays((prevDays) => {
-                const updatedDay = prevDays[eventData].map((item, index) => {
-                    if (index === 0) {
-                        return { ...item, difficulty_level: [patient_difficuilty?.data?.data?.exercise_difficulty] };
-                    }
-                    return item;
-                });
+    }, [selectedCategory, selected_patient_category, selected_training_type, dispatch]);
 
-                return {
-                    ...prevDays,
-                    [eventData]: updatedDay,
-                };
-            });
-        }
-
-    }, [patient_difficuilty, selectedCategory, difficuilty]);
 
 
     useEffect(() => {
@@ -178,43 +158,39 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
     const handleAddExercise = () => {
         setDays((prevDays) => {
-            const lastExercise = prevDays[eventData]?.[prevDays[eventData]?.length - 1];
+            const currentDayData = prevDays[eventData] || [];
+            const lastExercise = currentDayData[currentDayData.length - 1];
 
             const isValidExerciseData = () => {
                 if (!lastExercise) return true;
+
                 if (lastExercise.exerciseName === "Untitled") {
-                    return false
+                    return false;
                 }
 
-                if (lastExercise.category === "strength exercise") {
-                    const hasEmptyFlexibilityField = lastExercise.flexibilityField.some((item) =>
-                        item.reps === "" || item.weight.value === null
-                    );
-                    if (hasEmptyFlexibilityField) return false;
-                } else {
-                    const hasEmptyCardioField = lastExercise.cardioFields.some((item) =>
-                        item.time.value === null ||
-                        item.heartRateTarget.value === null ||
-                        item.distanceGoal.value === null ||
-                        item.pace === ""
-                    );
-                    if (hasEmptyCardioField) return false;
-                }
-                return true
+                return !lastExercise.sets.some((item) =>
+                    item.reps === 0 ||
+                    item.time.value === 0 ||
+                    item.weight.value === 0
+                );
             };
 
             if (!isValidExerciseData()) {
-                toast.error("Please fill all the fields")
+                toast.error("Please fill all the fields");
                 return prevDays;
             }
-            setDifficuilty(patient_difficuilty?.data?.data?.exercise_difficulty)
-            const updatedDay = [...prevDays[eventData], newExerciseData];
+
+            setDifficuilty(patient_difficuilty?.data?.data?.exercise_difficulty);
+
+            const updatedDay = [...currentDayData, { ...newExerciseData }];
+
             return {
                 ...prevDays,
                 [eventData]: updatedDay,
             };
         });
     };
+
 
 
     const addNewFlexibilityToStrength = (i) => {
@@ -251,33 +227,34 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
             const updatedDays = { ...prevDays };
             const currentDayExercises = [...updatedDays[eventData]];
             const currentExercise = currentDayExercises[i];
-
-            const hasEmptyCardioField = currentExercise.cardioFields.some((field) =>
-                field.time.value === null ||
-                field.heartRateTarget.value === null ||
-                field.distanceGoal.value === null ||
-                field.pace === ""
+            const hasEmptyCardioField = currentDayExercises.some((exercise) =>
+                exercise.sets.some((field) => {
+                    return (
+                        field.time?.value === 0 ||
+                        field.weight?.value === 0 ||
+                        field.reps === 0
+                    );
+                })
             );
 
             if (hasEmptyCardioField) {
-                console.warn("Cannot add new cardio field, some values are empty in the previous fields.");
+                toast.error("Cannot add new set, some values are missing in the previous fields.");
                 return prevDays;
             }
-
-            currentExercise.cardioFields = [
-                ...currentExercise.cardioFields,
+            currentExercise.sets = [
+                ...currentExercise.sets,
                 {
-                    time: { value: null, unit: "sec" },
-                    heartRateTarget: { value: null, unit: "bpm" },
-                    distanceGoal: { value: null, unit: "km" },
-                    pace: "",
+                    reps: 0,
+                    time: { value: 0, unit: "sec" },
+                    weight: { value: 0, unit: "kg" },
                 },
             ];
-
             updatedDays[eventData] = currentDayExercises;
             return updatedDays;
         });
     };
+
+
 
 
     const handleChangeCardioUnit = (i, index, field, unit) => {
@@ -297,7 +274,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
     const handleChangeFlexibilityUnit = (i, index, field, unit) => {
         setDays((prevDays) => {
             const updatedDays = { ...prevDays };
-            const targetField = updatedDays[eventData][i].flexibilityField[index][field];
+            const targetField = updatedDays[eventData][i].sets[index][field];
             if (targetField && typeof targetField === 'object') {
                 targetField.unit = unit;
             } else {
@@ -309,44 +286,18 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
 
 
     const handleChangeCardioFields = (i, index, field, e) => {
-        let value
-        if (field === "pace") {
-            value = e.target.value
-        } else {
-            value = Number(e.target.value);
-        }
-        const cardioField = days[eventData][i].cardioFields[index];
-
-        if (field === "time") {
-            const unit = cardioField.time.unit;
-            if (isNaN(value) || value < 1 || value > 60) {
-                console.warn(`Time must be between 1 and 60 ${unit === "sec" ? "seconds" : "minutes"}.`);
-                return;
-            }
-        } else if (field === "heartRateTarget") {
-            if (isNaN(value) || value < 0 || value > 200) {
-                console.warn("Heart rate target must be between 0 and 200 bpm.");
-                return;
-            }
-        } else if (field === "distanceGoal") {
-            const unit = cardioField.distanceGoal.unit;
-            if (isNaN(value) || value <= 0) {
-                console.warn(`Distance goal must be a positive number (in ${unit}).`);
-                return;
-            }
-        }
 
         setDays((prevDays) => {
             const updatedDays = JSON.parse(JSON.stringify(prevDays));
-            const targetField = updatedDays[eventData][i].cardioFields[index][field];
-
-            if (field === "time" || field === "heartRateTarget" || field === "distanceGoal") {
-                targetField.value = value;
-            } else {
-                updatedDays[eventData][i].cardioFields[index][field] = value;
+            if (field === "time") {
+                updatedDays[eventData][i].sets[index][field].value = Number(e.target.value);
+            } else if (field === "weight") {
+                updatedDays[eventData][i].sets[index][field].value = Number(e.target.value);
+            } else if (field === "reps") {
+                updatedDays[eventData][i].sets[index][field] = Number(e.target.value);
             }
 
-            updatedDays[eventData][i].sets = [...updatedDays[eventData][i].cardioFields];
+            updatedDays[eventData][i].sets = [...updatedDays[eventData][i].sets];
             return updatedDays;
         });
     };
@@ -364,7 +315,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         }
 
         setDays((prevDays) => {
-            const updatedDays = JSON.parse(JSON.stringify(prevDays)); 
+            const updatedDays = JSON.parse(JSON.stringify(prevDays));
             const flexibilityField = updatedDays[eventData][i].flexibilityField[index];
 
             if (field === "reps") {
@@ -408,7 +359,43 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
         });
     };
 
+    const handleSelectPatientCategory = (val, i) => {
+        if (val) {
+            setSelected_patient_category(val);
 
+            setDays((prevDays) => {
+                const updatedDay = prevDays[eventData].map((item, index) => {
+                    if (index === i) {
+                        return { ...item, patient_category: val };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prevDays,
+                    [eventData]: updatedDay,
+                };
+            });
+        }
+
+    }
+
+    const handleSetTrainingType = (selectedOptions, i) => {
+        if (!selectedOptions) return;
+
+        const selectedValues = selectedOptions.map((option) => option.value);
+
+        setSelected_training_type(selectedValues);
+
+        setDays((prevDays) => {
+            return {
+                ...prevDays,
+                [eventData]: prevDays[eventData].map((item, index) =>
+                    index === i ? { ...item, training_type: selectedValues } : item
+                ),
+            };
+        });
+    };
 
     return (
         <Tab.Container id="left-tabs-example" defaultActiveKey={0}>
@@ -437,33 +424,39 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                         </Col>
                                         <Col lg={6}>
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                                <Form.Label>Category</Form.Label>
+                                                <Form.Label>Exercise type</Form.Label>
                                                 <Form.Select aria-label="Default select example" value={day?.category} onChange={(e) => handleSelectCategory(e.target.value, i)}>
                                                     <option value="" disabled selected>Please select category</option>
                                                     {exercise_category?.map((category, i) => (
                                                         <option key={i} value={category}>{category}</option>
                                                     ))}
                                                 </Form.Select>
-
                                             </Form.Group>
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                                <Form.Label>Difficuilty</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={day?.difficulty_level[0] ? day?.difficulty_level[0] : patient_difficuilty?.data?.data?.exercise_difficulty} onChange={(e) => handleSelectDifficuilty(e.target.value, i)}>
-                                                    <option value="" disabled selected>Please select difficuilty level</option>
-                                                    {exerciseDifficuilty?.map((category, i) => (
-                                                        <option key={i} value={category}>{category}</option>
-                                                    ))}
+                                                <Form.Label>Category</Form.Label>
+                                                <Form.Select aria-label="Default select example" value={day?.patient_category} onChange={(e) => handleSelectPatientCategory(e.target.value, i)}>
+                                                    <option value="" selected>Select Category</option>
+                                                    {patient_category?.map((data) => {
+                                                        return <option value={data}>{data}</option>;
+                                                    })}
                                                 </Form.Select>
                                             </Form.Group>
                                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise Name</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={~exercise_details?.isSuccess ? "Please select exercise name" : day?.exerciseId} onChange={(e) => handleSelectExerciseName(e.target.value, i)}>
-                                                    <option value="" disabled selected>Please select exercise name</option>
-                                                    {exercise?.map((exercise, i) => (
-                                                        <option key={i} value={exercise?.id}>{exercise?.exercise_name}</option>
+                                                <Form.Select
+                                                    aria-label="Default select example"
+                                                    value={day?.exerciseId || ""} 
+                                                    onChange={(e) => handleSelectExerciseName(e.target.value, i)}
+                                                >
+                                                    <option value="" disabled>Please select exercise name</option>
+                                                    {exercise?.map((ex, index) => (
+                                                        <option key={index} value={ex.id}>
+                                                            {ex.exercise_name}
+                                                        </option>
                                                     ))}
                                                 </Form.Select>
                                             </Form.Group>
+
                                             <Form.Group controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise Video Link</Form.Label>
                                                 <Form.Control type="text" disabled value={day.exerciseVideo} placeholder="Enter Video Link" />
@@ -473,61 +466,37 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             <div className="image_insert">
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="upload_image position-relative">
-                                                    <Form.Control type="file" placeholder="Enter Video Link" />
                                                     <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" />
                                                 </div>
                                             </div>
                                         </Col>
-                                    </Row>
-                                    <Row className="authWrapper">
                                         <Col lg={12}>
-                                            <div className="d-flex justify-content-between align-items-center mt-3">
-                                                <h5 className="mb-0">Body Parts and Movements</h5>
+                                            <div className="modal_card mt-3">
+                                                <h5 className="flex-grow-1 mb-2">Training Type</h5>
+                                                <Row>
+                                                    <Col lg={6}>
+                                                        <label>Training Type</label>
+                                                        <Select
+                                                            options={options}
+                                                            isMulti
+                                                            className="basic-multi-select"
+                                                            classNamePrefix="select"
+                                                            placeholder="Select Training type"
+                                                            value={options.filter((option) => day?.training_type?.includes(option.value))}
+                                                            onChange={(e) => handleSetTrainingType(e, i)}
+                                                        />
+                                                    </Col>
+                                                </Row>
                                             </div>
                                         </Col>
-                                        {Array.isArray(day.bodyParts) && day.bodyParts.map((entry, index) => {
-                                            return (
-                                                <>
-                                                    <Col lg={6}>
-                                                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                                            <Form.Label>Selected Name:</Form.Label>
-                                                            <Select
-                                                                value={
-                                                                    entry.name
-                                                                        ? { value: entry.name, label: entry.name }
-                                                                        : null
-                                                                }
-                                                                placeholder="Select Name"
-                                                                isDisabled={true}
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col lg={6}>
-                                                        <div className="d-flex align-items-center gap-2">
-                                                            <div className="flex-grow-1">
-                                                                <Form.Label>Selected Movements:</Form.Label>
-                                                                <Select
-                                                                    isMulti
-                                                                    value={entry.movements.map((movement) => ({
-                                                                        value: movement,
-                                                                        label: movement,
-                                                                    }))}
-                                                                    placeholder="Select Movements"
-                                                                    isDisabled={!entry.name || true}
-                                                                    className="flex-grow-1"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </Col>
-                                                </>
-                                            )
-                                        })}
-                                        {day?.category !== "strength exercise" && <div className="mt-3">
+                                    </Row>
+                                    <Row className="authWrapper">
+                                        <div className="mt-3">
                                             <div className="d-flex align-items-center mb-2">
                                                 <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                                                 <button onClick={() => addNewFlexibilityToCardio(i)} className="cmn_btn add_row">Add Row</button>
                                             </div>
-                                            {day?.cardioFields?.map((cardio, index) => (
+                                            {day?.sets?.map((cardio, index) => (
                                                 <Form.Group className="mb-2">
                                                     <div className="steps_items d-flex gap-2">
                                                         <div>
@@ -542,43 +511,27 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                                             <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
                                                                             <span onClick={() => handleChangeCardioUnit(i, index, "time", "sec")}
                                                                                 className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
-                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "time", "min")}
-                                                                                className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
                                                                         </div>
                                                                         <Form.Control type="text" placeholder="00" value={cardio?.time?.value} onChange={(e) => handleChangeCardioFields(i, index, "time", e)} />
 
                                                                     </div>
-                                                                    <div className="w-100">
+                                                                    <div className="flex-grow-1 w-100">
                                                                         <div className="d-flex gap-2 align-items-center">
-                                                                            <Form.Label className="flex-grow-1">HeartRate Target</Form.Label>{" "}
+                                                                            <Form.Label className="flex-grow-1" value={cardio?.reps} onChange={(e) => handleChangeCardioFields(i, index, "reps", e)}>Reps</Form.Label>{" "}
 
                                                                         </div>
-                                                                        <Form.Control type="text" placeholder="00" value={cardio?.heartRateTarget?.value} onChange={(e) => handleChangeCardioFields(i, index, "heartRateTarget", e)} />
-
+                                                                        <Form.Control type="text" placeholder="00" value={cardio?.reps} onChange={(e) => handleChangeCardioFields(i, index, "reps", e)} />
                                                                     </div>
-                                                                </div>
-                                                                <div className='d-flex gap-2'>
-                                                                    <div className="w-50">
+                                                                    <div className="flex-grow-1 w-100">
                                                                         <div className="d-flex gap-2 align-items-center">
-                                                                            <Form.Label className="flex-grow-1">Distance Goal</Form.Label>{" "}
-                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "km")}
-                                                                                className={cardio?.distanceGoal?.unit === "km" ? "time" : "time min"}>KM</span>{" "}
-                                                                            <span onClick={() => handleChangeCardioUnit(i, index, "distanceGoal", "meter")}
-                                                                                className={cardio?.distanceGoal?.unit === "meter" ? "time" : "time min"}>Meter</span>{" "}
+                                                                            <Form.Label className="flex-grow-1">Weight</Form.Label>{" "}
+                                                                            <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "kg")}
+                                                                                className={cardio?.weight?.unit === "kg" ? "time" : "time min"}>Kg</span>{" "}
+                                                                            <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "lbs")}
+                                                                                className={cardio?.weight?.unit === "lbs" ? "time" : "time min"}>Lbs</span>
                                                                         </div>
-                                                                        <Form.Control type="text" placeholder="00" value={cardio?.distanceGoal?.value} onChange={(e) => handleChangeCardioFields(i, index, "distanceGoal", e)} />
+                                                                        <Form.Control type="text" placeholder="00" value={cardio?.weight?.value} onChange={(e) => handleChangeCardioFields(i, index, "weight", e)} />
 
-                                                                    </div>
-                                                                    <div className="w-50">
-                                                                        <div className="d-flex gap-2 align-items-center">
-                                                                            <Form.Label className="flex-grow-1">Pace</Form.Label>{" "}
-                                                                        </div>
-                                                                        <Form.Select aria-label="Default select example" value={cardio?.pace} onChange={(e) => handleChangeCardioFields(i, index, "pace", e)} >
-                                                                            <option value="" disabled selected>Select pace</option>
-                                                                            <option value="moderate">Moderate</option>
-                                                                            <option value="medium">Medium</option>
-                                                                            <option value="vigorous">Vigorous</option>
-                                                                        </Form.Select>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -587,57 +540,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                     </div>
                                                 </Form.Group>
                                             ))}
-                                        </div>}
-                                        {day?.category === "strength exercise" && <div className="mt-3 ">
-                                            <div className="d-flex align-items-center mb-2">
-                                                <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
-                                                <button onClick={() => addNewFlexibilityToStrength(i)} className="cmn_btn add_row">Add Row</button>
-                                            </div>
-                                            {day?.flexibilityField?.map((val, index) => (
-                                                <Form.Group key={i} className="mb-2">
-                                                    <div className="steps_items d-flex gap-2">
-                                                        <div>
-                                                            <Form.Label>Set {index + 1}</Form.Label>
-                                                            <span className="step_count">{index + 1}</span>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <div className="d-flex gap-2 align-items-center">
-                                                                <Form.Label className="flex-grow-1">Reps</Form.Label>{" "}
-
-                                                            </div>
-                                                            <Form.Control type="text" placeholder="00" value={val?.reps} onChange={(e) => handleChangeFlexibilityFields(i, index, "reps", e)} />
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <div className="d-flex gap-2 align-items-center">
-                                                                <Form.Label className="flex-grow-1">Weight</Form.Label>{" "}
-                                                                <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "kg")}
-                                                                    className={val?.weight?.unit === "kg" ? "time" : "time min"}>Kg</span>{" "}
-                                                                <span onClick={() => handleChangeFlexibilityUnit(i, index, "weight", "lbs")}
-                                                                    className={val?.weight?.unit === "lbs" ? "time" : "time min"}>Lbs</span>
-                                                            </div>
-                                                            <Form.Control type="text" placeholder="00" value={val?.weight?.value} onChange={(e) => handleChangeFlexibilityFields(i, index, "weight", e)} />
-
-                                                        </div>
-                                                        {day?.flexibilityField?.length > 1 && <span onClick={() => (handleRemoveFlexibilityFields(i, index))} className="minus align-self-end mb-2">x</span>}
-                                                    </div>
-                                                </Form.Group>
-                                            ))}
-
-                                        </div>}
-                                        <Col lg={12} className="pt-3">
-                                            <h5>Heart Rate and Targets</h5>
-                                        </Col>
-                                        <Col lg={12}>
-                                            <Row>
-                                                <Col lg={6}>
-                                                    <Form.Group controlId="exampleForm.ControlInput1">
-                                                        <Form.Label>Intensity (1-10)</Form.Label>
-                                                        <Form.Control type="text" placeholder="Intensity (1-10)" value={day?.intensity} onChange={(e) => handleAddIntensity(e.target.value, i)} />
-                                                    </Form.Group>
-                                                </Col>
-
-                                            </Row>
-                                        </Col>
+                                        </div>
                                         <Col lg={12} className="pt-3">
                                             <div className="d-flex justify-content-end gap-2">
                                                 <button className="cmn_btn border-btn" onClick={() => navigate(-1)}>Cancel</button>

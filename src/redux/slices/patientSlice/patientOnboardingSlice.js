@@ -20,6 +20,7 @@ export const patient_onboarding_api = createAsyncThunk("patient_onboarding_api",
                 "unit": height_unit,
                 "value": stepOnefullData?.height
             },
+            "patient_category": stepOnefullData?.patient_category,
             "weight": {
                 "unit": weight_unit,
                 "value": stepOnefullData?.weight

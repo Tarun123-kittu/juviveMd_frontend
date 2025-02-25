@@ -100,60 +100,29 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
       <DataTable columns={columns}>
         {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs
         }, i) => {
-
           return (
             <tr key={i}>
               <td>{exerciseDetails?.exercise_name}</td>
-              {exerciseDetails?.category !== "strength exercise" ? (
                 <td>
                   {planExercise?.sets?.length} /
                   {planExercise?.sets
-                    ?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`)
+                    ?.map((set) => `${set?.reps ? set?.reps+ " "+ "Reps" : set?.time.value + " " + set?.time.unit}`)
                     .join('-') || "N/A"}
                 </td>
-              ) : (
-                <td>
-                  {planExercise?.sets?.length} /
-                  {planExercise?.sets
-                    ?.map((set) => `${set?.reps}`)
-                    .join('-') || "N/A"}
-                </td>
-              )}
-
-              {exerciseDetails?.category !== "strength exercise" ? (
                 <td>
                   {planExercise?.sets
                     ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
                     .join('-') || "N/A"}
                 </td>
-              ) : (
+            
                 <td>
-                  {planExercise?.sets
-                    ?.map((set) => `${set?.weight?.value}${" "}${set?.weight?.unit}`)
-                    .join('-') || "N/A"}
-                </td>
-              )}
-              {exerciseDetails?.category !== "strength exercise" ? (
-                <td>
-                  {logs?.length > 0 ? logs?.length+"/" : "------"} 
+                  {logs?.length > 0 ? logs?.length + "/" : "------"}
                   {logs?.map((log) => log?.sets?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`).join('-'))}
                 </td>
-              ) : (
-                <td>
-                   {logs?.length > 0 ? logs?.length+"/" : "------"} 
-                  {logs?.map((log) => log?.sets?.map((set) => `${set?.reps}`).join('-'))}
-                </td>
-              )}
 
-              {exerciseDetails?.category !== "strength exercise" ? (
                 <td>
                   {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
                 </td>
-              ) : (
-                <td>
-                  {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.weight?.value}${" "}${set?.weight?.unit}`).join('-')) : "------"}
-                </td>
-              )}
               {/* <td>{planExercise?.sets?.length}</td>
               <td>{exerciseDetails?.description}</td> */}
               <td className="text-decoration-underline">Easy</td>

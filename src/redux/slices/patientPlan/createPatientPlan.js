@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const create_patient_plan = createAsyncThunk("create_patient_plan", async ({ patientId, planValidFrom, planValidTo, days }, thunkAPI) => {
+export const create_patient_plan = createAsyncThunk("create_patient_plan", async ({ payload }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -10,10 +10,10 @@ export const create_patient_plan = createAsyncThunk("create_patient_plan", async
         myHeaders.append("Authorization", validToken);
 
         const raw = JSON.stringify({
-            "patientId": patientId,
-            "planValidFrom": planValidFrom,
-            "planValidTo": planValidTo,
-            "days": days
+            "patientId": payload.patientId,
+            "planValidFrom": payload.planValidFrom,
+            "planValidTo": payload.planValidTo,
+            "days": payload.days
         });
 
         const requestOptions = {

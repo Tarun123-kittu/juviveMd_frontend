@@ -10,7 +10,7 @@ import { create_exercise_draft, clear_create_exercise_draft_state } from "../../
 import Select from "react-select";
 import { AddIMage } from "./ModalSvg";
 
-const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty }) => {
+const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_category, tab, setActiveTab, body_parts, exerciseDifficuilty, commonData, trainingType }) => {
   const dispatch = useDispatch();
   const [imagePreview, setImagePreview] = useState("");
   const [image, setImage] = useState("");
@@ -35,6 +35,18 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
   const [data, setData] = useState([{ name: "", movements: [] }]);
   const [fieldError, setFieldError] = useState("")
   const [apiData, setApiData] = useState();
+  const [categories, setCategories] = useState([
+    {
+      category: "",
+      start_point: {
+        sets: null,
+        reps: 0,
+        time: 0,
+      }
+    }
+  ])
+  const [unit, setUnit] = useState('')
+  const [training_type_data, setTraining_type_data] = useState([])
 
   const handleClose = () => {
     setshowAddExerciseModal(false);
@@ -55,11 +67,27 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setExerciseDescription('')
     setExerciseImage()
     setLoading("")
+    setCategories([
+      {
+        category: "",
+        start_point: {
+          sets: null,
+          reps: 0,
+          time: 0,
+        }
+      }
+    ])
+    setTraining_type_data([])
   };
+
+  const options = trainingType.map((type) => ({
+    value: type,
+    label: type,
+  }));
 
   useEffect(() => {
     if (body_parts && body_parts.length > 0) {
-      setApiData(body_parts); 
+      setApiData(body_parts);
     }
   }, [body_parts]);
 
@@ -73,27 +101,19 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
 
   const handleSave = (values) => {
     setLoading("first")
-    if (!data?.length) {
-      setBodyPartError("Please select the body parts");
-      return;
-    }
-    const invalidEntries = data?.filter(item => !item.name || !item.movements.length);
 
-    if (invalidEntries.length > 0) {
-      setBodyPartError("Please select at least one movement for each body part");
-      return;
-    }
     dispatch(clear_get_single_exercise_state())
     dispatch(
       create_exercise({
         exercise_name: exerciseName,
-        category: exerciseType,
-        difficulty_level: difficuiltyResponse,
-        body_parts: movementResponse,
+        exercise_type: exerciseType,
+        categories: categories,
         video_link: exerciseVideo,
         image_url: exerciseImage,
         description: exerciseDescription,
-        draft: true
+        unit:unit,
+        draft: false,
+        training_type: training_type_data
       })
     );
   };
@@ -108,13 +128,14 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     dispatch(
       create_exercise_draft({
         exercise_name: exerciseName,
-        category: exerciseType,
-        difficulty_level: difficuiltyResponse,
-        body_parts: movementResponse,
+        exercise_type: exerciseType,
+        categories: categories,
         video_link: exerciseVideo,
         image_url: exerciseImage,
         description: exerciseDescription,
-        draft: false,
+        unit:unit,
+        draft: true,
+        training_type: training_type_data
       })
     );
   };
@@ -129,7 +150,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setActiveTab("approvalRequest")
       dispatch(clear_create_exercise_state());
       dispatch(clear_get_single_exercise_state());
-      dispatch(get_exercise({ page: 1, tab : "approvalRequest" }))
+      dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
       setImagePreview("")
       setSelectedBodyNames([])
       setSelectedMovements([])
@@ -153,7 +174,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       setActiveTab("draft")
       dispatch(clear_create_exercise_draft_state());
       dispatch(clear_get_single_exercise_state());
-      dispatch(get_exercise({ page: 1, tab : "draft" }))
+      dispatch(get_exercise({ page: 1, tab: "draft" }))
       setImagePreview("")
       setSelectedBodyNames([])
       setSelectedMovements([])
@@ -184,12 +205,31 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setFieldValue("exerciseName", value);
   };
 
-  const handleExerciseImageChange = (e, setFieldValue) => {
-    setFieldError("")
+  const handleExerciseImageChange = async (e, setFieldValue) => {
+    setFieldError("");
     const value = e.target.value;
-    setExerciseImage(value);
-    setFieldValue("exerciseImage", value);
+    const isValid = await checkImageExists(value);
+    if (!isValid) {
+      toast.error("Invalid image URL. Please enter a valid image link.");
+      setExerciseImage("")
+      setFieldValue("exerciseImage", "");
+      return
+    } else {
+      setExerciseImage(value)
+      setFieldValue("exerciseImage", value);
+    }
   };
+
+
+  const checkImageExists = (url) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => resolve(true); 
+      img.onerror = () => resolve(false); 
+    });
+  };
+
   const handleExerciseVideoChange = (e, setFieldValue) => {
     setFieldError('')
     const value = e.target.value
@@ -214,12 +254,21 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     }
   }, [body_parts]);
 
-  const handleSelectDifficuilt = (selectedList) => {
-    setFieldError('')
-    setDifficuilty([...selectedList]);
+  const handleSelectDifficuilt = (index, selectedList) => {
+    setFieldError('');
+
     const formattedResponse = selectedList.map((item) => item.name);
+
+    setCategories((prevCategories) => {
+      return prevCategories.map((category, idx) =>
+        idx === index ? { ...category, category: formattedResponse[0] } : category
+      );
+    });
+
+    setDifficuilty([...selectedList]);
     setDifficuiltyResponse(formattedResponse);
   };
+
 
 
 
@@ -279,49 +328,28 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     setData(updatedData);
   };
 
-  const handleMovementChange = (index, selectedOptions) => {
-    setBodyPartError('')
-    const updatedData = [...data];
-    updatedData[index].movements = selectedOptions.map((option) => option.value);
-    setData(updatedData);
-  };
 
-  const addNewField = () => {
-    setData([...data, { name: "", movements: [] }]);
-  };
-
-  const getMovementsForName = (name) => {
-    const selected = apiData?.find((item) => item.name === name);
-    return selected
-      ? selected.movements.map((movement) => ({ value: movement, label: movement }))
-      : [];
-  };
-
-  const getAvailableNames = () => {
-    const selectedNames = data.map((entry) => entry.name);
-    return apiData
-      ?.filter((item) => !selectedNames.includes(item.name))
-      .map((item) => ({ value: item.name, label: item.name }));
-  };
-
-  const handleDeleteRow = (index) => {
-    setData(data.filter((_, i) => i !== index));
-  };
-
-  const isButtonDisabled = data.some(
-    (item) => item.name.trim() === "" || item.movements.length === 0
-  );
 
   useEffect(() => {
+    const areCategoriesValid =
+      categories.length > 0 &&
+      categories.every(
+        (cat) =>
+          cat.category &&
+          cat.category.trim() !== "" &&
+          cat.start_point &&
+          cat.start_point.sets !== null &&
+          (cat.start_point.reps !== 0 || cat.start_point.time !== 0)
+      );
+
     const isValid =
       exerciseType &&
       exerciseName &&
       exerciseVideo &&
       exerciseDescription &&
       exerciseImage &&
-      !isButtonDisabled &&
-      Array.isArray(difficuiltyResponse) &&
-      difficuiltyResponse.length > 0;
+      training_type_data.length > 0 &&
+      areCategoriesValid;
 
     setDraft(!isValid);
   }, [
@@ -330,9 +358,85 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     exerciseVideo,
     exerciseDescription,
     exerciseImage,
-    isButtonDisabled,
-    difficuiltyResponse,
+    categories,
+    training_type_data
   ]);
+
+
+
+  const handleAddNewCategory = () => {
+    const areFieldsFilled = categories.every(category =>
+      category.category !== "" &&
+      category.start_point.sets !== null &&
+      (category.start_point.reps !== 0 || category.start_point.time !== 0)
+    );
+
+    if (!areFieldsFilled) {
+      toast.error("Please fill all fields before adding a new category.");
+      return;
+    }
+
+    let newCategory = {
+      category: "",
+      start_point: {
+        sets: null,
+        reps: 0,
+        time: 0,
+      }
+    };
+    setCategories((prevCategories) => {
+      const allCategories = [...prevCategories];
+      allCategories.push(newCategory);
+      return allCategories;
+    });
+  };
+
+  const handleSetTrainingType = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setTraining_type_data(selectedValues);
+  };
+
+  const handleSetCategory = (i, value) => {
+    setCategories((prevCategories) => {
+      return prevCategories.map((category, index) => {
+        if (index === i) {
+          return {
+            ...category,
+            category: value
+          }
+        }
+        return category
+      })
+    })
+  }
+
+  const handleUpdateStartPoint = (i, field, value) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((category, index) => {
+        if (index === i) {
+          let updatedStartPoint = {
+            ...category.start_point,
+            [field]: value,
+          };
+
+          if (field === "unit") {
+            if (value === "sec") {
+              updatedStartPoint.reps = 0; // Reset reps when "sec" is selected
+            } else {
+              updatedStartPoint.time = 0; // Reset time when another unit is selected
+            }
+          }
+
+          return {
+            ...category,
+            start_point: updatedStartPoint,
+          };
+        }
+        return category;
+      })
+    );
+  };
+
 
   return (
     <Modal
@@ -370,26 +474,26 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                   </Form.Group>
 
                   <Form.Group className="mb-2">
-                        <Form.Label>Exercise Name</Form.Label>
-                        <Field
-                          type="text"
-                          name="exerciseName"
-                          placeholder="Enter exercise name"
-                          className="form-control"
-                          onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
-                        />
-                      </Form.Group>
-                      <Form.Group className="mb-2">
-                        <Form.Label>Exercise Image Url</Form.Label>
-                        <Field
-                          type="text"
-                          name="exerciseImage"
-                          placeholder="Enter image url"
-                          className="form-control"
-                          onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
-                        />
-                      </Form.Group>
-                      <Form.Group className="mb-2">
+                    <Form.Label>Exercise Name</Form.Label>
+                    <Field
+                      type="text"
+                      name="exerciseName"
+                      placeholder="Enter exercise name"
+                      className="form-control"
+                      onChange={(e) => handleExerciseNameChange(e, setFieldValue)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Exercise Image Url</Form.Label>
+                    <Field
+                      type="text"
+                      name="exerciseImage"
+                      placeholder="Enter image url"
+                      className="form-control"
+                      onChange={(e) => handleExerciseImageChange(e, setFieldValue)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-2">
                     <Form.Label>Exercise Video Link</Form.Label>
                     <Field
                       type="text"
@@ -399,22 +503,22 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       onChange={(e) => handleExerciseVideoChange(e, setFieldValue)}
                     />
                   </Form.Group>
-                
+
                 </Col>
                 <Col lg={6} className="image_view">
                   <Row>
                     <Col lg={12}>
-                    <Form.Label>Exercise Image</Form.Label>
-                    <div className="exercise_view_image">
-                        {AddIMage}
-                        
-                    </div>
+                      <Form.Label>Exercise Image</Form.Label>
+                      <div className="exercise_view_image">
+                        {exerciseImage && <img src={exerciseImage} alt="exercise" width={300} />}
+                        {!exerciseImage && AddIMage}
+                      </div>
                     </Col>
-                    
+
 
                   </Row>
                 </Col>
-                {/* <Col lg={12}>
+                <Col lg={12}>
                   <Form.Group>
                     <Form.Label>Exercise Description</Form.Label>
                     <Field
@@ -426,204 +530,119 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                       onChange={(e) => handleExerciseDescriptionChange(e, setFieldValue)}
                     />
                   </Form.Group>
-                </Col> */}
+                </Col>
                 <Col lg={12}>
                   {bodyPartError && <span className="error text-danger">{bodyPartError}</span>}
                   {fieldError && <span className="error text-danger">{fieldError}</span>}
                 </Col>
-
                 <Col lg={12}>
                   <div className="modal_card mt-3">
-                  <h5 className="flex-grow-1 mb-2">Categories and Blocks</h5>
-                      <Row>
-                <Col lg={6}>
-                <Form.Group className="mb-2">
-                    <Form.Label>Difficulty level</Form.Label>
-                    <Select
-                      isMulti
-                      value={
-                        difficulty && difficulty.length > 0
-                          ? difficulty.map((item) => ({
-                            value: item.name,
-                            label: item.name,
-                          }))
-                          : null
-                      }
-                      options={difficuiltOptions?.map((option) => ({
-                        value: option.name,
-                        label: option.name,
-                      }))}
-                      onChange={(selectedOptions) => {
-                        const selectedList = selectedOptions.map((option) => ({
-                          name: option.value,
-                        }));
-                        handleSelectDifficuilt(selectedList);
-                      }}
-                      placeholder="Select Difficulty"
-                      className="flex-grow-1"
-                    />
-                  </Form.Group>
-                </Col>
-              
-                        <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
-                        <button class="cmn_btn add_row" disabled="">Add Categories</button>
-                        </Col>
+                    <h5 className="flex-grow-1 mb-2">Exercise Unit</h5>
+                    <Row>
+                      <Col lg={6}>
                         <Col lg={6}>
-                            <label>Blocks</label>
-                            <select name="" id="" className="form-select">
-                              <option value="" >Select Block</option>
-                            </select>
-                        </Col>
-                        <Col lg={6}>                     
-                          <div className="d-flex align-items-center gap-2">
-                            <div>
-                              <label>Sets</label>
-                              <Field
-                                  type="text"
-                                  name="sets"
-                                  placeholder="2"
-                                  className="form-control"
-                                
-                                />
-                            </div>
-                            <div>
-                              <label>Reps</label>
-                              <Field
-                                  type="text"
-                                  name="sets"
-                                  placeholder="Enter Reps"
-                                  className="form-control"
-                                
-                                />
-                            </div>
-                              <span className="minus align-self-end mb-2 cursor-pointer">x</span>
-                              <span className="minus plus align-self-end mb-2 cursor-pointer">+</span>
-                          </div>
-                        </Col>
-                   
-                      </Row>
-                      </div>
+                              <select className="form-select" onChange={(e) => setUnit(e.target.value)}>
+                                <option value="" selected>Select Unit</option>
+                                <option value="rotations">Rotations</option>
+                                <option value="sec">Sec</option>
+                                <option value="side">Side</option>
+                                <option value="steps">Steps</option>
+                                <option value="plane">Plane</option>
+                              </select>
+                            </Col>
+                      </Col>
+                    </Row>
+                  </div>
+                </Col>
+
+                <Col lg={12}>
+                  <div className="modal_card mt-3">
+                    <h5 className="flex-grow-1 mb-2">Categories and Blocks</h5>
+                    <Row>
+                      {categories?.map((list, i) => {
+                        let val = [list.category]
+                        return (
+                          <>
+                            <Col lg={6}>
+                              <label>Category</label>
+                              <select onChange={(e) => handleSetCategory(i, e.target.value)} className="form-select">
+                                <option value="" selected>Select Block</option>
+                                {commonData?.map((data) => {
+                                  return <option value={data}>{data}</option>;
+                                })}
+                              </select>
+                            </Col>
+
+                            <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
+                              {i === 0 && <button class="cmn_btn add_row" onClick={() => handleAddNewCategory()}>Add Categories</button>}
+                            </Col>
+
+                            <Col lg={9}>
+                              <div className="d-flex align-items-center gap-2">
+                                <div>
+                                  <label>Sets</label>
+                                  <Field
+                                    type="text"
+                                    name="sets"
+                                    placeholder="Enter sets"
+                                    className="form-control"
+                                    value={categories[i]?.start_point?.sets}
+                                    onChange={(e) => handleUpdateStartPoint(i, "sets", Number(e.target.value))}
+                                  />
+                                </div>
+                                <div>
+                                  <label>Reps</label>
+                                  <Field
+                                    type="text"
+                                    name="sets"
+                                    placeholder="Enter Reps"
+                                    className="form-control"
+                                    disabled={unit === "sec"}
+                                    value={categories[i]?.start_point?.reps}
+                                    onChange={(e) => handleUpdateStartPoint(i, "reps", Number(e.target.value))}
+                                  />
+                                </div>
+                                <div>
+                                  <label>Time</label>
+                                  <Field
+                                    type="text"
+                                    name="sets"
+                                    placeholder="Enter Time"
+                                    className="form-control"
+                                    disabled={unit !== "sec"}
+                                    value={categories[i]?.start_point?.time}
+                                    onChange={(e) => handleUpdateStartPoint(i, "time", Number(e.target.value))}
+                                  />
+                                </div>
+                              </div>
+                            </Col>
+
+                          </>
+                        )
+                      })}
+
+
+                    </Row>
+                  </div>
                 </Col>
                 <Col lg={12}>
                   <div className="modal_card mt-3">
-                    <div className="d-flex justify-content-between">
-                      <h5 className="flex-grow-1 mb-0">Body Parts and Movements</h5>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addNewField();
-                        }}
-                        className="cmn_btn add_row"
-                        disabled={isButtonDisabled}
-                      >
-                       Add Row
-                      </button>
-                    </div>
-                    {data?.map((entry, index) => (
-                      <div
-                        className="row mb-3"
-                      >
-                        <div className="col-lg-6">
-                          <label>Select Name:</label>
-                          <Select
-                            value={
-                              entry.name
-                                ? { value: entry.name, label: entry.name }
-                                : null
-                            }
-                            options={getAvailableNames()}
-                            onChange={(selectedOption) =>
-                              handleNameChange(index, selectedOption)
-                            }
-                            placeholder="Select Name"
-                          />
-                        </div>
-                        <div className="col-lg-6">
-                          <label>Select Movements:</label>
-                          <div className="d-flex align-items-center gap-2">
-                            <Select
-                              isMulti
-                              value={entry.movements.map((movement) => ({
-                                value: movement,
-                                label: movement,
-                              }))}
-                              options={getMovementsForName(entry.name)}
-                              onChange={(selectedOptions) =>
-                                handleMovementChange(index, selectedOptions || [])
-                              }
-                              placeholder="Select Movements"
-                              isDisabled={!entry.name}
-                              className="flex-grow-1"
-                            />
-                            {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
-
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
+                    <h5 className="flex-grow-1 mb-2">Training Type</h5>
+                    <Row>
+                      <Col lg={6}>
+                        <label>Training Type</label>
+                        <Select
+                          options={options}
+                          isMulti // Enables multiple selection
+                          className="basic-multi-select"
+                          classNamePrefix="select"
+                          placeholder="Select Training type"
+                          onChange={handleSetTrainingType}
+                        />
+                      </Col>
+                    </Row>
                   </div>
                 </Col>
-                {/* <Col lg={12}>
-                  <div className="modal_card mt-3">
-                    <div className="d-flex justify-content-between">
-                      <h5 className="flex-grow-1 mb-0">Program Days</h5>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addNewField();
-                        }}
-                        className="cmn_btn add_row"
-                        disabled={isButtonDisabled}
-                      >
-                        Add Row
-                      </button>
-                    </div>
-                    {data?.map((entry, index) => (
-                      <div
-                        className="row mb-3"
-                      >
-                        <div className="col-lg-6">
-                          <label>Select Plan</label>
-                          <Select
-                            value={
-                              entry.name
-                                ? { value: entry.name, label: entry.name }
-                                : null
-                            }
-                            options={getAvailableNames()}
-                            onChange={(selectedOption) =>
-                              handleNameChange(index, selectedOption)
-                            }
-                            placeholder="Select Name"
-                          />
-                        </div>
-                        <div className="col-lg-6">
-                          <label>Select Days</label>
-                          <div className="d-flex align-items-center gap-2">
-                            <Select
-                              isMulti
-                              value={entry.movements.map((movement) => ({
-                                value: movement,
-                                label: movement,
-                              }))}
-                              options={getMovementsForName(entry.name)}
-                              onChange={(selectedOptions) =>
-                                handleMovementChange(index, selectedOptions || [])
-                              }
-                              placeholder="Select Movements"
-                              isDisabled={!entry.name}
-                              className="flex-grow-1"
-                            />
-                            {data?.length > 1 && <span className="minus align-self-end mb-2" style={{ cursor: "pointer" }} onClick={() => handleDeleteRow(index)}>x</span>}
-
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                  </div>
-                </Col> */}
               </Row>
               <div className="text-end mt-3">
                 <div className="d-flex justify-content-end gap-2">

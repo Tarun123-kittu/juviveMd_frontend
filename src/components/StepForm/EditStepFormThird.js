@@ -7,7 +7,7 @@ import "./StepForm.css";
 import Select from "react-select";
 
 const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, patient_all_data, setThird_step_Weight_unit, third_step_weight_unit, setStepThreeFullData, stepThreefullData }) => {
-  console.log(third_step_weight_unit,"this is the third step weight unit")
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
