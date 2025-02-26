@@ -621,7 +621,7 @@ const EditExercise = ({
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="exercise_view_image">
                                                     {/* {AddIMage} */}
-                                                    <img src={exerciseImage} className="img-fluid" />
+                                                    <img src={exerciseImage} className="w-100 object-fit-cover rounded" height={284} width={278}/>
 
                                                 </div>
                                             </Col>
@@ -678,6 +678,7 @@ const EditExercise = ({
                                                     return (
                                                         <>
                                                             <Col lg={6}>
+                                                            <div className="mb-3 mt-3">
                                                                 <label>Category</label>
                                                                 <select onChange={(e) => handleSetCategory(i, e.target.value)} className="form-select" value={categories[i]?.category}>
                                                                     <option value="" selected>Select Category</option>
@@ -685,15 +686,17 @@ const EditExercise = ({
                                                                         return <option value={data}>{data}</option>;
                                                                     })}
                                                                 </select>
+                                                            </div>
+                                                                
                                                             </Col>
 
                                                             <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
                                                                 {i === 0 && <button class="cmn_btn add_row" onClick={() => handleAddNewCategory()}>Add Categories</button>}
                                                             </Col>
 
-                                                            <Col lg={9}>
+                                                            <Col lg={12}>
                                                                 <div className="d-flex align-items-center gap-2">
-                                                                    <div>
+                                                                    <div className="flex-grow-1">
                                                                         <label>Sets</label>
                                                                         <Field
                                                                             type="text"
@@ -704,7 +707,7 @@ const EditExercise = ({
                                                                             onChange={(e) => handleUpdateStartPoint(i, "sets", Number(e.target.value))}
                                                                         />
                                                                     </div>
-                                                                    <div>
+                                                                    <div className="flex-grow-1">
                                                                         <label>Reps</label>
                                                                         <Field
                                                                             type="text"
@@ -716,7 +719,7 @@ const EditExercise = ({
                                                                             onChange={(e) => handleUpdateStartPoint(i, "reps", Number(e.target.value))}
                                                                         />
                                                                     </div>
-                                                                    <div>
+                                                                    <div className="flex-grow-1">
                                                                         <label>Time</label>
                                                                         <Field
                                                                             type="text"
@@ -730,23 +733,9 @@ const EditExercise = ({
                                                                     </div>
                                                                 </div>
                                                             </Col>
-                                                            {/* <Col lg={3}>
-                                                                <label>Unit</label>
-                                                                <select className="form-select" onChange={(e) => handleUpdateStartPoint(i, "unit", e.target.value)} value={categories[i]?.start_point?.unit}>
-                                                                    <option value="" selected>Select Unit</option>
-                                                                    <option value="rotations">Rotations</option>
-                                                                    <option value="sec">Sec</option>
-                                                                    <option value="side">Side</option>
-                                                                    <option value="steps">Steps</option>
-                                                                    <option value="plane">Plane</option>
-                                                                </select>
-                                                            </Col> */}
-
                                                         </>
                                                     )
                                                 })}
-
-
                                             </Row>
                                         </div>
                                     </Col>

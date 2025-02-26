@@ -463,7 +463,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             <div className="image_insert">
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="upload_image position-relative">
-                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" />
+                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" width={200} height={200}/>
                                                 </div>
                                             </div>
                                         </Col>
@@ -488,17 +488,6 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 <Form.Label>Exercise Video Link</Form.Label>
                                                 <Form.Control type="text" disabled value={day.exerciseVideo} placeholder="Enter Video Link" />
                                             </Form.Group>
-                                        </Col>
-                                      
-                                        <Col lg={12}>
-                                            <div className="modal_card mt-3">
-                                                <h5 className="flex-grow-1 mb-2">Training Type</h5>
-                                                <Row>
-                                                    <Col lg={6}>
-                                                       
-                                                    </Col>
-                                                </Row>
-                                            </div>
                                         </Col>
                                     </Row>
                                     <Row className="authWrapper">

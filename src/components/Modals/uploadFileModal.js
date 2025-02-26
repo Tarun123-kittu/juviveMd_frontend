@@ -27,6 +27,16 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
 
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
 
+    const expectedHeaders = [
+        'Exercise Name', 'Exercise Type', 'Category',
+        'Start Point, A', 'Start Point, B', 'Start Point, C',
+        'Exercise Unit', 'Upper', 'Lower', 'Unilateral', 'Back',
+        'Full Body', 'Push', 'Pull', 'Core', 'Chest', 'Mobility',
+        'Biceps', 'Triceps', 'Shoulders', 'Conditioning', 'Menopause',
+        'image_url', 'video_link', 'description'
+    ];
+
+
     useEffect(() => {
         if (!showFileUploadModal) return
         fetch("/exercises - Sheet1 (1).csv")
@@ -88,50 +98,30 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
     const parseCSV = (data) => {
         Papa.parse(data, {
             complete: (result) => {
-                const headers = result.data[0]; // Assume the first row contains headers
-                const expectedHeaders = [
-                    'exercise_name', 'category', 'difficulty_level', 'body_parts_and_movements', 'video_link', 'description', 'image_url'
-                ];
-
-                const isValidHeaders = expectedHeaders.every((header) => headers.includes(header));
-                if (!isValidHeaders) {
-                    toast.error('Invalid headers in the CSV file.');
-                    setIsValidUpload(false);
-                    return;
-                }
-
                 setFileData(result.data);
-                setHide_download(false)
-                setShowPreview(true)
+                setHide_download(false);
+                setShowPreview(true);
                 setFileName(`data_${new Date().toLocaleString()}.csv`);
             },
             header: false,
         });
     };
 
+
+
+
     const parseExcel = (data) => {
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        const headers = rows[0];
-
-        const expectedHeaders = [
-            'exercise_name', 'category', 'difficulty_level', 'body_parts_and_movements', 'video_link', 'description', 'image_url'
-        ];
-
-        const isValidHeaders = expectedHeaders.every((header) => headers.includes(header));
-        if (!isValidHeaders) {
-            toast.error('Invalid headers in the Excel file.');
-            setIsValidUpload(false);
-            return;
-        }
 
         setFileData(rows);
-        setShowPreview(true)
-        setHide_download(false)
+        setShowPreview(true);
+        setHide_download(false);
         setFileName(`data_${new Date().toLocaleString()}.xlsx`);
     };
+
 
 
     const handleUpload = () => {
@@ -255,10 +245,12 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                                 </tr>
                             </thead>
                             <tbody>
-                                {fileData.slice(1).map((row, rowIndex) => {
-                                    // Check if any cell in the row matches the `exercise_name` field in `show_success`
+                                {Array.isArray(fileData) && fileData.slice(1).map((row, rowIndex) => {
+                                    if (!Array.isArray(row)) return null; // Prevent errors if row is undefined
+
                                     const isRowMatched = row.some(cell =>
-                                        show_success.some(success => success.exercise_name === cell)
+                                        Array.isArray(show_success) &&
+                                        show_success.some(success => success?.exercise_name === String(cell))
                                     );
 
                                     return (
@@ -269,17 +261,14 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                                         >
                                             {row.map((cell, cellIndex) => (
                                                 <td className="text-break" key={cellIndex}>
-                                                    {cell}
+                                                    {String(cell)}
                                                 </td>
                                             ))}
                                         </tr>
                                     );
                                 })}
-
-
-
-
                             </tbody>
+
                         </table>
                     )}
                     {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>

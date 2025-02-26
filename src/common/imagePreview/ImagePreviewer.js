@@ -25,7 +25,8 @@ const ImagePreview = ({ setShowPopup, showPopup, image }) => {
                 <img
                     src={image}
                     alt="Preview"
-                    className="img-fluid"
+                    className="object-fit-cover w-100"
+                    height={550}
                 />
             </Modal.Body>
             </Modal>
