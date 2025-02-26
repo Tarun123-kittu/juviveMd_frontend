@@ -1,3 +1,4 @@
-exercise_name,category,difficulty_level,body_parts_and_movements,video_link,description,image_url
-runninng,cardiovascular,"Easy,Moderate","neck: Rotation,Lat. Flexx/Ext; wrIst: rotation",https://www.youtube.com/watch?v=N2IJFzhW_Gc,running description,https://def.com
-swimming,cardiovascular,"Moderate,Hard","TrUnk: Rotation,Flex/Ext; Knee: HiNgy",",https://www.youtube.com/watch?v=swimming123",Swimming improves endurance,https://example.com/images/swimming.jpg
+Exercise Name,Exercise Type,Category,"Start Point, A","Start Point, B","Start Point, C",Exercise Unit,Upper,Lower,Unilateral,Back,Full Body,Push ,Pull,Core,Chest,Mobility,Biceps,Triceps,Shoulders,Conditioning,Menopause ,image_url,video_link,description
+,,,,,,,,,,,,,,,,,,,,,,,,
+Band Resisted Ankle ROM,Mobility,"A,B,C",2x10x60,2x10x60,2x10x60,rotations,,x,,,,,,,,x,,,,,,https://phloii.s3.amazonaws.com/profile_images/67627d58fc4ebebd2e511de6/2605,https://www.youtube.com/watch?v=ufrFCjERMDc,do exercise
+Static Forward Lunge,Mobility,"A,B,C",2x10x60,2x10x60,2x10x60,sec,,x,,,,,,,,x,,,,,,https://phloii.s3.amazonaws.com/profile_images/67627d58fc4ebebd2e511de6/2605,https://www.youtube.com/watch?v=ufrFCjERMDc,do exercise

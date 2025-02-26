@@ -463,7 +463,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     <Field
                       as="select"
                       name="exerciseType"
-                      className="form-control"
+                      className="form-select"
                       onChange={(e) => handleExerciseTypeChange(e, setFieldValue)}
                     >
                       <option value="">Select exercise type</option>

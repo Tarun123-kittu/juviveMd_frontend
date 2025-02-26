@@ -2,6 +2,7 @@
     font-size: var(--label-size);
     font-weight: 400;
     color: var(--bs-black);
+    font-family: var(--font-family);
 }
 .authWrapper .form-control:focus, .authWrapper .form-select:focus {
 box-shadow: unset;
@@ -14,14 +15,17 @@ border-color: var(--primary-color);
     border-color: var(--border-color);
     height: 40px;
     font-weight: 400;
+    font-family: var(--font-family);
 }
 .authWrapper a{
     font-size: var(--label-size);
     color: var(--primary-color);
     text-decoration: unset;
+    font-family: var(--font-family);
 }
 .remeberPass{
     color: var(--bs-black);
+    font-family: var(--font-family);
 }
 .authWidth {
     padding-left: 5rem;
