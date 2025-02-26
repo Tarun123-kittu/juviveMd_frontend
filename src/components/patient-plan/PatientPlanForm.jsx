@@ -420,10 +420,11 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                 <Tab.Pane eventKey={i}>
                                     <Row className="authWrapper ">
                                         <Col lg={12}>
-                                            <h5>Basic Information</h5>
+                                            <h5>Exercise Filter</h5>
                                         </Col>
-                                        <Col lg={6}>
-                                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                        <Col lg={12}>
+                                          <div className='exercise_filters_card d-flex gap-2'> 
+                                          <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise type</Form.Label>
                                                 <Form.Select aria-label="Default select example" value={day?.category} onChange={(e) => handleSelectCategory(e.target.value, i)}>
                                                     <option value="" disabled selected>Please select category</option>
@@ -432,7 +433,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                     ))}
                                                 </Form.Select>
                                             </Form.Group>
-                                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                            <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Category</Form.Label>
                                                 <Form.Select aria-label="Default select example" value={day?.patient_category} onChange={(e) => handleSelectPatientCategory(e.target.value, i)}>
                                                     <option value="" selected>Select Category</option>
@@ -441,7 +442,33 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>
-                                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                            <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
+                                                <Form.Label>Training Type</Form.Label>
+                                                        <Select
+                                                            options={options}
+                                                            isMulti
+                                                            className="basic-multi-select"
+                                                            classNamePrefix="select"
+                                                            placeholder="Select Training type"
+                                                            value={options.filter((option) => day?.training_type?.includes(option.value))}
+                                                            onChange={(e) => handleSetTrainingType(e, i)}
+                                                        />
+                                            </Form.Group>
+                                          </div>
+                                        </Col>
+                                        <Col lg={12}>
+                                            <h5>Basic Information</h5>
+                                        </Col>
+                                        <Col lg={6}>
+                                            <div className="image_insert">
+                                                <Form.Label>Exercise Image</Form.Label>
+                                                <div className="upload_image position-relative">
+                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" />
+                                                </div>
+                                            </div>
+                                        </Col>
+                                        <Col lg={6}>
+                                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise Name</Form.Label>
                                                 <Form.Select
                                                     aria-label="Default select example"
@@ -462,29 +489,13 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                                 <Form.Control type="text" disabled value={day.exerciseVideo} placeholder="Enter Video Link" />
                                             </Form.Group>
                                         </Col>
-                                        <Col lg={6}>
-                                            <div className="image_insert">
-                                                <Form.Label>Exercise Image</Form.Label>
-                                                <div className="upload_image position-relative">
-                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" />
-                                                </div>
-                                            </div>
-                                        </Col>
+                                      
                                         <Col lg={12}>
                                             <div className="modal_card mt-3">
                                                 <h5 className="flex-grow-1 mb-2">Training Type</h5>
                                                 <Row>
                                                     <Col lg={6}>
-                                                        <label>Training Type</label>
-                                                        <Select
-                                                            options={options}
-                                                            isMulti
-                                                            className="basic-multi-select"
-                                                            classNamePrefix="select"
-                                                            placeholder="Select Training type"
-                                                            value={options.filter((option) => day?.training_type?.includes(option.value))}
-                                                            onChange={(e) => handleSetTrainingType(e, i)}
-                                                        />
+                                                       
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -543,7 +554,7 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                         </div>
                                         <Col lg={12} className="pt-3">
                                             <div className="d-flex justify-content-end gap-2">
-                                                <button className="cmn_btn border-btn" onClick={() => navigate(-1)}>Cancel</button>
+                                                <button className="cmn_btn border-btn px-4" onClick={() => navigate(-1)}>Cancel</button>
                                                 <button className="cmn_btn" onClick={() => handleAddExercise()}>Add Exercise</button>
                                             </div>
                                         </Col>
