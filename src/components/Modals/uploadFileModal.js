@@ -131,10 +131,11 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
 
     useEffect(() => {
         if (is_file_uploades?.isSuccess) {
-
+            handleClose()
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
             setShow_success(is_file_uploades?.data?.data?.successRecords)
+            dispatch(clear_upload_exercise_state())
         }
         if (is_file_uploades?.isError) {
             toast.error(is_file_uploades?.error?.message, {

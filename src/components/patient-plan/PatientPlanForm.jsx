@@ -33,7 +33,6 @@ const PatientPlanForm = ({
   setSelected_training_type,
   selected_training_type,
 }) => {
-  console.log(days[eventData], "this is the event data");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [difficuilty, setDifficuilty] = useState("");
@@ -460,7 +459,7 @@ const PatientPlanForm = ({
                       eventKey={i}
                       onClick={() => setSelectedIndex(i)}
                     >
-                      {name.exerciseName}{" "}
+                      <span>{name.exerciseName}</span>{" "}
                       {days[eventData]?.length > 1 && (
                         <button
                           onClick={() => handleRemoveItems(eventData, i)}
