@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, body_parts, exerciseDifficuilty, patientId, editable, patient_category, training_type, setSelected_patient_category, selected_patient_category, setSelected_training_type, selected_training_type }) => {
+    console.log(days[eventData], "this is the event data")
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [difficuilty, setDifficuilty] = useState('')
@@ -423,38 +424,38 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             <h5>Exercise Filter</h5>
                                         </Col>
                                         <Col lg={12}>
-                                          <div className='exercise_filters_card d-flex gap-2'> 
-                                          <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
-                                                <Form.Label>Exercise type</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={day?.category} onChange={(e) => handleSelectCategory(e.target.value, i)}>
-                                                    <option value="" disabled selected>Please select category</option>
-                                                    {exercise_category?.map((category, i) => (
-                                                        <option key={i} value={category}>{category}</option>
-                                                    ))}
-                                                </Form.Select>
-                                            </Form.Group>
-                                            <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
-                                                <Form.Label>Category</Form.Label>
-                                                <Form.Select aria-label="Default select example" value={day?.patient_category} onChange={(e) => handleSelectPatientCategory(e.target.value, i)}>
-                                                    <option value="" selected>Select Category</option>
-                                                    {patient_category?.map((data) => {
-                                                        return <option value={data}>{data}</option>;
-                                                    })}
-                                                </Form.Select>
-                                            </Form.Group>
-                                            <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
-                                                <Form.Label>Training Type</Form.Label>
-                                                        <Select
-                                                            options={options}
-                                                            isMulti
-                                                            className="basic-multi-select"
-                                                            classNamePrefix="select"
-                                                            placeholder="Select Training type"
-                                                            value={options.filter((option) => day?.training_type?.includes(option.value))}
-                                                            onChange={(e) => handleSetTrainingType(e, i)}
-                                                        />
-                                            </Form.Group>
-                                          </div>
+                                            <div className='exercise_filters_card d-flex gap-2'>
+                                                <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
+                                                    <Form.Label>Exercise type</Form.Label>
+                                                    <Form.Select aria-label="Default select example" value={day?.category} onChange={(e) => handleSelectCategory(e.target.value, i)}>
+                                                        <option value="" disabled selected>Please select category</option>
+                                                        {exercise_category?.map((category, i) => (
+                                                            <option key={i} value={category}>{category}</option>
+                                                        ))}
+                                                    </Form.Select>
+                                                </Form.Group>
+                                                <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
+                                                    <Form.Label>Category</Form.Label>
+                                                    <Form.Select aria-label="Default select example" value={day?.patient_category} onChange={(e) => handleSelectPatientCategory(e.target.value, i)}>
+                                                        <option value="" selected>Select Category</option>
+                                                        {patient_category?.map((data) => {
+                                                            return <option value={data}>{data}</option>;
+                                                        })}
+                                                    </Form.Select>
+                                                </Form.Group>
+                                                <Form.Group className="w-100" controlId="exampleForm.ControlInput1">
+                                                    <Form.Label>Training Type</Form.Label>
+                                                    <Select
+                                                        options={options}
+                                                        isMulti
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                        placeholder="Select Training type"
+                                                        value={options.filter((option) => day?.training_type?.includes(option.value))}
+                                                        onChange={(e) => handleSetTrainingType(e, i)}
+                                                    />
+                                                </Form.Group>
+                                            </div>
                                         </Col>
                                         <Col lg={12}>
                                             <h5>Basic Information</h5>
@@ -463,25 +464,34 @@ const PatientPlanForm = ({ eventData, setDays, days, index, exercise_category, b
                                             <div className="image_insert">
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="upload_image position-relative">
-                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" width={200} height={200}/>
+                                                    <img src={day.exerciseImage ? day.exerciseImage : DefaultImage} className='exercise_selected_iamge' alt="dfault" width={200} height={200} />
                                                 </div>
                                             </div>
                                         </Col>
                                         <Col lg={6}>
-                                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                                 <Form.Label>Exercise Name</Form.Label>
-                                                <Form.Select
-                                                    aria-label="Default select example"
-                                                    value={day?.exerciseId || ""} 
-                                                    onChange={(e) => handleSelectExerciseName(e.target.value, i)}
-                                                >
-                                                    <option value="" disabled>Please select exercise name</option>
-                                                    {exercise?.map((ex, index) => (
-                                                        <option key={index} value={ex.id}>
-                                                            {ex.exercise_name}
-                                                        </option>
-                                                    ))}
-                                                </Form.Select>
+
+                                                {exercise?.length > 0 ? (
+                                                    <Form.Select
+                                                        aria-label="Default select example"
+                                                        value={day?.exerciseId || ""}
+                                                        onChange={(e) => handleSelectExerciseName(e.target.value, i)}
+                                                        disabled={exercise?.filter(ex => !days[eventData]?.some(dayItem => dayItem.exerciseId === ex.id)).length === 0} // Disable if no exercises are available
+                                                    >
+                                                        <option value="" disabled>Please select exercise name</option>
+                                                        {exercise
+                                                            ?.filter(ex => !days[eventData]?.some(dayItem => dayItem.exerciseId === ex.id)) // Remove duplicates
+                                                            .map((ex, index) => (
+                                                                <option key={index} value={ex.id}>
+                                                                    {ex.exercise_name}
+                                                                </option>
+                                                            ))
+                                                        }
+                                                    </Form.Select>
+                                                ) : (
+                                                    <Form.Control type="text" placeholder="No exercises available" disabled />
+                                                )}
                                             </Form.Group>
 
                                             <Form.Group controlId="exampleForm.ControlInput1">
