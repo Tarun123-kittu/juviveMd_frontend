@@ -21,6 +21,7 @@ const ExerciseView = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedOption, setSelectedOption] = useState(null);
   const is_exercise = useSelector((store) => store.SINGLE_EXERCISE);
+  console.log(is_exercise, "this is the exercise data")
   const is_status_updated = useSelector((store) => store.UPDATE_EXERCISE_STATUS)
   const [exercise_data, setExerciseData] = useState()
 
@@ -120,69 +121,71 @@ const ExerciseView = () => {
                 <h4 className="ex_heading mb-4">
                   Exercise Information
                 </h4>
-                  
+
                 <ul className="exercise_status d-flex gap-3">
-                <li className="w-100">
-                <h5 className="mb-0">Exercise Type</h5>
+
+                  <li className="w-100">
+                    <h5 className="mb-0">Exercise Type</h5>
                     <p className="mb-3">
-                    Strength Exercise
+                      Strength Exercise
                     </p>
-                  <h5 className="mb-0">Exercise Video Link</h5>
+                    <h5 className="mb-0">Exercise Video Link</h5>
                     <p>
-                    Strength Exercise
+                      Strength Exercise
                     </p>
-                   </li>
-                <li className="w-100">
-                <h5 className="mb-0">Exercise Name</h5>
+                  </li>
+                  <li className="w-100">
+                    <h5 className="mb-0">Exercise Name</h5>
                     <p>
-                    Bench Press
+                      Bench Press
                     </p>
-                <h5 className="mb-0">Exercise Status</h5>
+                    <h5 className="mb-0">Exercise Status</h5>
                     <p className="mb-3">
-                    Approved
+                      Approved
                     </p>
-                   </li>
-                <li className="w-100">
-                <h5 className="mb-0">Exercise Image Url</h5>
+                  </li>
+                  <li className="w-100">
+                    <h5 className="mb-0">Exercise Image Url</h5>
                     <p>
-                    https%3A%2F%2Fdannorthfitness.com%2F8-cues-to.
+                      https%3A%2F%2Fdannorthfitness.com%2F8-cues-to.
                     </p>
-                   </li>
-                  </ul>
-                  <h4 className="ex_heading pt-3">
+                  </li>
+                </ul>
+                <h4 className="ex_heading pt-3">
                   Categories and Blocks
                 </h4>
                 <ul className="exercise_status d-flex gap-3">
-                <li className="w-100">
-                    <h5 className="mb-0">Difficulty Level</h5>
+                  
+                  <li className="w-100">
+                    <h5 className="mb-0">Category</h5>
                     <p>
                       Hard
                     </p>
                   </li>
                   <li className="w-100"></li>
                   <li className="w-100"></li>
-                  </ul>
+                </ul>
                 <ul className="exercise_status d-flex gap-3">
-                <li className="w-100">
+                  <li className="w-100">
                     <h5 className="mb-0">Blocks</h5>
                     <p>
                       Block c
                     </p>
                   </li>
                   <li className="w-100">
-                  <h5 className="mb-0">Stes</h5>
+                    <h5 className="mb-0">Stes</h5>
                     <p>
-                    03
+                      03
                     </p>
                   </li>
                   <li className="w-100">
-                  <h5 className="mb-0">Reps</h5>
+                    <h5 className="mb-0">Reps</h5>
                     <p>
-                   10
+                      10
                     </p>
                   </li>
-                  </ul>
-                
+                </ul>
+
                 {/* <ul className="exercise_status">
                 
                   <li>
