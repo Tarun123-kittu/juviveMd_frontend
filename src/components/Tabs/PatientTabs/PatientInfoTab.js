@@ -140,7 +140,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={planExercise?.active} />
                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                   </div>
-                  {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />}
+                  {/* {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />} */}
                 </div>
               </td>
             </tr>

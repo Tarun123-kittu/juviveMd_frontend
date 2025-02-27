@@ -6,6 +6,16 @@
 .setting_wrapper.patient_exercise .settings_tabs.nav-pills .nav-link {
     padding: 10px 12px;
     font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.setting_wrapper.patient_exercise .settings_tabs.nav-pills .nav-link.active .iconBtn svg path {
+    fill: #fff;
+}
+.iconBtn{
+    background-color: transparent;
+    border: unset;
 }
 
 .setting_wrapper.patient_exercise {
