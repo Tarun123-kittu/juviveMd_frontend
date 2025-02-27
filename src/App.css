@@ -42,6 +42,10 @@ li{
   background: var(--fade-color);
   height: 45px;
 }
+.iconBtn{
+  border: unset;
+  background: unset;
+}
 /* .blur_bg {
   opacity: 15%;
 } */

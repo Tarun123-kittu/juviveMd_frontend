@@ -2,7 +2,7 @@
     width: calc(100% - 90px);
 }
 .pose_image {
-    border-radius: 19px;
+    border-radius: 12px;
     overflow: hidden;
     text-align: center;
 }
@@ -16,13 +16,7 @@
 .exercise_video iframe {
     clip-path: inset(0% 0% 0% 0% round 12px);
 }
-/* .pose_image img {
-    width: 60%;
-    margin: auto;
-} */
-/* .pose_image {
-    min-height: 300px;
-} */
+
 ul.exercise_status .patient_dropdown button.btn {
     border: unset !important;
     justify-content: end;
@@ -39,9 +33,15 @@ ul.exercise_status p {
 .pose_image img {
     width: 100%;
     border-radius: 10px;
-    height: 220px;
+    height: 315px;
     object-fit: cover;
 
+}
+h4.ex_heading {
+    font-family: Poppins;
+    font-weight: 500;
+    font-size: 23.2px;
+    line-height: 34.81px;
 }
 .exercise_video iframe {
     clip-path: inset(0% 0% 0% 0% round 12px);

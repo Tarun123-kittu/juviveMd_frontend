@@ -16,8 +16,8 @@ import toast from "react-hot-toast";
 import { getRoutePermissions } from "../../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
-
-
+import { EyeSvg } from "../../SvgIcons/EyeSvg";
+import PatientLogsModal from "./PatientLogsModal";
 const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate, exercisePlanId, setExercisePlanId }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -29,6 +29,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [data, setData] = useState([])
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
+  const [showPatientLogsModal, setShowPatientLogsModal] = useState(false)
   const columns = [
     "Exercise Name",
     "Set/Reps",
@@ -99,6 +100,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
 
   return (
     <>
+    <PatientLogsModal setShow={setShowPatientLogsModal}  show={showPatientLogsModal} />
       <DataTable columns={columns}>
         {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs
         }, i) => {
@@ -138,10 +140,13 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                     alt=""
                     onClick={() => handleDeletePlan(exerciseDetails?.id)}
                   />} */}
-                  <div class="form-check form-switch">
+                  <button onClick={()=>setShowPatientLogsModal(true)} className="iconBtn">
+                    {EyeSvg}
+                  </button>
+                  {/* <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={planExercise?.active} />
                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                  </div>
+                  </div> */}
                   {/* {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />} */}
                 </div>
               </td>
