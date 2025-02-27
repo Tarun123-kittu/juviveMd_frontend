@@ -87,9 +87,9 @@ const ExerciseView = () => {
             </div>
 
           </div>
-          <div className="cmn_bg_wrapper">
-            <Row className="m-0 ">
-              <Col lg={6} className="ps-0 pe-4 border-end">
+          <div className="cmn_bg_wrapper p-0">
+            <Row className="m-0 px-3 border-bottom pb-0">
+              <Col lg={6} className="border-end pb-4 pt-4">
                 <h4 className="exercise_heading text-start">Image</h4>
                 <div className="pose_image">
                   <img
@@ -97,9 +97,11 @@ const ExerciseView = () => {
                     alt="Exercise_Image"
                     className="exercise_preview_image"
                   />
-
                 </div>
-                <h4 className="exercise_heading mt-3">Video</h4>
+
+              </Col>
+              <Col lg={6} className="pt-4">
+                <h4 className="exercise_heading">Video</h4>
                 <div className="exercise_video">
                   <ReactPlayer
                     url={exercise_data?.video_link}
@@ -109,10 +111,80 @@ const ExerciseView = () => {
                   />
                 </div>
               </Col>
-              <Col lg={6} className="pe-0 ps-4">
 
 
-                <ul className="exercise_status">
+
+            </Row>
+            <Row className="m-0 p-3">
+              <Col lg={12}>
+                <h4 className="ex_heading mb-4">
+                  Exercise Information
+                </h4>
+                  
+                <ul className="exercise_status d-flex gap-3">
+                <li className="w-100">
+                <h5 className="mb-0">Exercise Type</h5>
+                    <p className="mb-3">
+                    Strength Exercise
+                    </p>
+                  <h5 className="mb-0">Exercise Video Link</h5>
+                    <p>
+                    Strength Exercise
+                    </p>
+                   </li>
+                <li className="w-100">
+                <h5 className="mb-0">Exercise Name</h5>
+                    <p>
+                    Bench Press
+                    </p>
+                <h5 className="mb-0">Exercise Status</h5>
+                    <p className="mb-3">
+                    Approved
+                    </p>
+                   </li>
+                <li className="w-100">
+                <h5 className="mb-0">Exercise Image Url</h5>
+                    <p>
+                    https%3A%2F%2Fdannorthfitness.com%2F8-cues-to.
+                    </p>
+                   </li>
+                  </ul>
+                  <h4 className="ex_heading pt-3">
+                  Categories and Blocks
+                </h4>
+                <ul className="exercise_status d-flex gap-3">
+                <li className="w-100">
+                    <h5 className="mb-0">Difficulty Level</h5>
+                    <p>
+                      Hard
+                    </p>
+                  </li>
+                  <li className="w-100"></li>
+                  <li className="w-100"></li>
+                  </ul>
+                <ul className="exercise_status d-flex gap-3">
+                <li className="w-100">
+                    <h5 className="mb-0">Blocks</h5>
+                    <p>
+                      Block c
+                    </p>
+                  </li>
+                  <li className="w-100">
+                  <h5 className="mb-0">Stes</h5>
+                    <p>
+                    03
+                    </p>
+                  </li>
+                  <li className="w-100">
+                  <h5 className="mb-0">Reps</h5>
+                    <p>
+                   10
+                    </p>
+                  </li>
+                  </ul>
+                
+                {/* <ul className="exercise_status">
+                
                   <li>
                     <h5 className="mb-0">Description</h5>
                     <p>
@@ -140,9 +212,8 @@ const ExerciseView = () => {
                     ))}
 
                   </li>
-                </ul>
+                </ul> */}
               </Col>
-
             </Row>
           </div>
           <div>
