@@ -41,7 +41,6 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
 
   useEffect(() => {
     return () => {
-      setLoading(true)
       dispatch(clear_patient_plan_state())
     }
   }, [])
@@ -49,9 +48,9 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const patientExerciseData = useSelector((store) => store.GET_PATIENT_PLAN)
 
   useEffect(() => {
-    setLoading(true)
     dispatch(clear_patient_plan_state())
     if (formattedDate) {
+      setLoading(true)
       dispatch(get_patient_plan({ id: patientId, currentDate: formattedDate }))
     }
   }, [formattedDate])
@@ -64,6 +63,9 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
     if (patientExerciseData?.isError) {
       setData([])
       setLoading(false)
+    }
+    if (patientExerciseData?.isLoading) {
+      setLoading(true)
     }
   }, [patientExerciseData])
 

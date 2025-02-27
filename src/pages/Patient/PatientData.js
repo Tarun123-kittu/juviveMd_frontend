@@ -32,7 +32,8 @@ const PatientData = () => {
   const [currentBmi, setCurrentBmi] = useState('')
   const [expectedBmi, setExpectedBmi] = useState('')
   const [body_parts, setBody_parts] = useState()
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  console.log(loading,"this is the loading state")
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [showPopup, setShowPopup] = useState(false)
   const [currImage, setCurrImage] = useState("")
@@ -180,7 +181,7 @@ const PatientData = () => {
   }, [common_data])
 
   const handleTabSelect = (dayName) => {
-    if (loading) return;
+    setLoading(true)
     setActiveTab(dayName);
 
     const selectedDate = getDateForDay(dayName);
@@ -371,7 +372,7 @@ const PatientData = () => {
         </div>
         <Tabs
           activeKey={activeTab}
-          onSelect={handleTabSelect}
+          onSelect={!loading && handleTabSelect}
           id="uncontrolled-tab-example"
           className="mb-3 weekendTabs cmn_tabs"
         >
