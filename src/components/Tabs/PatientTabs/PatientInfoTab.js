@@ -27,6 +27,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [currImage, setCurrImage] = useState("")
   const [planId, setPlanId] = useState(null)
   const [data, setData] = useState([])
+  const [feedbackValue, setFeedbackValue] = useState({})
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [showPatientLogsModal, setShowPatientLogsModal] = useState(false)
@@ -96,38 +97,43 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
     }
   }, [is_plan_deleted])
 
+  const feedbackData = ["", "Effortless", "Fairly easy", "could do 2 more", "could do 1 more", "no more"]
+
   return (
     <>
-    <PatientLogsModal setShow={setShowPatientLogsModal}  show={showPatientLogsModal} />
+      <PatientLogsModal setShow={setShowPatientLogsModal} show={showPatientLogsModal} />
       <DataTable columns={columns}>
-        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs
+        {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs, feedbacks
         }, i) => {
           return (
             <tr key={i}>
               <td>{exerciseDetails?.exercise_name}</td>
-                <td>
-                  {planExercise?.sets?.length} /
-                  {planExercise?.sets
-                    ?.map((set) => `${set?.reps ? set?.reps+ " "+ "Reps" : set?.time.value + " " + set?.time.unit}`)
-                    .join('-') || "N/A"}
-                </td>
-                <td>
-                  {planExercise?.sets
-                    ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
-                    .join('-') || "N/A"}
-                </td>
-            
-                <td>
-                  {logs?.length > 0 ? logs?.length + "/" : "------"}
-                  {logs?.map((log) => log?.sets?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`).join('-'))}
-                </td>
+              <td>
+                {planExercise?.sets?.length} /
+                {planExercise?.sets
+                  ?.map((set) => `${set?.reps ? set?.reps + " " + "Reps" : set?.time.value + " " + set?.time.unit}`)
+                  .join('-') || "N/A"}
+              </td>
+              <td>
+                {planExercise?.sets
+                  ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
+                  .join('-') || "N/A"}
+              </td>
 
-                <td>
-                  {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
-                </td>
+              <td>
+                {logs?.length > 0 ? logs?.length + "/" : "------"}
+                {logs?.map((log) => log?.sets?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`).join('-'))}
+              </td>
+
+              <td>
+                {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
+              </td>
               {/* <td>{planExercise?.sets?.length}</td>
               <td>{exerciseDetails?.description}</td> */}
-              <td className="text-decoration-underline">Easy</td>
+              <td onClick={() => { feedbacks?.length > 0 && setShowReviewModal(true); setFeedbackValue(feedbacks[0]) }} className="text-decoration-underline cursor-pointer">
+                {feedbacks?.map((data) => feedbackData[data?.enjoyment]).filter(Boolean).join(', ')}
+              </td>
+
               <td>
                 <div className="d-flex gap-2">
                   {/* <img src={LinkImage} width={18} alt="" /> */}
@@ -138,7 +144,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                     alt=""
                     onClick={() => handleDeletePlan(exerciseDetails?.id)}
                   />} */}
-                  <button onClick={()=>setShowPatientLogsModal(true)} className="iconBtn">
+                  <button onClick={() => setShowPatientLogsModal(true)} className="iconBtn">
                     {EyeSvg}
                   </button>
                   {/* <div class="form-check form-switch">
@@ -158,6 +164,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
       <FeedbackModal
         setShowReviewModal={setShowReviewModal}
         showReviewModal={showReviewModal}
+        feedbackValue={feedbackValue}
       />
       <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_plan_deleted?.isLoading} />
       <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />

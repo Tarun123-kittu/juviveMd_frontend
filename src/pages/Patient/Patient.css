@@ -26,6 +26,9 @@
     padding-top: 20px;
     padding-bottom: 5px;
 }
+.pointer_cur {
+    cursor : "pointer"
+}
 ul.user_select_weeks {
     display: flex;
     gap: 9px;

@@ -20,6 +20,7 @@ import ImagePreview from "../../common/imagePreview/ImagePreviewer";
 import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
 import { isPatientPlanEditable, clear_is_patient_plan_editable } from "../../redux/slices/patientPlan/editPatientPlan";
+import FeedbackModal from "../../components/Modals/FeedbackModal";
 
 const PatientData = () => {
   const location = useLocation()
@@ -42,6 +43,7 @@ const PatientData = () => {
   const [planStartAt, setPlanStartAt] = useState('')
   const [planEndAt, setPlanEndAt] = useState('')
   const [exercisePlanId, setExercisePlanId] = useState(null)
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
@@ -65,9 +67,9 @@ const PatientData = () => {
       setExercisePlanId(isPatientPlanEditableResponse?.data?.data?.id)
 
 
-      if (isPatientPlanEditableDate > planStartDate && isPatientPlanEditableDate < planEndDate) {
+      if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
         setCanEditPatientPlan(true);
-      } else if (isPatientPlanEditableDate === planEndDate) {
+      } else if (isPatientPlanEditableDate === planEndAt) {
         setCanEditPatientPlan(false);
       }
     }
@@ -209,6 +211,7 @@ const PatientData = () => {
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
+        <img onClick={() => navigate("/patient")} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
         {
           patient_details?.isLoading ? <Skeleton className="skeleton" /> :
             <div className="d-flex gap-3">
@@ -365,7 +368,7 @@ const PatientData = () => {
             </svg>
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan && isPatientPlanEditableResponse?.isSuccess) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Plan</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Plan</button>}
             {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan } })}>+Create Plan</button>}
           </div>
         </div>
@@ -414,6 +417,7 @@ const PatientData = () => {
       </div>
       {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} />}
       <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
+    
     </div >
   );
 };

@@ -23,7 +23,7 @@ const daysData = {
   exerciseName: "Untitled",
   exerciseImage: "",
   exerciseVideo: "",
-  difficulty_level: [],
+  difficuilty_level: "",
   active: true,
   bodyParts: [],
   sets: [
@@ -128,6 +128,7 @@ const PatientPlanComponent = () => {
         const validExercises = days[day]
           .map((exercise) => ({
             exerciseId: exercise.exerciseId,
+            difficulty_level : exercise.difficuilty_level,
             sets: exercise.sets.map((set) => ({
               time: {
                 value: set.time.value,
@@ -168,7 +169,7 @@ const PatientPlanComponent = () => {
       }
     } catch (error) {
       console.error("Error during plan validation:", error.message);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -260,7 +261,7 @@ const PatientPlanComponent = () => {
             exerciseName: exercise.exercise_name || "Untitled",
             exerciseImage: exercise.image_url || "",
             exerciseVideo: exercise.video_link || "",
-            difficulty_level: [],
+            difficuilty_level: "",
             active: true,
             bodyParts: [],
             sets: exercise.categories?.length
@@ -294,6 +295,7 @@ const PatientPlanComponent = () => {
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
+      <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur"/>
         {isPlanExercise?.isLoading && editable ? <Loader /> : <div className="exercise_tab position-relative">
           <div className="position-absolute end-0 ps-3 bg-white">
             <button className="cmn_btn filter_btn px-4 " onClick={() => { setSavePlanModal(true) }}>Save Plan</button>
