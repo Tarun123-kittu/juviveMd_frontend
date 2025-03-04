@@ -128,8 +128,7 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
               <li><img src={Feedback} alt="feedback" /></li>
             </ul>
           </div>
-          <div className="d-flex gap-2 justify-content-center mt-3">
-            <button className="cmn_btn px-4">Reply</button>
+          <div className="d-flex gap-2 justify-content-end mt-3">
             <button className="cmn_btn px-4">Close</button>
           </div>
         </Modal.Body>

@@ -130,7 +130,7 @@ const PatientData = () => {
       height = height / 100;
     } else if (heightUnit === "feet") {
       const [feet, inches = 0] = height.toString().split(".").map(Number);
-      height = (feet  0.3048) + (inches  0.0254);
+      height = (feet *  0.3048) + (inches * 0.0254);
     }
 
     if (weightUnit === "lbs") {

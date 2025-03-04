@@ -185,7 +185,34 @@ li.page-item.active a.page-link {
   border: unset;
   border-bottom: 1px solid var(--primary-color);
 }
+.cmn_accordian .accordion-button:not(.collapsed) {
+  background: unset;
+  box-shadow: unset;
+}
 
+.cmn_accordian .accordion-item:first-of-type {
+  border-radius: 10px;
+}
+
+.cmn_accordian .accordion-item {
+  margin-bottom: 12px;
+  border-radius: 4px;
+  border: unset;
+  box-shadow: 0px 0px 5px rgba(0,0,0,10%);
+  background: rgba(172, 201, 203, 0.2);
+}
+
+.cmn_accordian .accordion-item button {
+  border-radius: 10px;
+  background: rgba(172, 201, 203, 0.2);
+  font-weight: 500;
+}
+
+.cmn_accordian .accordion-button:not(.collapsed):focus, .cmn_accordian .accordion-button:focus {
+  outline: unset;
+  box-shadow: unset;
+  color: var(--primary-color);
+}
 .cmn_tabs.nav-tabs .nav-link {
   color: #666666;
   font-size: 14px;
@@ -207,7 +234,26 @@ border: 1px solid rgba(172, 201, 203, 0.2);
 .cmn_table .patient_dropdown .dropdown {
   position: unset;
 }
+.exercise_review_data {
+  display: flex;
+  flex-wrap: wrap;
+}
 
+.exercise_review_data li {
+  width: 33%;
+}
+h6.review_title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.exercise_review_data li strong, .exercise_review_data li span {
+  font-size: 14px;
+}
+.exercise_review_data li:last-child {
+  width: 100%;
+}
 .cmn_table .patient_dropdown  .dropdown-menu {
   inset: unset !important;
   transform: unset !important;
