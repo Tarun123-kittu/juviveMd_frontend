@@ -46,8 +46,9 @@ import deleteExercise from "./slices/exerciseSlice/deleteExercise"
 import getDeleteRequests from "./slices/patientSlice/AllDeleteRequests"
 import IsPatientPlanEditableSlice from "./slices/patientPlan/editPatientPlan"
 import getPatientExercisePlan from "./slices/patientPlan/getPatientExercisePlan"
-import updatePatientExercisePlan from "./slices/patientPlan/updatePatientExercisePlan"  
+import updatePatientExercisePlan from "./slices/patientPlan/updatePatientExercisePlan"
 import FetchPlanSuggestions from "./slices/patientPlan/planSuggestions"
+import GetExerciseHistory from "./slices/patientPlan/getExerciseHistory"
 
 const AppStore = configureStore({
   reducer: {
@@ -99,7 +100,8 @@ const AppStore = configureStore({
     IS_PATIENT_PLAN_EDITABLE: IsPatientPlanEditableSlice,
     GET_PATIENT_EXERCISE_PLAN: getPatientExercisePlan,
     UPDATE_PATIENT_EXERCISE_PLAN: updatePatientExercisePlan,
-    PLAN_SUGGESTIONS: FetchPlanSuggestions
+    PLAN_SUGGESTIONS: FetchPlanSuggestions,
+    EXERCISE_HISTORY_DATA: GetExerciseHistory
   },
 })
 

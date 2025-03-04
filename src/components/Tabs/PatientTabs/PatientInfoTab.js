@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../../DataTable/DataTable";
-import DeleteImage from "../../../Images/delete.png";
-import EditImage from "../../../Images/edit.png";
-import Training from "../../../Images/training.png";
-import LinkImage from "../../../Images/linkIcon.png";
 import FeedbackModal from "../../Modals/FeedbackModal";
 import { get_patient_plan, clear_patient_plan_state } from "../../../redux/slices/patientPlan/getPAtientPlan";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +14,7 @@ import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 import { EyeSvg } from "../../SvgIcons/EyeSvg";
 import PatientLogsModal from "./PatientLogsModal";
+
 const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate, exercisePlanId, setExercisePlanId }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -29,6 +26,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [data, setData] = useState([])
   const [feedbackValue, setFeedbackValue] = useState({})
   const is_plan_deleted = useSelector((store) => store.DELETE_PATIENT_PLAN)
+  const [exerciseId, setExerciseId] = useState()
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [showPatientLogsModal, setShowPatientLogsModal] = useState(false)
   const columns = [
@@ -101,12 +99,18 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
 
   const feedbackData = ["", "Effortless", "Fairly easy", "could do 2 more", "could do 1 more", "no more"]
 
+  const handleViewExerciseHistory = (id) => {
+    setShowPatientLogsModal(true)
+    setExerciseId(id)
+  }
+
   return (
     <>
-      <PatientLogsModal setShow={setShowPatientLogsModal} show={showPatientLogsModal} />
+      <PatientLogsModal setShow={setShowPatientLogsModal} show={showPatientLogsModal} exerciseId={exerciseId} patientId={patientId} setExerciseId={setExerciseId} />
       <DataTable columns={columns}>
         {patientExerciseData?.isLoading ? <tr><td colspan={7}><Loader /></td></tr> : data?.length === 0 ? <tr><td colspan={7}><Nodata /></td></tr> : Object.keys(data) && data?.exercises?.map(({ exerciseDetails, planExercise, logs, feedbacks
         }, i) => {
+          console.log(planExercise, "this is the logs of exercise")
           return (
             <tr key={i}>
               <td>{exerciseDetails?.exercise_name}</td>
@@ -121,44 +125,29 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                   ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
                   .join('-') || "N/A"}
               </td>
-
               <td>
-                {logs?.length > 0 ? `${logs.length}/ ` : "------"}
-                {logs?.map((log) =>
-                  log?.sets?.map((set) =>
-                    `${set?.weight?.value} ${set?.weight?.unit}`
-                  ).join(' - ')
-                ).join(', ')}
+                {logs?.length > 0
+                  ? logs
+                    ?.flatMap(log => log?.sets?.map(rep => `${rep?.weight?.value}${rep?.weight?.unit}`))
+                    .join(' - ')
+                  : "--------"}
               </td>
-
-
               <td>
-                {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
+                {logs?.length > 0
+                  ? logs
+                    ?.flatMap(log => log?.sets?.map(rep => `${rep?.time?.value}${rep?.time?.unit}`))
+                    .join(' - ')
+                  : "--------"}
               </td>
-              {/* <td>{planExercise?.sets?.length}</td>
-              <td>{exerciseDetails?.description}</td> */}
               <td onClick={() => { feedbacks?.length > 0 && setShowReviewModal(true); setFeedbackValue(feedbacks[0]) }} className="text-decoration-underline cursor-pointer">
                 {feedbacks?.map((data) => feedbackData[data?.enjoyment]).filter(Boolean).join(', ')}
               </td>
 
               <td>
                 <div className="d-flex gap-2">
-                  {/* <img src={LinkImage} width={18} alt="" /> */}
-                  {/* {patientPlanPermissions?.canDelete && !hideItems && <img
-                    src={DeleteImage}
-                    className="ms-2 me-2"
-                    width={18}
-                    alt=""
-                    onClick={() => handleDeletePlan(exerciseDetails?.id)}
-                  />} */}
-                  <button onClick={() => setShowPatientLogsModal(true)} className="iconBtn">
+                  <button onClick={() => handleViewExerciseHistory(exerciseDetails?.id)} className="iconBtn">
                     {EyeSvg}
                   </button>
-                  {/* <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={planExercise?.active} />
-                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                  </div> */}
-                  {/* {patientPlanPermissions?.canUpdate && !hideItems && <img src={EditImage} width={18} alt="" onClick={() => handleEditExercise(exerciseDetails?.id)} />} */}
                 </div>
               </td>
             </tr>

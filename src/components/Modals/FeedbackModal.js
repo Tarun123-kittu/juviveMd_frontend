@@ -14,6 +14,7 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
   };
 
   const feedbackData = ["", "Effortless", "Fairly easy", "could do 2 more", "could do 1 more", "no more"]
+  const classesData = ["", "effortless", "fairleasy", "twomore", "onemore", "nomore"]
   return (
     <div>
       <Modal
@@ -23,7 +24,7 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
         className="cmn_modal FeedbackModal"
         centered
       >
-        {/* <div className="modal_head text-end">
+        <div className="modal_head text-end">
           <svg
             type="button"
             onClick={handleClose}
@@ -40,17 +41,17 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
               fill="black"
             />
           </svg>
-        </div> */}
-        <Modal.Body className="p-0">
+        </div>
+        <Modal.Body className="p-5">
           <h5 className="deletmodal_heading  text-center">
             Customer Exercise Feedback
           </h5>
           <p className="text-center">How much customer enjoy the exercise?</p>
           <div className="text-center">
-            <img src={SadImage} alt="Sad Image" />
+
           </div>
           <div className="range mt-3">
-            <input type="range" value={feedbackValue?.enjoyment * 20} />
+            <input title={feedbackData[feedbackValue?.enjoyment]} type="range" className={classesData[feedbackValue?.enjoyment]} value={feedbackValue?.enjoyment * 20} />
           </div>
           <div className="range-frequency d-flex justify-content-between">
             <span>
@@ -62,31 +63,11 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
           </div>
           <div className="text-center">
             <h5 className="feed-sub-text mb-3"> Customer Rate Your Exercise</h5>
-            <div className="d-flex gap-2 justify-content-center">
+            <div className="d-flex gap-2 justify-content-center mb-2">
               <Rating value={feedbackValue?.rating ? feedbackValue?.rating : 0} />
             </div>
-            <p className="text-center status">{feedbackData[feedbackValue?.enjoyment]}</p>
-            {/* <h5 className="feed-sub-text">Set Duration</h5> */}
-            {/* <ul className="duration-data">
-              <li>
-                <img src={DurationImage} alt={DurationImage} />
-                <span className="d-block">Set 1</span>
-                <p>Duration - 00:00:04</p>
-                <p>Total Reps- 12</p>
-              </li>
-              <li>
-                <img src={DurationImage} alt={DurationImage} />
-                <span className="d-block">Set 2</span>
-                <p>Duration - 00:00:04</p>
-                <p>Total Reps- 12</p>
-              </li>
-              <li>
-                <img src={DurationImage} alt={DurationImage} />
-                <span className="d-block">Set 3</span>
-                <p>Duration - 00:00:04</p>
-                <p>Total Reps- 12</p>
-              </li>
-            </ul> */}
+            <img src={`/${feedbackValue?.rating}.png`} alt="Sad Image" width={35}/>
+
           </div>
           <h5 className="feed-sub-text mt-3">Additional Feedback </h5>
           <ul className="add-feedback">
@@ -101,35 +82,37 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
           </ul>
           <div className="row injury-data">
             <div className="col-md-6">
-              <div className="d-flex justify-content-between mb-3">
+              {feedbackValue?.locationOfPain && <div className="d-flex justify-content-between mb-3">
                 <label htmlFor="">Location of Pain</label>
-                <input type="text" placeholder="Lower back" />
-              </div>
-              <div className="d-flex justify-content-between">
+                <input type="text" placeholder="Lower back" disabled value={feedbackValue?.locationOfPain} />
+              </div>}
+              {feedbackValue?.descriptionOfPain && <div className="d-flex justify-content-between">
                 <label htmlFor="">Description of <br />
                   Pain:</label>
-                <select name="" id="" >
-                  <option value="dd">test</option>
-                </select>
-              </div>
+                <input type="text" placeholder="Lower back" disabled value={feedbackValue?.descriptionOfPain} />
+              </div>}
             </div>
-            <div className="col-md-6">
+            {feedbackValue?.painIntensity && <div className="col-md-6">
               <div className="d-flex justify-content-between">
-                <label htmlFor="">Location of Pain</label>
-                <input type="text" placeholder="Lower back" />
+                <label htmlFor="">Pain Intensity</label>
+                <input type="text" placeholder="Lower back" disabled value={feedbackValue?.painIntensity} />
               </div>
-            </div>
+            </div>}
 
           </div>
           <h5 className="feed-sub-text mt-3">Message </h5>
           <div className="feedback-desc">
             <p>{feedbackValue?.message}</p>
-            <ul>
-              <li><img src={Feedback} alt="feedback" /></li>
+            <ul className="d-flex gap-2">
+              {feedbackValue?.files?.map((file, i) => {
+                return (
+                  <li key={i}><img src={file} alt="feedback" /></li>
+                )
+              })}
             </ul>
           </div>
           <div className="d-flex gap-2 justify-content-end mt-3">
-            <button className="cmn_btn px-4">Close</button>
+            <button className="cmn_btn px-4" onClick={() => handleClose()}>Close</button>
           </div>
         </Modal.Body>
       </Modal>
