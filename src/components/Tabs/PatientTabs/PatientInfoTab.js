@@ -121,9 +121,14 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
               </td>
 
               <td>
-                {logs?.length > 0 ? logs?.length + "/" : "------"}
-                {logs?.map((log) => log?.sets?.map((set) => `${set?.distanceGoal?.value}${" "}${set?.distanceGoal?.unit}`).join('-'))}
+                {logs?.length > 0 ? `${logs.length}/ ` : "------"}
+                {logs?.map((log) =>
+                  log?.sets?.map((set) =>
+                    `${set?.weight?.value} ${set?.weight?.unit}`
+                  ).join(' - ')
+                ).join(', ')}
               </td>
+
 
               <td>
                 {logs?.length > 0 ? logs?.map((log) => log?.sets?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`).join('-')) : "------"}
