@@ -5,11 +5,15 @@ import BlackStar from "../../Images/black-star.png";
 import DurationImage from "../../Images/duration-image.png";
 import Feedback from "../../Images/feed.png";
 import SadImage from "../../Images/sad_image.png";
-const FeedbackModal = ({ showReviewModal, setShowReviewModal }) => {
+import Rating from "../../common/ratings/Rating";
+
+
+const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) => {
   const handleClose = () => {
     setShowReviewModal(false);
   };
 
+  const feedbackData = ["", "Effortless", "Fairly easy", "could do 2 more", "could do 1 more", "no more"]
   return (
     <div>
       <Modal
@@ -46,7 +50,7 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal }) => {
             <img src={SadImage} alt="Sad Image" />
           </div>
           <div className="range mt-3">
-            <input type="range" value={20} />
+            <input type="range" value={feedbackValue?.enjoyment * 20} />
           </div>
           <div className="range-frequency d-flex justify-content-between">
             <span>
@@ -59,15 +63,11 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal }) => {
           <div className="text-center">
             <h5 className="feed-sub-text mb-3"> Customer Rate Your Exercise</h5>
             <div className="d-flex gap-2 justify-content-center">
-              <img src={YellowStar} width={20} alt="rating" />
-              <img src={BlackStar} width={20} alt="rating" />
-              <img src={BlackStar} width={20} alt="rating" />
-              <img src={BlackStar} width={20} alt="rating" />
-              <img src={BlackStar} width={20} alt="rating" />
+              <Rating value={feedbackValue?.rating ? feedbackValue?.rating : 0} />
             </div>
-            <p className="text-center status">Unable to Finish</p>
-            <h5 className="feed-sub-text">Set Duration</h5>
-            <ul className="duration-data">
+            <p className="text-center status">{feedbackData[feedbackValue?.enjoyment]}</p>
+            {/* <h5 className="feed-sub-text">Set Duration</h5> */}
+            {/* <ul className="duration-data">
               <li>
                 <img src={DurationImage} alt={DurationImage} />
                 <span className="d-block">Set 1</span>
@@ -86,51 +86,51 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal }) => {
                 <p>Duration - 00:00:04</p>
                 <p>Total Reps- 12</p>
               </li>
-            </ul>
+            </ul> */}
           </div>
           <h5 className="feed-sub-text mt-3">Additional Feedback </h5>
           <ul className="add-feedback">
             <li className="d-flex justify-content-between">
               Was the workout too challenging?
-              <button className="cmn_btn">Yes</button>
+              <button className="cmn_btn">{feedbackValue?.challenging ? "Yes" : "No"}</button>
             </li>
             <li className="d-flex justify-content-between">
               Did you feel pain during any exercises?
-              <button className="cmn_btn">Yes</button>
+              <button className="cmn_btn">{feedbackValue?.pain ? "Yes" : "No"}</button>
             </li>
           </ul>
           <div className="row injury-data">
-                <div className="col-md-6">
-                    <div className="d-flex justify-content-between mb-3">
-                        <label htmlFor="">Location of Pain</label>
-                        <input type="text" placeholder="Lower back" />
-                    </div>
-                    <div className="d-flex justify-content-between">
-                        <label htmlFor="">Description of <br />
-                        Pain:</label>
-                       <select name="" id="" > 
-                        <option value="dd">test</option>
-                       </select>
-                    </div>
-                </div>
-                <div className="col-md-6">
-                    <div className="d-flex justify-content-between">
-                        <label htmlFor="">Location of Pain</label>
-                        <input type="text" placeholder="Lower back" />
-                    </div>
-                    </div>
+            <div className="col-md-6">
+              <div className="d-flex justify-content-between mb-3">
+                <label htmlFor="">Location of Pain</label>
+                <input type="text" placeholder="Lower back" />
+              </div>
+              <div className="d-flex justify-content-between">
+                <label htmlFor="">Description of <br />
+                  Pain:</label>
+                <select name="" id="" >
+                  <option value="dd">test</option>
+                </select>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="d-flex justify-content-between">
+                <label htmlFor="">Location of Pain</label>
+                <input type="text" placeholder="Lower back" />
+              </div>
+            </div>
 
           </div>
           <h5 className="feed-sub-text mt-3">Message </h5>
           <div className="feedback-desc">
-                <p>In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. </p>
-                <ul>
-                    <li><img src={Feedback} alt="feedback" /></li>
-                </ul>
+            <p>{feedbackValue?.message}</p>
+            <ul>
+              <li><img src={Feedback} alt="feedback" /></li>
+            </ul>
           </div>
           <div className="d-flex gap-2 justify-content-center mt-3">
-                <button className="cmn_btn px-4">Reply</button>
-                <button className="cmn_btn px-4">Close</button>
+            <button className="cmn_btn px-4">Reply</button>
+            <button className="cmn_btn px-4">Close</button>
           </div>
         </Modal.Body>
       </Modal>

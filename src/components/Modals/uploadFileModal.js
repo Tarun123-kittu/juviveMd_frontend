@@ -247,7 +247,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                             </thead>
                             <tbody>
                                 {Array.isArray(fileData) && fileData.slice(1).map((row, rowIndex) => {
-                                    if (!Array.isArray(row)) return null; // Prevent errors if row is undefined
+                                    if (!Array.isArray(row)) return null; 
 
                                     const isRowMatched = row.some(cell =>
                                         Array.isArray(show_success) &&

@@ -33,6 +33,7 @@ const PatientPlanForm = ({
   setSelected_training_type,
   selected_training_type,
 }) => {
+  console.log(days[eventData], "this is the event exerciseDifficuilty");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [difficuilty, setDifficuilty] = useState("");
@@ -65,7 +66,7 @@ const PatientPlanForm = ({
     exerciseName: "Untitled",
     exerciseImage: "",
     exerciseVideo: "",
-    difficulty_level: [],
+    difficuilty_level: "",
     active: true,
     bodyParts: [],
     sets: [
@@ -135,7 +136,7 @@ const PatientPlanForm = ({
       setDays((prevDays) => {
         const updatedDay = prevDays[eventData].map((item, index) => {
           if (index === i) {
-            return { ...item, difficulty_level: [val] };
+            return { ...item, difficuilty_level: [val] };
           }
           return item;
         });
@@ -209,16 +210,19 @@ const PatientPlanForm = ({
         if (lastExercise.exerciseName === "Untitled") {
           return false;
         }
+        if (lastExercise.difficuilty_level === "") {
+          return false;
+        }
 
         return !lastExercise.sets.some((item) => {
           return (
-            item.reps === 0 && item.time.value === 0 && item.weight.value === 0
+            item.reps === 0 && (item.time.value === 0 || item.weight.value === 0)
           );
         });
       };
 
       if (!isValidExerciseData()) {
-        toast.error("Please fill at least one field (Reps, Time, or Weight)");
+        toast.error("Please fill exercise name,difficuilty level and at least one field (Reps, Time, or Weight)");
         return prevDays;
       }
 
@@ -420,6 +424,26 @@ const PatientPlanForm = ({
     }
   };
 
+  const handleSelectPatientDifficuilty = (val, i) => {
+    if (val) {
+      setSelected_patient_category(val);
+
+      setDays((prevDays) => {
+        const updatedDay = prevDays[eventData].map((item, index) => {
+          if (index === i) {
+            return { ...item, difficuilty_level: val };
+          }
+          return item;
+        });
+
+        return {
+          ...prevDays,
+          [eventData]: updatedDay,
+        };
+      });
+    }
+  };
+
   const handleSetTrainingType = (selectedOptions, i) => {
     if (!selectedOptions) return;
 
@@ -577,26 +601,26 @@ const PatientPlanForm = ({
 
                           {exercise?.length > 0 ? (
                             <Form.Select
-                            aria-label="Default select example"
-                            value={day?.exerciseId || ""} // ✅ Show selected exercise
-                            onChange={(e) => handleSelectExerciseName(e.target.value, i)}
-                          >
-                            <option value="">
-                              Please select exercise name
-                            </option>
-                          
-                            {exercise
-                              ?.filter((ex) => 
-                                ex.id === day?.exerciseId || // ✅ Allow selected value
-                                !days[eventData]?.some((dayItem) => dayItem.exerciseId === ex.id) // ❌ Remove only duplicates
-                              )
-                              .map((ex) => (
-                                <option key={ex.id} value={ex.id}>
-                                  {ex.exercise_name}
-                                </option>
-                              ))}
-                          </Form.Select>
-                          
+                              aria-label="Default select example"
+                              value={day?.exerciseId || ""} // ✅ Show selected exercise
+                              onChange={(e) => handleSelectExerciseName(e.target.value, i)}
+                            >
+                              <option value="">
+                                Please select exercise name
+                              </option>
+
+                              {exercise
+                                ?.filter((ex) =>
+                                  ex.id === day?.exerciseId || // ✅ Allow selected value
+                                  !days[eventData]?.some((dayItem) => dayItem.exerciseId === ex.id) // ❌ Remove only duplicates
+                                )
+                                .map((ex) => (
+                                  <option key={ex.id} value={ex.id}>
+                                    {ex.exercise_name}
+                                  </option>
+                                ))}
+                            </Form.Select>
+
                           ) : (
                             <Form.Control
                               type="text"
@@ -614,6 +638,26 @@ const PatientPlanForm = ({
                             value={day.exerciseVideo}
                             placeholder="Enter Video Link"
                           />
+                        </Form.Group>
+                        <Form.Group
+                          className="w-100"
+                          controlId="exampleForm.ControlInput1"
+                        >
+                          <Form.Label>Difficuilty Level</Form.Label>
+                          <Form.Select
+                            aria-label="Default select example"
+                            value={day?.difficuilty_level}
+                            onChange={(e) =>
+                              handleSelectPatientDifficuilty(e.target.value, i)
+                            }
+                          >
+                            <option value="" selected>
+                              Select Difficuilty Level
+                            </option>
+                            {exerciseDifficuilty?.map((data) => {
+                              return <option value={data}>{data}</option>;
+                            })}
+                          </Form.Select>
                         </Form.Group>
                       </Col>
                     </Row>
