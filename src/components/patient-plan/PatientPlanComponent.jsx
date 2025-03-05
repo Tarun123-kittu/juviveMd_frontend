@@ -14,6 +14,7 @@ import Loader from "../../common/Loader/Loader";
 import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } from "../../redux/slices/patientPlan/updatePatientExercisePlan";
 import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
 import { get_patient_plan_message, clear_patient_plan_message_state } from "../../redux/slices/patientPlan/getPatientPlanMessage";
+import Swal from 'sweetalert2'
 
 const daysData = {
   category: "",
@@ -179,6 +180,31 @@ const PatientPlanComponent = () => {
     }
   };
 
+  const showAlert = (message) => {
+    let timerInterval;
+    Swal.fire({
+      title: "",
+      html: `<p>${message}</p>`,
+      timer: 4000,
+      timerProgressBar: true,
+      didOpen: () => {
+        const timer = Swal.getPopup().querySelector(".swal2-timer-progress-bar");
+        timerInterval = setInterval(() => {
+          if (timer) {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log("I was closed by the timer");
+      }
+    });
+  };
+
 
   useEffect(() => {
     if (isPlanCreated?.isSuccess) {
@@ -304,6 +330,7 @@ const PatientPlanComponent = () => {
   useEffect(() => {
     if (plan_message?.isSuccess) {
       setPlanMessage(plan_message?.data?.data)
+        showAlert(plan_message?.data?.data)
     }
   }, [plan_message])
 

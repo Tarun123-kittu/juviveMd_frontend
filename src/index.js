@@ -9,12 +9,10 @@ import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <Provider store={AppStore}>
       <App />
       <Toaster position="top-right"
         reverseOrder={false} />
     </Provider>
-  </React.StrictMode>
 );
 reportWebVitals();
