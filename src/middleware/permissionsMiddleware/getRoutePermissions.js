@@ -5,7 +5,7 @@ export const getRoutePermissions = (route) => {
         const permissions_data = localStorage.getItem('permissions');
         if (!permissions_data) {
             return [];
-        }
+        } 
 
         const parsed_permissions = JSON.parse(permissions_data);
 

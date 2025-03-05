@@ -61,7 +61,7 @@ const Dashboard = () => {
               title="View Patient payment pending"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                if (data?.paymentPending) {
+                if (data?.paymentPending >= 0) {
                   navigate("/patient", { state: { val: "paymentPending" } });
                 } else {
                   navigate("/exercise", { state: { val: "active" } });
@@ -97,7 +97,7 @@ const Dashboard = () => {
               title="View Patient payment pending"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                if (data?.healthCases) {
+                if (data?.healthCases >= 0) {
                   navigate("/patient", { state: { val: "healthIssue" } })
                 } else {
                   navigate("/exercise", { state: { val: "draft" } });
@@ -153,7 +153,7 @@ const Dashboard = () => {
               title="View Patient payment pending"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                if (data?.exercisesApproval) {
+                if (data?.exercisesApproval >= 0) {
                   navigate("/exercise", { state: { val: "approvalRequest" } })
                 } else {
                   navigate("/patient", { state: { val: "active" } })

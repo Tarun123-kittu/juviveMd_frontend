@@ -268,25 +268,32 @@ const PatientPlanForm = ({
   };
 
   const addNewFlexibilityToCardio = (i) => {
-    console.log(days,"this is the days")
     setDays((prevDays) => {
+      if (!prevDays || !eventData || !prevDays[eventData]) {
+        console.error("Invalid eventData or days structure");
+        return prevDays;
+      }
+  
       const updatedDays = { ...prevDays };
       const currentDayExercises = [...updatedDays[eventData]];
+  
+      if (!currentDayExercises[i]) {
+        console.error(`Exercise at index ${i} does not exist`);
+        return prevDays;
+      }
+  
       const currentExercise = currentDayExercises[i];
-      const hasEmptyCardioField = currentDayExercises.some((exercise) =>
-        exercise.sets.some((field) => {
-          return (
-            field.time?.value === 0 ||
-            field.weight?.value === 0 ||
-            field.reps === 0
-          );
-        })
-      );
-
-      if (hasEmptyCardioField) {
-        toast.error(
-          "Cannot add new set, some values are missing in the previous fields."
-        );
+      const hasEmptySet = currentExercise?.sets?.some((field) => {
+        const hasNoValidValues =
+          (field.time?.value === 0 || field.time?.value == null) &&
+          (field.weight?.value === 0 || field.weight?.value == null) &&
+          (field.reps === 0 || field.reps == null);
+  
+        return hasNoValidValues;
+      });
+  
+      if (hasEmptySet) {
+        toast.error("Cannot add new set, some values are missing in the previous fields.");
         return prevDays;
       }
       currentExercise.sets = [
@@ -297,10 +304,12 @@ const PatientPlanForm = ({
           weight: { value: 0, unit: "kg" },
         },
       ];
+  
       updatedDays[eventData] = currentDayExercises;
       return updatedDays;
     });
   };
+  
 
   const handleChangeCardioUnit = (i, index, field, unit) => {
     setDays((prevDays) => {
@@ -427,7 +436,6 @@ const PatientPlanForm = ({
 
   const handleSelectPatientDifficuilty = (val, i) => {
     if (val) {
-      setSelected_patient_category(val);
 
       setDays((prevDays) => {
         const updatedDay = prevDays[eventData].map((item, index) => {

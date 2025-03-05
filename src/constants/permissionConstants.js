@@ -8,7 +8,7 @@ export const permission_constants = {
     PATIENTREPORTS: 'PatientReports',
     DASHBOARD: 'Dashboard',
     EXERCISEUPLOAD: 'ExerciseUpload',
-    EXERCISEACTIVETAB: 'ExerciseActiveTab',
+    EXERCISEACTIVETAB: 'ExerciseActiveTab', 
     EXERCISEAPPROVALTAB: 'ExerciseApprovalTab',
     EXERCISEDRAFTTAB: 'ExerciseDraftTab',
     EXERCISEREJECTEDTTAB: 'ExerciseRejectedTab',

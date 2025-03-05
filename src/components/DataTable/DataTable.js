@@ -14,7 +14,7 @@ const DataTable = ({ children, columns, hideAction,hasCheckbox }) => {
             )} */}
             {columns.map((col, index) => (
               <th key={index}>{col}</th>
-            ))}
+            ))} 
           </tr>
         </thead>
         <tbody>{children}</tbody>
