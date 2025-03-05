@@ -75,11 +75,11 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading mb-3">Exercise Log</h2>
+          <Accordion key={0} >
         {exerciseHistory?.isLoading ? <Loader /> : <div className="cmn_accordian">
           {data?.length === 0 ? <span className="d-block text-center py-5">No Exercise Logs To Display</span> : data?.map((item, i) => {
             return (
-              <Accordion key={i} >
-                <Accordion.Item eventKey="0">
+                <Accordion.Item eventKey={i}>
                   <Accordion.Header>{formatDate(item?.createdAt)}</Accordion.Header>
                   <Accordion.Body>
                     <h6 className="review_title">sets</h6>
@@ -138,11 +138,11 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
                     </ul>
                   </Accordion.Body>
                 </Accordion.Item>
-              </Accordion>
             )
           })}
 
         </div>}
+          </Accordion>
       </Modal.Body>
     </Modal>
   );

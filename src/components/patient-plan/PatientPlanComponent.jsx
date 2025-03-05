@@ -18,6 +18,7 @@ import { set } from "date-fns";
 const daysData = {
   category: "",
   patient_category: "",
+  planExerciseId : null,
   training_type: [],
   exerciseId: "",
   exerciseName: "Untitled",
@@ -94,6 +95,7 @@ const PatientPlanComponent = () => {
 
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
+  console.log(isPlanExercise,"this is from the exercise form data")
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
 
   useEffect(() => {
@@ -128,6 +130,7 @@ const PatientPlanComponent = () => {
         const validExercises = days[day]
           .map((exercise) => ({
             exerciseId: exercise.exerciseId,
+            planExerciseId : exercise.planExerciseId,
             difficulty_level : exercise.difficuilty_level,
             sets: exercise.sets.map((set) => ({
               time: {
@@ -216,7 +219,9 @@ const PatientPlanComponent = () => {
           return {
             ...exercise,
             exerciseId: exercise.exerciseDetails?.id,
+            planExerciseId : exercise.planExerciseId,
             category: exercise.exerciseDetails?.exercise_type,
+            difficuilty_level : exercise.difficulty_level || "",
             exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
             patient_category: exercise?.exerciseDetails?.categories[i]?.category,
             exerciseImage: exercise.exerciseDetails?.image_url,
@@ -258,6 +263,7 @@ const PatientPlanComponent = () => {
             patient_category: exercise?.patient_category || "A",
             training_type: exercise.training_type || [],
             exerciseId: exercise.id || "",
+            planExerciseId : exercise.planExerciseId,
             exerciseName: exercise.exercise_name || "Untitled",
             exerciseImage: exercise.image_url || "",
             exerciseVideo: exercise.video_link || "",

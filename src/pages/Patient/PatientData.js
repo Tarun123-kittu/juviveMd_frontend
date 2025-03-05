@@ -43,6 +43,7 @@ const PatientData = () => {
   const [planStartAt, setPlanStartAt] = useState('')
   const [planEndAt, setPlanEndAt] = useState('')
   const [exercisePlanId, setExercisePlanId] = useState(null)
+  console.log(exercisePlanId,"this is the exercise plan id from patient data component")
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
   const { patientId } = location?.state ? location?.state : location

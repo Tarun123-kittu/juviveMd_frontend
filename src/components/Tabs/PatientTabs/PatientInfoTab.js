@@ -29,6 +29,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [exerciseId, setExerciseId] = useState()
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [showPatientLogsModal, setShowPatientLogsModal] = useState(false)
+  const [planExerciseId,setPlanExerciseId] = useState(null)
   const columns = [
     "Exercise Name",
     "Set/Reps",
@@ -46,6 +47,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   }, [])
 
   const patientExerciseData = useSelector((store) => store.GET_PATIENT_PLAN)
+  console.log(patientExerciseData,"this is the patient plan exercise data")
 
   useEffect(() => {
     dispatch(clear_patient_plan_state())

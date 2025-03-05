@@ -63,6 +63,7 @@ const PatientPlanForm = ({
     patient_category: "",
     training_type: [],
     exerciseId: "",
+    planExerciseId : null,
     exerciseName: "Untitled",
     exerciseImage: "",
     exerciseVideo: "",
