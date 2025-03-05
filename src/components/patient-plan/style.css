@@ -18,6 +18,16 @@
     border: unset;
 }
 
+.message_class {
+    background: #eef4f5;
+    align-items: center;
+    border-radius: 10px;
+    color: black;
+    padding: 4px;
+    margin: 5px;
+    font-size: 14px;
+}
+
 .setting_wrapper.patient_exercise {
     padding: 20px;
     background: rgba(172, 201, 203, 0.2);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import default_user from "../../Images/default_user.svg";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -37,13 +37,15 @@ const PatientData = () => {
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [showPopup, setShowPopup] = useState(false)
   const [currImage, setCurrImage] = useState("")
+  const inputRef = useRef(null);
+  const [dateValue, setDateValue] = useState('');
   const [isPatientPlanEditableDate, setIsPatientPlanEditableDate] = useState('')
   const [canEditPatientPlan, setCanEditPatientPlan] = useState(false)
   const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
   const [planStartAt, setPlanStartAt] = useState('')
   const [planEndAt, setPlanEndAt] = useState('')
   const [exercisePlanId, setExercisePlanId] = useState(null)
-  console.log(exercisePlanId,"this is the exercise plan id from patient data component")
+  console.log(exercisePlanId, "this is the exercise plan id from patient data component")
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
   const { patientId } = location?.state ? location?.state : location
@@ -131,7 +133,7 @@ const PatientData = () => {
       height = height / 100;
     } else if (heightUnit === "feet") {
       const [feet, inches = 0] = height.toString().split(".").map(Number);
-      height = (feet *  0.3048) + (inches * 0.0254);
+      height = (feet * 0.3048) + (inches * 0.0254);
     }
 
     if (weightUnit === "lbs") {
@@ -209,6 +211,18 @@ const PatientData = () => {
     Friday: "Fri",
     Saturday: "Sat",
   };
+
+  const handleSvgClick = () => {
+    if (inputRef.current) {
+      // Open the calendar by programmatically clicking on the input
+      inputRef.current.click();
+    }
+  };
+
+  const handleDateChange = (e) => {
+    setDateValue(e.target.value);
+  };
+
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -361,12 +375,18 @@ const PatientData = () => {
               viewBox="0 0 18 18"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              onClick={handleSvgClick}
             >
               <path
                 d="M0 15.3C0 16.83 1.17 18 2.7 18H15.3C16.83 18 18 16.83 18 15.3V8.1H0V15.3ZM15.3 1.8H13.5V0.9C13.5 0.36 13.14 0 12.6 0C12.06 0 11.7 0.36 11.7 0.9V1.8H6.3V0.9C6.3 0.36 5.94 0 5.4 0C4.86 0 4.5 0.36 4.5 0.9V1.8H2.7C1.17 1.8 0 2.97 0 4.5V6.3H18V4.5C18 2.97 16.83 1.8 15.3 1.8Z"
                 fill="black"
               />
             </svg>
+            <input
+              ref={inputRef}
+              type="date"
+              style={{ display: 'none' }} // Hide the input field
+            />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
             {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Plan</button>}
@@ -418,7 +438,7 @@ const PatientData = () => {
       </div>
       {showAddPateintExercise && <AddPateintExercise showAddPateintExercise={showAddPateintExercise} setshowAddPateintExercise={setshowAddPateintExercise} exercise_category={exercise_category} patientId={patientId} weekdays={weekdays} body_parts={body_parts} exerciseDifficuilty={exerciseDifficuilty} weekday={activeTab} />}
       <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
-    
+
     </div >
   );
 };

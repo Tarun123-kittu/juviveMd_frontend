@@ -13,12 +13,12 @@ import { get_patient_exercise_plan, clear_get_patient_exercise_plan_state } from
 import Loader from "../../common/Loader/Loader";
 import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } from "../../redux/slices/patientPlan/updatePatientExercisePlan";
 import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
-import { set } from "date-fns";
+import { get_patient_plan_message, clear_patient_plan_message_state } from "../../redux/slices/patientPlan/getPatientPlanMessage";
 
 const daysData = {
   category: "",
   patient_category: "",
-  planExerciseId : null,
+  planExerciseId: null,
   training_type: [],
   exerciseId: "",
   exerciseName: "Untitled",
@@ -42,6 +42,7 @@ const PatientPlanComponent = () => {
     return () => {
       dispatch(clear_get_patient_exercise_plan_state())
       dispatch(clear_update_patient_exercise_plan_state())
+      dispatch(clear_patient_plan_message_state())
     }
   }, [])
   const location = useLocation()
@@ -68,6 +69,7 @@ const PatientPlanComponent = () => {
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [planValidFrom, setPlanValidFrom] = useState('')
   const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
+  const [planMessage, setPlanMessage] = useState("")
   const [days, setDays] = useState({
     Monday: [daysData],
     Tuesday: [daysData],
@@ -95,11 +97,12 @@ const PatientPlanComponent = () => {
 
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
-  console.log(isPlanExercise,"this is from the exercise form data")
+  const plan_message = useSelector((store) => store.PLAN_MESSAGE)
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
 
   useEffect(() => {
     dispatch(common_data_api())
+    dispatch(get_patient_plan_message({ patientId }))
   }, [])
 
   useEffect(() => {
@@ -130,8 +133,8 @@ const PatientPlanComponent = () => {
         const validExercises = days[day]
           .map((exercise) => ({
             exerciseId: exercise.exerciseId,
-            planExerciseId : exercise.planExerciseId,
-            difficulty_level : exercise.difficuilty_level,
+            planExerciseId: exercise.planExerciseId,
+            difficulty_level: exercise.difficuilty_level,
             sets: exercise.sets.map((set) => ({
               time: {
                 value: set.time.value,
@@ -219,9 +222,9 @@ const PatientPlanComponent = () => {
           return {
             ...exercise,
             exerciseId: exercise.exerciseDetails?.id,
-            planExerciseId : exercise.planExerciseId,
+            planExerciseId: exercise.planExerciseId,
             category: exercise.exerciseDetails?.exercise_type,
-            difficuilty_level : exercise.difficulty_level || "",
+            difficuilty_level: exercise.difficulty_level || "",
             exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
             patient_category: exercise?.exerciseDetails?.categories[i]?.category,
             exerciseImage: exercise.exerciseDetails?.image_url,
@@ -263,7 +266,7 @@ const PatientPlanComponent = () => {
             patient_category: exercise?.patient_category || "A",
             training_type: exercise.training_type || [],
             exerciseId: exercise.id || "",
-            planExerciseId : exercise.planExerciseId,
+            planExerciseId: exercise.planExerciseId,
             exerciseName: exercise.exercise_name || "Untitled",
             exerciseImage: exercise.image_url || "",
             exerciseVideo: exercise.video_link || "",
@@ -298,10 +301,21 @@ const PatientPlanComponent = () => {
     }
   }, [suggested_plans, editable]);
 
+  useEffect(() => {
+    if (plan_message?.isSuccess) {
+      setPlanMessage(plan_message?.data?.data)
+    }
+  }, [plan_message])
+
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
-      <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur"/>
+        <div className="d-flex justify-content-between">
+          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
+          <div className="message_class">
+            {plan_message?.isSuccess && <p>{planMessage}</p>}
+          </div>
+        </div>
         {isPlanExercise?.isLoading && editable ? <Loader /> : <div className="exercise_tab position-relative">
           <div className="position-absolute end-0 ps-3 bg-white">
             <button className="cmn_btn filter_btn px-4 " onClick={() => { setSavePlanModal(true) }}>Save Plan</button>

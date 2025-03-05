@@ -49,6 +49,7 @@ import getPatientExercisePlan from "./slices/patientPlan/getPatientExercisePlan"
 import updatePatientExercisePlan from "./slices/patientPlan/updatePatientExercisePlan"
 import FetchPlanSuggestions from "./slices/patientPlan/planSuggestions"
 import GetExerciseHistory from "./slices/patientPlan/getExerciseHistory"
+import GetPatientPlanMessage from "./slices/patientPlan/getPatientPlanMessage"
 
 const AppStore = configureStore({
   reducer: {
@@ -101,7 +102,8 @@ const AppStore = configureStore({
     GET_PATIENT_EXERCISE_PLAN: getPatientExercisePlan,
     UPDATE_PATIENT_EXERCISE_PLAN: updatePatientExercisePlan,
     PLAN_SUGGESTIONS: FetchPlanSuggestions,
-    EXERCISE_HISTORY_DATA: GetExerciseHistory
+    EXERCISE_HISTORY_DATA: GetExerciseHistory,
+    PLAN_MESSAGE: GetPatientPlanMessage
   },
 })
 

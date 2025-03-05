@@ -63,7 +63,7 @@ const PatientPlanForm = ({
     patient_category: "",
     training_type: [],
     exerciseId: "",
-    planExerciseId : null,
+    planExerciseId: null,
     exerciseName: "Untitled",
     exerciseImage: "",
     exerciseVideo: "",
@@ -204,7 +204,6 @@ const PatientPlanForm = ({
     setDays((prevDays) => {
       const currentDayData = prevDays[eventData] || [];
       const lastExercise = currentDayData[currentDayData.length - 1];
-
       const isValidExerciseData = () => {
         if (!lastExercise) return true;
 
@@ -269,6 +268,7 @@ const PatientPlanForm = ({
   };
 
   const addNewFlexibilityToCardio = (i) => {
+    console.log(days,"this is the days")
     setDays((prevDays) => {
       const updatedDays = { ...prevDays };
       const currentDayExercises = [...updatedDays[eventData]];
