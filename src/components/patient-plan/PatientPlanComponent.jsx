@@ -180,31 +180,6 @@ const PatientPlanComponent = () => {
     }
   };
 
-  const showAlert = (message) => {
-    let timerInterval;
-    Swal.fire({
-      title: "",
-      html: `<p>${message}</p>`,
-      timer: 4000,
-      timerProgressBar: true,
-      didOpen: () => {
-        const timer = Swal.getPopup().querySelector(".swal2-timer-progress-bar");
-        timerInterval = setInterval(() => {
-          if (timer) {
-            timer.textContent = `${Swal.getTimerLeft()}`;
-          }
-        }, 100);
-      },
-      willClose: () => {
-        clearInterval(timerInterval);
-      }
-    }).then((result) => {
-      if (result.dismiss === Swal.DismissReason.timer) {
-        console.log("I was closed by the timer");
-      }
-    });
-  };
-
 
   useEffect(() => {
     if (isPlanCreated?.isSuccess) {
@@ -330,7 +305,6 @@ const PatientPlanComponent = () => {
   useEffect(() => {
     if (plan_message?.isSuccess) {
       setPlanMessage(plan_message?.data?.data)
-        showAlert(plan_message?.data?.data)
     }
   }, [plan_message])
 
