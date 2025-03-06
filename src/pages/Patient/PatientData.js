@@ -21,10 +21,11 @@ import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
 import { isPatientPlanEditable, clear_is_patient_plan_editable } from "../../redux/slices/patientPlan/editPatientPlan";
 import FeedbackModal from "../../components/Modals/FeedbackModal";
+import { clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
 
 const PatientData = () => {
   const location = useLocation()
-  const { hideItems } = location?.state ? location?.state : location
+  const { hideItems } = location?.state ? location?.state : location 
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
@@ -119,6 +120,7 @@ const PatientData = () => {
     const formatted = formatDateValue(currentDate);
     setIsPatientPlanEditableDate(formatted)
     setFormattedDate(formatted);
+    dispatch(clear_suggested_plans_state())
   }, []);
 
 
