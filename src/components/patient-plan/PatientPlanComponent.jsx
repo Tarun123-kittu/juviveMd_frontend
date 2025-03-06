@@ -310,13 +310,13 @@ const PatientPlanComponent = () => {
 
   return (
     <div className="wrapper">
-      <div className="inner_wrapper">
-        <div className="d-flex justify-content-between">
-          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
+        <div className="d-flex justify-content-between align-items-center stickQuote">
+          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="pointer_cur" />
           <div className="message_class">
-            {plan_message?.isSuccess && <p>{planMessage}</p>}
+            {plan_message?.isSuccess && <p>"{planMessage}"</p>}
           </div>
         </div>
+      <div className="inner_wrapper pt-0">
         {isPlanExercise?.isLoading && editable ? <Loader /> : <div className="exercise_tab position-relative">
           <div className="position-absolute end-0 ps-3 bg-white">
             <button className="cmn_btn filter_btn px-4 " onClick={() => { setSavePlanModal(true) }}>Save Plan</button>
