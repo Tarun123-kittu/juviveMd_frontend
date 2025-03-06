@@ -26,9 +26,6 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
     const [hide_download, setHide_download] = useState(true)
 
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
-    // console.log(is_file_uploades,"this is the is file upoad")
-    // console.log(fileData,"this is file Data")
-    console.log(show_success, "isSuccess--")
 
     const expectedHeaders = [
         'Exercise Name', 'Exercise Type', 'Category',
