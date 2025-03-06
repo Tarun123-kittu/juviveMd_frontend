@@ -133,7 +133,7 @@ const PatientResetPassword = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    <h1>Your password has been created</h1>
+                                    <h3>Your password has been created</h3>
                                 )
                             }
 
