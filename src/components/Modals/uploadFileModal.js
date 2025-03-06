@@ -26,6 +26,9 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
     const [hide_download, setHide_download] = useState(true)
 
     const is_file_uploades = useSelector((store) => store.UPLOAD_EXERCISE);
+    console.log(is_file_uploades,"this is the is file upoad")
+    console.log(fileData,"this is file Data")
+    console.log(show_success,"isSuccess--")
 
     const expectedHeaders = [
         'Exercise Name', 'Exercise Type', 'Category',
@@ -131,11 +134,10 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
 
     useEffect(() => {
         if (is_file_uploades?.isSuccess) {
-            handleClose()
+            // handleClose()
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
-            setShow_success(is_file_uploades?.data?.data?.successRecords)
-            dispatch(clear_upload_exercise_state())
+            setShow_success(is_file_uploades?.data?.data?.processedExercises)
         }
         if (is_file_uploades?.isError) {
             toast.error(is_file_uploades?.error?.message, {
@@ -248,11 +250,14 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                             <tbody>
                                 {Array.isArray(fileData) && fileData.slice(1).map((row, rowIndex) => {
                                     if (!Array.isArray(row)) return null; 
+                                    console.log("row--",row)
 
                                     const isRowMatched = row.some(cell =>
                                         Array.isArray(show_success) &&
-                                        show_success.some(success => success?.exercise_name === String(cell))
+                                        show_success.some(success => console.log(success?.exercise_name,cell,"both responses"))
                                     );
+
+                                    console.log(isRowMatched,"isRowMatched:--")
 
                                     return (
                                         <tr
