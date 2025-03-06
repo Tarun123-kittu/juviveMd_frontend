@@ -31,7 +31,7 @@ import ImagePreview from '../../common/imagePreview/ImagePreviewer'
 
 const Reception_patient_list = ({ showButtons }) => {
     const elementRef = useRef(null);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch() 
     const navigate = useNavigate()
     const location = useLocation()
     const { val } = location?.state ? location?.state : location
@@ -49,7 +49,7 @@ const Reception_patient_list = ({ showButtons }) => {
     const [page, setPage] = useState(1)
     const [isActiveTab, setIsActiveTab] = useState(false)
     const [tab, setTab] = useState(val || "active")
-    const [trainers, setTrainers] = useState()
+    const [trainers, setTrainers] = useState() 
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [index, setIndex] = useState(null)
