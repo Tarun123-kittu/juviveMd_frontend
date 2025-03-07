@@ -16,8 +16,8 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     setSavePlanModal(false);
     !editable && setPlanValidFrom('');
     !editable && setPlanValidTo('');
-    // setPlanValidTo("")
-    // setPlanValidFrom("")
+    setPlanValidTo("")
+    setPlanValidFrom("")
     
   };
 
