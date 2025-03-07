@@ -25,7 +25,7 @@ import { clear_suggested_plans_state } from "../../redux/slices/patientPlan/plan
 
 const PatientData = () => {
   const location = useLocation()
-  const { hideItems } = location?.state ? location?.state : location 
+  const { hideItems } = location?.state ? location?.state : location
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [patient_data, setPatient_data] = useState()
@@ -38,15 +38,15 @@ const PatientData = () => {
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [showPopup, setShowPopup] = useState(false)
   const [currImage, setCurrImage] = useState("")
-  const inputRef = useRef(null);
+  const dateInputRef = useRef(null);
   const [dateValue, setDateValue] = useState('');
+  const [inputSelectedDate, setInputSelectedDate] = useState();
   const [isPatientPlanEditableDate, setIsPatientPlanEditableDate] = useState('')
   const [canEditPatientPlan, setCanEditPatientPlan] = useState(false)
   const [showAddPateintExercise, setshowAddPateintExercise,] = useState(false)
   const [planStartAt, setPlanStartAt] = useState('')
   const [planEndAt, setPlanEndAt] = useState('')
   const [exercisePlanId, setExercisePlanId] = useState(null)
-  console.log(exercisePlanId, "this is the exercise plan id from patient data component")
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
   const { patientId } = location?.state ? location?.state : location
@@ -85,7 +85,7 @@ const PatientData = () => {
 
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDate = new Date();
+    const currentDate = inputSelectedDate ? inputSelectedDate : new Date();
     const currentDayIndex = currentDate.getDay();
     const targetDayIndex = daysOfWeek.indexOf(dayName);
 
@@ -215,14 +215,19 @@ const PatientData = () => {
   };
 
   const handleSvgClick = () => {
-    if (inputRef.current) {
-      // Open the calendar by programmatically clicking on the input
-      inputRef.current.click();
-    }
+    console.log("This is the handle svg click button")
+    dateInputRef.current && dateInputRef.current.click();
   };
 
   const handleDateChange = (e) => {
-    setDateValue(e.target.value);
+    setSelectedDate(new Date(e.target.value));
+    setInputSelectedDate(new Date(e.target.value));
+    const selectedDay = formatDate(new Date(e.target.value))
+    const newDay = selectedDay?.split(",")
+    setActiveTab(newDay[0])
+    const formatted = formatDateValue(new Date(e.target.value));
+    setFormattedDate(formatted)
+
   };
 
   return (
@@ -377,7 +382,7 @@ const PatientData = () => {
               viewBox="0 0 18 18"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              onClick={handleSvgClick}
+              onClick={() => dateInputRef.current.showPicker()}
             >
               <path
                 d="M0 15.3C0 16.83 1.17 18 2.7 18H15.3C16.83 18 18 16.83 18 15.3V8.1H0V15.3ZM15.3 1.8H13.5V0.9C13.5 0.36 13.14 0 12.6 0C12.06 0 11.7 0.36 11.7 0.9V1.8H6.3V0.9C6.3 0.36 5.94 0 5.4 0C4.86 0 4.5 0.36 4.5 0.9V1.8H2.7C1.17 1.8 0 2.97 0 4.5V6.3H18V4.5C18 2.97 16.83 1.8 15.3 1.8Z"
@@ -385,9 +390,10 @@ const PatientData = () => {
               />
             </svg>
             <input
-              ref={inputRef}
               type="date"
-              style={{ display: 'none' }} // Hide the input field
+              ref={dateInputRef}
+              style={{ visibility: "hidden", position: "absolute" }}
+              onChange={handleDateChange}
             />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
