@@ -389,9 +389,9 @@ const PatientPlanForm = ({
       const updatedDays = { ...prevDays };
       const currentDayExercises = [...updatedDays[eventData]];
 
-      currentDayExercises[i].cardioFields = currentDayExercises[
+      currentDayExercises[i].sets = currentDayExercises[
         i
-      ].cardioFields.filter((_, idx) => idx !== index);
+      ].sets.filter((_, idx) => idx !== index);
 
       updatedDays[eventData] = currentDayExercises;
 
@@ -816,7 +816,7 @@ const PatientPlanForm = ({
                                   </div>
                                 </div>
                               </div>
-                              {day?.cardioFields?.length > 1 && (
+                              {day?.sets?.length > 1 && (
                                 <span
                                   onClick={() =>
                                     handleRemoveCardioFields(i, index)
