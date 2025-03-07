@@ -685,7 +685,7 @@ const PatientPlanForm = ({
                           </button>
                         </div>
                         {day?.sets?.map((cardio, index) => (
-                          <Form.Group className="mb-2">
+                          <Form.Group className="mb-3">
                             <div className="steps_items d-flex gap-2">
                               <div>
                                 <Form.Label>Set {index + 1}</Form.Label>
@@ -693,7 +693,7 @@ const PatientPlanForm = ({
                               </div>
                               <div className="w-100">
                                 <div className="flex-grow-1">
-                                  <div className="d-flex gap-2 mb-3">
+                                  <div className="d-flex gap-2">
                                     <div className="w-100">
                                       <div className="d-flex gap-2 align-items-center">
                                         <Form.Label className="flex-grow-1">

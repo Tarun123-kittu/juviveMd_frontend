@@ -310,7 +310,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               value={stepOnefullData?.patient_category}
               onChange={formik.handleChange}
             >
-              <option value="">Select Block</option>
+              <option value="">Select category</option>
               {categoryData?.map((data, index) => (
                 <option key={index} value={data}>
                   {data}
