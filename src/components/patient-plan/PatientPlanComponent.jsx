@@ -232,7 +232,7 @@ const PatientPlanComponent = () => {
             exerciseId: exercise.exerciseDetails?.id,
             planExerciseId: exercise.planExerciseId,
             category: exercise.exerciseDetails?.exercise_type,
-            difficuilty_level: exercise.difficulty_level || "",
+            difficuilty_level: exercise.difficulty_level ? exercise.difficulty_level : difficuilty_level_data[patient_selected_category] || "",
             exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
             patient_category: exercise?.exerciseDetails?.categories[i]?.category,
             exerciseImage: exercise.exerciseDetails?.image_url,
@@ -278,7 +278,7 @@ const PatientPlanComponent = () => {
             exerciseName: exercise.exercise_name || "Untitled",
             exerciseImage: exercise.image_url || "",
             exerciseVideo: exercise.video_link || "",
-            difficuilty_level: "",
+            difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
             active: true,
             bodyParts: [],
             sets: exercise.categories?.length
