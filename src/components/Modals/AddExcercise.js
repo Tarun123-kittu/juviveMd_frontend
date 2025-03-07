@@ -111,7 +111,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         video_link: exerciseVideo,
         image_url: exerciseImage,
         description: exerciseDescription,
-        unit:unit,
+        unit: unit,
         draft: false,
         training_type: training_type_data
       })
@@ -133,7 +133,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
         video_link: exerciseVideo,
         image_url: exerciseImage,
         description: exerciseDescription,
-        unit:unit,
+        unit: unit,
         draft: true,
         training_type: training_type_data
       })
@@ -225,8 +225,8 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
     return new Promise((resolve) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => resolve(true); 
-      img.onerror = () => resolve(false); 
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
     });
   };
 
@@ -436,7 +436,12 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       })
     );
   };
-
+  const handleRemoveCategories = (i) => {
+    setCategories((prevCategories) => {
+      return prevCategories.filter((category, index) => index !== i);
+    });
+  };
+  
 
   return (
     <Modal
@@ -541,15 +546,15 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                     <Row>
                       <Col lg={6}>
                         <Col lg={6}>
-                              <select className="form-select" onChange={(e) => setUnit(e.target.value)}>
-                                <option value="" selected>Select Unit</option>
-                                <option value="rotations">Rotations</option>
-                                <option value="sec">Sec</option>
-                                <option value="side">Side</option>
-                                <option value="steps">Steps</option>
-                                <option value="plane">Plane</option>
-                              </select>
-                            </Col>
+                          <select className="form-select" onChange={(e) => setUnit(e.target.value)}>
+                            <option value="" selected>Select Unit</option>
+                            <option value="rotations">Rotations</option>
+                            <option value="sec">Sec</option>
+                            <option value="side">Side</option>
+                            <option value="steps">Steps</option>
+                            <option value="plane">Plane</option>
+                          </select>
+                        </Col>
                       </Col>
                     </Row>
                   </div>
@@ -614,6 +619,7 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
                                     onChange={(e) => handleUpdateStartPoint(i, "time", Number(e.target.value))}
                                   />
                                 </div>
+                                {categories?.length > 1 && <span className="minus align-self-end mb-2 cursor-pointer" onClick={() => handleRemoveCategories(i)}>x</span>}
                               </div>
                             </Col>
 

@@ -206,7 +206,7 @@ const EditExercise = ({
                 video_link: exerciseVideo,
                 image_url: exerciseImage,
                 description: exerciseDescription,
-                unit:unit,
+                unit: unit,
                 draft: false,
                 training_type: training_type_data,
                 id: id,
@@ -238,7 +238,7 @@ const EditExercise = ({
                 image_url: exerciseImage,
                 description: exerciseDescription,
                 draft: true,
-                unit:unit,
+                unit: unit,
                 training_type: training_type_data,
                 id: id,
                 hasImage: hasImage,
@@ -496,6 +496,12 @@ const EditExercise = ({
         setTraining_type_data(selectedValues);
     };
 
+    const handleRemoveCategories = (i) => {
+        setCategories((prevCategories) => {
+          return prevCategories.filter((category, index) => index !== i);
+        });
+      };
+
     return (
         <Modal
             show={showAddExerciseModal}
@@ -621,7 +627,7 @@ const EditExercise = ({
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="exercise_view_image">
                                                     {/* {AddIMage} */}
-                                                    <img src={exerciseImage} className="w-100 object-fit-cover rounded" height={284} width={278}/>
+                                                    <img src={exerciseImage} className="w-100 object-fit-cover rounded" height={284} width={278} />
 
                                                 </div>
                                             </Col>
@@ -678,16 +684,16 @@ const EditExercise = ({
                                                     return (
                                                         <>
                                                             <Col lg={6}>
-                                                            <div className="mb-3 mt-3">
-                                                                <label>Category</label>
-                                                                <select onChange={(e) => handleSetCategory(i, e.target.value)} className="form-select" value={categories[i]?.category}>
-                                                                    <option value="" selected>Select Category</option>
-                                                                    {commonData?.map((data) => {
-                                                                        return <option value={data}>{data}</option>;
-                                                                    })}
-                                                                </select>
-                                                            </div>
-                                                                
+                                                                <div className="mb-3 mt-3">
+                                                                    <label>Category</label>
+                                                                    <select onChange={(e) => handleSetCategory(i, e.target.value)} className="form-select" value={categories[i]?.category}>
+                                                                        <option value="" selected>Select Category</option>
+                                                                        {commonData?.map((data) => {
+                                                                            return <option value={data}>{data}</option>;
+                                                                        })}
+                                                                    </select>
+                                                                </div>
+
                                                             </Col>
 
                                                             <Col lg={6} className="text-end d-flex justify-content-end align-items-center">
@@ -731,6 +737,7 @@ const EditExercise = ({
                                                                             onChange={(e) => handleUpdateStartPoint(i, "time", Number(e.target.value))}
                                                                         />
                                                                     </div>
+                                                                    {categories?.length > 1 && <span className="minus align-self-end mb-2 cursor-pointer" onClick={() => handleRemoveCategories(i)}>x</span>}
                                                                 </div>
                                                             </Col>
                                                         </>
