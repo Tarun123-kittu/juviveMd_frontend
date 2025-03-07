@@ -32,6 +32,8 @@ const PatientPlanForm = ({
   selected_patient_category,
   setSelected_training_type,
   selected_training_type,
+  patient_selected_category,
+  difficuilty_level_data
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,7 +70,7 @@ const PatientPlanForm = ({
     exerciseName: "Untitled",
     exerciseImage: "",
     exerciseVideo: "",
-    difficuilty_level: "",
+    difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
     active: true,
     bodyParts: [],
     sets: [

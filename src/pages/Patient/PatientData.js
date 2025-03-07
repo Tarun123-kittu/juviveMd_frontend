@@ -49,6 +49,7 @@ const PatientData = () => {
   const [exercisePlanId, setExercisePlanId] = useState(null)
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
+  const [patient_category, setPatient_category] = useState("")
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)
@@ -174,6 +175,7 @@ const PatientData = () => {
       setCurrentBmi(bmi.bmi)
       const expectbmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.optimal_weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.optimal_weight?.unit)
       setExpectedBmi(expectbmi?.bmi)
+      setPatient_category(patient_details?.data?.data?.patient_category)
     }
   }, [patient_details])
 
@@ -397,8 +399,8 @@ const PatientData = () => {
             />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId } })}>Edit Plan</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan } })}>+Create Plan</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category } })}>Edit Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category } })}>+Create Plan</button>}
           </div>
         </div>
         <Tabs

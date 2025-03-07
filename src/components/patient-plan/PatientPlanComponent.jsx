@@ -16,26 +16,7 @@ import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/s
 import { get_patient_plan_message, clear_patient_plan_message_state } from "../../redux/slices/patientPlan/getPatientPlanMessage";
 import Swal from 'sweetalert2'
 
-const daysData = {
-  category: "",
-  patient_category: "",
-  planExerciseId: null,
-  training_type: [],
-  exerciseId: "",
-  exerciseName: "Untitled",
-  exerciseImage: "",
-  exerciseVideo: "",
-  difficuilty_level: "",
-  active: true,
-  bodyParts: [],
-  sets: [
-    {
-      reps: 0,
-      time: { value: 0, unit: "sec" },
-      weight: { value: 0, unit: "kg" },
-    }
-  ]
-}
+
 
 const PatientPlanComponent = () => {
   const dispatch = useDispatch()
@@ -54,8 +35,34 @@ const PatientPlanComponent = () => {
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
   const exercisePlanId = location.state.exercisePlanId
+  const { patient_category: patient_selected_category } = location?.state ? location?.state : location
   if (!patientId) {
     navigate(-1)
+  }
+  const difficuilty_level_data = {
+    A: "Easy",
+    B: "Moderate",
+    C: "Hard",
+  }
+  const daysData = {
+    category: "",
+    patient_category: "",
+    planExerciseId: null,
+    training_type: [],
+    exerciseId: "",
+    exerciseName: "Untitled",
+    exerciseImage: "",
+    exerciseVideo: "",
+    difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
+    active: true,
+    bodyParts: [],
+    sets: [
+      {
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+      }
+    ]
   }
   const common_data = useSelector((store) => store.COMMON_DATA)
   const isPlanUpdated = useSelector((store) => store.UPDATE_PATIENT_EXERCISE_PLAN)
@@ -310,12 +317,12 @@ const PatientPlanComponent = () => {
 
   return (
     <div className="wrapper">
-        <div className="d-flex justify-content-between align-items-center stickQuote">
-          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="pointer_cur" />
-          <div className="message_class">
-            {plan_message?.isSuccess && <p>"{planMessage}"</p>}
-          </div>
+      <div className="d-flex justify-content-between align-items-center stickQuote">
+        <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="pointer_cur" />
+        <div className="message_class">
+          {plan_message?.isSuccess && <p>"{planMessage}"</p>}
         </div>
+      </div>
       <div className="inner_wrapper pt-0">
         {isPlanExercise?.isLoading && editable ? <Loader /> : <div className="exercise_tab position-relative">
           <div className="position-absolute end-0 ps-3 bg-white">
@@ -346,6 +353,8 @@ const PatientPlanComponent = () => {
                     selected_patient_category={selected_patient_category}
                     setSelected_training_type={setSelected_training_type}
                     selected_training_type={selected_training_type}
+                    patient_selected_category={patient_selected_category}
+                    difficuilty_level_data={difficuilty_level_data}
                   />
                 )}
               </Tab>
