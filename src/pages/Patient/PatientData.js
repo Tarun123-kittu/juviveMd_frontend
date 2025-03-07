@@ -120,7 +120,7 @@ const PatientData = () => {
     const formatted = formatDateValue(currentDate);
     setIsPatientPlanEditableDate(formatted)
     setFormattedDate(formatted);
-    dispatch(clear_suggested_plans_state())
+    // dispatch(clear_suggested_plans_state())
   }, []);
 
 

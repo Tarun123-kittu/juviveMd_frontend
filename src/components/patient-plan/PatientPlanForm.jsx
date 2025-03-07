@@ -33,7 +33,6 @@ const PatientPlanForm = ({
   setSelected_training_type,
   selected_training_type,
 }) => {
-  console.log(days[eventData], "this is the event exerciseDifficuilty");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [difficuilty, setDifficuilty] = useState("");
@@ -51,6 +50,8 @@ const PatientPlanForm = ({
     value: type,
     label: type,
   }));
+
+  console.log(days[eventData], "EventData--"); //It will return the object/data based on the exercise you select.
 
   useEffect(() => {
     if (editable) {

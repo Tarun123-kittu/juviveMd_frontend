@@ -44,7 +44,7 @@ const Exercise = () => {
     if (val) {
       setActiveTab(val)
     }
-  }, [val])
+  }, [val]) 
 
 
   const common_data = useSelector((store) => store.COMMON_DATA);
