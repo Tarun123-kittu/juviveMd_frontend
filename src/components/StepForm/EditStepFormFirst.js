@@ -287,7 +287,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={4}>
+          <Col lg={4}> 
             <label>Category</label>
             <select
               name="patient_category"
