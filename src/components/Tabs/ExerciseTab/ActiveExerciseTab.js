@@ -50,6 +50,8 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     "Action"
   ];
 
+  // console.log(exercise,"exCateg--")
+
   const exercise_data = useSelector((store) => store.ALL_EXERCISES)
   const is_status_updated = useSelector((store) => store.UPDATE_EXERCISE_STATUS)
 
@@ -119,6 +121,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
       <div className={`${exercise_data?.data?.data?.totalPages > 1 && "streach_table"}`}>
         <DataTable columns={columns}>
           {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={8}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
+            console.log(exercise,"exerCateg--")
             return (
               <tr>
 
@@ -143,7 +146,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                     <span>No Video Link Available</span>
                   )}
                 </td>
-                <td>{exercise?.category ? exercise?.category?.charAt(0).toUpperCase() + exercise?.category.slice(1) : ""}</td>
+                <td>{exercise?.exercise_type ? exercise?.exercise_type?.charAt(0).toUpperCase() + exercise?.exercise_type.slice(1) : ""}</td>
                 <td className={ExercisePermissionApproveReject?.canUpdate && tab !== "draft" ? "" : 'nodropdown'}> <div className='patient_dropdown w-100'>
                   <Dropdown
                     show={isOpen}

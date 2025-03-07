@@ -45,6 +45,7 @@ const Exercise = () => {
       setActiveTab(val)
     }
   }, [val]) 
+  console.log(exercise_category,"category--")
 
 
   const common_data = useSelector((store) => store.COMMON_DATA);
