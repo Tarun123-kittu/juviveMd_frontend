@@ -107,7 +107,8 @@ const PatientPlanComponent = () => {
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
   const plan_message = useSelector((store) => store.PLAN_MESSAGE)
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
-
+  console.log("isPlanExercise--",isPlanExercise)
+  console.log("suggested_plans--",suggested_plans)
   useEffect(() => {
     dispatch(common_data_api())
     dispatch(get_patient_plan_message({ patientId }))
@@ -130,10 +131,10 @@ const PatientPlanComponent = () => {
   }, [common_data])
 
   useEffect(() => {
-    if (!hasPlan && !editable) {
+    // if (!hasPlan && !editable) {
       dispatch(fetchPlanSuggestions({ patientId }))
-    }
-  }, [hasPlan])
+    // }
+  }, [])
 
   const handleSavePlan = () => {
     try {
