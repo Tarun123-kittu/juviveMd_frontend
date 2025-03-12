@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
-export const get_patient_exercise_plan = createAsyncThunk("get_patient_exercise_plan", async ({ planId }, thunkAPI) => {
+export const get_patient_weight__report = createAsyncThunk("get_patient_weight__report", async ({ patientId }, thunkAPI) => {
     const token = Cookies.get('authToken');
     const validToken = "Bearer " + token;
     try {
@@ -14,7 +14,7 @@ export const get_patient_exercise_plan = createAsyncThunk("get_patient_exercise_
             redirect: "follow"
         };
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/plan-exercise?planId=${planId}`, requestOptions)
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/patient-weight-report?patientId=${patientId}`, requestOptions)
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
@@ -31,8 +31,8 @@ export const get_patient_exercise_plan = createAsyncThunk("get_patient_exercise_
     }
 })
 
-const getPatientExercisePlanSlice = createSlice({
-    name: "getPatientExercisePlanSlice",
+const getPatientWeightReportSlice = createSlice({
+    name: "getPatientWeightReportSlice",
     initialState: {
         isLoading: false,
         isSuccess: false,
@@ -41,7 +41,7 @@ const getPatientExercisePlanSlice = createSlice({
         error: null
     },
     reducers: {
-        clear_get_patient_exercise_plan_state: (state) => {
+        clear_get_patient_weight_report_state: (state) => {
             state.isLoading = false
             state.isSuccess = false
             state.isError = false
@@ -51,15 +51,15 @@ const getPatientExercisePlanSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(get_patient_exercise_plan.pending, (state) => {
+            .addCase(get_patient_weight__report.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(get_patient_exercise_plan.fulfilled, (state, action) => {
+            .addCase(get_patient_weight__report.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
                 state.data = action.payload
             })
-            .addCase(get_patient_exercise_plan.rejected, (state, action) => {
+            .addCase(get_patient_weight__report.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.error = action.error
@@ -67,5 +67,5 @@ const getPatientExercisePlanSlice = createSlice({
     }
 })
 
-export const { clear_get_patient_exercise_plan_state } = getPatientExercisePlanSlice.actions
-export default getPatientExercisePlanSlice.reducer
+export const { clear_get_patient_exercise_plan_state } = getPatientWeightReportSlice.actions
+export default getPatientWeightReportSlice.reducer

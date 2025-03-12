@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const PerformanceChart = () => {
+const PerformanceChart = ({patientWeightReportData,patientId,months,averageWeight}) => {
+  console.log("WeightReport--",patientWeightReportData,patientId)
+  console.log("months--",months)
+   
   const chartConfig = {
     title: {
       text: null
     },
     xAxis: {
-      categories: [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
-        "Aug", "Sep", "Oct", "Nov", "Dec"
-      ]
+      categories: 
+        months
+      
     },
     yAxis: {
       title: {
@@ -21,11 +23,12 @@ const PerformanceChart = () => {
     series: [
       {
         name: "Weight",
-        data: [10, 15, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70],
+        data: averageWeight,
         color: "#FF5733",
         fontWeight: "bold"
-      }
-    ],
+      },
+      
+    ],  
     plotOptions: {
       series: {
         dataLabels: {
