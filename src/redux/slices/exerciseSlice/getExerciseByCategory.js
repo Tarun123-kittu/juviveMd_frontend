@@ -6,7 +6,7 @@ export const get_exercise_by_category = createAsyncThunk(
     async ({ category, patient_category, training_type }, thunkAPI) => {
         const token = Cookies.get("authToken");
         if (!token) {
-            return thunkAPI.rejectWithValue({
+            return thunkAPI.rejectWithValue({ 
                 message: "Authentication token is missing.",
             });
         }

@@ -105,6 +105,7 @@ const PatientPlanComponent = () => {
 
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
+  // console.log("isPlanExercise--",isPlanExercise)
   const plan_message = useSelector((store) => store.PLAN_MESSAGE)
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
   console.log("isPlanExercise--",isPlanExercise)
@@ -270,7 +271,17 @@ const PatientPlanComponent = () => {
         const dayExercises = suggested_plans?.data?.data?.days?.[day] || [];
 
         acc[day] = dayExercises.length
-          ? dayExercises.map((exercise) => ({
+          ? dayExercises.map((exercise) => {
+            const result = exercise.categories.flatMap(item =>
+              Array.from({ length: item.start_point.sets }, () => ({
+                category: item.category,
+                reps: item.start_point?.reps||0,
+                time: {value:item.start_point?.time|| 0, unit: "sec"},
+                weight:{value:item.start_point?.weight || 0, unit: "kg"}
+              }))
+            );   
+            console.log("Itemres--",result)
+            return {
             category: exercise.exercise_type || "",
             patient_category: exercise?.patient_category || "A",
             training_type: exercise.training_type || [],
@@ -282,20 +293,36 @@ const PatientPlanComponent = () => {
             difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
             active: true,
             bodyParts: [],
-            sets: exercise.categories?.length
-              ? exercise.categories.map((category) => ({
-                reps: category.start_point?.reps || 0,
-                time: { value: category.start_point?.time || 0, unit: "sec" },
-                weight: { value: category.start_point?.weight || 0, unit: "kg" },
-              }))
+            // sets: exercise.categories?.length
+            //   ? exercise.categories.map((category) => ({
+            //     reps: category.start_point?.reps || 0,
+            //     time: { value: category.start_point?.time || 0, unit: "sec" },
+            //     weight: { value: category.start_point?.weight || 0, unit: "kg" },
+            //   }))
+            //   : [
+            //     {
+            //       reps: 0,
+            //       time: { value: 0, unit: "sec" },
+            //       weight: { value: 0, unit: "kg" },
+            //     },
+            //   ],
+            sets:exercise.categories?.length
+              ?  exercise.categories.flatMap(item =>
+                Array.from({ length: item.start_point.sets }, () => ({
+                  category: item.category,
+                  reps: item.start_point?.reps||0,
+                  time: {value:item.start_point?.time|| 0, unit: "sec"},
+                  weight:{value:item.start_point?.weight || 0, unit: "kg"}
+                })))  
               : [
                 {
+                  category:'A',
                   reps: 0,
                   time: { value: 0, unit: "sec" },
                   weight: { value: 0, unit: "kg" },
                 },
               ],
-          }))
+          }})
           : [daysData];
 
         return acc;
@@ -309,6 +336,7 @@ const PatientPlanComponent = () => {
       }
     }
   }, [suggested_plans, editable]);
+  console.log("vParticularDayEx--",days)
 
   useEffect(() => {
     if (plan_message?.isSuccess) {

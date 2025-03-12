@@ -45,7 +45,9 @@ const PatientPlanForm = ({
   const patient_difficuilty = useSelector(
     (store) => store.PATIENT_DIFFICUILTIES
   );
-  const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY);
+  const exercise_details = useSelector((store) => store.EXERCISE_BY_CATEGORY);  
+  console.log("patient_category--",patient_category,"selected_patient_category--",selected_patient_category,"exercise_details--",exercise_details,"daySpecificCategory--",days[eventData])
+
   const hasRun = useRef(false);
 
   const options = training_type.map((type) => ({
@@ -58,7 +60,7 @@ const PatientPlanForm = ({
   useEffect(() => {
     if (editable) {
       setSelectedCategory(days[eventData][selectedIndex]?.category);
-    }
+    } 
   }, [days, selectedIndex]);
 
   const newExerciseData = {
@@ -684,7 +686,7 @@ const PatientPlanForm = ({
                             Add Row
                           </button>
                         </div>
-                        {day?.sets?.map((cardio, index) => (
+                        {day?.sets?.filter((item)=>item.category===selected_patient_category).map((cardio, index) => (
                           <Form.Group className="mb-3">
                             <div className="steps_items d-flex gap-2">
                               <div>
