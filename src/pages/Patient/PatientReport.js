@@ -132,7 +132,6 @@ console.log("selectedReportTypeData--",selectedReportType,selectedReportTypeData
                 cardioData={selectedReportTypeData?.series?.filter(item => item.name==="Cardio (min)").map((item)=>item.data)}
                 reportType={selectedReportType}
                 />
-            
             )
             }
             </div>

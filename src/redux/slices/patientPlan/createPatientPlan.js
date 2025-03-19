@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
 
 export const create_patient_plan = createAsyncThunk("create_patient_plan", async ({ payload }, thunkAPI) => {
-    const token = Cookies.get('authToken');
+    const token = Cookies.get('authToken'); 
     const validToken = "Bearer " + token;
     try {
         const myHeaders = new Headers();

@@ -30,7 +30,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [showPatientLogsModal, setShowPatientLogsModal] = useState(false)
   const [planExerciseId,setPlanExerciseId] = useState(null)
-  const columns = [
+  const columns = [ 
     "Exercise Name",
     "Set/Reps",
     "Weight/Time",

@@ -418,7 +418,7 @@ const PatientPlanForm = ({
       return updatedDays;
     });
   };
-
+console.log("exercisesDays--",days)
   const handleSelectPatientCategory = (val, i) => {
     if (val) {
       setSelected_patient_category(val);
@@ -686,7 +686,8 @@ const PatientPlanForm = ({
                             Add Row
                           </button>
                         </div>
-                        {day?.sets?.filter((item)=>item.category===selected_patient_category).map((cardio, index) => (
+                        {/* {day?.sets?.filter((item)=>item.category===selected_patient_category).map((cardio, index) => ( */}
+                        {day?.sets?.map((cardio, index) => (
                           <Form.Group className="mb-3">
                             <div className="steps_items d-flex gap-2">
                               <div>

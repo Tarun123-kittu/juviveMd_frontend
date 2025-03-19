@@ -5,6 +5,7 @@ import { getDay, getDate, setDate, setHours, min } from "date-fns";
 import Spinner from 'react-bootstrap/Spinner';
 
 const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable }) => {
+  console.log("valid-",planValidFrom,planValidTo,editable)
   const [minDate, setMinDate] = useState(() => {
     const date = planValidTo ? new Date(planValidTo) : new Date();
     date.setDate(date.getDate() + 1); // Add 1 day

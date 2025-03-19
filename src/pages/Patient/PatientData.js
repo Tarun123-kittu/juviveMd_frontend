@@ -21,9 +21,11 @@ import Email from '../../Images/email.svg'
 import Phone from '../../Images/phone.svg'
 import { isPatientPlanEditable, clear_is_patient_plan_editable } from "../../redux/slices/patientPlan/editPatientPlan";
 import FeedbackModal from "../../components/Modals/FeedbackModal";
-import { clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
+import { clear_suggested_plans_state, fetchPlanSuggestions } from "../../redux/slices/patientPlan/planSuggestions";
+import { get_selected_patient_exercise_details } from "../../redux/slices/patientPlan/getSelectedPAtientPlan";
 
 const PatientData = () => {
+  const [hashDate,setHashDate]=useState()
   const location = useLocation()
   const { hideItems } = location?.state ? location?.state : location
   const navigate = useNavigate()
@@ -56,7 +58,7 @@ const PatientData = () => {
   const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [patientReportsPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
-
+  const GET_PATIENT_PLAN=useSelector((state)=>state.GET_PATIENT_PLAN)
   useEffect(() => {
     return () => {
       setCanEditPatientPlan(false)
@@ -65,6 +67,7 @@ const PatientData = () => {
 
   useEffect(() => {
     if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
+      
       const planStartDate = isPatientPlanEditableResponse?.data?.data?.planValidFrom;
       const planEndDate = isPatientPlanEditableResponse?.data?.data?.planValidTo;
       setPlanStartAt(planStartDate)
@@ -82,8 +85,9 @@ const PatientData = () => {
       setCanEditPatientPlan(false)
       dispatch(clear_is_patient_plan_editable())
     }
-  }, [isPatientPlanEditableResponse, isPatientPlanEditableDate]);
 
+    return ()=>dispatch(clear_is_patient_plan_editable())
+  }, [isPatientPlanEditableResponse, isPatientPlanEditableDate,hashDate]);
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const currentDate = inputSelectedDate ? inputSelectedDate : new Date();
@@ -128,8 +132,9 @@ const PatientData = () => {
   useEffect(() => {
     dispatch(get_selected_patient({ id: patientId }))
     dispatch(isPatientPlanEditable({ id: patientId }))
+    dispatch(get_patient_plan({id:patientId,currentDate:formattedDate}))
     dispatch(common_data_api())
-  }, [])
+  }, [hashDate])
 
   function calculateBMI(height, weight, heightUnit, weightUnit) {
     if (heightUnit === "cm") {
@@ -229,8 +234,10 @@ const PatientData = () => {
     setActiveTab(newDay[0])
     const formatted = formatDateValue(new Date(e.target.value));
     setFormattedDate(formatted)
+    setHashDate(formatted)
 
   };
+console.log("Date--",formattedDate,isPatientPlanEditableResponse,inputSelectedDate,hashDate,patientId)
 
   return (
     <div className="wrapper">
@@ -400,7 +407,7 @@ const PatientData = () => {
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
             {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category } })}>Edit Plan</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category } })}>+Create Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => {  dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category } })}}>+Create Plan</button>}
           </div>
         </div>
         <Tabs

@@ -15,6 +15,7 @@ import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } f
 import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
 import { get_patient_plan_message, clear_patient_plan_message_state } from "../../redux/slices/patientPlan/getPatientPlanMessage";
 import Swal from 'sweetalert2'
+import { isPatientPlanEditable } from "../../redux/slices/patientPlan/editPatientPlan";
 
 
 
@@ -39,6 +40,8 @@ const PatientPlanComponent = () => {
   if (!patientId) {
     navigate(-1)
   }
+
+  
   const difficuilty_level_data = {
     A: "Easy",
     B: "Moderate",
@@ -102,8 +105,9 @@ const PatientPlanComponent = () => {
     }
   }, [])
 
-
+// console.log("props--",hasPlan,editable)
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
+  console.log("isPlanCreated",isPlanCreated)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
   // console.log("isPlanExercise--",isPlanExercise)
   const plan_message = useSelector((store) => store.PLAN_MESSAGE)
@@ -178,10 +182,13 @@ const PatientPlanComponent = () => {
         days: validatedPlan
       };
 
+      console.log("payload--",payload)
+
       if (editable && exercisePlanId) {
         dispatch(updatePatientExercisePlan({ planId: exercisePlanId, ...payload }));
       } else {
         dispatch(create_patient_plan({ payload }));
+        dispatch(isPatientPlanEditable({ id: patientId }))
       }
     } catch (error) {
       console.error("Error during plan validation:", error.message);
@@ -293,35 +300,35 @@ const PatientPlanComponent = () => {
             difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
             active: true,
             bodyParts: [],
-            // sets: exercise.categories?.length
-            //   ? exercise.categories.map((category) => ({
-            //     reps: category.start_point?.reps || 0,
-            //     time: { value: category.start_point?.time || 0, unit: "sec" },
-            //     weight: { value: category.start_point?.weight || 0, unit: "kg" },
-            //   }))
-            //   : [
-            //     {
-            //       reps: 0,
-            //       time: { value: 0, unit: "sec" },
-            //       weight: { value: 0, unit: "kg" },
-            //     },
-            //   ],
-            sets:exercise.categories?.length
-              ?  exercise.categories.flatMap(item =>
-                Array.from({ length: item.start_point.sets }, () => ({
-                  category: item.category,
-                  reps: item.start_point?.reps||0,
-                  time: {value:item.start_point?.time|| 0, unit: "sec"},
-                  weight:{value:item.start_point?.weight || 0, unit: "kg"}
-                })))  
+            sets: exercise.categories?.length
+              ? exercise.categories.map((category) => ({
+                reps: category.start_point?.reps || 0,
+                time: { value: category.start_point?.time || 0, unit: "sec" },
+                weight: { value: category.start_point?.weight || 0, unit: "kg" },
+              }))
               : [
                 {
-                  category:'A',
                   reps: 0,
                   time: { value: 0, unit: "sec" },
                   weight: { value: 0, unit: "kg" },
                 },
               ],
+            // sets:exercise.categories?.length
+            //   ?  exercise.categories.flatMap(item =>
+            //     Array.from({ length: item.start_point.sets }, () => ({
+            //       category: item.category,
+            //       reps: item.start_point?.reps||0,
+            //       time: {value:item.start_point?.time|| 0, unit: "sec"},
+            //       weight:{value:item.start_point?.weight || 0, unit: "kg"}
+            //     })))  
+            //   : [
+            //     {
+            //       category:'A',
+            //       reps: 0,
+            //       time: { value: 0, unit: "sec" },
+            //       weight: { value: 0, unit: "kg" },
+            //     },
+            //   ],
           }})
           : [daysData];
 
