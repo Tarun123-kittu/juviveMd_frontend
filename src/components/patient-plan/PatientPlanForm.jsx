@@ -424,7 +424,7 @@ const PatientPlanForm = ({
   const handleSelectPatientCategory = (val, i) => {
     if (val) {
       setSelected_patient_category(val);
-
+      
       setDays((prevDays) => {
         const updatedDay = prevDays[eventData].map((item, index) => {
           if (index === i) {
@@ -556,7 +556,7 @@ const PatientPlanForm = ({
                             <Form.Label>Category</Form.Label>
                             <Form.Select
                               aria-label="Default select example"
-                              value={day?.patient_category}
+                              value={day?.patient_category||"A"}
                               onChange={(e) =>
                                 handleSelectPatientCategory(e.target.value, i)
                               }
