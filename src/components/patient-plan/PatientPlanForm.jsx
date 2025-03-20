@@ -306,6 +306,8 @@ const PatientPlanForm = ({
       currentExercise.sets = [
         ...currentExercise.sets,
         {
+          category:selected_patient_category||"A",
+          sets:1,
           reps: 0,
           time: { value: 0, unit: "sec" },
           weight: { value: 0, unit: "kg" },
@@ -345,6 +347,8 @@ const PatientPlanForm = ({
   };
 
   const handleChangeCardioFields = (i, index, field, e) => {
+    console.log("change--", i, index, field,e.target.value);
+
     setDays((prevDays) => {
       const updatedDays = JSON.parse(JSON.stringify(prevDays));
       if (field === "time") {
@@ -556,7 +560,7 @@ const PatientPlanForm = ({
                             <Form.Label>Category</Form.Label>
                             <Form.Select
                               aria-label="Default select example"
-                              value={day?.patient_category||"A"}
+                              value={day?.patient_category}
                               onChange={(e) =>
                                 handleSelectPatientCategory(e.target.value, i)
                               }
@@ -699,7 +703,7 @@ const PatientPlanForm = ({
                                 <div className="steps_items d-flex gap-2">
                                   <div>
                                     <Form.Label>Set {setindex + 1}</Form.Label>
-                                    <span className="step_count">{index + 1}</span>
+                                    <span className="step_count">{setindex + 1}</span>
                                   </div>
                                   <div className="w-100">
                                     <div className="flex-grow-1">
@@ -710,7 +714,7 @@ const PatientPlanForm = ({
                                               Time Duration
                                             </Form.Label>{" "}
                                             <span
-                                              onClick={() =>
+                                              onChange={() =>
                                                 handleChangeCardioUnit(
                                                   i,
                                                   index,
@@ -728,7 +732,7 @@ const PatientPlanForm = ({
                                             </span>{" "}
                                           </div>
                                           <Form.Control
-                                            type="text"
+                                            type="number"
                                             placeholder="00"
                                             value={cardio?.time?.value}
                                             onChange={(e) =>
