@@ -13,6 +13,7 @@ export const create_patient_plan = createAsyncThunk("create_patient_plan", async
             "patientId": payload.patientId,
             "planValidFrom": payload.planValidFrom,
             "planValidTo": payload.planValidTo,
+            // "Category": payload.Category,
             "days": payload.days
         });
 

@@ -18,7 +18,7 @@ export const get_patient_exercise_plan = createAsyncThunk("get_patient_exercise_
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
-                throw new Error(errorMessage.message);
+                throw new Error(errorMessage.message);  
             } 
         }
 

@@ -58,13 +58,39 @@ const PatientData = () => {
   const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
   const [patientReportsPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
-  const GET_PATIENT_PLAN=useSelector((state)=>state.GET_PATIENT_PLAN)
+  const get_patient_plan_response=useSelector((state)=>state.GET_PATIENT_PLAN)
+ 
   useEffect(() => {
     return () => {
-      setCanEditPatientPlan(false)
-    }
-  }, [])
+      setCanEditPatientPlan(false); 
+      dispatch(clear_is_patient_plan_editable())
+    };
+  }, []);
+console.log("get_patient_plan_response--",get_patient_plan_response,patientId,hashDate)
+  
+useEffect(() => {
+  if (get_patient_plan_response?.isSuccess ) {
+    
+    const planStartDate = get_patient_plan_response?.data?.data?.planMetadata?.planValidFrom;
+    const planEndDate = get_patient_plan_response?.data?.data?.planMetadata.planValidTo;
+    setPlanStartAt(planStartDate)
+    setPlanEndAt(planEndDate)
+    setExercisePlanId(get_patient_plan_response?.data?.data?.patient?.id)
 
+
+    if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
+      setCanEditPatientPlan(true);
+    } else if (isPatientPlanEditableDate === planEndAt) {
+      setCanEditPatientPlan(false);
+    }
+  }
+  if (isPatientPlanEditableResponse?.isError) {
+    setCanEditPatientPlan(false)
+    dispatch(clear_is_patient_plan_editable())
+  }
+
+  return ()=>dispatch(clear_is_patient_plan_editable())
+}, [isPatientPlanEditableResponse, isPatientPlanEditableDate,hashDate]);
   useEffect(() => {
     if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
       

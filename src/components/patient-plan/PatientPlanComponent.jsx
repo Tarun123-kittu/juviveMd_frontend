@@ -41,7 +41,7 @@ const PatientPlanComponent = () => {
     navigate(-1)
   }
 
-  
+
   const difficuilty_level_data = {
     A: "Easy",
     B: "Moderate",
@@ -49,7 +49,7 @@ const PatientPlanComponent = () => {
   }
   const daysData = {
     category: "",
-    patient_category: "",
+    patient_category: "A",
     planExerciseId: null,
     training_type: [],
     exerciseId: "",
@@ -74,7 +74,7 @@ const PatientPlanComponent = () => {
   const [body_parts, setBody_parts] = useState()
   const [patient_category, setPatient_category] = useState([])
   const [training_type, setTraining_type] = useState([])
-  const [selected_patient_category, setSelected_patient_category] = useState()
+  const [selected_patient_category, setSelected_patient_category] = useState("A")
   const [selected_training_type, setSelected_training_type] = useState()
   const [activeTab, setActiveTab] = useState("Monday")
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
@@ -105,15 +105,15 @@ const PatientPlanComponent = () => {
     }
   }, [])
 
-// console.log("props--",hasPlan,editable)
+  // console.log("props--",hasPlan,editable)
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
-  console.log("isPlanCreated",isPlanCreated)
+  console.log("isPlanCreated", isPlanCreated)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
   // console.log("isPlanExercise--",isPlanExercise)
   const plan_message = useSelector((store) => store.PLAN_MESSAGE)
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
-  console.log("isPlanExercise--",isPlanExercise)
-  console.log("suggested_plans--",suggested_plans)
+  console.log("isPlanExercise--", isPlanExercise)
+  console.log("suggested_plans--", suggested_plans)
   useEffect(() => {
     dispatch(common_data_api())
     dispatch(get_patient_plan_message({ patientId }))
@@ -137,32 +137,38 @@ const PatientPlanComponent = () => {
 
   useEffect(() => {
     // if (!hasPlan && !editable) {
-      dispatch(fetchPlanSuggestions({ patientId }))
+    dispatch(fetchPlanSuggestions({ patientId }))
     // }
   }, [])
 
   const handleSavePlan = () => {
     try {
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
-        const validExercises = days[day]
-          .map((exercise) => ({
-            exerciseId: exercise.exerciseId,
-            planExerciseId: exercise.planExerciseId,
-            difficulty_level: exercise.difficuilty_level,
-            sets: exercise.sets.map((set) => ({
-              time: {
-                value: set.time.value,
-                unit: set.time.unit,
-              },
-              weight: {
-                value: set.weight.value,
-                unit: set.weight.unit,
-              },
-              reps: set.reps,
-            })),
-          }))
-          .filter(exercise => exercise.exerciseId);
 
+        const validExercises = days[day]
+          .map((exercise) => {
+            console.log("ex--", exercise)
+            return {
+              exerciseId: exercise.exerciseId,
+              planExerciseId: exercise.planExerciseId,
+              difficulty_level: exercise.difficuilty_level,
+              sets: exercise.sets.map((set) => ({
+                category: set.category,
+                sets: set.sets,
+                time: {
+                  value: set.time.value,
+                  unit: set.time.unit,
+                },
+                weight: {
+                  value: set.weight.value,
+                  unit: set.weight.unit,
+                },
+                reps: set.reps,
+              })),
+            }
+          })
+          .filter(exercise => exercise.exerciseId);
+        console.log("validExercises--", validExercises)
         if (validExercises.length > 0) {
           acc[day] = validExercises;
         }
@@ -182,7 +188,7 @@ const PatientPlanComponent = () => {
         days: validatedPlan
       };
 
-      console.log("payload--",payload)
+      console.log("payload--", payload)
 
       if (editable && exercisePlanId) {
         dispatch(updatePatientExercisePlan({ planId: exercisePlanId, ...payload }));
@@ -220,9 +226,10 @@ const PatientPlanComponent = () => {
       dispatch(clear_update_patient_exercise_plan_state())
     }
   }, [isPlanUpdated])
+  console.log("isplanex--",isPlanExercise,days)
 
   useEffect(() => {
-    if (isPlanExercise?.isSuccess) {
+    if (isPlanExercise?.isSuccess && editable) {
 
       const staticDays = {
         Monday: [daysData],
@@ -233,9 +240,10 @@ const PatientPlanComponent = () => {
         Saturday: [daysData],
         Sunday: [daysData],
       };
-
+// console.log("isplanex--",isPlanExercise,days)
       const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
         acc[day] = isPlanExercise.data.data.days[day].map((exercise, i) => {
+          console.log("ex--",exercise)
           return {
             ...exercise,
             exerciseId: exercise.exerciseDetails?.id,
@@ -250,6 +258,8 @@ const PatientPlanComponent = () => {
             active: true,
             bodyParts: exercise.exerciseDetails?.body_parts,
             sets: exercise.sets.map((val) => ({
+              category:val?.category||"A",
+              sets: val.sets,
               reps: val.reps,
               weight: { value: val.weight.value, unit: val.weight.unit },
               time: { value: val.time.value, unit: val.time.unit },
@@ -260,16 +270,17 @@ const PatientPlanComponent = () => {
       }, {});
 
       const updatedDays = { ...staticDays, ...responseDays };
+      console.log("updatedDays--", updatedDays)
 
       setDays(updatedDays);
       setPlanValidFrom(isPlanExercise.data.data.planValidFrom);
       setPlanValidTo(isPlanExercise.data.data.planValidTo);
-      setSelected_patient_category(isPlanExercise.data.data.patient_category);
+      setSelected_patient_category(isPlanExercise.data.data.patient_category ||"A");
       setSelected_training_type(isPlanExercise.data.data.training_type);
     }
-  }, [isPlanExercise]);
+  }, [isPlanExercise,editable]);
 
-
+  console.log("finalDay--", days)
   useEffect(() => {
     if (suggested_plans?.isSuccess && !editable) {
       const staticDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -278,17 +289,7 @@ const PatientPlanComponent = () => {
         const dayExercises = suggested_plans?.data?.data?.days?.[day] || [];
 
         acc[day] = dayExercises.length
-          ? dayExercises.map((exercise) => {
-            const result = exercise.categories.flatMap(item =>
-              Array.from({ length: item.start_point.sets }, () => ({
-                category: item.category,
-                reps: item.start_point?.reps||0,
-                time: {value:item.start_point?.time|| 0, unit: "sec"},
-                weight:{value:item.start_point?.weight || 0, unit: "kg"}
-              }))
-            );   
-            console.log("Itemres--",result)
-            return {
+          ? dayExercises.map((exercise) => ({
             category: exercise.exercise_type || "",
             patient_category: exercise?.patient_category || "A",
             training_type: exercise.training_type || [],
@@ -301,10 +302,12 @@ const PatientPlanComponent = () => {
             active: true,
             bodyParts: [],
             sets: exercise.categories?.length
-              ? exercise.categories.map((category) => ({
-                reps: category.start_point?.reps || 0,
-                time: { value: category.start_point?.time || 0, unit: "sec" },
-                weight: { value: category.start_point?.weight || 0, unit: "kg" },
+              ? exercise.categories.map((categoryItem) => ({
+                category: categoryItem.category,
+                sets: categoryItem.start_point?.sets,
+                reps: categoryItem.start_point?.reps || 0,
+                time: { value: categoryItem.start_point?.time || 0, unit: "sec" },
+                weight: { value: categoryItem.start_point?.weight || 0, unit: "kg" },
               }))
               : [
                 {
@@ -313,23 +316,7 @@ const PatientPlanComponent = () => {
                   weight: { value: 0, unit: "kg" },
                 },
               ],
-            // sets:exercise.categories?.length
-            //   ?  exercise.categories.flatMap(item =>
-            //     Array.from({ length: item.start_point.sets }, () => ({
-            //       category: item.category,
-            //       reps: item.start_point?.reps||0,
-            //       time: {value:item.start_point?.time|| 0, unit: "sec"},
-            //       weight:{value:item.start_point?.weight || 0, unit: "kg"}
-            //     })))  
-            //   : [
-            //     {
-            //       category:'A',
-            //       reps: 0,
-            //       time: { value: 0, unit: "sec" },
-            //       weight: { value: 0, unit: "kg" },
-            //     },
-            //   ],
-          }})
+          }))
           : [daysData];
 
         return acc;
@@ -343,7 +330,7 @@ const PatientPlanComponent = () => {
       }
     }
   }, [suggested_plans, editable]);
-  console.log("vParticularDayEx--",days)
+  // console.log("vParticularDayEx--", days)
 
   useEffect(() => {
     if (plan_message?.isSuccess) {
