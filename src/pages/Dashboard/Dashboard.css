@@ -164,7 +164,27 @@
 .info_card.exercise-card .info_image{
     background: #E9FFE5;
 }
+.chart_card {
+    padding: 1.2rem;
+    box-shadow: 0px 0px 2.8px 0px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 1);
+    border-radius: 15px;
+}
+.chart_card h4 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 150%;
+    letter-spacing: 0px;
+    padding-bottom: 15px;
+}
 
+.chart_card.userActivity h4 {
+    border-bottom: 1px solid rgba(199, 199, 199, 1);
+    margin-left: -1.2rem;
+    margin-right: -1.2rem;
+    padding: 0px 15px;
+    padding-bottom: 15px;
+}
 @media(max-width:1440px){
     .info_card h3 {
         font-size: 18px;

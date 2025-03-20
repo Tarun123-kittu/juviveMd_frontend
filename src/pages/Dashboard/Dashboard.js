@@ -16,6 +16,9 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
+import { Col, Row } from "react-bootstrap";
+import TrainerBarChart from "./TrainerBarChart";
+import UserActivityChart from "./UserActivityChart";
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -205,6 +208,24 @@ const Dashboard = () => {
               </h4>
             </div>}
           </div>
+        </div>
+        <div>
+      <Row className="mb-3 pt-2 pb-2">
+        <Col lg={9}>
+          <div className="chart_card">
+          <h4>
+          Chats (Response time from Trainer )
+          </h4>
+          <TrainerBarChart/>
+          </div>
+        </Col>
+        <Col lg={3}>
+        <div className="chart_card userActivity">
+          <h4>User Activity Pie Chart</h4>
+          <UserActivityChart/>
+          </div>
+        </Col>
+      </Row>
         </div>
         <div className="cmn_head mb-2">
           <Reception_patient_list showButtons={false} className={true} />
