@@ -136,9 +136,9 @@ const PatientPlanComponent = () => {
   }, [common_data])
 
   useEffect(() => {
-    // if (!hasPlan && !editable) {
+    if (!editable) {
     dispatch(fetchPlanSuggestions({ patientId }))
-    // }
+    }
   }, [])
 
   const handleSavePlan = () => {
