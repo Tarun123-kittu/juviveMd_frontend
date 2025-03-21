@@ -564,7 +564,7 @@ const PatientPlanForm = ({
                               onChange={(e) =>
                                 handleSelectPatientCategory(e.target.value, i)
                               }
-                              disabled={true}
+                              
                             >
                               <option value="" selected>
                                 Select Category
