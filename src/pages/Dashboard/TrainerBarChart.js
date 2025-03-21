@@ -1,7 +1,11 @@
 import React from 'react'
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-const options = {
+
+const TrainerBarChart = ({ trainerChatResponseReportData }) => {
+  const trainerNames= trainerChatResponseReportData?.map((item) => item.trainerName)
+  const trainerResponseTimes= trainerChatResponseReportData?.map((item) => item.avgResponseTime)
+  const options = {
     chart: {
       type: "column"
     },
@@ -12,7 +16,7 @@ const options = {
       text: null
     },
     xAxis: {
-      categories: ["Tariner 01", "Tariner 02", "Tariner 03", "Tariner 04", "Tariner 05", "Tariner 06","Tariner 01", "Tariner 02", "Tariner 03", "Tariner 04", "Tariner 05", "Tariner 06"],
+      categories: trainerNames,
       crosshair: true,
       accessibility: {
         description: "Countries"
@@ -25,7 +29,7 @@ const options = {
       }
     },
     tooltip: {
-        enabled: true // Hides tooltip
+      enabled: true // Hides tooltip
     },
     plotOptions: {
       column: {
@@ -36,13 +40,12 @@ const options = {
     series: [
       {
         name: null,
-        data: [387749, 280000, 129000, 64300, 54000, 34300,387749, 280000, 129000, 64300, 54000, 34300],
-        color: "rgba(151, 208, 195, 1)" ,
+        data: trainerResponseTimes,
+        color: "rgba(151, 208, 195, 1)",
         showInLegend: false // Hides from legend
       }
     ]
   };
-const TrainerBarChart = () => {
   return (
     <HighchartsReact highcharts={Highcharts} options={options} />
   )

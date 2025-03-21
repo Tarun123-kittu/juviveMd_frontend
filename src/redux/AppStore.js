@@ -52,6 +52,8 @@ import GetExerciseHistory from "./slices/patientPlan/getExerciseHistory"
 import GetPatientPlanMessage from "./slices/patientPlan/getPatientPlanMessage"
 import getPatientWeightReportSlice from './slices/getPatientReportSlice/getPatientWeightReportSlice'
 import getPatientProgressReportSlice from './slices/getPatientReportSlice/getPatientProgressReportSlice'
+import GetUserActivityReport from './slices/dashboardSlice/getUserActivityReport'
+import GetTrainerChatResponseReport from './slices/dashboardSlice/getTrainerChatResponseReport'
 
 const AppStore = configureStore({
   reducer: {
@@ -107,7 +109,9 @@ const AppStore = configureStore({
     EXERCISE_HISTORY_DATA: GetExerciseHistory,
     PLAN_MESSAGE: GetPatientPlanMessage,
     GET_PATIENT_WEIGHT_REPORT:getPatientWeightReportSlice,
-    GET_PATIENT_PROGRESS_REPORT:getPatientProgressReportSlice
+    GET_PATIENT_PROGRESS_REPORT:getPatientProgressReportSlice,
+    GET_USER_ACTIVITY_REPORT:GetUserActivityReport,
+    GET_TRAINER_CHAT_RESPONSE_REPORT:GetTrainerChatResponseReport 
   },
 })
 

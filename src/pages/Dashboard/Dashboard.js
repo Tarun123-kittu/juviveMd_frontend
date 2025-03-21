@@ -19,8 +19,13 @@ import { permission_constants } from "../../constants/permissionConstants";
 import { Col, Row } from "react-bootstrap";
 import TrainerBarChart from "./TrainerBarChart";
 import UserActivityChart from "./UserActivityChart";
+import { get_user_activity_report } from "../../redux/slices/dashboardSlice/getUserActivityReport";
+import { get_trainer_chat_response_report } from "../../redux/slices/dashboardSlice/getTrainerChatResponseReport";
 
 const Dashboard = () => {
+  const [userActivityReportData,setUserActivityReportData]=useState([])
+  const [trainerChatResponseReportData,setTrainerChatResponseReportData]=useState([])
+  console.log(userActivityReportData,"activityreport",trainerChatResponseReportData)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [show, setShow] = useState(false);
@@ -46,6 +51,30 @@ const Dashboard = () => {
     "Status",
     "Action",
   ];
+
+  // GET_USER_ACTIVITY_REPORT
+  const activityReportResponse=useSelector((store)=>store. GET_USER_ACTIVITY_REPORT)
+  const trainerChatReportResponse=useSelector((store)=>store. GET_TRAINER_CHAT_RESPONSE_REPORT)
+
+  useEffect(()=>{
+    dispatch(get_user_activity_report())
+  },[])   
+
+  useEffect(() => {
+    if (activityReportResponse?.isSuccess) {
+      setUserActivityReportData(activityReportResponse?.data?.data)
+    }
+  }, [activityReportResponse])
+
+  useEffect(()=>{
+    dispatch(get_trainer_chat_response_report())
+  },[])   
+
+  useEffect(() => {
+    if (trainerChatReportResponse?.isSuccess) {
+      setTrainerChatResponseReportData(trainerChatReportResponse?.data?.data)
+    }
+  }, [trainerChatReportResponse])
 
   useEffect(() => {
     if (dashboard_data?.isSuccess) {
@@ -216,13 +245,13 @@ const Dashboard = () => {
           <h4>
           Chats (Response time from Trainer )
           </h4>
-          <TrainerBarChart/>
+          <TrainerBarChart trainerChatResponseReportData={trainerChatResponseReportData}/>
           </div>
         </Col>
         <Col lg={3}>
         <div className="chart_card userActivity">
           <h4>User Activity Pie Chart</h4>
-          <UserActivityChart/>
+          <UserActivityChart userActivityReportData={userActivityReportData}/>
           </div>
         </Col>
       </Row>
