@@ -42,11 +42,27 @@ const PatientPlanComponent = () => {
   }
 
 
+  const common_data = useSelector((store) => store.COMMON_DATA)
+  const isPlanUpdated = useSelector((store) => store.UPDATE_PATIENT_EXERCISE_PLAN)
+  const [savePlanModal, setSavePlanModal] = useState(false)
+  const [exercise_category, setExercise_category] = useState()
+  const [body_parts, setBody_parts] = useState()
+  const [patient_category, setPatient_category] = useState([])
+  const [training_type, setTraining_type] = useState([])
+  const [selected_patient_category, setSelected_patient_category] = useState("A")
+  const [selected_training_type, setSelected_training_type] = useState()
+  const [activeTab, setActiveTab] = useState("Monday")
+  const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
+  const [planValidFrom, setPlanValidFrom] = useState('')
+  const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
+  const [planMessage, setPlanMessage] = useState("")
   const difficuilty_level_data = {
     A: "Easy",
     B: "Moderate",
     C: "Hard",
   }
+
+
   const daysData = {
     category: "",
     patient_category: "A",
@@ -62,26 +78,14 @@ const PatientPlanComponent = () => {
     sets: [
       {
         patient_category: "",
+        sets: 0,
         reps: 0,
         time: { value: 0, unit: "sec" },
         weight: { value: 0, unit: "kg" },
+        setsData: []
       }
     ]
   }
-  const common_data = useSelector((store) => store.COMMON_DATA)
-  const isPlanUpdated = useSelector((store) => store.UPDATE_PATIENT_EXERCISE_PLAN)
-  const [savePlanModal, setSavePlanModal] = useState(false)
-  const [exercise_category, setExercise_category] = useState()
-  const [body_parts, setBody_parts] = useState()
-  const [patient_category, setPatient_category] = useState([])
-  const [training_type, setTraining_type] = useState([])
-  const [selected_patient_category, setSelected_patient_category] = useState("A")
-  const [selected_training_type, setSelected_training_type] = useState()
-  const [activeTab, setActiveTab] = useState("Monday")
-  const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
-  const [planValidFrom, setPlanValidFrom] = useState('')
-  const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
-  const [planMessage, setPlanMessage] = useState("")
   const [days, setDays] = useState({
     Monday: [daysData],
     Tuesday: [daysData],
@@ -105,6 +109,9 @@ const PatientPlanComponent = () => {
       })
     }
   }, [])
+
+
+
 
   // console.log("props--",hasPlan,editable)
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
@@ -227,7 +234,7 @@ const PatientPlanComponent = () => {
       dispatch(clear_update_patient_exercise_plan_state())
     }
   }, [isPlanUpdated])
-  console.log("isplanex--", isPlanExercise, days)
+  console.log("isplanex--", isPlanExercise, days, patientId)
 
   useEffect(() => {
     if (isPlanExercise?.isSuccess && editable) {
@@ -244,14 +251,16 @@ const PatientPlanComponent = () => {
       // console.log("isplanex--",isPlanExercise,days)
       console.log("kk--", selected_patient_category)
       const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
+
         acc[day] = isPlanExercise.data.data.days[day].map((exercise, i) => {
+
           console.log("ex--", exercise)
           const newSet = exercise.sets.map(item => ({
             reps: item.reps,
             time: { unit: "sec", value: item.time.value },
             weight: { unit: "kg", value: item.weight.value },
           }));
-          
+
           // console.log("newSett--", newSet)
           return {
             ...exercise,
@@ -265,14 +274,21 @@ const PatientPlanComponent = () => {
             exerciseVideo: exercise.exerciseDetails?.video_link,
             training_type: exercise.exerciseDetails?.training_type,
             active: true,
-            bodyParts: exercise.exerciseDetails?.body_parts,
-            sets: exercise.exerciseDetails.categories.map((item,index) => ({
+            bodyParts: exercise.exerciseDetails?.body_parts,// there is no body_parts in fetch plan-exercise API
+            sets: exercise.exerciseDetails.categories.map((item, index) => ({
               category: item.category,
               reps: newSet[index]?.reps ?? item.start_point.reps,
               sets: item.start_point.sets,
-              time:newSet[index]?.time ?? { unit: "sec", value: item.start_point.time },
-              weight: newSet[index]?.weight ?? { unit: "kg", value: 0 } 
-            })),
+              time: newSet[index]?.time ?? { unit: "sec", value: item.start_point.time },
+              weight: newSet[index]?.weight ?? { unit: "kg", value: 0 }
+            })).map(item => ({
+              ...item,
+              setsData: Array.from({ length: item.sets }, () => ({
+                reps: item.reps,
+                time: item.time,
+                weight: item.weight
+              }))
+            }))
           };
         });
         return acc;
@@ -299,11 +315,11 @@ const PatientPlanComponent = () => {
 
         acc[day] = dayExercises.length
           ? dayExercises.map((exercise) => ({
-            category: exercise.exercise_type || "",
-            patient_category: exercise?.patient_category || "A",
-            training_type: exercise.training_type || [],
-            exerciseId: exercise.id || "",
-            planExerciseId: exercise.planExerciseId,
+            category: exercise.exercise_type || "",//Strength, Mobility, Functional
+            patient_category: exercise?.patient_category || "A",//there is no patient_category in fetch suggested plan api
+            training_type: exercise.training_type || [],//Upper, Unliteral, pull, Biceps
+            exerciseId: exercise.id || "",//exercise id
+            planExerciseId: exercise.planExerciseId,//there is no planExerciseId in fetch suggested plan API
             exerciseName: exercise.exercise_name || "Untitled",
             exerciseImage: exercise.image_url || "",
             exerciseVideo: exercise.video_link || "",
@@ -316,15 +332,38 @@ const PatientPlanComponent = () => {
                 sets: categoryItem.start_point?.sets,
                 reps: categoryItem.start_point?.reps || 0,
                 time: { value: categoryItem.start_point?.time || 0, unit: "sec" },
-                weight: { value: categoryItem.start_point?.weight || 0, unit: "kg" },
+                weight: { value: categoryItem.start_point?.weight || 0, unit: "kg" },//there is no start_point.weight in fetch suggested plan API
+              })).map(item => ({
+                ...item,
+                setsData: Array.from({ length: item.sets }, () => ({
+                  reps: item.reps,
+                  time: item.time,
+                  weight: item.weight
+                }))
               }))
               : [
                 {
+                  category: "",
+                  sets: 0,
                   reps: 0,
                   time: { value: 0, unit: "sec" },
                   weight: { value: 0, unit: "kg" },
                 },
               ],
+
+            // sets: exercise.categories?.length
+            //   ? exercise.categories.map((category) => ({
+            //     reps: category.start_point?.reps || 0,
+            //     time: { value: category.start_point?.time || 0, unit: "sec" },
+            //     weight: { value: category.start_point?.weight || 0, unit: "kg" },
+            //   }))
+            //   : [
+            //     {
+            //       reps: 0,
+            //       time: { value: 0, unit: "sec" },
+            //       weight: { value: 0, unit: "kg" },
+            //     },
+            //   ],
           }))
           : [daysData];
 

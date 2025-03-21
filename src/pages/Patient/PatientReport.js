@@ -23,6 +23,8 @@ const [monthlyProgressReportSeries,setMonthlyProgressReportSeries]=useState([])
 const [selectedReportTypeData,setSelectedReportTypeData]=useState([])
 
 const patientId = location.state.patientId
+const BpmRate =location.state.patientBpmRate
+
 const getPatientWeightReportData=useSelector((state)=>state.GET_PATIENT_WEIGHT_REPORT)
 const getPatientProgressReportData=useSelector((state)=>state.GET_PATIENT_PROGRESS_REPORT)
 const {selectedReportType}=useSelector((state)=>state.GET_PATIENT_PROGRESS_REPORT);
@@ -102,7 +104,7 @@ console.log("selectedReportTypeData--",selectedReportType,selectedReportTypeData
                     <h5>Heart Rate</h5>
 
                 </div>
-                <h4 className="heart_rate d-flex gap-2 align-items-center">98 <span>bpm</span></h4>
+                <h4 className="heart_rate d-flex gap-2 align-items-center">{BpmRate?BpmRate:"N/A"} <span>bpm</span></h4>
                 <p className="bpm_status">Normal</p>
             </div>
           </Col>

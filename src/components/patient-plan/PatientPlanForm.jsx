@@ -36,7 +36,7 @@ const PatientPlanForm = ({
   difficuilty_level_data
 }) => {
 
-  console.log("ii--",selected_patient_category)
+  console.log("ii--", selected_patient_category)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [difficuilty, setDifficuilty] = useState("");
@@ -282,15 +282,15 @@ const PatientPlanForm = ({
       }
 
       const updatedDays = { ...prevDays };
-      const currentDayExercises = [...updatedDays[eventData]];
-
+      const currentDayExercises = [...updatedDays[eventData]];//exercises of specific day
+      console.log("currentDayExercises--", currentDayExercises)
       if (!currentDayExercises[i]) {
         console.error(`Exercise at index ${i} does not exist`);
         return prevDays;
       }
 
-      const currentExercise = currentDayExercises[i];
-      const hasEmptySet = currentExercise?.sets?.some((field) => {
+      const currentExercise = currentDayExercises[i];//exercise of selected excersice
+      const hasEmptySet = currentExercise?.sets[0].setsData?.some((field) => {
         const hasNoValidValues =
           (field.time?.value === 0 || field.time?.value == null) &&
           (field.weight?.value === 0 || field.weight?.value == null) &&
@@ -300,14 +300,14 @@ const PatientPlanForm = ({
       });
 
       if (hasEmptySet) {
-        toast.error("Cannot add new set, some values are missing in the previous fields.");
+        toast.error("Cannot add new set, some values are missing in the current set.");
         return prevDays;
       }
       currentExercise.sets = [
         ...currentExercise.sets,
         {
-          category:selected_patient_category||"A",
-          sets:1,
+          category: selected_patient_category || "A",
+          sets: 1,
           reps: 0,
           time: { value: 0, unit: "sec" },
           weight: { value: 0, unit: "kg" },
@@ -347,20 +347,20 @@ const PatientPlanForm = ({
   };
 
   const handleChangeCardioFields = (i, index, field, e) => {
-    console.log("change--", i, index, field,e.target.value);
+    console.log("change--", i, index, field, e.target.value);
 
     setDays((prevDays) => {
       const updatedDays = JSON.parse(JSON.stringify(prevDays));
       if (field === "time") {
-        updatedDays[eventData][i].sets[index][field].value = Number(
+        updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
           e.target.value
         );
       } else if (field === "weight") {
-        updatedDays[eventData][i].sets[index][field].value = Number(
+        updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
           e.target.value
         );
       } else if (field === "reps") {
-        updatedDays[eventData][i].sets[index][field] = Number(e.target.value);
+        updatedDays[eventData][i].sets[0].setsData[index][field] = Number(e.target.value);
       }
 
       updatedDays[eventData][i].sets = [...updatedDays[eventData][i].sets];
@@ -428,7 +428,7 @@ const PatientPlanForm = ({
   const handleSelectPatientCategory = (val, i) => {
     if (val) {
       setSelected_patient_category(val);
-      
+
       setDays((prevDays) => {
         const updatedDay = prevDays[eventData].map((item, index) => {
           if (index === i) {
@@ -538,7 +538,7 @@ const PatientPlanForm = ({
                             <Form.Label>Exercise type</Form.Label>
                             <Form.Select
                               aria-label="Default select example"
-                              value={day?.category  }
+                              value={day?.category}
                               onChange={(e) =>
                                 handleSelectCategory(e.target.value, i)
                               }
@@ -564,7 +564,7 @@ const PatientPlanForm = ({
                               onChange={(e) =>
                                 handleSelectPatientCategory(e.target.value, i)
                               }
-                              
+
                             >
                               <option value="" selected>
                                 Select Category
@@ -695,159 +695,166 @@ const PatientPlanForm = ({
                           </button>
                         </div>
                         {/* {day?.sets?.filter((item)=>item.category===selected_patient_category).map((cardio, index) => ( */}
-                        {day?.sets?.filter((item) => item.category === selected_patient_category).map((cardio, index) => (
-                          Array.from({ length: cardio.sets }, (_, setindex) => (
-                            
-                            <div>
-                              <Form.Group className="mb-3">
-                                <div className="steps_items d-flex gap-2">
-                                  <div>
-                                    <Form.Label>Set {setindex + 1}</Form.Label>
-                                    <span className="step_count">{setindex + 1}</span>
-                                  </div>
-                                  <div className="w-100">
-                                    <div className="flex-grow-1">
-                                      <div className="d-flex gap-2">
+                        {day?.sets?.filter((item) => item.category === selected_patient_category).map((setsInfo) => {
+                          return (
+                            <>
+                              {
+                                setsInfo.setsData.map((cardio, index) => {
+                                  console.log("cardioDet--", index, cardio)
+                                  return (
+                                    <Form.Group className="mb-3">
+                                      <div className="steps_items d-flex gap-2">
+                                        <div>
+                                          <Form.Label>Set {index + 1}</Form.Label>
+                                          <span className="step_count">{index + 1}</span>
+                                        </div>
                                         <div className="w-100">
-                                          <div className="d-flex gap-2 align-items-center">
-                                            <Form.Label className="flex-grow-1">
-                                              Time Duration
-                                            </Form.Label>{" "}
-                                            <span
-                                              onChange={() =>
-                                                handleChangeCardioUnit(
-                                                  i,
-                                                  index,
-                                                  "time",
-                                                  "sec"
-                                                )
-                                              }
-                                              className={
-                                                cardio?.time?.unit === "sec"
-                                                  ? "time"
-                                                  : "time min"
-                                              }
-                                            >
-                                              sec
-                                            </span>{" "}
+                                          <div className="flex-grow-1">
+                                            <div className="d-flex gap-2">
+                                              <div className="w-100">
+                                                <div className="d-flex gap-2 align-items-center">
+                                                  <Form.Label className="flex-grow-1">
+                                                    Time Duration
+                                                  </Form.Label>{" "}
+                                                  <span
+                                                    // onChange={() =>
+                                                    //   handleChangeCardioUnit(
+                                                    //     i,
+                                                    //     index,
+                                                    //     "time",
+                                                    //     "sec"
+                                                    //   )
+                                                    // }
+                                                    className={
+                                                      cardio?.time?.unit === "sec"
+                                                        ? "time"
+                                                        : "time min"
+                                                    }
+                                                  >
+                                                    sec
+                                                  </span>{" "}
+                                                </div>
+                                                <Form.Control
+                                                  type="number"
+                                                  placeholder="00"
+                                                  value={cardio?.time?.value}
+                                                  onChange={(e) =>
+                                                    handleChangeCardioFields(
+                                                      i,
+                                                      index,
+                                                      "time",
+                                                      e
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                              <div className="flex-grow-1 w-100">
+                                                <div className="d-flex gap-2 align-items-center">
+                                                  <Form.Label
+                                                    className="flex-grow-1"
+                                                    value={cardio?.reps}
+                                                  // onChange={(e) =>
+                                                  //   handleChangeCardioFields(
+                                                  //     i,
+                                                  //     index,
+                                                  //     "reps",
+                                                  //     e
+                                                  //   )
+                                                  // }
+                                                  >
+                                                    Reps
+                                                  </Form.Label>{" "}
+                                                </div>
+                                                <Form.Control
+                                                  type="text"
+                                                  placeholder="00"
+                                                  value={cardio?.reps}
+                                                  onChange={(e) =>
+                                                    handleChangeCardioFields(
+                                                      i,
+                                                      index,
+                                                      "reps",
+                                                      e
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                              <div className="flex-grow-1 w-100">
+                                                <div className="d-flex gap-2 align-items-center">
+                                                  <Form.Label className="flex-grow-1">
+                                                    Weight
+                                                  </Form.Label>{" "}
+                                                  <span
+                                                    onClick={() =>
+                                                      handleChangeFlexibilityUnit(
+                                                        i,
+                                                        index,
+                                                        "weight",
+                                                        "kg"
+                                                      )
+                                                    }
+                                                    className={
+                                                      cardio?.weight?.unit === "kg"
+                                                        ? "time"
+                                                        : "time min"
+                                                    }
+                                                  >
+                                                    Kg
+                                                  </span>{" "}
+                                                  <span
+                                                    onClick={() =>
+                                                      handleChangeFlexibilityUnit(
+                                                        i,
+                                                        index,
+                                                        "weight",
+                                                        "lbs"
+                                                      )
+                                                    }
+                                                    className={
+                                                      cardio?.weight?.unit === "lbs"
+                                                        ? "time"
+                                                        : "time min"
+                                                    }
+                                                  >
+                                                    Lbs
+                                                  </span>
+                                                </div>
+                                                <Form.Control
+                                                  type="text"
+                                                  placeholder="00"
+                                                  value={cardio?.weight?.value}
+                                                  onChange={(e) =>
+                                                    handleChangeCardioFields(
+                                                      i,
+                                                      index,
+                                                      "weight",
+                                                      e
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                            </div>
                                           </div>
-                                          <Form.Control
-                                            type="number"
-                                            placeholder="00"
-                                            value={cardio?.time?.value}
-                                            onChange={(e) =>
-                                              handleChangeCardioFields(
-                                                i,
-                                                index,
-                                                "time",
-                                                e
-                                              )
-                                            }
-                                          />
                                         </div>
-                                        <div className="flex-grow-1 w-100">
-                                          <div className="d-flex gap-2 align-items-center">
-                                            <Form.Label
-                                              className="flex-grow-1"
-                                              value={cardio?.reps}
-                                              onChange={(e) =>
-                                                handleChangeCardioFields(
-                                                  i,
-                                                  index,
-                                                  "reps",
-                                                  e
-                                                )
-                                              }
-                                            >
-                                              Reps
-                                            </Form.Label>{" "}
-                                          </div>
-                                          <Form.Control
-                                            type="text"
-                                            placeholder="00"
-                                            value={cardio?.reps}
-                                            onChange={(e) =>
-                                              handleChangeCardioFields(
-                                                i,
-                                                index,
-                                                "reps",
-                                                e
-                                              )
+                                        {day?.sets?.length > 1 && (
+                                          <span
+                                            onClick={() =>
+                                              handleRemoveCardioFields(i, index)
                                             }
-                                          />
-                                        </div>
-                                        <div className="flex-grow-1 w-100">
-                                          <div className="d-flex gap-2 align-items-center">
-                                            <Form.Label className="flex-grow-1">
-                                              Weight
-                                            </Form.Label>{" "}
-                                            <span
-                                              onClick={() =>
-                                                handleChangeFlexibilityUnit(
-                                                  i,
-                                                  index,
-                                                  "weight",
-                                                  "kg"
-                                                )
-                                              }
-                                              className={
-                                                cardio?.weight?.unit === "kg"
-                                                  ? "time"
-                                                  : "time min"
-                                              }
-                                            >
-                                              Kg
-                                            </span>{" "}
-                                            <span
-                                              onClick={() =>
-                                                handleChangeFlexibilityUnit(
-                                                  i,
-                                                  index,
-                                                  "weight",
-                                                  "lbs"
-                                                )
-                                              }
-                                              className={
-                                                cardio?.weight?.unit === "lbs"
-                                                  ? "time"
-                                                  : "time min"
-                                              }
-                                            >
-                                              Lbs
-                                            </span>
-                                          </div>
-                                          <Form.Control
-                                            type="text"
-                                            placeholder="00"
-                                            value={cardio?.weight?.value}
-                                            onChange={(e) =>
-                                              handleChangeCardioFields(
-                                                i,
-                                                index,
-                                                "weight",
-                                                e
-                                              )
-                                            }
-                                          />
-                                        </div>
+                                            className="minus align-self-end mb-2"
+                                          >
+                                            x
+                                          </span>
+                                        )}
                                       </div>
-                                    </div>
-                                  </div>
-                                  {day?.sets?.length > 1 && (
-                                    <span
-                                      onClick={() =>
-                                        handleRemoveCardioFields(i, index)
-                                      }
-                                      className="minus align-self-end mb-2"
-                                    >
-                                      x
-                                    </span>
-                                  )}
-                                </div>
-                              </Form.Group>
-                            </div>
-                          ))
-                          ))}
+                                    </Form.Group>
+                                  )
+                                })}
+                            </>
+                          )
+
+
+                        })}
                       </div>
                       <Col lg={12} className="pt-3">
                         <div className="d-flex justify-content-end gap-2">

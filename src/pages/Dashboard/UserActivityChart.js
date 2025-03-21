@@ -43,10 +43,10 @@ export default function UserActivityChart({userActivityReportData}) {
         name: "Patients",
         colorByPoint: true,
         data: [
-          { name: "Total Patient", y: userActivityReportData?.totalPatients, color: "rgba(20, 184, 166, 1)" }, // Teal
-          { name: "Active Patient", y: userActivityReportData?.activePatients, color: "rgba(114, 114, 255, 1)" }, // Blue-Violet
-          { name: "Regular Present", y: userActivityReportData?.regularPresents, color: "rgba(135, 255, 114, 1)" }, // Green
-          { name: "Irregular Present", y: userActivityReportData?.irregularPresents, color: "rgba(255, 131, 150, 1)" } // Red
+          { name: "Total Patient", y: userActivityReportData?.totalPatients?userActivityReportData?.totalPatients:0, color: "rgba(20, 184, 166, 1)" }, // Teal
+          { name: "Active Patient", y: userActivityReportData?.activePatients?userActivityReportData?.activePatients:0, color: "rgba(114, 114, 255, 1)" }, // Blue-Violet
+          { name: "Regular Present", y: userActivityReportData?.regularPresents?userActivityReportData?.regularPresents:0, color: "rgba(135, 255, 114, 1)" }, // Green
+          { name: "Irregular Present", y: userActivityReportData?.irregularPresents?userActivityReportData?.irregularPresents:0, color: "rgba(255, 131, 150, 1)" } // Red
         ]
       }
     ]

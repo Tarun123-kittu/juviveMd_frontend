@@ -549,7 +549,7 @@ const EditPateintExercise = ({
               <Form.Group className="mb-2">
                 <Form.Label>Exercise Image</Form.Label>
                 <div className="exercise_image">
-                  <img src={exerciseImage || TrainingImage} alt="training image" disabled className="img-fluid"/>
+                  <img src={exerciseImage || TrainingImage} alt="training image" disabled className="img-fluid" />
                 </div>
               </Form.Group>
             </Col>
@@ -633,21 +633,21 @@ const EditPateintExercise = ({
                 </div>
                 <div className="w-100">
 
-                <div className="flex-grow-1 d-flex gap-2 ">
-                  <div className="w-100">
-                    <div className="d-flex gap-2 align-items-center">
-                      <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
-                      <span onClick={() => handleChangeCardioUnit(i, "time", "sec")}
-                        className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
-                      <span onClick={() => handleChangeCardioUnit(i, "time", "min")}
-                        className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
-                    </div>
-                    <Form.Control type="text" placeholder="00" value={cardio?.time?.value} className={cardioError[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeCardioFields(i, "time", e)} />
+                  <div className="flex-grow-1 d-flex gap-2 ">
+                    <div className="w-100">
+                      <div className="d-flex gap-2 align-items-center">
+                        <Form.Label className="flex-grow-1">Time Duration</Form.Label>{" "}
+                        <span onClick={() => handleChangeCardioUnit(i, "time", "sec")}
+                          className={cardio?.time?.unit === "sec" ? "time" : "time min"}>sec</span>{" "}
+                        <span onClick={() => handleChangeCardioUnit(i, "time", "min")}
+                          className={cardio?.time?.unit === "min" ? "time" : "time min"}>min</span>
+                      </div>
+                      <Form.Control type="text" placeholder="00" value={cardio?.time?.value} className={cardioError[`time-${i}`] ? "is-invalid" : ""} onChange={(e) => handleChangeCardioFields(i, "time", e)} />
 
+                    </div>
+                    {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">x</span>}
                   </div>
-                  {cardioFields?.length > 1 && <span onClick={() => (handleRemoveCardioFields(i))} className="minus align-self-end mb-2">x</span>}
-                </div>
-                {cardioError[`time-${i}`] && <div className="error_input">{cardioError[`time-${i}`]}</div>}
+                  {cardioError[`time-${i}`] && <div className="error_input">{cardioError[`time-${i}`]}</div>}
                 </div>
               </div>
             </Form.Group>
