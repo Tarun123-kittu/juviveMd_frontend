@@ -77,7 +77,7 @@ const PatientPlanComponent = () => {
     bodyParts: [],
     sets: [
       {
-        patient_category: "",
+        category: "A",
         sets: 0,
         reps: 0,
         time: { value: 0, unit: "sec" },

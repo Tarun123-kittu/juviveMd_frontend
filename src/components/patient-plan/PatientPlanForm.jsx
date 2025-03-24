@@ -335,11 +335,11 @@ const PatientPlanForm = ({
       }
 
       const currentExercise = currentDayExercises[i]; //exercise of selected excersice
-      let specificSet = currentExercise.sets.filter(
+      let specificSet = currentExercise?.sets?.filter(
         (item) => item.category === selected_patient_category
       );
-      console.log("specific Set--", specificSet);
-      const hasEmptySet = specificSet[0].setsData?.some((field) => {
+      console.log("specific Set--", currentExercise);
+      const hasEmptySet = specificSet[0]?.setsData?.some((field) => {
         const hasNoValidValues =
           (field.time?.value === 0 || field.time?.value == null) &&
           (field.weight?.value === 0 || field.weight?.value == null) &&
@@ -356,7 +356,7 @@ const PatientPlanForm = ({
       }
       let noOfSets = specificSet[0].sets;
       specificSet[0].sets = noOfSets + 1;
-      specificSet[0].setsData.push({
+      specificSet[0]?.setsData?.push({
         reps: 0,
         time: { value: 0, unit: "sec" },
         weight: { value: 0, unit: "kg" },
@@ -804,7 +804,7 @@ const PatientPlanForm = ({
                           return (
                             <>
                               {
-                                setsInfo.setsData.map((cardio, index) => {
+                                setsInfo?.setsData?.map((cardio, index) => {
                                   console.log("cardioDet--", index, cardio)
                                   return (
                                     <Form.Group className="mb-3">
