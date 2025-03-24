@@ -280,7 +280,7 @@ const PatientPlanForm = ({
           return false;
         }
 
-        return !lastExercise.sets.some((item) => {
+        return !lastExercise.sets.filter((item)=>item.category===selected_patient_category)?.setsData?.some((item) => {
           return (
             item.reps === 0 && (item.time.value === 0 || item.weight.value === 0)
           );
