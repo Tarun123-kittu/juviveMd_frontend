@@ -274,6 +274,51 @@ const PatientPlanForm = ({
     });
   };
 
+  // const addNewFlexibilityToCardio = (i) => {
+  //   setDays((prevDays) => {
+  //     if (!prevDays || !eventData || !prevDays[eventData]) {
+  //       console.error("Invalid eventData or days structure");
+  //       return prevDays;
+  //     }
+
+  //     const updatedDays = { ...prevDays };
+  //     const currentDayExercises = [...updatedDays[eventData]];//exercises of specific day
+  //     console.log("currentDayExercises--", currentDayExercises)
+  //     if (!currentDayExercises[i]) {
+  //       console.error(`Exercise at index ${i} does not exist`);
+  //       return prevDays;
+  //     }
+
+  //     const currentExercise = currentDayExercises[i];//exercise of selected excersice
+  //     const hasEmptySet = currentExercise?.sets[0].setsData?.some((field) => {
+  //       const hasNoValidValues =
+  //         (field.time?.value === 0 || field.time?.value == null) &&
+  //         (field.weight?.value === 0 || field.weight?.value == null) &&
+  //         (field.reps === 0 || field.reps == null);
+
+  //       return hasNoValidValues;
+  //     });
+
+  //     if (hasEmptySet) {
+  //       toast.error("Cannot add new set, some values are missing in the current set.");
+  //       return prevDays;
+  //     }
+  //     currentExercise.sets = [
+  //       ...currentExercise.sets,
+  //       {
+  //         category: selected_patient_category || "A",
+  //         sets: 1,
+  //         reps: 0,
+  //         time: { value: 0, unit: "sec" },
+  //         weight: { value: 0, unit: "kg" },
+  //       },
+  //     ];
+
+  //     updatedDays[eventData] = currentDayExercises;
+  //     return updatedDays;
+  //   });
+  // };
+
   const addNewFlexibilityToCardio = (i) => {
     setDays((prevDays) => {
       if (!prevDays || !eventData || !prevDays[eventData]) {
@@ -282,15 +327,19 @@ const PatientPlanForm = ({
       }
 
       const updatedDays = { ...prevDays };
-      const currentDayExercises = [...updatedDays[eventData]];//exercises of specific day
-      console.log("currentDayExercises--", currentDayExercises)
+      const currentDayExercises = [...updatedDays[eventData]]; //exercises of specific day
+      console.log("currentDayExercises--", currentDayExercises);
       if (!currentDayExercises[i]) {
-        console.error(`Exercise at index ${i} does not exist`);
+        console.error(`Exercise at index ${ i } does not exist`);
         return prevDays;
       }
 
-      const currentExercise = currentDayExercises[i];//exercise of selected excersice
-      const hasEmptySet = currentExercise?.sets[0].setsData?.some((field) => {
+      const currentExercise = currentDayExercises[i]; //exercise of selected excersice
+      let specificSet = currentExercise.sets.filter(
+        (item) => item.category === selected_patient_category
+      );
+      console.log("specific Set--", specificSet);
+      const hasEmptySet = specificSet[0].setsData?.some((field) => {
         const hasNoValidValues =
           (field.time?.value === 0 || field.time?.value == null) &&
           (field.weight?.value === 0 || field.weight?.value == null) &&
@@ -300,19 +349,29 @@ const PatientPlanForm = ({
       });
 
       if (hasEmptySet) {
-        toast.error("Cannot add new set, some values are missing in the current set.");
+        toast.error(
+          "Cannot add new set, some values are missing in the current set."
+        );
         return prevDays;
       }
-      currentExercise.sets = [
-        ...currentExercise.sets,
-        {
-          category: selected_patient_category || "A",
-          sets: 1,
-          reps: 0,
-          time: { value: 0, unit: "sec" },
-          weight: { value: 0, unit: "kg" },
-        },
-      ];
+      let noOfSets = specificSet[0].sets;
+      specificSet[0].sets = noOfSets + 1;
+      specificSet[0].setsData.push({
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+      });
+      // const updatedSet = specificSet.map(set =>
+      //   set.category === selected_patient_category
+      //     ? { ...set, setsData: [...set.setsData, specificSet[0].setsData] }
+      //     : set
+      // );
+      // currentExercise.sets = [
+      //   ...currentExercise.sets,
+      //   updatedSet
+      // ];
+
+      console.log("div--", currentExercise.sets);
 
       updatedDays[eventData] = currentDayExercises;
       return updatedDays;
@@ -346,21 +405,45 @@ const PatientPlanForm = ({
     });
   };
 
+  // const handleChangeCardioFields = (i, index, field, e) => {
+  //   console.log("change--", i, index, field, e.target.value);
+
+  //   setDays((prevDays) => {
+  //     const updatedDays = JSON.parse(JSON.stringify(prevDays));
+  //     if (field === "time") {
+  //       updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
+  //         e.target.value
+  //       );
+  //     } else if (field === "weight") {
+  //       updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
+  //         e.target.value
+  //       );
+  //     } else if (field === "reps") {
+  //       updatedDays[eventData][i].sets[0].setsData[index][field] = Number(e.target.value);
+  //     }
+
+  //     updatedDays[eventData][i].sets = [...updatedDays[eventData][i].sets];
+  //     return updatedDays;
+  //   });
+  // };
+
   const handleChangeCardioFields = (i, index, field, e) => {
     console.log("change--", i, index, field, e.target.value);
 
     setDays((prevDays) => {
       const updatedDays = JSON.parse(JSON.stringify(prevDays));
       if (field === "time") {
-        updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
-          e.target.value
-        );
+        updatedDays[eventData][i].sets.filter(
+          (item) => item.category === selected_patient_category
+        )[0].setsData[index][field].value = e.target.value;
       } else if (field === "weight") {
-        updatedDays[eventData][i].sets[0].setsData[index][field].value = Number(
-          e.target.value
-        );
+        updatedDays[eventData][i].sets.filter(
+          (item) => item.category === selected_patient_category
+        )[0].setsData[index][field].value = e.target.value;
       } else if (field === "reps") {
-        updatedDays[eventData][i].sets[0].setsData[index][field] = Number(e.target.value);
+        updatedDays[eventData][i].sets.filter(
+          (item) => item.category === selected_patient_category
+        )[0].setsData[index][field] = e.target.value;
       }
 
       updatedDays[eventData][i].sets = [...updatedDays[eventData][i].sets];
@@ -395,21 +478,43 @@ const PatientPlanForm = ({
     });
   };
 
+  // const handleRemoveCardioFields = (i, index) => {
+  //   setDays((prevDays) => {
+  //     const updatedDays = { ...prevDays };
+  //     const currentDayExercises = [...updatedDays[eventData]];
+
+  //     currentDayExercises[i].sets = currentDayExercises[
+  //       i
+  //     ].sets.filter((_, idx) => idx !== index);
+
+  //     updatedDays[eventData] = currentDayExercises;
+
+  //     return updatedDays;
+  //   });
+  // };
   const handleRemoveCardioFields = (i, index) => {
     setDays((prevDays) => {
       const updatedDays = { ...prevDays };
       const currentDayExercises = [...updatedDays[eventData]];
+      const currentExercise = currentDayExercises[i]; //exercise of selected excersice
+      // let specificSet = currentExercise.sets.filter(
+      //   (item) => item.category === selected_patient_category
+      // );
+      // currentDayExercises[i].sets
+      // .filter((set) => set.category === selected_patient_category)
+      // .map((set)=>({...set,setsData:set.setsData.filter((item,idx)=>idx!==index)}))
 
-      currentDayExercises[i].sets = currentDayExercises[
-        i
-      ].sets.filter((_, idx) => idx !== index);
+      currentDayExercises[i].sets.map((set) =>
+        set.category === selected_patient_category
+          ? (set.setsData = set.setsData.filter((item, idx) => idx !== index))
+          : set
+      );
 
       updatedDays[eventData] = currentDayExercises;
 
       return updatedDays;
-    });
+    });  
   };
-
   const handleRemoveFlexibilityFields = (i, index) => {
     setDays((prevDays) => {
       const updatedDays = { ...prevDays };
