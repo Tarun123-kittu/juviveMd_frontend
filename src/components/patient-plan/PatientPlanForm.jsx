@@ -65,12 +65,12 @@ const PatientPlanForm = ({
     }
   }, [days, selectedIndex]);
 
-  const newExerciseData = {
+  const daysData = {
     category: "",
-    patient_category: "",
+    patient_category: "A",
+    planExerciseId: null,
     training_type: [],
     exerciseId: "",
-    planExerciseId: null,
     exerciseName: "Untitled",
     exerciseImage: "",
     exerciseVideo: "",
@@ -79,11 +79,70 @@ const PatientPlanForm = ({
     bodyParts: [],
     sets: [
       {
+        category: "A",
+        sets: 0,
         reps: 0,
         time: { value: 0, unit: "sec" },
         weight: { value: 0, unit: "kg" },
+        setsData: []
       },
-    ],
+      {
+        category: "B",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      },
+      {
+        category: "C",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      }
+    ]
+  }
+
+  const newExerciseData = {
+    category: "",
+    patient_category: "A",
+    planExerciseId: null,
+    training_type: [],
+    exerciseId: "",
+    exerciseName: "Untitled",
+    exerciseImage: "",
+    exerciseVideo: "",
+    difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
+    active: true,
+    bodyParts: [],
+    sets: [
+      {
+        category: "A",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      },
+      {
+        category: "B",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      },
+      {
+        category: "C",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      }
+    ]
   };
 
   useEffect(() => {
@@ -330,13 +389,14 @@ const PatientPlanForm = ({
       const currentDayExercises = [...updatedDays[eventData]]; //exercises of specific day
       console.log("currentDayExercises--", currentDayExercises);
       if (!currentDayExercises[i]) {
-        console.error(`Exercise at index ${ i } does not exist`);
+        console.error(`Exercise at index ${i} does not exist`);
         return prevDays;
       }
 
       const currentExercise = currentDayExercises[i]; //exercise of selected excersice
+      const patCategory = currentExercise.patient_category;
       let specificSet = currentExercise?.sets?.filter(
-        (item) => item.category === selected_patient_category
+        (item) => item.category === patCategory
       );
       console.log("specific Set--", currentExercise);
       const hasEmptySet = specificSet[0]?.setsData?.some((field) => {
@@ -354,7 +414,7 @@ const PatientPlanForm = ({
         );
         return prevDays;
       }
-      let noOfSets = specificSet[0].sets;
+      let noOfSets = specificSet[0]?.sets || 0;
       specificSet[0].sets = noOfSets + 1;
       specificSet[0]?.setsData?.push({
         reps: 0,
@@ -513,7 +573,7 @@ const PatientPlanForm = ({
       updatedDays[eventData] = currentDayExercises;
 
       return updatedDays;
-    });  
+    });
   };
   const handleRemoveFlexibilityFields = (i, index) => {
     setDays((prevDays) => {

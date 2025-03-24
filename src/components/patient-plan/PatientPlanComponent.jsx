@@ -83,6 +83,22 @@ const PatientPlanComponent = () => {
         time: { value: 0, unit: "sec" },
         weight: { value: 0, unit: "kg" },
         setsData: []
+      },
+      {
+        category: "B",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
+      },
+      {
+        category: "C",
+        sets: 0,
+        reps: 0,
+        time: { value: 0, unit: "sec" },
+        weight: { value: 0, unit: "kg" },
+        setsData: []
       }
     ]
   }
