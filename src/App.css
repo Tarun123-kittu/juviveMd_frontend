@@ -330,6 +330,81 @@ div.css-v7duua:hover {
 .cmn_modal.imageModal .modal-dialog {
   max-width: 500px;
 }
+.tabel h4 {
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: 8px 2rem;
+  border-top: 0.25px solid rgba(12, 94, 98, 10%);
+  background: rgba(232, 245, 243, 1);
+  border-bottom: 0.25px solid rgba(12, 94, 98, 10%);
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: rgba(0, 0, 0, 1);
+}
+.tabel ul {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tabel ul li {
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  width: 100%;
+  padding: 0px 10px;
+  border-right: 1px solid #ddd;
+  white-space: nowrap;
+  text-align: center;
+  color: rgba(102, 102, 102, 1);
+}
+
+.tabel ul li span {
+  font-weight: 600;
+}
+
+.tabel ul li:first-child {
+  padding-left: 0;
+}
+
+.tabel ul li:last-child {
+  border-right: unset;
+}
+.tabel table thead th,.tabel table tbody td {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: rgba(102, 102, 102, 1);
+  padding: 10px 14px;
+}
+.tabel h5 {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 100%;
+  color: rgba(0, 0, 0, 1);
+}
+
+.tabel {
+  border-bottom: 1px solid rgba(165, 160, 160, 1);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.tabel:last-child {
+  margin-bottom: 0;
+}
+.logs_wrapper{
+  max-height: 85vh;
+  overflow: auto;
+}
 @media(max-width:1440px){
   .cmn_btn {
 height: 40px;

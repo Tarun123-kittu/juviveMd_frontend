@@ -27,7 +27,6 @@
 .message_class {
     align-items: center;
     border-radius: 10px;
-    padding: 4px;
     box-shadow: 0px 21.28px 12.16px 0px rgba(0, 0, 0, 0.02);
     background: rgba(221, 239, 255, 1);
     border-left: 5px solid rgba(0, 133, 255, 1);

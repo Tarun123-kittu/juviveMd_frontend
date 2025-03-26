@@ -106,6 +106,18 @@ console.log("selectedReportTypeData--",selectedReportType,selectedReportTypeData
                 </div>
                 <h4 className="heart_rate d-flex gap-2 align-items-center">{BpmRate?BpmRate:"N/A"} <span>bpm</span></h4>
                 <p className="bpm_status">Normal</p>
+            
+                <svg width="279" className="w-100" height="131" viewBox="0 0 279 131" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M55.1784 55.3449C31.7385 51.7311 22.3859 51.9919 2.76562 62.4921V130.787H277.535V17.2266C260.29 24.7215 241.593 27.7488 223.534 33.1092C194.374 41.7653 183.804 18.5771 156.033 30.7268C130.621 41.8447 134.662 68.3911 108.385 72.0217C84.8892 75.2681 78.6182 58.9587 55.1784 55.3449Z" fill="url(#paint0_linear_3911_9093)" fill-opacity="0.4"/>
+            <path d="M2.76562 104.779L4.83329 93.2917L18.8475 96.2783L20.2259 87.5482L44.6116 55.6464L95.5808 87.5482L108.997 68.7728L137.978 7.62891L150.197 85.617L188.293 99.2739L224.232 40.6928L277.535 75.6016" stroke="#E8394B" stroke-width="4.30102"/>
+            <defs>
+            <linearGradient id="paint0_linear_3911_9093" x1="140.954" y1="-12.9505" x2="140.954" y2="125.229" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#DA8184"/>
+            <stop offset="1" stop-color="#CA6B6E" stop-opacity="0"/>
+            </linearGradient>
+            </defs>
+            </svg>
+
             </div>
           </Col>
           <Col lg={12}>
