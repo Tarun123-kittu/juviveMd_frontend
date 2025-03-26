@@ -15,8 +15,27 @@ import { updatePatientExercisePlan, clear_update_patient_exercise_plan_state } f
 import { fetchPlanSuggestions, clear_suggested_plans_state } from "../../redux/slices/patientPlan/planSuggestions";
 import { get_patient_plan_message, clear_patient_plan_message_state } from "../../redux/slices/patientPlan/getPatientPlanMessage";
 import Swal from 'sweetalert2'
-import { isPatientPlanEditable } from "../../redux/slices/patientPlan/editPatientPlan";
 
+const daysData = {
+  category: "",
+  patient_category: "",
+  planExerciseId: null,
+  training_type: [],
+  exerciseId: "",
+  exerciseName: "Untitled",
+  exerciseImage: "",
+  exerciseVideo: "",
+  difficuilty_level: "",
+  active: true,
+  bodyParts: [],
+  sets: [
+    {
+      reps: 0,
+      time: { value: 0, unit: "sec" },
+      weight: { value: 0, unit: "kg" },
+    }
+  ]
+}
 
 
 const PatientPlanComponent = () => {
@@ -36,36 +55,10 @@ const PatientPlanComponent = () => {
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
   const exercisePlanId = location.state.exercisePlanId
-  const { patient_category: patient_selected_category } = location?.state ? location?.state : location
+  
+  const userpatient_category = location.state.patient_category
   if (!patientId) {
     navigate(-1)
-  }
-
-
-  const difficuilty_level_data = {
-    A: "Easy",
-    B: "Moderate",
-    C: "Hard",
-  }
-  const daysData = {
-    category: "",
-    patient_category: "A",
-    planExerciseId: null,
-    training_type: [],
-    exerciseId: "",
-    exerciseName: "Untitled",
-    exerciseImage: "",
-    exerciseVideo: "",
-    difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
-    active: true,
-    bodyParts: [],
-    sets: [
-      {
-        reps: 0,
-        time: { value: 0, unit: "sec" },
-        weight: { value: 0, unit: "kg" },
-      }
-    ]
   }
   const common_data = useSelector((store) => store.COMMON_DATA)
   const isPlanUpdated = useSelector((store) => store.UPDATE_PATIENT_EXERCISE_PLAN)
@@ -73,8 +66,9 @@ const PatientPlanComponent = () => {
   const [exercise_category, setExercise_category] = useState()
   const [body_parts, setBody_parts] = useState()
   const [patient_category, setPatient_category] = useState([])
+  console.log(patient_category,"===>patient_category")
   const [training_type, setTraining_type] = useState([])
-  const [selected_patient_category, setSelected_patient_category] = useState("A")
+  const [selected_patient_category, setSelected_patient_category] = useState()
   const [selected_training_type, setSelected_training_type] = useState()
   const [activeTab, setActiveTab] = useState("Monday")
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
@@ -90,7 +84,7 @@ const PatientPlanComponent = () => {
     Saturday: [daysData],
     Sunday: [daysData],
   });
-
+  // console.log(days,"days============>")
   useEffect(() => {
     return () => {
       setDays({
@@ -105,15 +99,12 @@ const PatientPlanComponent = () => {
     }
   }, [])
 
-  // console.log("props--",hasPlan,editable)
+
   const isPlanCreated = useSelector((store) => store.CREATE_PATIENT_PLAN)
-  console.log("isPlanCreated", isPlanCreated)
   const isPlanExercise = useSelector((store) => store.GET_PATIENT_EXERCISE_PLAN)
-  // console.log("isPlanExercise--",isPlanExercise)
   const plan_message = useSelector((store) => store.PLAN_MESSAGE)
   const suggested_plans = useSelector((store) => store.PLAN_SUGGESTIONS)
-  console.log("isPlanExercise--", isPlanExercise)
-  console.log("suggested_plans--", suggested_plans)
+
   useEffect(() => {
     dispatch(common_data_api())
     dispatch(get_patient_plan_message({ patientId }))
@@ -127,6 +118,7 @@ const PatientPlanComponent = () => {
 
   useEffect(() => {
     if (common_data?.isSuccess) {
+      console.log(common_data?.data?.data,"common_data?.data?.data")
       setExercise_category(common_data?.data?.data?.exercise_category)
       setBody_parts(common_data?.data?.data?.bodyParts)
       setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
@@ -135,40 +127,35 @@ const PatientPlanComponent = () => {
     }
   }, [common_data])
 
+console.log(common_data,"common_data")
   useEffect(() => {
-    if (!editable) {
-    dispatch(fetchPlanSuggestions({ patientId }))
+    if (!hasPlan && !editable) {
+      dispatch(fetchPlanSuggestions({ patientId }))
     }
-  }, [])
+  }, [hasPlan])
 
   const handleSavePlan = () => {
     try {
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
-
         const validExercises = days[day]
-          .map((exercise) => {
-            console.log("ex--", exercise)
-            return {
-              exerciseId: exercise.exerciseId,
-              planExerciseId: exercise.planExerciseId,
-              difficulty_level: exercise.difficuilty_level,
-              sets: exercise.sets.map((set) => ({
-                category: set.category,
-                sets: set.sets,
-                time: {
-                  value: set.time.value,
-                  unit: set.time.unit,
-                },
-                weight: {
-                  value: set.weight.value,
-                  unit: set.weight.unit,
-                },
-                reps: set.reps,
-              })),
-            }
-          })
+          .map((exercise) => ({
+            exerciseId: exercise.exerciseId,
+            planExerciseId: exercise.planExerciseId,
+            difficulty_level: exercise.difficuilty_level,
+            sets: exercise.sets.map((set) => ({
+              time: {
+                value: set.time.value,
+                unit: set.time.unit,
+              },
+              weight: {
+                value: set.weight.value,
+                unit: set.weight.unit,
+              },
+              reps: set.reps,
+            })),
+          }))
           .filter(exercise => exercise.exerciseId);
-        console.log("validExercises--", validExercises)
+
         if (validExercises.length > 0) {
           acc[day] = validExercises;
         }
@@ -188,13 +175,10 @@ const PatientPlanComponent = () => {
         days: validatedPlan
       };
 
-      console.log("payload--", payload)
-
       if (editable && exercisePlanId) {
         dispatch(updatePatientExercisePlan({ planId: exercisePlanId, ...payload }));
       } else {
         dispatch(create_patient_plan({ payload }));
-        dispatch(isPatientPlanEditable({ id: patientId }))
       }
     } catch (error) {
       console.error("Error during plan validation:", error.message);
@@ -226,10 +210,9 @@ const PatientPlanComponent = () => {
       dispatch(clear_update_patient_exercise_plan_state())
     }
   }, [isPlanUpdated])
-  console.log("isplanex--",isPlanExercise,days)
 
   useEffect(() => {
-    if (isPlanExercise?.isSuccess && editable) {
+    if (isPlanExercise?.isSuccess) {
 
       const staticDays = {
         Monday: [daysData],
@@ -240,16 +223,15 @@ const PatientPlanComponent = () => {
         Saturday: [daysData],
         Sunday: [daysData],
       };
-// console.log("isplanex--",isPlanExercise,days)
+
       const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
         acc[day] = isPlanExercise.data.data.days[day].map((exercise, i) => {
-          console.log("ex--",exercise)
           return {
             ...exercise,
             exerciseId: exercise.exerciseDetails?.id,
             planExerciseId: exercise.planExerciseId,
             category: exercise.exerciseDetails?.exercise_type,
-            difficuilty_level: exercise.difficulty_level ? exercise.difficulty_level : difficuilty_level_data[patient_selected_category] || "",
+            difficuilty_level: exercise.difficulty_level || "",
             exerciseName: exercise.exerciseDetails?.exercise_name || "Untitled",
             patient_category: exercise?.exerciseDetails?.categories[i]?.category,
             exerciseImage: exercise.exerciseDetails?.image_url,
@@ -258,8 +240,6 @@ const PatientPlanComponent = () => {
             active: true,
             bodyParts: exercise.exerciseDetails?.body_parts,
             sets: exercise.sets.map((val) => ({
-              category:val?.category||"A",
-              sets: val.sets,
               reps: val.reps,
               weight: { value: val.weight.value, unit: val.weight.unit },
               time: { value: val.time.value, unit: val.time.unit },
@@ -270,17 +250,16 @@ const PatientPlanComponent = () => {
       }, {});
 
       const updatedDays = { ...staticDays, ...responseDays };
-      console.log("updatedDays--", updatedDays)
 
       setDays(updatedDays);
       setPlanValidFrom(isPlanExercise.data.data.planValidFrom);
       setPlanValidTo(isPlanExercise.data.data.planValidTo);
-      setSelected_patient_category(isPlanExercise.data.data.patient_category ||"A");
+      setSelected_patient_category(isPlanExercise.data.data.patient_category);
       setSelected_training_type(isPlanExercise.data.data.training_type);
     }
-  }, [isPlanExercise,editable]);
+  }, [isPlanExercise]);
 
-  console.log("finalDay--", days)
+
   useEffect(() => {
     if (suggested_plans?.isSuccess && !editable) {
       const staticDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -289,35 +268,38 @@ const PatientPlanComponent = () => {
         const dayExercises = suggested_plans?.data?.data?.days?.[day] || [];
 
         acc[day] = dayExercises.length
-          ? dayExercises.map((exercise) => ({
-            category: exercise.exercise_type || "",
-            patient_category: exercise?.patient_category || "A",
-            training_type: exercise.training_type || [],
-            exerciseId: exercise.id || "",
-            planExerciseId: exercise.planExerciseId,
-            exerciseName: exercise.exercise_name || "Untitled",
-            exerciseImage: exercise.image_url || "",
-            exerciseVideo: exercise.video_link || "",
-            difficuilty_level: patient_selected_category ? difficuilty_level_data[patient_selected_category] : "",
-            active: true,
-            bodyParts: [],
-            sets: exercise.categories?.length
-              ? exercise.categories.map((categoryItem) => ({
-                category: categoryItem.category,
-                sets: categoryItem.start_point?.sets,
-                reps: categoryItem.start_point?.reps || 0,
-                time: { value: categoryItem.start_point?.time || 0, unit: "sec" },
-                weight: { value: categoryItem.start_point?.weight || 0, unit: "kg" },
-              }))
-              : [
-                {
-                  reps: 0,
-                  time: { value: 0, unit: "sec" },
-                  weight: { value: 0, unit: "kg" },
-                },
-              ],
-          }))
-          : [daysData];
+        ? dayExercises.map((exercise) => {
+          console.log(exercise,"exercise====>")
+            const patientCategory = exercise.categories?.find(cat => cat.category === userpatient_category || "A");
+          console.log(patientCategory,"patientCategory")
+            return {
+              category: exercise.exercise_type || "",
+              patient_category: exercise?.patient_category || "A",
+              training_type: exercise.training_type || [],
+              exerciseId: exercise.id || "",
+              planExerciseId: exercise.planExerciseId,
+              exerciseName: exercise.exercise_name || "Untitled",
+              exerciseImage: exercise.image_url || "",
+              exerciseVideo: exercise.video_link || "",
+              difficuilty_level: "",
+              active: true,
+              bodyParts: [],
+              sets: patientCategory
+                ? Array.from({ length: patientCategory.start_point?.sets || 0 }, () => ({
+                    reps: patientCategory.start_point?.reps || 0,
+                    time: { value: patientCategory.start_point?.time || 0, unit: "sec" },
+                    weight: { value: patientCategory.start_point?.weight || 0, unit: "kg" },
+                  }))
+                : [
+                    {
+                      reps: 0,
+                      time: { value: 0, unit: "sec" },
+                      weight: { value: 0, unit: "kg" },
+                    },
+                  ],
+            };
+          })
+        : [daysData];
 
         return acc;
       }, {});
@@ -330,23 +312,22 @@ const PatientPlanComponent = () => {
       }
     }
   }, [suggested_plans, editable]);
-  // console.log("vParticularDayEx--", days)
 
   useEffect(() => {
     if (plan_message?.isSuccess) {
       setPlanMessage(plan_message?.data?.data)
     }
   }, [plan_message])
-
+console.log(days,"day======= co")
   return (
     <div className="wrapper">
-      <div className="d-flex justify-content-between align-items-center stickQuote">
-        <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="pointer_cur" />
-        <div className="message_class">
-          {plan_message?.isSuccess && <p>"{planMessage}"</p>}
+      <div className="inner_wrapper">
+        <div className="d-flex justify-content-between mb-2">
+          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
+         {plan_message?.isSuccess &&  <div className="message_class">
+            <p>{planMessage}</p>
+          </div>}
         </div>
-      </div>
-      <div className="inner_wrapper pt-0">
         {isPlanExercise?.isLoading && editable ? <Loader /> : <div className="exercise_tab position-relative">
           <div className="position-absolute end-0 ps-3 bg-white">
             <button className="cmn_btn filter_btn px-4 " onClick={() => { setSavePlanModal(true) }}>Save Plan</button>
@@ -376,8 +357,6 @@ const PatientPlanComponent = () => {
                     selected_patient_category={selected_patient_category}
                     setSelected_training_type={setSelected_training_type}
                     selected_training_type={selected_training_type}
-                    patient_selected_category={patient_selected_category}
-                    difficuilty_level_data={difficuilty_level_data}
                   />
                 )}
               </Tab>

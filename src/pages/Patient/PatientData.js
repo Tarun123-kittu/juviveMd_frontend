@@ -52,6 +52,7 @@ const PatientData = () => {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
   const [patient_category, setPatient_category] = useState("")
+  console.log(patient_category,"userpatient_category")
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
   const common_data = useSelector((store) => store.COMMON_DATA)

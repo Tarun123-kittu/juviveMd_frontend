@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../../common/Loader/Loader";
 import Rating from "../../../common/ratings/Rating";
 import Nodata from "../../StaticComponents/Nodata";
-
+import Table from 'react-bootstrap/Table';
 const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId }) => {
   const dispatch = useDispatch()
   const exerciseHistory = useSelector((store) => store.EXERCISE_HISTORY_DATA)
@@ -75,74 +75,192 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
       </div>
       <Modal.Body className="p-0 authWrapper add_exercise">
         <h2 className="deletmodal_heading mb-3">Exercise Log</h2>
-          <Accordion key={0} >
+        {data?.map((item, i)=>{
+          return(
+
+        <div className="tabel" key={i}>
+          <h4>{formatDate(item?.createdAt)}</h4>
+          <Table  bordered hover>
+          <thead>
+            <tr>
+              <th>Set No.</th>
+              <th>Weight</th>
+              <th>Reps</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {item?.sets?.map((set, i) => {
+                        return (                     
+                          <tr>
+                          <td>{i + 1}</td>
+                          <td>{set?.weight?.value ? set?.weight?.value : 0}{set?.weight?.unit}</td>
+                          <td>{set?.reps}</td>
+                          <td>{set?.time?.value ? set?.time?.value : 0}{set?.time?.unit}</td>
+                        </tr>
+                        )
+                      })}
+           
+          </tbody>
+        </Table>
+          <h5 className="pt-2">Review</h5>
+          <ul className="exercise_review_data p-0 m-0">
+                      <li className="mb-3">
+                        <span className="d-block">Challenging</span>
+                       {item?.feedbacks[0]?.challenging ? "Yes" : "No"}
+                      </li>
+                      <li className="mb-3">
+                        <span className="d-block">Rating</span>
+                       {<Rating value={item?.feedbacks[0]?.rating} />}
+                      </li>
+                      <li className="mb-3">
+                        <span className="d-block">Enjoyment</span>
+                        {feedbackData[item?.feedbacks[0]?.enjoyment]}
+                      </li>
+                      <li className="mb-3">
+                        <span className="d-block">Pain</span>
+                        {item?.feedbacks[0]?.pain ? "Yes" : "No"}
+                      </li>
+                      <li className="mb-3">
+                        <span className="d-block">Category</span>
+                        {item?.feedbacks[0]?.category}
+                      </li>
+                      <li>
+                        <span className="d-block">Message</span>
+                      
+                          {item?.feedbacks[0]?.message}
+                       
+                      </li>
+                    </ul>
+        </div>
+          )
+        })}
+          {/* <Accordion key={0} > */}
+          <div className="logs_wrapper">
+
         {exerciseHistory?.isLoading ? <Loader /> : <div className="cmn_accordian">
           {data?.length === 0 ? <span className="d-block text-center py-5">No Exercise Logs To Display</span> : data?.map((item, i) => {
             return (
-                <Accordion.Item eventKey={i}>
-                  <Accordion.Header>{formatDate(item?.createdAt)}</Accordion.Header>
-                  <Accordion.Body>
-                    <h6 className="review_title">sets</h6>
-                    {item?.sets?.map((set, i) => {
-                      return (
-                        <ul className="exercise_review_data p-0 m-0 flex-nowrap">
-                          <li className="mb-3">
-                            {i === 0 && <strong className="d-block">Set No.</strong>}
-                            <span>{i + 1}</span>
-                          </li>
-                          <li className="mb-3">
-                            {i === 0 && <strong className="d-block">Weight</strong>}
-                            <span>{set?.weight?.value ? set?.weight?.value : 0}{set?.weight?.unit}</span>
-                          </li>
-                          <li className="mb-3">
-                            {i === 0 && <strong className="d-block">Reps</strong>}
-                            <span>{set?.reps}</span>
-                          </li>
-                          <li className="w-25">
-                            {i === 0 && <strong className="d-block">Time</strong>}
-                            <span>{set?.time?.value ? set?.time?.value : 0}{set?.time?.unit}</span>
-                          </li>
+                // <Accordion.Item eventKey={i}>
+                //   <Accordion.Header>{formatDate(item?.createdAt)}</Accordion.Header>
+                //   <Accordion.Body>
+                //     <h6 className="review_title">sets</h6>
+                //     {item?.sets?.map((set, i) => {
+                //       return (
+                //         <ul className="exercise_review_data p-0 m-0 flex-nowrap">
+                //           <li className="mb-3">
+                //             {i === 0 && <strong className="d-block">Set No.</strong>}
+                //             <span>{i + 1}</span>
+                //           </li>
+                //           <li className="mb-3">
+                //             {i === 0 && <strong className="d-block">Weight</strong>}
+                //             <span>{set?.weight?.value ? set?.weight?.value : 0}{set?.weight?.unit}</span>
+                //           </li>
+                //           <li className="mb-3">
+                //             {i === 0 && <strong className="d-block">Reps</strong>}
+                //             <span>{set?.reps}</span>
+                //           </li>
+                //           <li className="w-25">
+                //             {i === 0 && <strong className="d-block">Time</strong>}
+                //             <span>{set?.time?.value ? set?.time?.value : 0}{set?.time?.unit}</span>
+                //           </li>
 
-                        </ul>
-                      )
-                    })}
+                //         </ul>
+                //       )
+                //     })}
 
-                    <h6 className="review_title mt-3 border-top pt-3">Review</h6>
-                    <ul className="exercise_review_data p-0 m-0">
-                      <li className="mb-3">
-                        <strong className="d-block">Challenging</strong>
-                        <span>{item?.feedbacks[0]?.challenging ? "Yes" : "No"}</span>
-                      </li>
-                      <li className="mb-3">
-                        <strong className="d-block">Rating</strong>
-                        <span>{<Rating value={item?.feedbacks[0]?.rating} />}</span>
-                      </li>
-                      <li className="mb-3">
-                        <strong className="d-block">Enjoyment</strong>
-                        <span>{feedbackData[item?.feedbacks[0]?.enjoyment]}</span>
-                      </li>
-                      <li className="mb-3">
-                        <strong className="d-block">Pain</strong>
-                        <span>{item?.feedbacks[0]?.pain ? "Yes" : "No"}</span>
-                      </li>
-                      <li className="mb-3">
-                        <strong className="d-block">Category</strong>
-                        <span>{item?.feedbacks[0]?.category}</span>
-                      </li>
-                      <li>
-                        <strong className="d-block">Message</strong>
-                        <span>
-                          {item?.feedbacks[0]?.message}
-                        </span>
-                      </li>
-                    </ul>
-                  </Accordion.Body>
-                </Accordion.Item>
+                //     <h6 className="review_title mt-3 border-top pt-3">Review</h6>
+                //     <ul className="exercise_review_data p-0 m-0">
+                //       <li className="mb-3">
+                //         <strong className="d-block">Challenging</strong>
+                //         <span>{item?.feedbacks[0]?.challenging ? "Yes" : "No"}</span>
+                //       </li>
+                //       <li className="mb-3">
+                //         <strong className="d-block">Rating</strong>
+                //         <span>{<Rating value={item?.feedbacks[0]?.rating} />}</span>
+                //       </li>
+                //       <li className="mb-3">
+                //         <strong className="d-block">Enjoyment</strong>
+                //         <span>{feedbackData[item?.feedbacks[0]?.enjoyment]}</span>
+                //       </li>
+                //       <li className="mb-3">
+                //         <strong className="d-block">Pain</strong>
+                //         <span>{item?.feedbacks[0]?.pain ? "Yes" : "No"}</span>
+                //       </li>
+                //       <li className="mb-3">
+                //         <strong className="d-block">Category</strong>
+                //         <span>{item?.feedbacks[0]?.category}</span>
+                //       </li>
+                //       <li>
+                //         <strong className="d-block">Message</strong>
+                //         <span>
+                //           {item?.feedbacks[0]?.message}
+                //         </span>
+                //       </li>
+                //     </ul>
+                //   </Accordion.Body>
+                // </Accordion.Item>
+                <div className="tabel" key={i}>
+                <h4>{formatDate(item?.createdAt)}</h4>
+                <Table  bordered hover>
+                <thead>
+                  <tr>
+                    <th>Set No.</th>
+                    <th>Weight</th>
+                    <th>Reps</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {item?.sets?.map((set, i) => {
+                              return (                     
+                                <tr>
+                                <td>{i + 1}</td>
+                                <td>{set?.weight?.value ? set?.weight?.value : 0}{set?.weight?.unit}</td>
+                                <td>{set?.reps}</td>
+                                <td>{set?.time?.value ? set?.time?.value : 0}{set?.time?.unit}</td>
+                              </tr>
+                              )
+                            })}
+                 
+                </tbody>
+              </Table>
+                <h5 className="pt-2">Review</h5>
+                <ul className="exercise_review_data p-0 m-0">
+                            <li className="mb-3">
+                              <span className="d-block">Challenging</span>
+                             {item?.feedbacks[0]?.challenging ? "Yes" : "No"}
+                            </li>
+                            <li className="mb-3">
+                              <span className="d-block">Rating</span>
+                             {<Rating value={item?.feedbacks[0]?.rating} />}
+                            </li>
+                            <li className="mb-3">
+                              <span className="d-block">Enjoyment</span>
+                              {feedbackData[item?.feedbacks[0]?.enjoyment]}
+                            </li>
+                            <li className="mb-3">
+                              <span className="d-block">Pain</span>
+                              {item?.feedbacks[0]?.pain ? "Yes" : "No"}
+                            </li>
+                            <li className="mb-3">
+                              <span className="d-block">Category</span>
+                              {item?.feedbacks[0]?.category}
+                            </li>
+                            <li>
+                              <span className="d-block">Message</span>
+                            
+                                {item?.feedbacks[0]?.message}
+                             
+                            </li>
+                          </ul>
+              </div>
             )
           })}
 
         </div>}
-          </Accordion>
+          </div>
+          {/* </Accordion> */}
       </Modal.Body>
     </Modal>
   );
