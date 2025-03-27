@@ -348,7 +348,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               <div className="volumeInput">
                 <div className="position-relative d-flex align-items-center w-100">
                   <Form.Control
-                    type="text"
+                    type="number"
                     name="weight"
                     placeholder="Enter Weight"
                     value={formik.values.weight}

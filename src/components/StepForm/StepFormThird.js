@@ -116,7 +116,7 @@ const StepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate,
             <div className="volumeInput w-100">
               <div className="position-relative w-100 d-flex align-items-center">
                 <Form.Control
-                  type="text"
+                  type="number"
                   name="optimalWeight"
                   placeholder="Enter weight"
                   value={formik.values.optimalWeight}

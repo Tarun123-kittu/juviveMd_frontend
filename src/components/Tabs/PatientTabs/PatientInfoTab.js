@@ -33,9 +33,11 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
   const columns = [ 
     "Exercise Name",
     "Set/Reps",
-    "Weight/Time",
+    "Time",
+    "Weight",
     "Achieved Set/Reps",
-    "Achieved weight Time",
+    "Achieved weight",
+    "Achieved Time",
     "Patient Review",
     "Action",
   ];
@@ -126,6 +128,21 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                 {planExercise?.sets
                   ?.map((set) => `${set?.time?.value}${" "}${set?.time?.unit}`)
                   .join('-') || "N/A"}
+              </td>
+              <td>
+                {planExercise?.sets
+                  ?.map((set) => `${set?.weight?.value}${" "}${set?.weight?.unit}`)
+                  .join('-') || "N/A"}
+              </td>
+              <td>
+                {console.log(logs,'logs==========>')}
+                  {logs?.length > 0
+                ? `${logs?.flatMap(log => log?.sets?.length > 0 ? [log?.sets?.length] : [])
+                    .join(' / ') || "N/A"} / 
+                  ${logs?.flatMap(log => log?.sets?.map(rep => `${rep?.reps} Reps`))
+                    .join(' - ') || "N/A"}`
+                : "--------"}
+                  
               </td>
               <td>
                 {logs?.length > 0
