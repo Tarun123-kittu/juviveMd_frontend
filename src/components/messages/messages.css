@@ -3,10 +3,7 @@
     width: 350px;
 }
 
-.messages_list li.active, .message_head {
-    background: #0C5E62;
-    color: #fff;
-}
+
 .conversation_item img {
     width: 35px;
     height: 35px;
@@ -18,7 +15,37 @@
     border-radius: 5px;
     margin-bottom: 10px;
 }
+.message_head {
+    background: #ecf2f3;
+    color: #000;
+    border-bottom: 1px solid #ddd;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0;
+}
+.message_text {
+    display: flex;
+    justify-content: space-between;
+}
 
+
+.message_text span.messsage_count {
+    min-width: 20px;
+    font-size: 10px;
+    height: 20px;
+    width: auto;
+    line-height: 21px;
+    top: 2px;
+}
+.activeMessage, .messages_list li:hover {
+    background: #0c5e6214;
+}
+span.user_message {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines to display */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." at the end if text overflows */
+}
 .message_user span {
     font-size: 13px;
 }
@@ -33,12 +60,12 @@
     pointer-events: none;
     cursor: not-allowed;
   }
-p.message_dialogue {
-    background: var(--primary-color);
+  p.message_dialogue {
+    background: #ededed;
     padding: 7px 10px;
     border-radius: 10px;
     border-top-left-radius: 0px;
-    color: #fff;
+    color: #000;
     margin-top: 6px;
     font-size: 12px;
 }
@@ -61,17 +88,18 @@ span.message_errors {
 }
 
 .send_message {
-    background: #ACC9CB;
+    background: #ecf2f3;
     padding: 15px;
 }
 
 .send_message input {
     width: 100%;
     height: 49px;
-    padding: 0px 10px;
+    padding: 0px 20px;
     border: unset;
-    border-radius: 5px;
+    border-radius: 35px;
     font-size: 14px;
+    padding-right: 60px;
 }
 
 .send_message {
