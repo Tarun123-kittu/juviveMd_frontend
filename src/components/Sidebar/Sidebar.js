@@ -97,7 +97,7 @@ const Sidebar = () => {
     if (all_chats?.isSuccess) {
       const chatCount = all_chats?.data?.data?.items.filter((el) => el.read === false)
       if (pathname === "/messages") {
-        if (chatCount?.length > 1) {
+        if (chatCount?.length > 0) {
           setUnreadChats(chatCount)
         } else {
           setUnreadChats([])
@@ -207,6 +207,7 @@ const Sidebar = () => {
                       </Link>
                     </li>
                   )}
+                  {console.log(unreadChats.length,"unreadChats.length===>")}
                   {menus?.name === "Messages" && firstPermissionChat?.canRead && (
                     <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
                       <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>

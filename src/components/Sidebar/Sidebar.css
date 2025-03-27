@@ -124,18 +124,19 @@ li.log_out div {
     border-radius : 42px
 }
 
-span.messsage_count {
+span.messsage_count{
     display: inline-block;
     width: 25px;
     height: 25px;
     text-align: center;
-    background: #fff;
+    background: var(--primary-color);
     border-radius: 50%;
     font-size: 12px;
     line-height: 25px;
     position: relative;
-    top: -5px;
+    top: 0px;
     margin-left: 4px;
+    color: #fff;
 }
 
 a.sidebar_active span.messsage_count {

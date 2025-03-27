@@ -206,7 +206,7 @@ const MessagesComponent = () => {
             <ul>
               {Array.isArray(chats) && chats?.length !== 0 && chats.map((chat, i) => {
                 return (
-                  <li key={i} className={`d-flex gap-2 align-items-center ${chatIndex === i ? "disabled" : ""} ${chat?.read || chatIndex === i ? "shadow p-2 bg-white rounded" : "active"}`} aria-disabled="true" style={{ cursor: "pointer" }} onClick={() => { setChatIndex(i); setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img height={35} width={35} className='round_image' src={chat?.receiver?.image || DefaultImage} alt="user image" />
+                  <li key={i} className={`d-flex gap-2  ${chatIndex === i ? " activeMessage" : ""} ${chat?.read || chatIndex === i ? " p-2  rounded" : "active"}`} aria-disabled="true" style={{ cursor: "pointer" }} onClick={() => { setChatIndex(i); setOpenChatId(chat?.senderId === localStorage.getItem('user_id') ? chat.receiverId : chat.senderId); setOpenChatName(chat?.senderId === localStorage.getItem('user_id') ? chat.receiver?.firstName : chat.sender?.firstName); setPage(1); setChatData([]); dispatch(clear_whole_chat_state()); setChatIndex(i) }}><img height={35} width={35} className='round_image' src={chat?.receiver?.image || DefaultImage} alt="user image" />
                     <div className='message_user flex-grow-1 '>
                       <div className='d-flex'>
                         <h6 className='flex-grow-1'>{chat?.senderId === localStorage.getItem('user_id') ? chat?.receiver?.firstName : chat?.sender?.firstName}</h6>
@@ -222,7 +222,8 @@ const MessagesComponent = () => {
                           }).replace(',', ',')}
                         </span>
                       </div>
-                      <span>{all_chats?.isLoading && chatIndex === i ? lastMessage : chat?.message?.length > 40 ? chat?.message?.slice(0, 40) + "..." : chat?.message}</span>
+                      <div className="message_text"><span className="user_message">{all_chats?.isLoading && chatIndex === i ? lastMessage : chat?.message?.length > 40 ? chat?.message?.slice(0, 40) + "..." : chat?.message}</span>{chat?.unreadCount > 0 && <span className="messsage_count">{chat?.unreadCount}</span>}</div>
+                   
                     </div>
                   </li>
                 )
