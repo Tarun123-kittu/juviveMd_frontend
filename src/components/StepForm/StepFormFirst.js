@@ -9,6 +9,7 @@ import "react-international-phone/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullData, setHeight_unit, height_unit, setWeight_unit, weight_unit, stepOnefullData, setTrainer_name, categoryData }) => {
+  console.log("stepOnefullData--", stepOnefullData)
   const [phone, setPhone] = useState('');
   const [trainer_names, setTrainer_names] = useState([])
   const validationSchema = Yup.object({
@@ -48,6 +49,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
         trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
         `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
       ),
+    patient_category: Yup.string().required("Please select a category").oneOf(categoryData, `Category must be one of: ${categoryData.join(", ")}`),
   });
 
   const formik = useFormik({
@@ -63,6 +65,7 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
       goal: stepOnefullData?.goal || "",
       gender: stepOnefullData?.gender || "",
       trainer: stepOnefullData?.trainer || "",
+      patient_category: stepOnefullData?.patient_category || ""
     },
     validationSchema,
     onSubmit: (values) => {
@@ -302,12 +305,12 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={4}>
+          {/* <Col lg={4}>
             <label>Category</label>
             <select
               name="patient_category"
               className="form-select"
-              value={stepOnefullData?.patient_category}
+              value={formik.values?.patient_category}
               onChange={formik.handleChange}
             >
               <option value="">Select category</option>
@@ -317,6 +320,28 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                 </option>
               ))}
             </select>
+          </Col> */}
+          <Col lg={4}>
+            <Form.Group className="mb-2">
+              <Form.Label>Category</Form.Label>
+              <Form.Select
+                name="patient_category"
+                value={stepOnefullData?.patient_category}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.patient_category && !!formik.errors.patient_category}
+              >
+                <option>Select category</option>
+                {categoryData?.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.patient_category}
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
 
         </Row>

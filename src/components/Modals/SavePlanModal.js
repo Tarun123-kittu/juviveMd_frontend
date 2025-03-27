@@ -12,13 +12,13 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     return date.toISOString().split('T')[0];
 });
 
-
+console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
   const handleClose = () => {
     setSavePlanModal(false);
     !editable && setPlanValidFrom('');
     !editable && setPlanValidTo('');
-    setPlanValidTo("")
-    setPlanValidFrom("")
+    // setPlanValidTo("")
+    // setPlanValidFrom("")
     
   };
 

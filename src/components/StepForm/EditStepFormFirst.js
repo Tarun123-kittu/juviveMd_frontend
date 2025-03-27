@@ -52,6 +52,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
         trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
         `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
       ),
+      
   });
 
   // Formik setup

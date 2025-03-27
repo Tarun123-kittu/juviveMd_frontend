@@ -42,7 +42,7 @@ const AddpatientModal = ({ showPateintModal, setshowPateintModal, tab, common_da
     const [step_four_additional_information, setStep_four_additional_information] = useState("")
     const [workout_frequency, setWorkout_frequency] = useState()
 
-
+console.log("stepOnefullData--",stepOnefullData)
     const onboarding_process = useSelector((store) => store.ONBOARD_PATIENT)
     const trainers_data = useSelector((store) => store.TRAINERS_LIST)
     const handleClose = () => {
