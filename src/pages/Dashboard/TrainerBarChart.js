@@ -3,8 +3,8 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const TrainerBarChart = ({ trainerChatResponseReportData }) => {
-  const trainerNames= trainerChatResponseReportData?.map((item) => item.trainerName)
-  const trainerResponseTimes= trainerChatResponseReportData?.map((item) => item.avgResponseTime)
+  const trainerNames = trainerChatResponseReportData?.map((item) => item.trainerName) || [];
+  const trainerResponseTimes = trainerChatResponseReportData?.map((item) => Math.floor(parseFloat(item.avgResponseTime))) || [];
   const options = {
     chart: {
       type: "column"
