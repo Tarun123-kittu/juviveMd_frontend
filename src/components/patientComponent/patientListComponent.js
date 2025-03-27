@@ -45,6 +45,7 @@ const Reception_patient_list = ({ showButtons }) => {
     const [date, setDate] = useState()
     const [gender, setGender] = useState()
     const [status, setStatus] = useState()
+    console.log("patStatus-->", status)
     const [trainer, setTrainer] = useState()
     const [page, setPage] = useState(1)
     const [isActiveTab, setIsActiveTab] = useState(false)
@@ -164,6 +165,7 @@ const Reception_patient_list = ({ showButtons }) => {
     }, [trainers_list, common_data])
 
     const handleSearch = () => {
+        console.log("clickedSearchStatus-->", status)
         dispatch(get_patients_list({ page, tab, username, goal, date, gender, status, trainer }))
     }
 

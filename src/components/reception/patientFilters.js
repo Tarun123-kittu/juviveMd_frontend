@@ -176,7 +176,7 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
             )}
  <div className='d-flex justify-content-end gap-2'>
 
-            <button className='cmn_btn' onClick={() => (goal || gender || date || username || status || trainer) && handleSearch()}>Search</button>
+            <button className='cmn_btn' onClick={() => (goal || gender || date || username || status || !status|| trainer) && handleSearch()}>Search</button>
             <button className='cmn_btn fade_color' onClick={() => (goal || gender || date || username || status || trainer) && handleClean()}>Clean</button>
  </div>
         </div>
