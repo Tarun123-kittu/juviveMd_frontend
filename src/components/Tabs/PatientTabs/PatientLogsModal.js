@@ -52,7 +52,7 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
     <Modal
       show={show}
       onHide={handleClose}
-      className="cmn_modal"
+      className="cmn_modal logsModal"
       centered
       size="md"
     >
@@ -73,9 +73,9 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
           />
         </svg>
       </div>
-      <Modal.Body className="p-0 authWrapper add_exercise">
+      <Modal.Body className="p-0 authWrapper ">
         <h2 className="deletmodal_heading mb-3">Exercise Log</h2>
-        {data?.map((item, i)=>{
+        {/* {data?.map((item, i)=>{
           return(
 
         <div className="tabel" key={i}>
@@ -134,7 +134,7 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
                     </ul>
         </div>
           )
-        })}
+        })} */}
           {/* <Accordion key={0} > */}
           <div className="logs_wrapper">
 
@@ -202,7 +202,8 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
                 // </Accordion.Item>
                 <div className="tabel" key={i}>
                 <h4>{formatDate(item?.createdAt)}</h4>
-                <Table  bordered hover>
+              <div className="p-3 logs_data">
+              <Table  bordered hover>
                 <thead>
                   <tr>
                     <th>Set No.</th>
@@ -226,34 +227,37 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
                 </tbody>
               </Table>
                 <h5 className="pt-2">Review</h5>
-                <ul className="exercise_review_data p-0 m-0">
-                            <li className="mb-3">
-                              <span className="d-block">Challenging</span>
+                <ul className="exercise_review_data p-0 m-0 border-0">
+                            <li className="mb-2">
+                              <span className="d-block">Challenging:</span>
                              {item?.feedbacks[0]?.challenging ? "Yes" : "No"}
                             </li>
-                            <li className="mb-3">
-                              <span className="d-block">Rating</span>
+                            <li className="mb-2 justify-content-center">
+                              <span className="d-block">Rating:</span>
                              {<Rating value={item?.feedbacks[0]?.rating} />}
                             </li>
-                            <li className="mb-3">
-                              <span className="d-block">Enjoyment</span>
+                            <li className="mb-2 justify-content-center">
+                              <span className="d-block">Enjoyment:</span>
                               {feedbackData[item?.feedbacks[0]?.enjoyment]}
                             </li>
-                            <li className="mb-3">
-                              <span className="d-block">Pain</span>
+                            <li className="mb-2 justify-content-center">
+                              <span className="d-block">Pain:</span>
                               {item?.feedbacks[0]?.pain ? "Yes" : "No"}
                             </li>
-                            <li className="mb-3">
-                              <span className="d-block">Category</span>
+                            <li className="mb-2 justify-content-center">
+                              <span className="d-block">Category:</span>
                               {item?.feedbacks[0]?.category}
                             </li>
+                          </ul>
+                          <ul className="pb-3">
                             <li>
-                              <span className="d-block">Message</span>
+                              <span className="d-block">Message:</span>
                             
                                 {item?.feedbacks[0]?.message}
                              
                             </li>
                           </ul>
+              </div>
               </div>
             )
           })}

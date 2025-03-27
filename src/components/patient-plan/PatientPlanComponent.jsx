@@ -66,7 +66,7 @@ const PatientPlanComponent = () => {
   const [exercise_category, setExercise_category] = useState()
   const [body_parts, setBody_parts] = useState()
   const [patient_category, setPatient_category] = useState([])
-  console.log(patient_category,"===>patient_category")
+
   const [training_type, setTraining_type] = useState([])
   const [selected_patient_category, setSelected_patient_category] = useState()
   const [selected_training_type, setSelected_training_type] = useState()
@@ -74,6 +74,7 @@ const PatientPlanComponent = () => {
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [planValidFrom, setPlanValidFrom] = useState('')
   const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
+
   const [planMessage, setPlanMessage] = useState("")
   const difficuilty_level_data = {
     A: "Easy",
@@ -154,7 +155,6 @@ const PatientPlanComponent = () => {
     }
   }, [common_data])
 
-console.log(common_data,"common_data")
   useEffect(() => {
     if (!hasPlan && !editable) {
       dispatch(fetchPlanSuggestions({ patientId }))
@@ -166,9 +166,10 @@ console.log(common_data,"common_data")
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
         const validExercises = days[day]
           .map((exercise) => ({
+           
             exerciseId: exercise.exerciseId,
             planExerciseId: exercise.planExerciseId,
-            difficulty_level: exercise.difficuilty_level,
+            difficulty_level: exercise.difficuilty_level || 'Easy',
             sets: exercise.sets.map((set) => ({
               time: {
                 value: set.time.value,
@@ -345,7 +346,6 @@ console.log(common_data,"common_data")
       setPlanMessage(plan_message?.data?.data)
     }
   }, [plan_message])
-console.log(days,"day======= co")
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
