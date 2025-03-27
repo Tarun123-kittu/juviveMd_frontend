@@ -155,8 +155,9 @@ const PatientPlanComponent = () => {
     }
   }, [common_data])
 
+console.log(hasPlan,editable,"hasPlan,editable")
   useEffect(() => {
-    if (!hasPlan && !editable) {
+    if (!editable) {
       dispatch(fetchPlanSuggestions({ patientId }))
     }
   }, [hasPlan])
