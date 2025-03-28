@@ -321,7 +321,7 @@ const Reception_patient_list = ({ showButtons }) => {
                             {patient_data?.isLoading ? <tr><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 11 : 10}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 12 : 10}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
                             
                                 return (
-                                    <tr>
+                                    <tr key={i}> 
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
                                                 <img type="button" src={patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" style={{borderRadius:"50%"}} width={40} height={40} className='profile_image_patient object-fit-cover' onClick={() => { setCurrImage(patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
