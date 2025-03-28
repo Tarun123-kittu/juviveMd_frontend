@@ -144,12 +144,12 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
                 </div> */}
                 <input type="date" placeholder='Exercise Name' className='form-control' onChange={(e) => setDate(e.target.value)} ref={dateRef} />
             </div>
-
+                {console.log("status--",status)}
             {tab === "active" && (
                 <div className='patient_dropdown w-100'>
                     <Dropdown>
                         <Dropdown.Toggle variant="unset" id="dropdown-basic" className="cursor-pointer">
-                            {status !== "" ? (status === 1 ? "Active" : "Inactive") : "Select Status"} {/* Show selected status or placeholder */}
+                            {status !== "" && status!==undefined ? (status === 1 ? "Active" : "Inactive") : "Select Status"} {/* Show selected status or placeholder */}
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12.2143 3.7041H11.1253C11.0513 3.7041 10.9816 3.7404 10.938 3.79993L6.81303 9.48579L2.68802 3.79993C2.64446 3.7404 2.57477 3.7041 2.50072 3.7041H1.41175C1.31737 3.7041 1.2622 3.81155 1.31737 3.8885L6.43697 10.9465C6.62282 11.202 7.00323 11.202 7.18763 10.9465L12.3072 3.8885C12.3639 3.81155 12.3087 3.7041 12.2143 3.7041V3.7041Z" fill="black" fillOpacity="0.25" />
                             </svg>
@@ -177,7 +177,7 @@ const PatientFilters = ({ tab, username, setUsername, setGoal, goal, setDate, da
  <div className='d-flex justify-content-end gap-2'>
 
             <button className='cmn_btn' onClick={() => (goal || gender || date || username || status || !status|| trainer) && handleSearch()}>Search</button>
-            <button className='cmn_btn fade_color' onClick={() => (goal || gender || date || username || status || trainer) && handleClean()}>Clean</button>
+            <button className='cmn_btn fade_color' onClick={() => (goal || gender || date || username || status || !status || trainer) && handleClean()}>Clean</button>
  </div>
         </div>
     );

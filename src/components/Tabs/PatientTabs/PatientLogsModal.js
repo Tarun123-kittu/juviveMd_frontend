@@ -19,7 +19,7 @@ const PatientLogsModal = ({ setShow, show, exerciseId, patientId, setExerciseId 
     setData([])
     dispatch(clear_exercise_history_state())
   };
-
+ 
   useEffect(() => {
     if (exerciseId && patientId) {
       dispatch(get_exercise_history({ patientId, exerciseId }))
