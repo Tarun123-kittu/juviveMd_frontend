@@ -109,16 +109,23 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
           </svg>
         </div>
         <Modal.Body className="p-0">
-          { planValidTo && (
+          {!editable && planValidTo && (
             <div className="alert alert-success text-center mb-3">
               Plans are already created till <strong>{planValidFromDate}</strong>
             </div>
           )}
-           { planValidFrom && planValidTo && (
+           {!editable && planValidFrom && planValidTo && (
             <div className="alert alert-success text-center mb-3">
               NewPlan Will be created from {minDate} to <strong>{planValidTo}</strong>
             </div>
           )}
+          {/* {
+            editable && (
+              <div className="alert alert-success text-center mb-3">
+                Plans are already created till <strong>{planValidTo}</strong>
+              </div>
+            )
+          } */}
           <h5 className="mb-1 deletmodal_heading mt-4 ">Create Patient Plan</h5>
           <p className="text-black">
             Define the start and end dates for a customized <br /> patient care
