@@ -1,54 +1,58 @@
-import React from 'react'
+import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const TrainerBarChart = ({ trainerChatResponseReportData }) => {
-  const trainerNames= trainerChatResponseReportData?.map((item) => item.trainerName)
-  const trainerResponseTimes= trainerChatResponseReportData?.map((item) => item.avgResponseTime)
+  const trainerNames = trainerChatResponseReportData?.map((item) => item.trainerName);
+  // const trainerResponseTimes = trainerChatResponseReportData?.map((item) => Number(item.avgResponseTime));
+  const trainerResponseTimes = trainerChatResponseReportData?.map((item) => Math.floor(parseFloat(item.avgResponseTime))) || [];
   const options = {
     chart: {
-      type: "column"
+      type: "column",
     },
     title: {
-      text: null
+      text: null,
     },
     subtitle: {
-      text: null
+      text: null,
     },
     xAxis: {
       categories: trainerNames,
       crosshair: true,
-      accessibility: {
-        description: "Countries"
-      }
     },
     yAxis: {
       min: 0,
       title: {
-        text: null
+        text: "Response Time (minutes)", // Show minutes on Y-axis
+      },
+      labels: {
+        formatter: function () {
+          return (this.value / 60).toFixed(2); // Convert seconds to minutes
+        }
       }
     },
     tooltip: {
-      enabled: true // Hides tooltip
+      formatter: function () {
+        return `${this.y} sec`; // Show seconds in tooltip
+      }
     },
     plotOptions: {
       column: {
         pointPadding: 0.2,
-        borderWidth: 0
-      }
+        pointWidth: 30,
+        borderWidth: 0,
+      },
     },
     series: [
       {
-        name: null,
-        data: trainerResponseTimes,
+        data: [trainerResponseTimes],
         color: "rgba(151, 208, 195, 1)",
-        showInLegend: false // Hides from legend
-      }
-    ]
+        showInLegend: false,
+      },
+    ],
   };
-  return (
-    <HighchartsReact highcharts={Highcharts} options={options} />
-  )
-}
 
-export default TrainerBarChart
+  return <HighchartsReact highcharts={Highcharts} options={options} />;
+};
+
+export default TrainerBarChart;
