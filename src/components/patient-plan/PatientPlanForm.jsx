@@ -32,8 +32,10 @@ const PatientPlanForm = ({
   selected_patient_category,
   setSelected_training_type,
   selected_training_type,
+  planStartAt,
+  planEndAt
 }) => {
-  // console.log(setDays, "setDays====>");
+  console.log(days, "Days====>");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [difficuilty, setDifficuilty] = useState("Easy");
@@ -202,6 +204,7 @@ const PatientPlanForm = ({
   };
 
   const handleAddExercise = () => {
+
     setDays((prevDays) => {
       const currentDayData = prevDays[eventData] || [];
       const lastExercise = currentDayData[currentDayData.length - 1];

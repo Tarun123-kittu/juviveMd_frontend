@@ -54,6 +54,7 @@ const PatientPlanComponent = () => {
   const hasPlan = location.state.hasPlan
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
+  console.log("planStartCompAt--", planStartAt,"planEndAt--", planEndAt)
   const exercisePlanId = location.state.exercisePlanId
   console.log("exercisePlanId--", exercisePlanId)
   const userpatient_category = location.state.patient_category
@@ -181,6 +182,7 @@ const PatientPlanComponent = () => {
       } else {
         dispatch(create_patient_plan({ payload }));
       }
+      // !editable && setPlanValidTo('');
     } catch (error) {
       console.error("Error during plan validation:", error.message);
       toast.error(error.message);
@@ -357,6 +359,9 @@ const PatientPlanComponent = () => {
                     selected_patient_category={selected_patient_category}
                     setSelected_training_type={setSelected_training_type}
                     selected_training_type={selected_training_type}
+                    planStartAt={planStartAt}
+                    planEndAt={planEndAt}
+                    
                   />
                 )}
               </Tab>
