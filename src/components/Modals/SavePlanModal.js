@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from 'react-bootstrap/Form';
 import { getDay, getDate, setDate, setHours, min } from "date-fns";
 import Spinner from 'react-bootstrap/Spinner';
 
 const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable }) => {
-  console.log("valid-",planValidFrom,planValidTo,editable)
+  const [planValidFromDate,setPlanValidFromDate]=useState(planValidTo)
   const [minDate, setMinDate] = useState(() => {
     const date = planValidTo ? new Date(planValidTo) : new Date();
     date.setDate(date.getDate() + 1); // Add 1 day
     return date.toISOString().split('T')[0];
-});
+  });
+  console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable)
 
-console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
+  // console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
   const handleClose = () => {
     setSavePlanModal(false);
-    !editable && setPlanValidFrom('');
-    !editable && setPlanValidTo('');
+    // !editable && setPlanValidFrom('');
+    // !editable && setPlanValidTo('');
     // setPlanValidTo("")
     // setPlanValidFrom("")
-    
+
   };
+
+  function CalculateValidDate()
+  {
+    const date = planValidTo ? new Date(planValidTo) : new Date();
+    date.setDate(date.getDate() + 1); // Add 1 day
+    return date.toISOString().split('T')[0];
+  }
+
+  // useEffect(()=>{
+  //   if(!editable)
+  //   {
+  //     // setPlanValidTo('')
+  //     setMinDate(minDate)
+  //   }
+  //   return ()=>setPlanValidTo('')
+  // },[])
 
   const getStartOfWeek = (date) => {
     const d = new Date(date);
@@ -30,18 +47,25 @@ console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
     return d.toISOString().split('T')[0];
   };
 
+  // const getEndOfWeek = (date) => {
+  //   const d = new Date(date);
+  //   const day = d.getDay();
+  //   const diff = day === 0 ? 0 : 7 - day;
+  //   d.setDate(d.getDate() + diff);
+  //   return d.toISOString().split('T')[0];
+  // };
   const getEndOfWeek = (date) => {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = day === 0 ? 0 : 7 - day;
-    d.setDate(d.getDate() + diff);
-    return d.toISOString().split('T')[0];
+    const startOfWeek = new Date(getStartOfWeek(date));
+    startOfWeek.setDate(startOfWeek.getDate() + 6); // Move to Sunday
+    return startOfWeek.toISOString().split('T')[0];
   };
-
   const handleStartDateChange = (e) => {
     const selectedDate = e.target.value;
     const startOfWeek = getStartOfWeek(selectedDate);
+    const endOfWeek = getEndOfWeek(selectedDate);
+
     setPlanValidFrom(startOfWeek);
+    setPlanValidTo(endOfWeek);
   };
 
   const handleEndDateChange = (e) => {
@@ -49,8 +73,11 @@ console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
     const endOfWeek = getEndOfWeek(selectedDate);
     setPlanValidTo(endOfWeek);
   };
-
-
+  const getMaxStartDate = (minDate) => {
+    const d = new Date(minDate);
+    d.setDate(d.getDate() + 6); // Add 6 days to minDate
+    return d.toISOString().split('T')[0];
+  };
 
 
 
@@ -82,6 +109,16 @@ console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
           </svg>
         </div>
         <Modal.Body className="p-0">
+          { planValidTo && (
+            <div className="alert alert-success text-center mb-3">
+              Plans are already created till <strong>{planValidFromDate}</strong>
+            </div>
+          )}
+           { planValidFrom && planValidTo && (
+            <div className="alert alert-success text-center mb-3">
+              NewPlan Will be created from {minDate} to <strong>{planValidTo}</strong>
+            </div>
+          )}
           <h5 className="mb-1 deletmodal_heading mt-4 ">Create Patient Plan</h5>
           <p className="text-black">
             Define the start and end dates for a customized <br /> patient care
@@ -97,6 +134,7 @@ console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
                 onChange={handleStartDateChange}
                 disabled={editable}
                 min={minDate}
+                max={getMaxStartDate(minDate)}
               />
             </Form.Group>
 
@@ -106,8 +144,9 @@ console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
                 type="date"
                 placeholder="name@example.com"
                 value={planValidTo}
-                onChange={handleEndDateChange}
-                disabled={editable}
+                // onChange={handleEndDateChange}
+                // disabled={editable}
+                disabled={true}
                 min={minDate}
               />
             </Form.Group>
