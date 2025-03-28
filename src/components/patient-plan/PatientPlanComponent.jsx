@@ -55,7 +55,7 @@ const PatientPlanComponent = () => {
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
   const exercisePlanId = location.state.exercisePlanId
-  
+  console.log("exercisePlanId--", exercisePlanId)
   const userpatient_category = location.state.patient_category
   if (!patientId) {
     navigate(-1)

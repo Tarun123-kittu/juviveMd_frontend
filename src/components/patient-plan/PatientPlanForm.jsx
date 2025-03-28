@@ -364,7 +364,7 @@ const PatientPlanForm = ({
 
       updatedDays[eventData][i].sets = [...updatedDays[eventData][i].sets];
       return updatedDays;
-    });
+    }); 
   };
 
   const handleChangeFlexibilityFields = (i, index, field, e) => {
