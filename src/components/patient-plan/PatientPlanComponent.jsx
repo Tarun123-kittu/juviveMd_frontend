@@ -55,7 +55,7 @@ const PatientPlanComponent = () => {
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
   const exercisePlanId = location.state.exercisePlanId
-  
+  console.log("exercisePlanId--", exercisePlanId)
   const userpatient_category = location.state.patient_category
   if (!patientId) {
     navigate(-1)
@@ -76,33 +76,6 @@ const PatientPlanComponent = () => {
   const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
 
   const [planMessage, setPlanMessage] = useState("")
-  const difficuilty_level_data = {
-    A: "Easy",
-    B: "Moderate",
-    C: "Hard",
-  }
-
-
-  const daysData = {
-    category: "",
-    patient_category: "",
-    planExerciseId: null,
-    training_type: [],
-    exerciseId: "",
-    exerciseName: "Untitled",
-    exerciseImage: "",
-    exerciseVideo: "",
-    difficuilty_level: "",
-    active: true,
-    bodyParts: [],
-    sets: [
-      {
-        reps: 0,
-        time: { value: 0, unit: "sec" },
-        weight: { value: 0, unit: "kg" },
-      }
-    ]
-  }
   const [days, setDays] = useState({
     Monday: [daysData],
     Tuesday: [daysData],
@@ -155,7 +128,6 @@ const PatientPlanComponent = () => {
     }
   }, [common_data])
 
-console.log(hasPlan,editable,"hasPlan,editable")
   useEffect(() => {
     if (!editable) {
       dispatch(fetchPlanSuggestions({ patientId }))
@@ -252,8 +224,8 @@ console.log(hasPlan,editable,"hasPlan,editable")
         Saturday: [daysData],
         Sunday: [daysData],
       };
-      const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
 
+      const responseDays = Object.keys(isPlanExercise.data.data.days).reduce((acc, day) => {
         acc[day] = isPlanExercise.data.data.days[day].map((exercise, i) => {
           return {
             ...exercise,

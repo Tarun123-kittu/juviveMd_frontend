@@ -68,7 +68,8 @@ const PatientData = () => {
     };
   }, []);
 console.log("get_patient_plan_response--",get_patient_plan_response,patientId,hashDate)
-  
+
+console.log(get_patient_plan_response?.data?.data,"get_patient_plan_response--")
 useEffect(() => {
   if (get_patient_plan_response?.isSuccess ) {
     
@@ -76,7 +77,7 @@ useEffect(() => {
     const planEndDate = get_patient_plan_response?.data?.data?.planMetadata.planValidTo;
     setPlanStartAt(planStartDate)
     setPlanEndAt(planEndDate)
-    setExercisePlanId(get_patient_plan_response?.data?.data?.patient?.id)
+    setExercisePlanId(get_patient_plan_response?.data?.data?.planMetadata?.planId)
 
 
     if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
