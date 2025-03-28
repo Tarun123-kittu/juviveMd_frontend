@@ -143,7 +143,7 @@ const PatientPlanForm = ({
     selected_training_type,
     selectedIndex,
     dispatch,
-  ]);
+  ]);  
 
   useEffect(() => {
     if (exercise_details?.isSuccess) {

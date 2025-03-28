@@ -98,7 +98,8 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
     const parseCSV = (data) => {
         Papa.parse(data, {
             complete: (result) => {
-                setFileData(result.data);
+                console.log(result.data,"result.data")
+                setFileData(result?.data);
                 setHide_download(false);
                 setShowPreview(true);
                 setFileName(`data_${new Date().toLocaleString()}.csv`);
@@ -114,8 +115,8 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
+         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+        console.log(rows,"rows sxls")
         setFileData(rows);
         setShowPreview(true);
         setHide_download(false);
