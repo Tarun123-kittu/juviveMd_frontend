@@ -123,7 +123,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
           {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={8}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
             console.log(exercise,"exerCateg--")
             return (
-              <tr>
+              <tr key={i}>
 
                 <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
                 <td><img type="button" src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border object-fit-cover' alt="exercise" onClick={() => { setCurrImage(exercise?.image_url || PoseImage); setShowPopup(true) }} /></td>

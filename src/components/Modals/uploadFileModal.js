@@ -94,7 +94,6 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
             reader.readAsArrayBuffer(file);
         }
     };
-
     const parseCSV = (data) => {
         Papa.parse(data, {
             complete: (result) => {
@@ -107,25 +106,23 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
             header: false,
         });
     };
-
-
-
-
     const parseExcel = (data) => {
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
-        console.log(rows,"rows sxls")
-        setFileData(rows);
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+    
+        // Filter out rows where all columns are empty
+        const filteredRows = rows.filter(row => row.some(cell => cell !== "")); 
+    
+        console.log(filteredRows, "Filtered Rows");
+        setFileData(filteredRows);
         setShowPreview(true);
         setHide_download(false);
         setFileName(`data_${new Date().toLocaleString()}.xlsx`);
     };
-
-
-
-    const handleUpload = () => {
+    
+ const handleUpload = () => {
         if (!uploadFile) return
         dispatch(upload_exercises({ file: uploadFile }))
     };
@@ -138,7 +135,8 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
             setShow_success(is_file_uploades?.data?.data?.processedExercises)
         }
         if (is_file_uploades?.isError) {
-            toast.error(is_file_uploades?.error?.message, {
+            console.log(is_file_uploades);
+            toast.error(is_file_uploades?.error?.loggedError, {
                 duration: 2000
             })
             dispatch(clear_upload_exercise_state())
@@ -236,7 +234,8 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                 {!isValidUpload && <div className="text-danger">{errorMessage}</div>}
 
                 <div className='table-responsive uploadTable'>
-                    {fileData && fileData?.length > 0 && (
+                   <div className='uploadTable_result'>
+                     {fileData && fileData?.length > 0 && (
                         <table className="table table-striped table-bordered custom-table">
                             <thead>
                                 <tr>
@@ -275,6 +274,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
 
                         </table>
                     )}
+                   </div>
                     {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
                         <h6 className='m-0'>{is_file_uploades?.data?.data?.errorRecords?.length > 0 ? "Some of your exercises has been uploaded Successfully !!" : "Exercises Uploaded Successfully !!"}</h6>
                     </div>}
