@@ -21,8 +21,13 @@ export const upload_exercises = createAsyncThunk("upload_exercises", async ({ fi
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/upload-exercise`, requestOptions)
         if (!response.ok) {
             const errorMessage = await response.json();
+
+            console.log("response errorMessage",errorMessage);
             if (errorMessage) {
-                throw new Error(errorMessage.message);
+                throw {
+                    message: errorMessage.message || "An error occurred",
+                    loggedError: errorMessage.loggedError || "An error occurred",
+                };
             }
         }
 
@@ -30,7 +35,8 @@ export const upload_exercises = createAsyncThunk("upload_exercises", async ({ fi
         return result;
     } catch (error) {
         return thunkAPI.rejectWithValue({
-            message: error.message,
+            message: error.message || "An error occurred",
+            loggedError: error.loggedError || "An error occurred",
         });
     }
 })

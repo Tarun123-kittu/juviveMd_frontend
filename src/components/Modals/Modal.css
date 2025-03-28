@@ -571,3 +571,9 @@ span.time.min {
 .cmn_modal.upoadFile_modal .modal-dialog {
   max-width: 82%;
 }
+.uploadTable_result {
+  max-height: calc(100vh - 400px);
+}
+.uploadTable_result th {
+  white-space: nowrap;
+}

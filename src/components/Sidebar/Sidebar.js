@@ -165,62 +165,79 @@ const Sidebar = () => {
             <h6 style={{ cursor: "pointer" }} onClick={() => localStorage.getItem('user_role') === "TRAINER" ? navigate("/trainer/dashboard") : localStorage.getItem('user_role') === "RECEPTIONIST" ? navigate("/reception/dashboard") : navigate("/dashboard")} className='mt-2'>JuviveMD</h6>
             <p>{localStorage.getItem('user_role')}</p>
           </div>
-          <ul className='menu_items d-flex flex-column'>
-            {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
-              const currentPath = window.location.pathname;
-              // Check if the current path starts with the menu path
-              const isActive = currentPath.startsWith(menus.path);
-              return (
-                <>
-                  {menus?.name === "Staff" && firstPermissionStaff?.canRead && (
-                    <li key={`${index}-staff`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
-                      </Link>
-                    </li>
-                  )}
-                  {menus?.name === "Exercise" && firstPermissionExercise?.canRead && (
-                    <li key={`${index}-exercise`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
-                      </Link>
-                    </li>
-                  )}
-                  {menus?.name === "Patient" && firstPermissionPatient?.canRead && (
-                    <li key={`${index}-patient`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
-                      </Link>
-                    </li>
-                  )}
-                  {menus?.name === "Dashboard" && firstPermissionDashboard?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
-                      </Link>
-                    </li>
-                  )}
-                  {menus?.name === "Settings" && firstPermissionSettings?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>{menus.name}</span>
-                      </Link>
-                    </li>
-                  )}
-                  {console.log(unreadChats.length,"unreadChats.length===>")}
-                  {menus?.name === "Messages" && firstPermissionChat?.canRead && (
-                    <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
-                      <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
-                        {menus.icon} <span>
-                          {menus.name} <span className={`${unreadChats?.length > 0 ? "messsage_count" : ""}`}> {`${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`}</span>
-                        </span>
-                      </Link>
-                    </li>
-                  )}
-                </>
-              );
+              <ul className='menu_items d-flex flex-column'>
+                    {SidebarMenuItems && SidebarMenuItems.map((menus, index) => {
+                      const currentPath = window.location.pathname;
+                      const isActive = currentPath.startsWith(menus.path);
+                      
+                      if (menus?.name === "Staff" && firstPermissionStaff?.canRead) {
+                          return (
+                              <li key={`${index}-staff`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
 
-            })}
+                      if (menus?.name === "Exercise" && firstPermissionExercise?.canRead) {
+                          return (
+                              <li key={`${index}-exercise`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
+
+                      if (menus?.name === "Patient" && firstPermissionPatient?.canRead) {
+                          return (
+                              <li key={`${index}-patient`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
+
+                      if (menus?.name === "Dashboard" && firstPermissionDashboard?.canRead) {
+                          return (
+                              <li key={`${index}-dashboard`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
+
+                      if (menus?.name === "Settings" && firstPermissionSettings?.canRead) {
+                          return (
+                              <li key={`${index}-settings`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
+
+                      // Handling Messages
+                      if (menus?.name === "Messages" && firstPermissionChat?.canRead) {
+                          return (
+                              <li key={`${index}-messages`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>
+                                          {menus.name} <span className={`${unreadChats?.length > 0 ? "messsage_count" : ""}`}>
+                                              {`${Array.isArray(unreadChats) && unreadChats.length ? unreadChats.length : ''}`}
+                                          </span>
+                                      </span>
+                                  </Link>
+                              </li>
+                          );
+                      }
+
+                      // If no conditions match, return null
+                      return null;
+                  })}
             <li onClick={() => setShowDeleteModal(true)} className='log_out'>
               <div className='d-flex align-items-center '>
                 <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
