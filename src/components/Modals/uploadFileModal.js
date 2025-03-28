@@ -235,6 +235,22 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
 
                 <div className='table-responsive uploadTable'>
                    <div className='uploadTable_result'>
+                   {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
+                        <h6 className='m-0'>{is_file_uploades?.data?.data?.errorRecords?.length > 0 ? "Some of your exercises has been uploaded Successfully !!" : "Exercises Uploaded Successfully !!"}</h6>
+                    </div>}
+                    {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.errorRecords?.length > 0 && <div className='show_errors'>
+                        <h4>There are some errors in Your file.Please check below</h4>
+                        <ul>
+
+                            {is_file_uploades?.data?.data?.errorRecords?.map((ErrorCur, index) => {
+                                return (
+
+                                    <li key={index}>{ErrorCur?.error} row {ErrorCur?.row}</li>
+                                )
+                            })
+                            }
+                        </ul>
+                    </div>}
                      {fileData && fileData?.length > 0 && (
                         <table className="table table-striped table-bordered custom-table">
                             <thead>
@@ -275,22 +291,7 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
                         </table>
                     )}
                    </div>
-                    {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.successRecords?.length > 0 && <div className='show_success'>
-                        <h6 className='m-0'>{is_file_uploades?.data?.data?.errorRecords?.length > 0 ? "Some of your exercises has been uploaded Successfully !!" : "Exercises Uploaded Successfully !!"}</h6>
-                    </div>}
-                    {is_file_uploades?.isSuccess && is_file_uploades?.data?.data?.errorRecords?.length > 0 && <div className='show_errors'>
-                        <h4>There are some errors in Your file.Please check below</h4>
-                        <ul>
-
-                            {is_file_uploades?.data?.data?.errorRecords?.map((ErrorCur, index) => {
-                                return (
-
-                                    <li key={index}>{ErrorCur?.error} row {ErrorCur?.row}</li>
-                                )
-                            })
-                            }
-                        </ul>
-                    </div>}
+                 
 
 
                 </div>
