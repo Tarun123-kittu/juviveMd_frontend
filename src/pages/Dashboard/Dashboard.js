@@ -25,6 +25,7 @@ import { get_trainer_chat_response_report } from "../../redux/slices/dashboardSl
 const Dashboard = () => {
   const [userActivityReportData,setUserActivityReportData]=useState([])
   const [trainerChatResponseReportData,setTrainerChatResponseReportData]=useState([])
+  
   console.log(userActivityReportData,"activityreport",trainerChatResponseReportData)
   const dispatch = useDispatch()
   const navigate = useNavigate()
