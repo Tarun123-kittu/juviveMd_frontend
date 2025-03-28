@@ -345,7 +345,7 @@ const PatientPlanComponent = () => {
                     eventData={day}
                     setDays={setDays}
                     days={days}
-                    index={i}
+                    index={i} 
                     exercise_category={exercise_category}
                     body_parts={body_parts}
                     exerciseDifficuilty={exerciseDifficuilty}
