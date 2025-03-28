@@ -75,7 +75,7 @@ const ExerciseView = () => {
   return is_exercise?.isLoading && isLoading ? (
     <div className="wrapper">
       <div className="inner_wrapper">
-        <Loader wrapclass="full_height" />
+        <Loader wrapclassName="full_height" />
       </div>
     </div>
   ) : (

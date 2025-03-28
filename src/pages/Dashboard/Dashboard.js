@@ -34,7 +34,7 @@ const Dashboard = () => {
   const permissions_data = useSelector((store) => store.PERMISSIONS_DATA)
   const dashboard_data = useSelector((store) => store.DASHBOARD_STATE)
   const PatientPermissions = getRoutePermissions(permission_constants.PATIENT)?.[0] || {};
-
+  const userRole = localStorage.getItem("user_role");
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -240,7 +240,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div>
-      <Row className="mb-3 pt-2 pb-2">
+     { userRole === "Admin" && <Row className="mb-3 pt-2 pb-2">
         <Col lg={9}>
           <div className="chart_card">
           <h4>
@@ -255,7 +255,7 @@ const Dashboard = () => {
           <UserActivityChart userActivityReportData={userActivityReportData}/>
           </div>
         </Col>
-      </Row>
+      </Row>}
         </div>
         <div className="cmn_head mb-2">
           <Reception_patient_list showButtons={false} className={true} />
