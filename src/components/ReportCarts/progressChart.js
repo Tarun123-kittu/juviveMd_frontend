@@ -3,7 +3,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const ProgressChart = ({months,strengthData,weightLiftedData,cardioData,reportType}) => {
-  console.log("ProgressChartAllData--",months,strengthData,weightLiftedData,cardioData,reportType)
+  console.log("ProgressChartAllData--",months,"strength--",strengthData,"weightLifted--",weightLiftedData,"cardioData--",cardioData,"reportType",reportType)
 
 
   const formatCategories = (categories, reportType) => {
@@ -13,7 +13,7 @@ const ProgressChart = ({months,strengthData,weightLiftedData,cardioData,reportTy
       if (reportType === "monthly") {
         // Convert "2025-03" → "Mar 2025"
         const [year, month] = date.split("-");
-        return `${monthNames[parseInt(month, 10) - 1]} ${year}`;
+        return `${monthNames[parseInt(month, 10) - 1]} ${year}`; 
       } else if (reportType === "weekly") {
         // Convert "2025-Week10" → "Week 10, 2025"
         const [year, week] = date.split("-");
@@ -35,27 +35,38 @@ const ProgressChart = ({months,strengthData,weightLiftedData,cardioData,reportTy
     xAxis: {
       categories: formatCategories(months, reportType)
     },
-    yAxis: {
-      title: {
-        text: "Weight"
+    yAxis: [
+      {
+        title: { text: "Strength / Cardio (min)" },
+        min: 0, 
+        opposite: false,
+        alignTicks: false // Prevents scaling issues
+      },
+      {
+        title: { text: "Weight Lifted (kg)" },
+        min: 0,
+        opposite: true, // Places it on the right side
+        alignTicks: false // Ensures independent scaling
       }
-    },
+    ],
     series: [
       {
         name: "Strength",
-        data:strengthData,
+        data: strengthData ? strengthData[0].map(value => Math.round(value)) : [],
         color: "#FF5733",
-        fontWeight: "bold"
+        yAxis: 0 // Assign to the first y-axis
       },
       {
         name: "Weight Lifted",
-        data: weightLiftedData,
-        color: "#33FF57" // Green color for distinction
+        data: weightLiftedData ? weightLiftedData[0].map(value => Math.round(value)) : [],
+        color: "#33FF57",
+        yAxis: 1 // Assign to the second y-axis
       },
       {
         name: "Cardio",
-        data: cardioData,
-        color: "#3357FF" // Blue color for distinction
+        data: cardioData ? cardioData[0].map(value => Math.round(value)) : [],
+        color: "#3357FF",
+        yAxis: 0 // Assign to the first y-axis
       }
     ],
     plotOptions: {
@@ -70,12 +81,13 @@ const ProgressChart = ({months,strengthData,weightLiftedData,cardioData,reportTy
       type: "line"
     },
     tooltip: {
-        backgroundColor: "rgba(12, 94, 98, 1)",  // Custom tooltip background color
-        style: {
-          color: "#fff",  // Text color
-          fontWeight: "bold"
-        }
-      },
+      shared: true,
+      backgroundColor: "rgba(12, 94, 98, 1)",  
+      style: {
+        color: "#fff",
+        fontWeight: "bold"
+      }
+    },
     credits: {
       enabled: false
     }
