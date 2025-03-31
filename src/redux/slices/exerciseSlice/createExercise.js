@@ -34,7 +34,10 @@ export const create_exercise = createAsyncThunk("create_exercise", async ({ exer
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
-                throw new Error(errorMessage.message);
+                throw {
+                    message: errorMessage.message || "An error occurred",
+                    loggedError: errorMessage.loggedError || "An error occurred",
+                };
             }
         }
 
@@ -42,7 +45,8 @@ export const create_exercise = createAsyncThunk("create_exercise", async ({ exer
         return result;
     } catch (error) {
         return thunkAPI.rejectWithValue({
-            message: error.message,
+            message: error.message || "An error occurred",
+            loggedError: error.loggedError || "An error occurred",
         });
     }
 })
