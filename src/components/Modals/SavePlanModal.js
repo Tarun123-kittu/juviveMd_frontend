@@ -5,13 +5,20 @@ import { getDay, getDate, setDate, setHours, min } from "date-fns";
 import Spinner from 'react-bootstrap/Spinner';
 import { formatDate } from '../../common/formatDate/formatDate';
 
-const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable }) => {
+const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable,hasPlan }) => {
   const [planValidFromDate,setPlanValidFromDate]=useState(planValidTo)
   const [minDate, setMinDate] = useState(() => {
     const date = planValidTo ? new Date(planValidTo) : new Date();
-    date.setDate(date.getDate()); // Add 1 day
+    date.setDate(date.getDate()+1); // Add 1 day
     return date.toISOString().split('T')[0];
   });
+
+  function initialDate()
+  {
+    const date = planValidTo ? new Date(planValidTo) : new Date();
+    date.setDate(date.getDate()); // Add 1 day
+    return date.toISOString().split('T')[0];
+  }
   console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable)
 
   // console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
@@ -148,7 +155,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 value={planValidFrom}
                 onChange={handleStartDateChange}
                 // disabled={editable}
-                min={minDate}
+                min={hasPlan? minDate:initialDate()}
                 // max={getMaxStartDate(minDate)}
               />
             </Form.Group>
