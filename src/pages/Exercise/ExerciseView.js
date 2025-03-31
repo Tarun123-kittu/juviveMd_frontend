@@ -15,6 +15,7 @@ import {
 import toast from "react-hot-toast";
 
 const ExerciseView = () => {
+  const userRole = localStorage.getItem('user_role')
   const location = useLocation();
   const { id, val } = location?.state ? location?.state : location;
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ const ExerciseView = () => {
         <div className="cmn_head pb-3 d-flex justify-content-between">
           <h2 className="text-capitalize">{exercise_data?.exercise_name}</h2>
           <div className="status_dropdown_wrapper">
-            <select
+          {userRole !== "Trainer" && <select
               value={selectedOption}
               onChange={handleChange}
               name="cars"
@@ -103,7 +104,7 @@ const ExerciseView = () => {
               <option disabled value={3} className="d-none">
                 Draft
               </option>
-            </select>
+            </select>}
           </div>
         </div>
         <div className="cmn_bg_wrapper p-0">
@@ -151,7 +152,11 @@ const ExerciseView = () => {
                 </li>
                 <li className="w-100">
                   <h5 className="mb-0">Exercise Image Url</h5>
-                  <p>{is_exercise?.data?.data?.image_url}</p>
+                  <p title={is_exercise?.data?.data?.image_url} className="exercise_url">
+                    {is_exercise?.data?.data?.image_url.length > 40 
+                    ? is_exercise.data.data.image_url.slice(0, 40) + "..." 
+                    : is_exercise?.data?.data?.image_url}
+                    </p>
                   <h5 className="mb-0">Exercise Unit</h5>
                   <p>{is_exercise?.data?.data?.unit}</p>
                 </li>
