@@ -482,7 +482,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                               
                                                 {PatientPlan?.canRead && tab !== "healthIssue" && showButtons &&
                                                  <button  
-                                                  disabled={patient?.status === 0 || patient?.payment === false} 
+                                                //   disabled={patient?.status === 0 || patient?.payment === false} 
                                                   onClick={() => {navigate("/patientData", { state: { patientId: patient?.id, val: tab } })}} className={`${(patient?.status === 0 || patient?.payment === false) && 'disable_opacity'} cmn_btn px-2 py-1`} style={{ height: "36px" }}> <img width="18" src={ArrowRight} /> </button>}
                                             </div>
                                         </td>

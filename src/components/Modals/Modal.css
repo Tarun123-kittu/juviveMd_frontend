@@ -240,8 +240,17 @@ h5.step_heading {
   border-radius: 8px;
 }
 /* save modal */
+.plan_alert {
+  background: #0c5e621a;
+  padding: 10px 10px;
+  border-radius: 8px;
+  color: var(--primary-color);
+  border-left: 6px solid var(--primary-color);
+  font-size: 14px;
+}
+
 .cmn_modal.savePlanModal .modal-dialog {
-  max-width: 503px;
+  max-width: 670px;
 }
 /* media query */
 @media (max-width: 1440px) {

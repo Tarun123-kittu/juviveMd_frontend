@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from 'react-bootstrap/Form';
 import { getDay, getDate, setDate, setHours, min } from "date-fns";
 import Spinner from 'react-bootstrap/Spinner';
+import { formatDate } from '../../common/formatDate/formatDate';
 
 const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable }) => {
   const [planValidFromDate,setPlanValidFromDate]=useState(planValidTo)
@@ -16,13 +17,19 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
   // console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
   const handleClose = () => {
     setSavePlanModal(false);
+    // !editable && setMinDate('')
     // !editable && setPlanValidFrom('');
     // !editable && setPlanValidTo('');
     // setPlanValidTo("")
     // setPlanValidFrom("")
 
   };
-
+  // useEffect(()=>{
+  //   return ()=>{
+      // setPlanValidFrom('')
+      // setPlanValidTo('')
+  //   }
+  // })
   function CalculateValidDate()
   {
     const date = planValidTo ? new Date(planValidTo) : new Date();
@@ -109,16 +116,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
           </svg>
         </div>
         <Modal.Body className="p-0">
-          {!editable && planValidTo && (
-            <div className="alert alert-success text-center mb-3">
-              Plans are already created till <strong>{planValidFromDate}</strong>
-            </div>
-          )}
-           {!editable && planValidFrom && planValidTo && (
-            <div className="alert alert-success text-center mb-3">
-              NewPlan Will be created from {minDate} to <strong>{planValidTo}</strong>
-            </div>
-          )}
+
           {/* {
             editable && (
               <div className="alert alert-success text-center mb-3">
@@ -131,6 +129,16 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
             Define the start and end dates for a customized <br /> patient care
             plan
           </p>
+          {!editable && planValidFromDate && planValidTo && (
+            <div className="plan_alert mb-3">
+              Plans are already created till <strong>{formatDate(planValidFromDate)}</strong>
+            </div>
+          )}
+           {!editable && planValidFrom && planValidTo && (
+            <div className="plan_alert mb-3">
+              New plan Will be created from {formatDate(planValidFrom?planValidFrom:minDate)} to <strong>{formatDate(planValidTo)}</strong>
+            </div>
+          )}
           <div className="authWrapper ">
             <Form.Group className="mb-3" controlId="estartDate">
               <Form.Label>Plan Start Date</Form.Label>

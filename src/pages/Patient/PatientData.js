@@ -69,7 +69,7 @@ const PatientData = () => {
   }, []);
 console.log("get_patient_plan_response--",get_patient_plan_response,patientId,hashDate)
 
-console.log(get_patient_plan_response?.data?.data,"get_patient_plan_response--")
+console.log(get_patient_plan_response?.data?.data,"get_patient_plan_response--",isPatientPlanEditableDate)
 useEffect(() => {
   if (get_patient_plan_response?.isSuccess ) {
     
@@ -92,30 +92,32 @@ useEffect(() => {
   }
 
   return ()=>dispatch(clear_is_patient_plan_editable())
-}, [isPatientPlanEditableResponse, isPatientPlanEditableDate,hashDate]);
-  useEffect(() => {
-    if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
+}, [isPatientPlanEditableResponse,get_patient_plan_response, isPatientPlanEditableDate,hashDate]);
+
+console.log("isPatientPlanEditableResponse--",isPatientPlanEditableResponse)
+  // useEffect(() => {
+  //   if (isPatientPlanEditableResponse?.isSuccess && isPatientPlanEditableDate) {
       
-      const planStartDate = isPatientPlanEditableResponse?.data?.data?.planValidFrom;
-      const planEndDate = isPatientPlanEditableResponse?.data?.data?.planValidTo;
-      setPlanStartAt(planStartDate)
-      setPlanEndAt(planEndDate)
-      setExercisePlanId(isPatientPlanEditableResponse?.data?.data?.id)
+  //     const planStartDate = isPatientPlanEditableResponse?.data?.data?.planValidFrom;
+  //     const planEndDate = isPatientPlanEditableResponse?.data?.data?.planValidTo;
+  //     setPlanStartAt(planStartDate)
+  //     setPlanEndAt(planEndDate)
+  //     setExercisePlanId(isPatientPlanEditableResponse?.data?.data?.id)
 
 
-      if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
-        setCanEditPatientPlan(true);
-      } else if (isPatientPlanEditableDate === planEndAt) {
-        setCanEditPatientPlan(false);
-      }
-    }
-    if (isPatientPlanEditableResponse?.isError) {
-      setCanEditPatientPlan(false)
-      dispatch(clear_is_patient_plan_editable())
-    }
+  //     if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
+  //       setCanEditPatientPlan(true);
+  //     } else if (isPatientPlanEditableDate === planEndAt) {
+  //       setCanEditPatientPlan(false);
+  //     }
+  //   }
+  //   if (isPatientPlanEditableResponse?.isError) {
+  //     setCanEditPatientPlan(false)
+  //     dispatch(clear_is_patient_plan_editable())
+  //   }
 
-    return ()=>dispatch(clear_is_patient_plan_editable())
-  }, [isPatientPlanEditableResponse, isPatientPlanEditableDate,hashDate]);
+  //   return ()=>dispatch(clear_is_patient_plan_editable())
+  // }, [isPatientPlanEditableResponse, isPatientPlanEditableDate,hashDate]);
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const currentDate = inputSelectedDate ? inputSelectedDate : new Date();
