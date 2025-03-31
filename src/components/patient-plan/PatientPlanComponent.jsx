@@ -47,14 +47,21 @@ const PatientPlanComponent = () => {
       dispatch(clear_patient_plan_message_state())
     }
   }, [])
+  function getCurrentDate(date) {
+    console.log("gotNewDate--", date)
+  }
+
   const location = useLocation()
   const navigate = useNavigate()
+  const selectedDate = location.state.selectedDate
+  const formattedDate = location.state.formattedDate;
+  // console.log("selectedDate--", selectedDate, "formattedDate--", formattedDate)
   const patientId = location.state.patientId
   const editable = location.state.editable
   const hasPlan = location.state.hasPlan
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
-  console.log("planStartCompAt--", planStartAt,"planEndAt--", planEndAt)
+  console.log("planStartCompAt--", planStartAt, "planEndAt--", planEndAt)
   const exercisePlanId = location.state.exercisePlanId
   console.log("exercisePlanId--", exercisePlanId)
   const userpatient_category = location.state.patient_category
@@ -120,7 +127,7 @@ const PatientPlanComponent = () => {
 
   useEffect(() => {
     if (common_data?.isSuccess) {
-      console.log(common_data?.data?.data,"common_data?.data?.data")
+      console.log(common_data?.data?.data, "common_data?.data?.data")
       setExercise_category(common_data?.data?.data?.exercise_category)
       setBody_parts(common_data?.data?.data?.bodyParts)
       setExerciseDifficuilty(common_data?.data?.data?.exercise_difficulties)
@@ -140,7 +147,7 @@ const PatientPlanComponent = () => {
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
         const validExercises = days[day]
           .map((exercise) => ({
-           
+
             exerciseId: exercise.exerciseId,
             planExerciseId: exercise.planExerciseId,
             difficulty_level: exercise.difficuilty_level || 'Easy',
@@ -271,10 +278,10 @@ const PatientPlanComponent = () => {
         const dayExercises = suggested_plans?.data?.data?.days?.[day] || [];
 
         acc[day] = dayExercises.length
-        ? dayExercises.map((exercise) => {
-          console.log(exercise,"exercise====>")
+          ? dayExercises.map((exercise) => {
+            console.log(exercise, "exercise====>")
             const patientCategory = exercise.categories?.find(cat => cat.category === userpatient_category || "A");
-          console.log(patientCategory,"patientCategory")
+            console.log(patientCategory, "patientCategory")
             return {
               category: exercise.exercise_type || "",
               patient_category: exercise?.patient_category || "A",
@@ -289,20 +296,20 @@ const PatientPlanComponent = () => {
               bodyParts: [],
               sets: patientCategory
                 ? Array.from({ length: patientCategory.start_point?.sets || 0 }, () => ({
-                    reps: patientCategory.start_point?.reps || 0,
-                    time: { value: patientCategory.start_point?.time || 0, unit: "sec" },
-                    weight: { value: patientCategory.start_point?.weight || 0, unit: "kg" },
-                  }))
+                  reps: patientCategory.start_point?.reps || 0,
+                  time: { value: patientCategory.start_point?.time || 0, unit: "sec" },
+                  weight: { value: patientCategory.start_point?.weight || 0, unit: "kg" },
+                }))
                 : [
-                    {
-                      reps: 0,
-                      time: { value: 0, unit: "sec" },
-                      weight: { value: 0, unit: "kg" },
-                    },
-                  ],
+                  {
+                    reps: 0,
+                    time: { value: 0, unit: "sec" },
+                    weight: { value: 0, unit: "kg" },
+                  },
+                ],
             };
           })
-        : [daysData];
+          : [daysData];
 
         return acc;
       }, {});
@@ -326,7 +333,7 @@ const PatientPlanComponent = () => {
       <div className="inner_wrapper">
         <div className="d-flex justify-content-between mb-2">
           <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
-         {plan_message?.isSuccess &&  <div className="message_class">
+          {plan_message?.isSuccess && <div className="message_class">
             <p>{planMessage}</p>
           </div>}
         </div>
@@ -336,18 +343,33 @@ const PatientPlanComponent = () => {
           </div>
           <Tabs
             activeKey={activeTab}
-            onSelect={(k) => setActiveTab(k)}
+            onSelect={(k) => { setActiveTab(k); }}
             id="controlled-tab-example"
             className="mb-3 cmn_tabs"
           >
-            {Object.keys(days)?.map((day, i) => (
-              <Tab eventKey={day} title={day} key={i}>
+            {Object.keys(days)?.map((day, i) => {
+              const newDate = new Date(selectedDate);
+              const jsDayIndex = selectedDate?.getDay();
+              const selectedDayIndex = (jsDayIndex + 6) % 7; // Adjust index to match Monday-first format
+              const dayDifference = i - selectedDayIndex;
+              newDate?.setDate(selectedDate?.getDate() + dayDifference);
+              newDate?.setHours(0, 0, 0, 0); // Normalize time for accurate comparison
+              const todayDate = new Date();
+              todayDate?.setHours(0, 0, 0, 0);
+              newDate?.setHours(0, 0, 0, 0);
+              // Check if this tab should be disabled
+              const isDisabled = newDate?.getTime() < todayDate?.getTime();
+              return (<Tab eventKey={day} title={day} key={i} >
                 {activeTab === day && (
                   <PatientPlanForm
+                    isDisabled={isDisabled}
+                    getCurrentDate={getCurrentDate}
+                    selectedDate={selectedDate}
+                    formattedDate={formattedDate}
                     eventData={day}
                     setDays={setDays}
                     days={days}
-                    index={i} 
+                    index={i}
                     exercise_category={exercise_category}
                     body_parts={body_parts}
                     exerciseDifficuilty={exerciseDifficuilty}
@@ -361,11 +383,11 @@ const PatientPlanComponent = () => {
                     selected_training_type={selected_training_type}
                     planStartAt={planStartAt}
                     planEndAt={planEndAt}
-                    
+
                   />
                 )}
-              </Tab>
-            ))}
+              </Tab>)
+            })}
           </Tabs>
         </div>}
       </div>

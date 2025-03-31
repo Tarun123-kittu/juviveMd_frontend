@@ -428,6 +428,7 @@ console.log("Date--",formattedDate,isPatientPlanEditableResponse,inputSelectedDa
                 fill="black"
               />
             </svg>
+            {/* {console.log("selectedDate--",selectedDate,"formattedDate--",formattedDate)} */}
             <input
               type="date"
               ref={dateInputRef}
@@ -436,7 +437,7 @@ console.log("Date--",formattedDate,isPatientPlanEditableResponse,inputSelectedDa
             />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category } })}>Edit Plan</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category,selectedDate,formattedDate } })}>Edit Plan</button>}
             {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => {  dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category } })}}>+Create Plan</button>}
           </div>
         </div>
