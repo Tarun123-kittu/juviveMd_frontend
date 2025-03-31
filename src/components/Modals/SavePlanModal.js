@@ -9,7 +9,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
   const [planValidFromDate,setPlanValidFromDate]=useState(planValidTo)
   const [minDate, setMinDate] = useState(() => {
     const date = planValidTo ? new Date(planValidTo) : new Date();
-    date.setDate(date.getDate() + 1); // Add 1 day
+    date.setDate(date.getDate()); // Add 1 day
     return date.toISOString().split('T')[0];
   });
   console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable)
@@ -18,8 +18,8 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
   const handleClose = () => {
     setSavePlanModal(false);
     // !editable && setMinDate('')
-    // !editable && setPlanValidFrom('');
-    // !editable && setPlanValidTo('');
+    !editable && setPlanValidFrom('');
+    !editable && setPlanValidTo('');
     // setPlanValidTo("")
     // setPlanValidFrom("")
 
@@ -72,7 +72,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     const endOfWeek = getEndOfWeek(selectedDate);
 
     setPlanValidFrom(startOfWeek);
-    setPlanValidTo(endOfWeek);
+    // setPlanValidTo(endOfWeek);
   };
 
   const handleEndDateChange = (e) => {
@@ -147,9 +147,9 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 placeholder="name@example.com"
                 value={planValidFrom}
                 onChange={handleStartDateChange}
-                disabled={editable}
+                // disabled={editable}
                 min={minDate}
-                max={getMaxStartDate(minDate)}
+                // max={getMaxStartDate(minDate)}
               />
             </Form.Group>
 
@@ -159,9 +159,9 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 type="date"
                 placeholder="name@example.com"
                 value={planValidTo}
-                // onChange={handleEndDateChange}
+                onChange={handleEndDateChange}
                 // disabled={editable}
-                disabled={true}
+                disabled={editable}
                 min={minDate}
               />
             </Form.Group>
