@@ -54,6 +54,9 @@ const PatientPlanComponent = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
+  const latestPlanStartDate=location.state.latestPlanStartDate;
+  const latestPlanEndDate=location.state.latestPlanEndDate;
+  console.log("LatestDates--",latestPlanStartDate,latestPlanEndDate)
   const selectedDate = location.state.selectedDate
   const formattedDate = location.state.formattedDate;
   // console.log("selectedDate--", selectedDate, "formattedDate--", formattedDate)
@@ -143,7 +146,7 @@ const PatientPlanComponent = () => {
     }
   }, [hasPlan])
 
-  const handleSavePlan = () => {
+  const handleSavePlan = (newFromDate,newToDate) => {
 
     try {
       const validatedPlan = Object.keys(days).reduce((acc, day) => {
@@ -181,8 +184,8 @@ const PatientPlanComponent = () => {
 
       const payload = {
         patientId,
-        planValidFrom,
-        planValidTo,
+        planValidFrom:newFromDate,
+        planValidTo:newToDate,
         days: validatedPlan
       };
 
@@ -393,7 +396,7 @@ const PatientPlanComponent = () => {
           </Tabs>
         </div>}
       </div>
-      {savePlanModal && <SavePlanModal savePlanModal={savePlanModal} setSavePlanModal={setSavePlanModal} setPlanValidFrom={setPlanValidFrom} setPlanValidTo={setPlanValidTo} planValidFrom={planValidFrom} planValidTo={planValidTo} handleSavePlan={handleSavePlan} loading={isPlanCreated?.isLoading || isPlanUpdated?.isLoading} editable={editable} hasPlan={hasPlan} />}
+      {savePlanModal && <SavePlanModal savePlanModal={savePlanModal} setSavePlanModal={setSavePlanModal} setPlanValidFrom={setPlanValidFrom} setPlanValidTo={setPlanValidTo} planValidFrom={planValidFrom} planValidTo={planValidTo} handleSavePlan={handleSavePlan} loading={isPlanCreated?.isLoading || isPlanUpdated?.isLoading} editable={editable} hasPlan={hasPlan}  latestPlanStartDate={latestPlanStartDate} latestPlanEndDate={latestPlanEndDate} />}
     </div>
   );
 };
