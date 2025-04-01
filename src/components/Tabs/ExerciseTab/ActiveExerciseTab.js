@@ -160,7 +160,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                         setTimeout(() => setStatus(null), 0);
                       }
                     }}
-                    autoClose={false}
+                    autoClose={true}
                   >
                     <Dropdown.Toggle
                       variant="unset"
@@ -195,7 +195,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                     </Dropdown.Toggle>
 
                     {ExercisePermissionApproveReject?.canUpdate && tab !== "draft" && index === i && (
-                      <Dropdown.Menu>
+                      <Dropdown.Menu autoClose={true}>
                         <ul>
                           {tab !== "active" && (
                             <Dropdown.Item
@@ -204,6 +204,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
                                 setIndex(i);
                               }}
                               className="d-flex gap-2"
+                              
                             >
                               <input
                                 type="checkbox"
