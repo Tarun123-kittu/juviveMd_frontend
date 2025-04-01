@@ -634,7 +634,7 @@ const EditExercise = ({
                                                 <Form.Label>Exercise Image</Form.Label>
                                                 <div className="exercise_view_image">
                                                     {/* {AddIMage} */}
-                                                    <img src={exerciseImage} className=" object-fit-cover" width={300} />
+                                                    <img src={exerciseImage} className=" object-fit-cover" width={300} height={300} />
 
                                                 </div>
                                             </Col>
