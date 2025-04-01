@@ -43,7 +43,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     // setNewFromDate()
     return ;
   }
-  console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable,latestPlanStartDate,latestPlanEndDate)
+  console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable,latestPlanStartDate,latestPlanEndDate,hasPlan)
 
   // console.log("planValidFrom",planValidFrom,"planValidTo",planValidTo)
   const handleClose = () => {
@@ -171,7 +171,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
             Define the start and end dates for a customized <br /> patient care
             plan
           </p>
-          {!editable && planValidFromDate && planValidTo && (
+          {!editable && latestPlanEndDate && (
             <div className="plan_alert mb-3">
               Plans are already created till <strong>{formatDate(latestPlanEndDate)}</strong>
             </div>

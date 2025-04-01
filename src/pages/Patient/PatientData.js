@@ -57,6 +57,7 @@ const PatientData = () => {
   console.log(patient_category, "userpatient_category")
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
+  console.log(patient_details,"patDets--")
   const common_data = useSelector((store) => store.COMMON_DATA)
   const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
@@ -101,10 +102,10 @@ const PatientData = () => {
     }
     if (get_patient_plan_response?.isError) {
       // setCanEditPatientPlan(false)
-      if (isPatientPlanEditableDate > latestPlanEndDate) {
-        setCanEditPatientPlan(false);
-        // return;
-      }
+      // if (isPatientPlanEditableDate > latestPlanEndDate) {
+      //   setCanEditPatientPlan(false);
+      //   // return;
+      // }
       dispatch(clear_patient_plan_state())
     }
 
