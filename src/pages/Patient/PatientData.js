@@ -65,6 +65,7 @@ const PatientData = () => {
 
 
   useEffect(() => {
+    setCanEditPatientPlan(false);
     return () => {
       setCanEditPatientPlan(false);
       // dispatch(clear_is_patient_plan_editable())
@@ -466,7 +467,7 @@ console.log("hashDate==>",hashDate)
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
             {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category, selectedDate, formattedDate } })}>Edit Plan</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category } }) }}>+Create Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category,latestPlanStartDate,latestPlanEndDate } }) }}>+Create Plan</button>}
           </div>
         </div>
         <Tabs
