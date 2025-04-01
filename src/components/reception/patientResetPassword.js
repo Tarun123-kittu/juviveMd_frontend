@@ -123,7 +123,7 @@ const PatientResetPassword = () => {
                                                 disabled={!data}
                                             >
                                                 {!resetPasswordState?.isLoading ? (
-                                                    "Change Password"
+                                                    "Create Password"
                                                 ) : (
                                                     <Spinner animation="border" role="status">
                                                         <span className="visually-hidden">Loading...</span>

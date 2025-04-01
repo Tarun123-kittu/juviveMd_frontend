@@ -93,10 +93,10 @@ const ExerciseView = () => {
             >
               <option disabled>Please select status</option>
               <option value={0} disabled={disableDropdown}>
-                Reject
+                Rejected
               </option>
               <option value={1} disabled={disableDropdown}>
-                Approve
+                Approved
               </option>
               <option disabled value={2} className="d-none">
                 Pending
