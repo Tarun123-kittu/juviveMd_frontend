@@ -4,17 +4,38 @@ import Form from 'react-bootstrap/Form';
 import { getDay, getDate, setDate, setHours, min } from "date-fns";
 import Spinner from 'react-bootstrap/Spinner';
 import { formatDate } from '../../common/formatDate/formatDate';
+import { showToast } from "../../common/toast/showToast";
 
-const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable,hasPlan }) => {
-  const [planValidFromDate,setPlanValidFromDate]=useState(planValidTo)
+const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setPlanValidTo, planValidFrom, planValidTo, handleSavePlan, loading, editable, hasPlan }) => {
+  const [planValidFromDate, setPlanValidFromDate] = useState(planValidTo)
+  const [errorFromDate, setErrorFromDate] = useState(false)
+  const [errorToDate, setErrorToDate] = useState(false)
   const [minDate, setMinDate] = useState(() => {
     const date = planValidTo ? new Date(planValidTo) : new Date();
-    date.setDate(date.getDate()+1); // Add 1 day
+    date.setDate(date.getDate() + 1); // Add 1 day
     return date.toISOString().split('T')[0];
   });
+  function handleLocalSavePlan() {
+    if (planValidFrom !== "") {
+      setErrorFromDate(false)
+    }
+    else {
+      setErrorFromDate(true)
+      // showToast("please select date", "ERROR")
+      return;
+    }
 
-  function initialDate()
-  {
+    if (planValidTo !== "") {
+      setErrorToDate(false)
+      handleSavePlan()
+    }
+    else {
+      setErrorToDate(true)
+      // showToast("please select date", "ERROR")
+      return;
+    }
+  }
+  function initialDate() {
     const date = planValidTo ? new Date(planValidTo) : new Date();
     date.setDate(date.getDate()); // Add 1 day
     return date.toISOString().split('T')[0];
@@ -33,12 +54,11 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
   };
   // useEffect(()=>{
   //   return ()=>{
-      // setPlanValidFrom('')
-      // setPlanValidTo('')
+  // setPlanValidFrom('')
+  // setPlanValidTo('')
   //   }
   // })
-  function CalculateValidDate()
-  {
+  function CalculateValidDate() {
     const date = planValidTo ? new Date(planValidTo) : new Date();
     date.setDate(date.getDate() + 1); // Add 1 day
     return date.toISOString().split('T')[0];
@@ -79,6 +99,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     const endOfWeek = getEndOfWeek(selectedDate);
 
     setPlanValidFrom(startOfWeek);
+    setErrorFromDate(true)
     // setPlanValidTo(endOfWeek);
   };
 
@@ -141,9 +162,9 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
               Plans are already created till <strong>{formatDate(planValidFromDate)}</strong>
             </div>
           )}
-           {!editable && planValidFrom && planValidTo && (
+          {!editable && planValidFrom && planValidTo && (
             <div className="plan_alert mb-3">
-              New plan Will be created from {formatDate(planValidFrom?planValidFrom:minDate)} to <strong>{formatDate(planValidTo)}</strong>
+              New plan Will be created from {formatDate(planValidFrom ? planValidFrom : minDate)} to <strong>{formatDate(planValidTo)}</strong>
             </div>
           )}
           <div className="authWrapper ">
@@ -155,9 +176,13 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 value={planValidFrom}
                 onChange={handleStartDateChange}
                 disabled={editable}
-                min={hasPlan? minDate:initialDate()}
-                // max={getMaxStartDate(minDate)}
+                min={hasPlan ? minDate : initialDate()}
+              // max={getMaxStartDate(minDate)}
               />
+              {
+                errorFromDate && !planValidFrom && <div className="error text-danger">Date is required</div>
+
+              }
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="endDate">
@@ -171,10 +196,14 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 disabled={editable}
                 min={minDate}
               />
+              {
+                errorToDate && !planValidTo && <div className="error text-danger">Date is required</div>
+
+              }
             </Form.Group>
             <div className="d-flex justify-content-end gap-2">
               <button className="cmn_btn border-btn" onClick={handleClose}>Cancel</button>
-              <button className="cmn_btn" onClick={handleSavePlan}>{loading ? <Spinner animation="border" variant="light" size="sm" /> : editable ? "Update Plan" : "Save Plan"}</button></div>
+              <button className="cmn_btn" onClick={handleLocalSavePlan}>{loading ? <Spinner animation="border" variant="light" size="sm" /> : editable ? "Update Plan" : "Save Plan"}</button></div>
           </div>
         </Modal.Body>
       </Modal>
