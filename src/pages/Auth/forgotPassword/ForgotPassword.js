@@ -11,7 +11,7 @@ import { Form } from "react-bootstrap";
 import Logo from "../../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 // Validation Schema using Yup
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -84,8 +84,9 @@ const ForgotPassword = () => {
                     {errors.email}
                   </Form.Control.Feedback>
                 </Form.Group>
-
-                <div className="mt-3">
+             
+               
+                <div className="mt-3 mb-3">
                   <button
                     type="submit"
                     className="cmn_btn w-100"
@@ -95,6 +96,9 @@ const ForgotPassword = () => {
                   
                   </button>
                 </div>
+                <h6 className="user_account">
+                 If you already have an account <Link to='/'>Login</Link>
+                </h6>
               </Form>
             )}
           </Formik>
