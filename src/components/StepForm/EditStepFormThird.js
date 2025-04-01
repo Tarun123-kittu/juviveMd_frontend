@@ -7,11 +7,11 @@ import "./StepForm.css";
 import Select from "react-select";
 
 const EditStepFormThird = ({ discomfort_issue, activity_level, weekDays, sleep_rate, workout_type, workout_place, equipments, workout_times, setStep, patient_all_data, setThird_step_Weight_unit, third_step_weight_unit, setStepThreeFullData, stepThreefullData }) => {
-console.log(third_step_weight_unit,"third_step_weight_unit===>")
+console.log(patient_all_data,"patient_all_data===>")
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      optimalWeight: patient_all_data?.optimal_weight?.value || stepThreefullData?.optimalWeight || "",
+      optimalWeight: patient_all_data?.optimal_weight?.value || stepThreefullData?.optimalWeight || null,
       bodyFat: patient_all_data?.fat_percentage?.value || stepThreefullData?.bodyFat || "",
       discomfort: patient_all_data?.discomfort || stepThreefullData?.discomfort || "",
       activityLevel: patient_all_data?.activity_level || stepThreefullData?.activityLevel || "",

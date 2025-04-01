@@ -13,6 +13,7 @@ import { get_patient_plan } from "../../redux/slices/patientPlan/getPAtientPlan"
 import toast from "react-hot-toast";
 import { getRoutePermissions } from "../../middleware/permissionsMiddleware/getRoutePermissions";
 import { permission_constants } from "../../constants/permissionConstants";
+import { showToast } from "../../common/toast/showToast";
 
 const EditPateintExercise = ({
   showEditPateintExercise,
@@ -102,7 +103,8 @@ const EditPateintExercise = ({
       handleClose()
     }
     if (is_plan_updated.isError) {
-      toast.error(is_plan_updated?.error?.message)
+      showToast(is_plan_updated?.error?.loggedError,"ERROR")
+      showToast(is_plan_updated?.error?.message,"ERROR")
       dispatch(clear_update_patient_plan_state())
     }
   }, [is_plan_updated])

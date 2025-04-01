@@ -16,7 +16,7 @@ import Loader from "../../common/Loader/Loader"
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-
+import { showToast } from "../../common/toast/showToast";
 
 const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList }) => {
     const dispatch = useDispatch();
@@ -127,7 +127,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
             setImage(staffData.image || "");
             setCountryCode(staffData?.countryCode || "")
         } else if (selected_staff_detail?.isError) {
-            toast.error(selected_staff_detail?.error?.message || "An error occurred.");
+            showToast(selected_staff_detail?.error?.message || "An error occurred.","ERROR");
         }
     }, [selected_staff_detail]);
 
@@ -140,7 +140,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
 
     useEffect(() => {
         if (is_staff_updated?.isSuccess) {
-            toast.success("Staff Updated Successfully")
+            showToast("Staff Updated Successfully","SUCCESS")
             dispatch(get_all_staff({ page }))
             dispatch(clear_single_staff_state())
             dispatch(clear_update_staff_state())
@@ -148,7 +148,7 @@ const EditStaffmodal = ({ show, setShow, staffId, page, setStaffId, rolesList })
             handleClose()
         }
         if (is_staff_updated?.isError) {
-            toast.error(is_staff_updated?.error?.message)
+            showToast(is_staff_updated?.error?.message,"ERROR")
             dispatch(clear_update_staff_state())
         }
     }, [is_staff_updated])
