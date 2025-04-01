@@ -65,7 +65,10 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
         if (!response.ok) {
             const errorMessage = await response.json();
             if (errorMessage) {
-                throw new Error(errorMessage.message);
+                throw {
+                    message: errorMessage.message || "An error occurred",
+                    loggedError: errorMessage.loggedError || "An error occurred",
+                };
             }
         }
 
@@ -73,7 +76,8 @@ export const update_patient = createAsyncThunk("update_patient", async ({ id, st
         return result;
     } catch (error) {
         return thunkAPI.rejectWithValue({
-            message: error.message,
+            message: error.message || "An error occurred",
+            loggedError: error.loggedError || "An error occurred",
         });
     }
 })

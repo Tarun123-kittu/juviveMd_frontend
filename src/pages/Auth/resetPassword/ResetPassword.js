@@ -117,7 +117,7 @@ const ResetPassword = () => {
                   type="submit"
                   className="cmn_btn w-100"
                   disabled={!data}
-                > Change Password  {resetPasswordState?.isLoading && <Spinner animation="border" role="status">
+                > Create Password  {resetPasswordState?.isLoading && <Spinner animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </Spinner>}
                 </button>

@@ -14,7 +14,7 @@ import ConfirmForm from "../StepForm/ConfirmForm";
 import { update_patient, clear_update_patient_state } from "../../redux/slices/patientSlice/updatePatientSlice";
 import toast from "react-hot-toast";
 import { get_patients_list } from "../../redux/slices/patientSlice/getPatientList";
-
+import { showToast } from "../../common/toast/showToast";
 
 
 
@@ -129,7 +129,8 @@ const EditpatientModal = ({ showPateintModal, setshowPateintModal, tab, patientI
             setStepOneFullData()
         }
         if (is_patient_updated?.isError) {
-            toast.error(is_patient_updated?.error?.message)
+            showToast(is_patient_updated?.error?.loggedError,"ERROR")
+            showToast(is_patient_updated?.error?.message,"ERROR")
             dispatch(clear_update_patient_state())
         }
     }, [is_patient_updated])

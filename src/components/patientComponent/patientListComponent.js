@@ -31,7 +31,7 @@ import ImagePreview from '../../common/imagePreview/ImagePreviewer'
 
 const Reception_patient_list = ({ showButtons }) => {
     const elementRef = useRef(null);
-    const dispatch = useDispatch() 
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
     const { val } = location?.state ? location?.state : location
@@ -50,7 +50,7 @@ const Reception_patient_list = ({ showButtons }) => {
     const [page, setPage] = useState(1)
     const [isActiveTab, setIsActiveTab] = useState(false)
     const [tab, setTab] = useState(val || "active")
-    const [trainers, setTrainers] = useState() 
+    const [trainers, setTrainers] = useState()
     const [goalsList, setGoalsList] = useState()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [index, setIndex] = useState(null)
@@ -78,7 +78,23 @@ const Reception_patient_list = ({ showButtons }) => {
             setTab(val)
         }
     }, [val])
+    const filterRef = useRef(null);
+    const handleClickOutside = (event) => {
+        if (filterRef.current && !filterRef.current.contains(event.target)) {
+            setShowFilter(false);
+        }
+    };
+    useEffect(() => {
+        if (showFilter) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
 
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showFilter]);
     const handelShowFilter = () => {
         setShowFilter(!showFilter)
     }
@@ -195,8 +211,8 @@ const Reception_patient_list = ({ showButtons }) => {
 
     const handleUpdatePaymentStatus = (id) => {
         let payment_status = payment_status_received
-        if(payment_status_received)
-        dispatch(update_patient_payment_api({ id, payment_status }))
+        if (payment_status_received)
+            dispatch(update_patient_payment_api({ id, payment_status }))
     }
 
     useEffect(() => {
@@ -309,23 +325,24 @@ const Reception_patient_list = ({ showButtons }) => {
                                 </li>
                             )}
                         </ul>}
-                        {PatientPermissions?.canCreate && showButtons && <button onClick={() => setshowPateintModal(true)} className='cmn_btn filter_btn'>+ Add Patient</button>} {showButtons && <button onClick={handelShowFilter} className="cmn_btn filter_btn px-4">Filter</button>}
+                        {PatientPermissions?.canCreate && showButtons && <button onClick={() => setshowPateintModal(true)} className='cmn_btn filter_btn'>+ Add Patient</button>}
+                        {showButtons && <button onClick={handelShowFilter} className="cmn_btn filter_btn px-4">Filter</button>}
                         {showFilter &&
-
-                            <PatientFilters tab={tab} showFilter={showFilter} username={username} setUsername={setUsername} setGoal={setGoal} goal={goal} setDate={setDate} date={date} setGender={setGender} gender={gender} setStatus={setStatus} status={status} setTrainer={setTrainer} trainer={trainer} trainers={trainers} goalsList={goalsList} handleSearch={handleSearch} page={page} />
-
+                            <div ref={filterRef}>
+                                <PatientFilters tab={tab} showFilter={showFilter} username={username} setUsername={setUsername} setGoal={setGoal} goal={goal} setDate={setDate} date={date} setGender={setGender} gender={gender} setStatus={setStatus} status={status} setTrainer={setTrainer} trainer={trainer} trainers={trainers} goalsList={goalsList} handleSearch={handleSearch} page={page} />
+                            </div>
                         }
 
                     </div>
                     <div className='patient_data'>
                         <DataTable columns={tab === "active" ? columns : tab === "healthIssue" ? columns_one : columns_two}>
                             {patient_data?.isLoading ? <tr><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 11 : 10}><Loader /></td></tr> : patient_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={tab === "paymentPending" || tab === "healthIssue" ? 12 : 10}><Nodata /> </td></tr> : Array.isArray(patient_data?.data?.data?.items) && patient_data?.data?.data?.items?.map((patient, i) => {
-                            
+
                                 return (
-                                    <tr key={i}> 
+                                    <tr key={i}>
                                         <td className="ps-3">
                                             <div className="d-flex align-items-center table_user">
-                                                <img type="button" src={patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" style={{borderRadius:"50%"}} width={40} height={40} className='profile_image_patient object-fit-cover' onClick={() => { setCurrImage(patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
+                                                <img type="button" src={patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"} alt="User-image" style={{ borderRadius: "50%" }} width={40} height={40} className='profile_image_patient object-fit-cover' onClick={() => { setCurrImage(patient?.image ? patient?.image : patient?.gender === "FEMALE" ? "/female.webp" : "/male.png"); setShowPopup(true) }} />
                                                 <div className="d-inline-grid">
                                                     <p className="mb-0">{patient?.firstName ? patient.firstName.charAt(0).toUpperCase() + patient.firstName.slice(1) : ''} {patient?.lastName}</p>
                                                 </div>
@@ -354,7 +371,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                                         setIsOpen(nextOpenState);
                                                         if (!nextOpenState) handleDropdownClose();
                                                     }}
-                                                    autoClose={false}
+                                                    autoClose={true}
                                                 >
                                                     <Dropdown.Toggle
                                                         variant="unset"
@@ -408,8 +425,8 @@ const Reception_patient_list = ({ showButtons }) => {
                                                                     checked={payment_status_received || patient?.payment}
                                                                     onClick={(e) => {
                                                                         e.stopPropagation(); // Prevents triggering the parent onClick
-                                                                        setPayment_status_received(true);
-                                                                        setPayment_status_pending(false);
+                                                                        setPayment_status_received((prev) => !prev);
+                                                                        // setPayment_status_pending(false);
                                                                     }}
                                                                 />
                                                                 Received
@@ -451,8 +468,8 @@ const Reception_patient_list = ({ showButtons }) => {
                                         <td>{patient?.created_at ? formatDate(patient?.created_at) : null}</td>
 
 
-                                        {<td  className={`${tab !== "healthIssue" && "d-none"} cursor-pointer`}>
-                                            <div className='health_issue' data-tooltip-id={`my-tooltip-${i}`}  ref={elementRef}>
+                                        {<td className={`${tab !== "healthIssue" && "d-none"} cursor-pointer`}>
+                                            <div className='health_issue' data-tooltip-id={`my-tooltip-${i}`} ref={elementRef}>
                                                 <div className='tooltip_wrapper'>
                                                     <span className='d-flex align-items-center justify-content-center'>!</span>
                                                     <ReactTooltip id={`my-tooltip-${i}`} place="bottom" type="info" effect="solid">
@@ -480,11 +497,11 @@ const Reception_patient_list = ({ showButtons }) => {
                                                 {PatientPermissions?.canDelete && <svg onClick={() => { setShowDeleteModal(true); setPatientId(patient?.id) }} width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3.96355 24C3.28478 24 2.70701 23.7606 2.23026 23.2817C1.7535 22.8028 1.51512 22.223 1.51512 21.5422V2.69372H0V1.17185H6.06048V0H15.1512V1.17185H21.2117V2.69372H19.6965V21.5422C19.6965 22.2422 19.4632 22.8271 18.9966 23.2969C18.5299 23.7666 17.9471 24.001 17.2481 24H3.96355ZM18.1814 2.69372H3.03024V21.5422C3.03024 21.8151 3.11761 22.0393 3.29235 22.2148C3.4671 22.3904 3.69083 22.4781 3.96355 22.4781H17.2496C17.4819 22.4781 17.6956 22.3807 17.8905 22.1859C18.0855 21.9911 18.1824 21.776 18.1814 21.5406V2.69372ZM7.28469 19.4344H8.79981V5.73748H7.28469V19.4344ZM12.4119 19.4344H13.927V5.73748H12.4119V19.4344Z" fill="black" />
                                                 </svg>}
-                                              
+
                                                 {PatientPlan?.canRead && tab !== "healthIssue" && showButtons &&
-                                                 <button  
-                                                  disabled={patient?.status === 0 || patient?.payment === false} 
-                                                  onClick={() => {navigate("/patientData", { state: { patientId: patient?.id, val: tab } })}} className={`${(patient?.status === 0 || patient?.payment === false) && 'disable_opacity'} cmn_btn px-2 py-1`} style={{ height: "36px" }}> <img width="18" src={ArrowRight} /> </button>}
+                                                    <button
+                                                        disabled={patient?.status === 0 || patient?.payment === false}
+                                                        onClick={() => { navigate("/patientData", { state: { patientId: patient?.id, val: tab } }) }} className={`${(patient?.status === 0 || patient?.payment === false) && 'disable_opacity'} cmn_btn px-2 py-1`} style={{ height: "36px" }}> <img width="18" src={ArrowRight} /> </button>}
                                             </div>
                                         </td>
                                     </tr>
