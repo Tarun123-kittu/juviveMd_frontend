@@ -242,73 +242,87 @@ const MessagesComponent = () => {
                 onScroll={handleScroll}
                 ref={chatRef}
               >
-                {Array.isArray(chatData) && chatData.length > 0 ? (
-                  chatData?.map((item) => {
-                    const myId = localStorage.getItem('user_id');
-                    const isSentByMe = item.senderId === myId;
+              {Array.isArray(chatData) && chatData.length > 0 ? (
+  chatData?.map((item, index) => {
+    const myId = localStorage.getItem('user_id');
+    const isSentByMe = item.senderId === myId;
+    const createdAt = new Date(item.createdAt);
+    
+    // Calculate today's date and yesterday's date
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-                    return (
-                      <div key={item.id}>
-                        {isSentByMe ? (
-                          <ul className='conversation_list right_conversation ps-5 pe-3 w-50 ms-auto'>
-                            <li className='d-flex gap-2 align-items-start conversation_item '>
-                              <div className='message_user flex-grow-1'>
-                                <div className='d-flex gap-2 justify-content-end'>
-                                  <span className='message_time'>
-                                    {new Date(item.createdAt).toLocaleString('en-GB', {
-                                      day: '2-digit',
-                                      month: 'short',
-                                      year: 'numeric',
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                      hour12: true
-                                    }).replace(',', ',')}
-                                  </span>
-                                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
-                                </div>
-                                <p className='message_dialogue'>{item.message}</p>
-                              </div>
-                              <img
-                                src={item.sender?.image || localStorage.getItem('juvive_image_url')}
-                                alt='Your'
-                                width={35}
-                                height={35}
-                                className='round_image'
-                              />
-                            </li>
-                          </ul>
-                        ) : (
-                          <ul className='conversation_list pe-5 ps-3 w-50'>
-                            <li className='d-flex gap-2 align-items-start conversation_item'>
-                              <img
-                                src={item.sender?.image || DefaultImage}
-                                alt='Sender'
-                              />
-                              <div className='message_user flex-grow-1'>
-                                <div className='d-flex gap-2'>
-                                  <h6>{item.sender?.firstName || 'Sender'}</h6>
-                                  <span className='message_time'>
-                                    {new Date(item.createdAt).toLocaleString('en-GB', {
-                                      day: '2-digit',
-                                      month: 'short',
-                                      year: 'numeric',
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                      hour12: true
-                                    }).replace(',', ',')}
-                                  </span>
-                                </div>
-                                <p className='message_dialogue'>{item.message}</p>
-                              </div>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <h3 className='p-5 text-center'> <Loader /></h3>
-                )}
+    let displayDate;
+    if (createdAt.toDateString() === today.toDateString()) {
+      displayDate = "Today";
+    } else if (createdAt.toDateString() === yesterday.toDateString()) {
+      displayDate = "Yesterday";
+    } else {
+      displayDate = createdAt.toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+    }
+
+    // Create a time string to display alongside the message
+    const timeString = createdAt.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    return (
+      <div key={item.id}>
+        {/* Show the date only if it's the first message or different date from the previous message */}
+        {index === 0 || 
+         new Date(chatData[index - 1].createdAt).toLocaleDateString() !== createdAt.toLocaleDateString() ? (
+          <div className='message_date text-center'>{displayDate}</div>
+        ) : null}
+
+        {isSentByMe ? (
+          <ul className='conversation_list right_conversation ps-5 pe-3 w-50 ms-auto'>
+            <li className='d-flex gap-2 align-items-start conversation_item '>
+              <div className='message_user flex-grow-1'>
+                <div className='d-flex gap-2 justify-content-end'>
+                  <span className='message_time'>{timeString}</span>
+                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
+                </div>
+                <p className='message_dialogue'>{item.message}</p>
+              </div>
+              <img
+                src={item.sender?.image || localStorage.getItem('juvive_image_url')}
+                alt='Your'
+                width={35}
+                height={35}
+                className='round_image'
+              />
+            </li>
+          </ul>
+        ) : (
+          <ul className='conversation_list pe-5 ps-3 w-50'>
+            <li className='d-flex gap-2 align-items-start conversation_item'>
+              <img
+                src={item.sender?.image || DefaultImage}
+                alt='Sender'
+              />
+              <div className='message_user flex-grow-1'>
+                <div className='d-flex gap-2'>
+                  <h6>{item.sender?.firstName || 'Sender'}</h6>
+                  <span className='message_time'>{timeString}</span>
+                </div>
+                <p className='message_dialogue'>{item.message}</p>
+              </div>
+            </li>
+          </ul>
+        )}
+      </div>
+    );
+  })
+) : (
+  <h3 className='p-5 text-center'> <Loader /></h3>
+)}
               </div>
             </div>
             {messageError && <span className='message_errors'>{messageError}</span>}

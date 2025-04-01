@@ -7,7 +7,10 @@ const EditStepFormSecond = ({
   patient_all_data,
   setSelected_health_issue,
   selected_health_issue,
+  setStep_form_open,setIs_health_issue
 }) => {
+
+  console.log(setStep_form_open,"setStep_form_open")
   useEffect(() => {
     // Initialize selected health issues from patient_all_data.health_issue_text
     if (Array.isArray(patient_all_data?.health_issue_text)) {
@@ -26,6 +29,10 @@ const EditStepFormSecond = ({
         ? prevSelected.filter((item) => item !== issue) // Remove if already selected
         : [...prevSelected, issue] // Add if not selected
     );
+  };
+  const handleClose = () => {
+  setStep_form_open(false);
+   setIs_health_issue(true);
   };
 
   return (
@@ -57,9 +64,9 @@ const EditStepFormSecond = ({
           Back
         </button>
         <button
-          onClick={() => {
-            setStep(3);
-          }}
+              onClick={() => {
+                selected_health_issue.length > 0 ? handleClose() : setStep(3);
+              }}
           className="cmn_btn ps-4 pe-4"
         >
           Next

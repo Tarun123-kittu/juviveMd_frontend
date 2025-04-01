@@ -415,6 +415,9 @@ button.disable_opacity {
   opacity: .5;
   cursor: no-drop;
 }
+h6.user_account a {
+  font-size: 18px;
+}
 @media(max-width:1440px){
   .cmn_btn {
 height: 40px;
