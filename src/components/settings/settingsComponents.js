@@ -17,7 +17,7 @@ import { getRoutePermissions } from '../../middleware/permissionsMiddleware/getR
 import { permission_constants } from '../../constants/permissionConstants';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
+import { showToast } from '../../common/toast/showToast';
 const SettingsComponents = () => {
   const dispatch = useDispatch()
   const [newPassword, setNewPassword] = useState('')

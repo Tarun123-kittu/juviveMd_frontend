@@ -187,7 +187,9 @@ const AddExcercise = ({ showAddExerciseModal, setshowAddExerciseModal, exercise_
       handleClose();
     }
     if (is_exercise_draft_created?.isError) {
-      toast.error(is_exercise_draft_created?.error?.message);
+      
+      showToast(is_exercise_draft_created.error.message, "ERROR");
+      showToast(is_exercise_draft_created.error.loggedError, "ERROR");
       dispatch(clear_create_exercise_draft_state());
     }
   }, [is_exercise_draft_created]);

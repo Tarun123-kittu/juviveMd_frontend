@@ -23,7 +23,7 @@ import { formatDate } from '../../../common/formatDate/formatDate';
 import ImagePreview from '../../../common/imagePreview/ImagePreviewer';
 
 
-const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, setActiveTab, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page, commonData, trainingType }) => {
+const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, setActiveTab, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page, commonData, trainingType ,filters}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,11 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
     if (tab) {
       setIsTabActive(true)
       dispatch(clear_get_single_exercise_state())
-      dispatch(get_exercise({ page, tab }))
+      const updatedFilters = { ...filters, page, tab };
+
+      console.log("testing", { page, tab, filters });
+      
+      dispatch(get_exercise(updatedFilters))
     }
   }, [tab, page, dispatch])
 
@@ -78,7 +82,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   useEffect(() => {
     if (is_status_updated?.isSuccess) {
       toast.success(is_status_updated?.message?.message)
-      dispatch(get_exercise({ page, tab }))
+      dispatch(get_exercise({ page, tab, filters }))
       setStatus(null)
       setSave(false)
       setIsOpen(false)
@@ -106,7 +110,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   useEffect(() => {
     if (is_exercise_deleted?.isSuccess) {
       toast.success("Exercise deleted successfully !!")
-      dispatch(get_exercise({ page, tab }))
+      dispatch(get_exercise({ page, tab, filters }))
       dispatch(clear_delete_exercise_state())
       setShowDeleteModal(false)
     }
@@ -123,7 +127,7 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
           {exercise_data?.isLoading ? <tr><td colSpan={8}> <Loader /></td> </tr> : exercise_data?.data?.data?.items?.length === 0 ? <tr className='text-center' ><td colSpan={8}><Nodata /></td></tr> : Array.isArray(all_exercise) && all_exercise?.map((exercise, i) => {
             console.log(exercise,"exerCateg--")
             return (
-              <tr key={i}>
+              <tr>
 
                 <td>{exercise?.exercise_name ? exercise?.exercise_name?.charAt(0)?.toUpperCase() + exercise.exercise_name.slice(1) : ''}</td>
                 <td><img type="button" src={exercise?.image_url || PoseImage} width={40} height={40} className='rounded-5 border object-fit-cover' alt="exercise" onClick={() => { setCurrImage(exercise?.image_url || PoseImage); setShowPopup(true) }} /></td>

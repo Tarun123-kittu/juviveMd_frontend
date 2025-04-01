@@ -24,7 +24,6 @@ import {
 } from "../../redux/slices/exerciseSlice/updateExercideDraft";
 import Multiselect from "multiselect-react-dropdown";
 import Select from "react-select";
-
 const EditExercise = ({
     showAddExerciseModal,
     setshowAddExerciseModal,
@@ -266,6 +265,7 @@ const EditExercise = ({
     useEffect(() => {
         if (is_exercise_updated_draft?.isSuccess) {
             toast.success(is_exercise_updated_draft?.message?.message);
+
             setshowAddExerciseModal(false);
             dispatch(get_exercise({ page: 1, tab }));
             dispatch(clear_update_exercise_draft_state());
@@ -273,7 +273,8 @@ const EditExercise = ({
             setExerciseId(null);
         }
         if (is_exercise_updated_draft?.isError) {
-            toast.error(is_exercise_updated_draft?.error?.message);
+            showToast(is_exercise_updated_draft?.error?.loggedError, "ERROR");
+            showToast(is_exercise_updated_draft?.error?.message, "ERROR");
             dispatch(clear_update_exercise_draft_state());
         }
     }, [is_exercise_updated_draft]);
