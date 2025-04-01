@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import ActiveExerciseTab from "../../components/Tabs/ExerciseTab/ActiveExerciseTab";
@@ -100,7 +100,24 @@ const Exercise = () => {
     setActiveTab(key)
     dispatch(clear_get_single_exercise_state())
   }
+  const filterRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setToggleFilter(false);
+    }
+};
 
+useEffect(() => {
+    if (toggleFilter) {
+        document.addEventListener("mousedown", handleClickOutside);
+    } else {
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, [toggleFilter]);
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -134,7 +151,7 @@ const Exercise = () => {
                 </button>
               </div>
               {toggleFilter && (
-                <div className="patient_filter">
+                <div className="patient_filter" ref={filterRef}>
                   <div className="filter_list w-100">
                     <input
                       type="text"
@@ -185,7 +202,7 @@ const Exercise = () => {
                   </div>
                   <div className='d-flex justify-content-end gap-2'>
                     <button className="cmn_btn" onClick={() => handleSearch()}>Search</button>
-                    <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clean</button>
+                    <button className="cmn_btn fade_color" onClick={() => handleClear()}>Clear</button>
                   </div>
                 </div>
               )}

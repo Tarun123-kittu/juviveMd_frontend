@@ -144,7 +144,7 @@ const ExerciseView = () => {
                   <h5 className="mb-0">Training Type</h5>
                   <p>{is_exercise?.data?.data?.training_type?.join(",")}</p>
                 </li>
-                <li className="w-100">
+                <li className="w-100"> 
                   <h5 className="mb-0">Exercise Name</h5>
                   <p>{is_exercise?.data?.data?.exercise_name}</p>
                   <h5 className="mb-0">Exercise Status</h5>
