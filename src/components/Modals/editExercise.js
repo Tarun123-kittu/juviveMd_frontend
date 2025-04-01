@@ -435,7 +435,7 @@ const EditExercise = ({
 
         if (!areFieldsFilled) {
 
-            showToast("Please fill all fields before adding a new categorys", "ERROR");
+            showToast("Please fill sets and reps before adding a new category", "ERROR");
             return;
         }
 
