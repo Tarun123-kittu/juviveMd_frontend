@@ -108,7 +108,7 @@ console.log(third_step_weight_unit,"third_step_weight_unit===>")
     <Form onSubmit={formik.handleSubmit}>
       <h5 className="step_heading pt-3">Edit Activity Levels & Fitness Goals</h5>
       <Row className="authWrapper">
-        <Col lg={6}>
+        <Col lg={6}> 
           <Form.Group className="mb-2">
             <Form.Label>What is the optimal weight for you? in Lbs/Kg</Form.Label>
             <div className="volumeInput w-100">
