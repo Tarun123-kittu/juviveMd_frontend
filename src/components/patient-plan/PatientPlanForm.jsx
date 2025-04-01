@@ -16,6 +16,7 @@ import Select from "react-select";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { CrosSvg } from "../patientComponent/pateintSvg";
+import { showToast } from "../../common/toast/showToast";
 const PatientPlanForm = ({
   isDisabled,
   getCurrentDate,
@@ -66,12 +67,14 @@ const PatientPlanForm = ({
       //   duration: 3000, // Toast duration in milliseconds
       // });
       toast.dismiss();
-      toast.error("Sorry, you can't edit past plans!");
+      // toast.error("Sorry, you can't edit past plans!");
+      showToast("Sorry, you can't edit past plans!","ERROR")
       setToastShown(true);
 
     }
 
     getCurrentDate(newDate); // Pass the date as before
+  
   }, [newDate, getCurrentDate]);
 
 

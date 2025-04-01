@@ -80,9 +80,14 @@ useEffect(() => {
     setExercisePlanId(get_patient_plan_response?.data?.data?.planMetadata?.planId)
 
 
-    if (isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate) {
+    if (planStartDate >= isPatientPlanEditableDate && isPatientPlanEditableDate < planEndDate) {
       setCanEditPatientPlan(true);
-    } else if (isPatientPlanEditableDate === planEndAt) {
+    }
+    else if(isPatientPlanEditableDate >= planStartDate && isPatientPlanEditableDate < planEndDate)
+    {
+      setCanEditPatientPlan(true);
+    }
+    else if (isPatientPlanEditableDate === planEndAt) {
       setCanEditPatientPlan(false);
     }
   }
