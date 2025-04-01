@@ -171,7 +171,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
             Define the start and end dates for a customized <br /> patient care
             plan
           </p>
-          {!editable && latestPlanEndDate && (
+          {!editable && hasPlan && latestPlanEndDate && (
             <div className="plan_alert mb-3">
               Plans are already created till <strong>{formatDate(latestPlanEndDate)}</strong>
             </div>
