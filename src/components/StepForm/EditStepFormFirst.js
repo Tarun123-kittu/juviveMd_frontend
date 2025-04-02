@@ -251,7 +251,8 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.date && !!formik.errors.date}
-                max={new Date().toISOString().split("T")[0]}
+                // max={new Date().toISOString().split("T")[0]}
+                max="2018-12-31"
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.date}
