@@ -82,7 +82,8 @@ const PatientPlanComponent = () => {
   const [training_type, setTraining_type] = useState([])
   const [selected_patient_category, setSelected_patient_category] = useState()
   const [selected_training_type, setSelected_training_type] = useState()
-  const [activeTab, setActiveTab] = useState("Monday")
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const [activeTab, setActiveTab] = useState(editable?today:"Monday")
   const [exerciseDifficuilty, setExerciseDifficuilty] = useState()
   const [planValidFrom, setPlanValidFrom] = useState('')
   const [planValidTo, setPlanValidTo] = useState(planEndAt || '')
@@ -333,6 +334,7 @@ const PatientPlanComponent = () => {
       setPlanMessage(plan_message?.data?.data)
     }
   }, [plan_message])
+  
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
@@ -388,7 +390,6 @@ const PatientPlanComponent = () => {
                     selected_training_type={selected_training_type}
                     planStartAt={planStartAt}
                     planEndAt={planEndAt}
-
                   />
                 )}
               </Tab>)
