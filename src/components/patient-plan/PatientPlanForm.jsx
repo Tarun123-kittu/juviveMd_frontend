@@ -42,7 +42,7 @@ const PatientPlanForm = ({
 }) => {
   const [toastShown, setToastShown] = useState(false); // Track if toast has been shown
 
-  console.log("Days====>", days, "Day===>", eventData, "Date--", selectedDate, formattedDate);
+  console.log("Days====>", days, "Day===>", eventData, "Date--", selectedDate,"formattedDate--", formattedDate);
   const toastIdRef = useRef(null);
   const newDate = new Date(selectedDate);
   const jsDayIndex = selectedDate?.getDay();
