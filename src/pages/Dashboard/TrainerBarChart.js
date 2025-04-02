@@ -3,8 +3,18 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const TrainerBarChart = ({ trainerChatResponseReportData }) => {
+  // Get trainer names
   const trainerNames = trainerChatResponseReportData?.map((item) => item.trainerName) || [];
-  const trainerResponseTimes = trainerChatResponseReportData?.map((item) => Math.floor(parseFloat(item.avgResponseTime))) || [];
+
+  // Get average response times in seconds for the trainers
+  const trainerResponseTimes = trainerChatResponseReportData?.map((item) => {
+    return Math.floor(parseFloat(item.avgResponseTime)) || 0; // Ensure each value is a number
+  }) || [];
+  
+  // Log trainer response times for debugging
+  console.log(trainerResponseTimes, "trainerResponseTimes");
+
+  // Chart options
   const options = {
     chart: {
       type: "column",
@@ -22,7 +32,7 @@ const TrainerBarChart = ({ trainerChatResponseReportData }) => {
     yAxis: {
       min: 0,
       title: {
-        text: "Response Time (minutes)", // Show minutes on Y-axis
+        text: "Response Time (seconds)", // Show seconds on Y-axis for clarity
       },
       labels: {
         formatter: function () {
@@ -32,8 +42,9 @@ const TrainerBarChart = ({ trainerChatResponseReportData }) => {
     },
     tooltip: {
       formatter: function () {
-        return `${this.y} sec`; // Show seconds in tooltip
-      }
+        return `${Math.floor(this.y / 60)} min ${this.y % 60} sec`;
+
+      },
     },
     plotOptions: {
       column: {
@@ -44,7 +55,8 @@ const TrainerBarChart = ({ trainerChatResponseReportData }) => {
     },
     series: [
       {
-        data: [trainerResponseTimes],
+        name: "Average Response Time", // Add a name for clarity in the legend
+        data: trainerResponseTimes, // Use the array of seconds directly for plotting
         color: "rgba(151, 208, 195, 1)",
         showInLegend: false,
       },
