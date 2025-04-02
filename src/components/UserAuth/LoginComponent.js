@@ -23,7 +23,7 @@ const validationSchema = Yup.object({
     .matches(/[a-zA-Z0-9]/, "Password can only contain letters and numbers")
     .required("Password is required"),
 });
-
+ 
 const LoginComponent = () => {
   const token = Cookies.get("authToken");
   const navigate = useNavigate();
