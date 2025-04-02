@@ -52,7 +52,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
         trainers_list.map((trainer) => trainer.id), // Validate trainer ID against the list
         `Trainer must be one of: ${trainers_list.map((trainer) => trainer.firstName).join(", ")}`
       ),
-      
+    patient_category: Yup.string().required("Please select a category").oneOf(categoryData, `Category must be one of: ${categoryData.join(", ")}`),
   });
 
   // Formik setup
@@ -289,7 +289,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-          <Col lg={4}> 
+          {/* <Col lg={4}>
             <label>Category</label>
             <select
               name="patient_category"
@@ -304,8 +304,29 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
                 </option>
               ))}
             </select>
+          </Col> */}
+          <Col lg={4}>
+            <Form.Group className="mb-2">
+              <Form.Label>Category</Form.Label>
+              <Form.Select
+                name="patient_category"
+                value={formik.values.patient_category}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.patient_category && !!formik.errors.patient_category}
+              >
+                <option>Select category</option>
+                {categoryData?.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.patient_category}
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
-
         </Row>
         <Row>
           <Col lg={6}>
