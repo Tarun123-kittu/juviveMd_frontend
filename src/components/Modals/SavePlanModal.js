@@ -41,7 +41,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     // const date = planValidTo ? new Date(planValidTo) : new Date();
     // date.setDate(date.getDate()); // Add 1 day
     // setNewFromDate()
-    return ;
+    return new Date().toISOString().split('T')[0];
   }
   console.log("planValidFrom", planValidFrom, "planValidTo", planValidTo, "minDate", minDate, "editable", editable,latestPlanStartDate,latestPlanEndDate,hasPlan)
 
