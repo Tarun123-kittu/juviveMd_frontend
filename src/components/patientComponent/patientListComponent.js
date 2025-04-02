@@ -28,6 +28,7 @@ import { TiArrowRight } from 'react-icons/ti';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowRight from '../../Images/button_right.svg'
 import ImagePreview from '../../common/imagePreview/ImagePreviewer'
+import { showToast } from '../../common/toast/showToast'
 
 const Reception_patient_list = ({ showButtons }) => {
     const elementRef = useRef(null);
@@ -210,7 +211,12 @@ const Reception_patient_list = ({ showButtons }) => {
     }, [is_patient_deleted])
 
     const handleUpdatePaymentStatus = (id) => {
+
         let payment_status = payment_status_received
+        if (payment_status === null) {
+            showToast("please select status", "ERROR")
+            return;
+        }
         if (payment_status_received)
             dispatch(update_patient_payment_api({ id, payment_status }))
     }
