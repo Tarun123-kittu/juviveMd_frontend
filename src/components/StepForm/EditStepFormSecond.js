@@ -31,6 +31,7 @@ const EditStepFormSecond = ({
     );
   };
   const handleClose = () => {
+    setStep(2);
   setStep_form_open(false);
    setIs_health_issue(true);
   };

@@ -1,7 +1,7 @@
 import React from 'react'
 import Spinner from "react-bootstrap/Spinner";
 
-const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModal, handleUpdate, setStep, onboarding_process }) => {
+const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModal,handleConfirm, setStep, onboarding_process }) => {
   const handleBack = () => {
     setIs_health_issue(false)
     setStep_form_open(true)
@@ -18,7 +18,7 @@ const ConfirmForm = ({ setIs_health_issue, setStep_form_open, setshowPateintModa
       </ol>
       <div className='d-flex gap-3 justify-content-center'>
         <button className='cmn_btn border-btn ps-5 pe-5' onClick={() => handleBack()}>Back</button>
-        {!onboarding_process?.isLoading ? <button type="submit" className='cmn_btn ps-5 pe-5' onClick={() => handleUpdate()}>Save</button>
+        {!onboarding_process?.isLoading ? <button type="submit" className='cmn_btn ps-5 pe-5' onClick={() => handleConfirm()}>Save</button>
           :
           <button type="submit" className='cmn_btn ps-5 pe-5'><Spinner animation="border" role="status">
             <span className="visually-hidden">Loading...</span>

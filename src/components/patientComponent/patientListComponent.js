@@ -367,6 +367,7 @@ const Reception_patient_list = ({ showButtons }) => {
                                             <button className="btn_info active" style={{
                                                 color: patient?.status === 1 ? '#0c5e62' : 'red',
                                             }}>
+                                                {console.log(patient?.status,"patient?.status")}
                                                 {patient?.status === 0 ? "Inactive" : "Active"}</button>
                                         </td>
                                         {tab === "paymentPending" && <td>

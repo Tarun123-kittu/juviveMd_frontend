@@ -10,7 +10,7 @@ import { get_exercise } from '../../redux/slices/exerciseSlice/getExercise';
 import Spinner from 'react-bootstrap/Spinner';
 import InfoIcon from '../../Images/info.png'
 import { RxCross2 } from "react-icons/rx";
-
+import { showToast } from '../../common/toast/showToast';
 function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiveTab }) {
     const dispatch = useDispatch();
     const fileInputRef = useRef(null);
@@ -125,14 +125,17 @@ function UploadFileModal({ setShowFileUploadModal, showFileUploadModal, setActiv
  const handleUpload = () => {
         if (!uploadFile) return
         dispatch(upload_exercises({ file: uploadFile }))
+        
     };
 
     useEffect(() => {
         if (is_file_uploades?.isSuccess) {
-            // handleClose()
             dispatch(get_exercise({ page: 1, tab: "approvalRequest" }))
             setShow_close_button(true)
             setShow_success(is_file_uploades?.data?.data?.processedExercises)
+            if(is_file_uploades?.data?.data?.processedExercises.length > 0 ){
+                showToast('Exercises uploaded successfully.',"SUCCESS")
+            }
         }
         if (is_file_uploades?.isError) {
             console.log(is_file_uploades);

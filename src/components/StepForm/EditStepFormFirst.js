@@ -136,7 +136,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
                 isInvalid={formik.touched.firstName && !!formik.errors.firstName}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
+                {formik.errors.firstName}
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
@@ -153,7 +153,7 @@ const EditStepFormFirst = ({ gender, goal, trainers_list, setStep, patient_all_d
                 isInvalid={formik.touched.lastName && !!formik.errors.lastName}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
+                {formik.errors.lastName}
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
