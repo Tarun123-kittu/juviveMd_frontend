@@ -9,6 +9,7 @@ import Logo from "../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
 import "./reception.css";
 import { patient_validate_token, clear_patient_validate_token_state } from "../../redux/slices/patientSlice/patientValidatePasswordToken";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const PatientResetPassword = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const PatientResetPassword = () => {
     const { token } = useParams();
     const [data, setData] = useState(false)
     const [password_created, setPassword_created] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const resetPasswordState = useSelector((store) => store.PATIENT_RESET_PASSWORD);
     const is_token_valid = useSelector((store) => store.PATIENT_VALIDATE_TOKEN);
@@ -59,15 +62,24 @@ const PatientResetPassword = () => {
 
     }, [is_token_valid])
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
     return (
         <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
             <div className="reset_form authWrapper">
                 <div className="text-center">
                     <img src={Logo} alt="logo" />
                 </div>
-                <h3 className="mb-1">Create Password</h3>
-                <h5>Create your password for your account so you can login and access all features.</h5>
-
+                {!password_created && (<>
+                    <h3 className="mb-1">Create Password</h3>
+                    <h5>Create your password for your account so you can login and access all features.</h5>
+                </>)}
                 <Formik
                     initialValues={{ password: "", confirmPassword: "" }}
                     validationSchema={validationSchema}
@@ -84,12 +96,15 @@ const PatientResetPassword = () => {
                                             <label htmlFor="password">Create new password</label>
                                             <div className="position-relative password_icon">
                                                 <Field
-                                                    type="password"
+                                                    type={showPassword ? "text" : "password"}
                                                     name="password"
                                                     placeholder="Enter your new password"
                                                     className="form-control"
                                                     disabled={!data}
                                                 />
+                                                <span onClick={togglePasswordVisibility}>
+                                                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                                </span>
                                                 <ErrorMessage
                                                     name="password"
                                                     component="div"
@@ -102,12 +117,15 @@ const PatientResetPassword = () => {
                                             <label htmlFor="confirmPassword">Confirm password</label>
                                             <div className="position-relative password_icon">
                                                 <Field
-                                                    type="password"
+                                                    type={showConfirmPassword ? "text" : "password"}
                                                     name="confirmPassword"
                                                     placeholder="Confirm your password"
                                                     className="form-control"
                                                     disabled={!data}
                                                 />
+                                                <span onClick={toggleConfirmPasswordVisibility}>
+                                                    {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                                                </span>
                                                 <ErrorMessage
                                                     name="confirmPassword"
                                                     component="div"
