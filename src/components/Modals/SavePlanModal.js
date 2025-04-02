@@ -16,24 +16,30 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
     return date.toISOString().split('T')[0];
   });
   function handleLocalSavePlan() {
-    if (newFromDate !== undefined) {
-      setErrorFromDate(false)
+    if(!editable)
+    {
+      if (newFromDate !== undefined) {
+        setErrorFromDate(false)
+      }
+      else {
+        setErrorFromDate(true)
+        // showToast("please select date", "ERROR")
+        return;
+      }
+      if (newToDate !== undefined) {
+        setErrorToDate(false)
+        handleSavePlan(newFromDate,newToDate)
+      }
+      else {
+        setErrorToDate(true)
+        // showToast("please select date", "ERROR")
+        return;
+      }
     }
-    else {
-      setErrorFromDate(true)
-      // showToast("please select date", "ERROR")
-      return;
-    }
+    else
+    handleSavePlan(planValidFrom,planValidTo)
 
-    if (newToDate !== undefined) {
-      setErrorToDate(false)
-      handleSavePlan(newFromDate,newToDate)
-    }
-    else {
-      setErrorToDate(true)
-      // showToast("please select date", "ERROR")
-      return;
-    }
+
   }
 
   
@@ -211,7 +217,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
               // max={getMaxStartDate(minDate)}
               />
               {
-                errorFromDate && !newFromDate && <div className="error text-danger">Date is required</div>
+                errorFromDate && !editable && !newFromDate && <div className="error text-danger">Date is required</div>
 
               }
             </Form.Group>

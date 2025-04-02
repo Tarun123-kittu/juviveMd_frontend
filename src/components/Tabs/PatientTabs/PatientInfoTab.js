@@ -179,7 +179,7 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
       <FeedbackModal
         setShowReviewModal={setShowReviewModal}
         showReviewModal={showReviewModal}
-        feedbackValue={feedbackValue}
+        feedbackValue=  {feedbackValue}
       />
       <DeleteModal showDeleteModal={showDeleteModal} setshowDeleteModal={setShowDeleteModal} handleDelete={handleDelete} loading={is_plan_deleted?.isLoading} />
       <ImagePreview setShowPopup={setShowPopup} showPopup={showPopup} image={currImage} />
