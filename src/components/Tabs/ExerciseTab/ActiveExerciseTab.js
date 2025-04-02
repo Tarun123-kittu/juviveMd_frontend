@@ -21,6 +21,7 @@ import { delete_exercise, clear_delete_exercise_state } from '../../../redux/sli
 import DeleteModal from '../../Modals/DeleteModal';
 import { formatDate } from '../../../common/formatDate/formatDate';
 import ImagePreview from '../../../common/imagePreview/ImagePreviewer';
+import { showToast } from '../../../common/toast/showToast';
 
 
 const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setToggleFilter, setActiveTab, pathname, ExercisePermission, body_parts, exerciseDifficuilty, setIsTabActive, setPage, page, commonData, trainingType ,filters}) => {
@@ -76,6 +77,11 @@ const ActiveExerciseTab = ({ tab, showDropdown, exercise_category, admin, setTog
   }, [exercise_data])
 
   const handleUpdateStatus = (id) => {
+    if(status===null)
+    {
+      showToast("please select status","ERROR")
+      return;
+    }
     dispatch(update_exercise_status({ id, status }))
   }
 
