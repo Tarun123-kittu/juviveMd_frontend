@@ -268,7 +268,8 @@ const StepFormFirst = ({ gender, goal, trainers_list, setStep, setStepOneFullDat
                 value={formik.values.date}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                max={new Date().toISOString().split("T")[0]} // Disable future dates
+                // max={new Date().toISOString().split("T")[0]} // Disable future dates
+                max="2018-12-31"
                 isInvalid={formik.touched.date && !!formik.errors.date}
               />
               <Form.Control.Feedback type="invalid">
