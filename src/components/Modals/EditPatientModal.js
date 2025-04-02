@@ -120,7 +120,9 @@ console.log(patient_data?.data?.data?.optimal_weight?.unit,"patient_data?.data?.
     }, [patient_data])
 
     const handleUpdate = () => {
-        dispatch(update_patient({ id: patientId, trainer_name, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency, patient_details: patient_data?.data?.data }))
+        console.log("is_health_issue0---",is_health_issue);
+        console.log("step---",step);
+        dispatch(update_patient({ id: patientId, trainer_name,step, stepOnefullData, selected_health_issue, height_unit, weight_unit, stepThreefullData, third_step_weight_unit, step_four_additional_information, workout_frequency, patient_details: patient_data?.data?.data }))
     }
 
     useEffect(() => {
@@ -185,7 +187,7 @@ console.log(patient_data?.data?.data?.optimal_weight?.unit,"patient_data?.data?.
                     {step === 2 && step_form_open && <EditStepFormSecond setStep_form_open={setStep_form_open} setIs_health_issue={setIs_health_issue} health_issue={health_issue} setStep={setStep} patient_all_data={patient_all_data} setSelected_health_issue={setSelected_health_issue} selected_health_issue={selected_health_issue} />}
                     {step === 3 && step_form_open && <EditStepFormThird discomfort_issue={discomfort_issue} activity_level={activity_level} weekDays={weekDays} sleep_rate={sleep_rate} workout_type={workout_type} workout_place={workout_place} equipments={equipments} workout_times={workout_times} setStep={setStep} patient_all_data={patient_all_data} setThird_step_Weight_unit={setThird_step_Weight_unit} third_step_weight_unit={third_step_weight_unit} setStepThreeFullData={setStepThreeFullData} stepThreefullData={stepThreefullData} />}
                     {step === 4 && step_form_open && <EditLastStep setStep={setStep} setStep_four_additional_information={setStep_four_additional_information} step_four_additional_information={step_four_additional_information} handleUpdate={handleUpdate} is_patient_updated={is_patient_updated} />}
-                    {is_health_issue && <ConfirmForm setIs_health_issue={setIs_health_issue}  setStep={setStep} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} handleUpdate={handleUpdate}  />}
+                    {is_health_issue && <ConfirmForm setIs_health_issue={setIs_health_issue}  setStep={setStep} setStep_form_open={setStep_form_open} setshowPateintModal={setshowPateintModal} handleConfirm={handleUpdate}  />}
                 </Modal.Body>
             </Modal>
         </div>
