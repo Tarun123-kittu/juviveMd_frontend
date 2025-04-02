@@ -1,3 +1,13 @@
+.doc_image_view img {
+  height: 250px;
+  object-fit: cover;
+  border-radius: 14px;
+  width: 100%;
+}
+.doc_image_view{
+  gap: 24px;
+}
+
 .modal-content .cmn_btn {
   height: 35px;
   font-size: 13px;

@@ -6,7 +6,8 @@ import DurationImage from "../../Images/duration-image.png";
 import Feedback from "../../Images/feed.png";
 import SadImage from "../../Images/sad_image.png";
 import Rating from "../../common/ratings/Rating";
-
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 
 const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) => {
   const handleClose = () => {
@@ -106,7 +107,13 @@ const FeedbackModal = ({ showReviewModal, setShowReviewModal, feedbackValue }) =
             <ul className="d-flex gap-2">
               {feedbackValue?.files?.map((file, i) => {
                 return (
-                  <li key={i}><img src={file} alt="feedback" /></li>
+                  <li key={i}><PhotoProvider maskOpacity={0.7} speed={() => 800}  easing={(type) => (type === 2 ? 'cubic-bezier(0.36, 0, 0.66, -0.56)' : 'cubic-bezier(0.34, 1.56, 0.64, 1)')}>
+                  <PhotoView src={file}>
+                    {/* <li key={i}> */}
+                      <img src={file} alt="feedback" />
+                    {/* </li> */}
+                  </PhotoView>     
+                </PhotoProvider></li>
                 )
               })}
             </ul>
