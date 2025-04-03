@@ -53,11 +53,12 @@ const PatientData = () => {
   const [exercisePlanId, setExercisePlanId] = useState(null)
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [hasPlan, setHasPlan] = useState()
+
   const [patient_category, setPatient_category] = useState("")
   console.log(patient_category, "userpatient_category")
   const { patientId } = location?.state ? location?.state : location
   const patient_details = useSelector((store) => store.SELECTED_PATIENT_DETAILS)
-  console.log(patient_details,"patDets--")
+  console.log(patient_details, "patDets--")
   const common_data = useSelector((store) => store.COMMON_DATA)
   const isPatientPlanEditableResponse = useSelector((store) => store.IS_PATIENT_PLAN_EDITABLE)
   const [patientPlanPermissions] = getRoutePermissions(permission_constants.PATIENTPLAN)
@@ -75,7 +76,7 @@ const PatientData = () => {
   }, []);
   console.log("get_patient_plan_response--", get_patient_plan_response, patientId, hashDate)
 
-  console.log(get_patient_plan_response?.data?.data, "get_patient_plan_response--", isPatientPlanEditableResponse, isPatientPlanEditableDate,latestPlanEndDate)
+  console.log(get_patient_plan_response?.data?.data, "get_patient_plan_response--", isPatientPlanEditableResponse, isPatientPlanEditableDate, latestPlanEndDate)
   useEffect(() => {
     if (get_patient_plan_response?.isSuccess) {
 
@@ -140,21 +141,21 @@ const PatientData = () => {
     }
 
   }, [get_patient_plan_response, isPatientPlanEditableResponse, isPatientPlanEditableDate, hashDate]);
-console.log("hashDate==>",hashDate)
+  console.log("hashDate==>", hashDate)
   // useEffect(()=>{
   //   if(selectedDate>latestPlanEndDate)setCanEditPatientPlan(false);
   // },[])
 
-  useEffect(()=>{
-    if(hashDate>latestPlanEndDate)setCanEditPatientPlan(false);
-  },[hashDate])
+  useEffect(() => {
+    if (hashDate > latestPlanEndDate) setCanEditPatientPlan(false);
+  }, [hashDate])
   const getDateForDay = (dayName) => {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const currentDate = inputSelectedDate ? inputSelectedDate : new Date();
     const currentDayIndex = currentDate.getDay();
     const targetDayIndex = daysOfWeek.indexOf(dayName);
 
-    const startOfWeek = new Date(currentDate);    
+    const startOfWeek = new Date(currentDate);
     const dayOffset = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
     startOfWeek.setDate(currentDate.getDate() - dayOffset);
 
@@ -163,14 +164,14 @@ console.log("hashDate==>",hashDate)
 
     return targetDate;
   };
-  
+
   const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currentDate = new Date();
   const currentDay = dayOfWeek[currentDate.getDay()];
   const [activeTab, setActiveTab] = useState(currentDay);
   const [selectedDate, setSelectedDate] = useState(getDateForDay(currentDay));
   const [formattedDate, setFormattedDate] = useState("");
-  const [selectedExerciseDays,setSelectedExerciseDays] = useState([])
+  const [selectedExerciseDays, setSelectedExerciseDays] = useState([])
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const current = new Date();
 
@@ -364,10 +365,7 @@ console.log("hashDate==>",hashDate)
                         <strong>Workout Place</strong>
                         <span>{patient_data?.workout_place}</span>
                       </li>
-                      {patient_data?.fat_percentage?.value > 0 && <li>
-                        <strong>Body fat %</strong>
-                        <span>{patient_data?.fat_percentage?.value}%</span>
-                      </li>}
+
                       <li>
                         <strong>Workout Type</strong>
                         <span>{patient_data?.workout_types}</span>
@@ -425,8 +423,14 @@ console.log("hashDate==>",hashDate)
                       <div className="link_image d-flex justify-content-center align-items-center">
                         <img src="/bmi_image.png" alt="email" />
                       </div>
-                      <span>BMI</span>
-                      <p className="mb-0">{currentBmi}</p>
+                      {/* <span>BMI</span> */}
+                      {/* <p className="mb-0">{currentBmi}</p>
+                       */}
+                       <span>Body Fat</span>
+                        <p className="mb-0">{patient_data?.fat_percentage?.value > 0 && patient_data?.fat_percentage?.value } %</p>
+                      {/* {patient_data?.fat_percentage?.value > 0 && <li>
+                        <span>{patient_data?.fat_percentage?.value}%</span>
+                      </li>} */}
                     </li>
                   </ul>
                   <div className="footer_bmi">
@@ -469,8 +473,8 @@ console.log("hashDate==>",hashDate)
             />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category, selectedDate, formattedDate,selectedExerciseDays } })}>Edit Plan</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category,latestPlanStartDate,latestPlanEndDate,selectedExerciseDays } }) }}>+Create Plan</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category, selectedDate, formattedDate, selectedExerciseDays } })}>Edit Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category, latestPlanStartDate, latestPlanEndDate, selectedExerciseDays } }) }}>+Create Plan</button>}
           </div>
         </div>
         <Tabs

@@ -40,11 +40,20 @@ const PatientPlanForm = ({
   planStartAt,
   planEndAt
 }) => {
+
+
+  const [isClickedOnAddRowBtn, setIsClickedOnAddRowBtn] = useState(false)
+  // const [isDuplicateSet,setIsDuplicateSet]=useState(false)
+
+
+
+
   const [toastShown, setToastShown] = useState(false); // Track if toast has been shown
 
-  console.log("Days====>", days, "Day===>", eventData, "Date--", selectedDate,"formattedDate--", formattedDate);
+  console.log("Days====>", days, "Day===>", eventData, "Date--", selectedDate, "formattedDate--", formattedDate);
   const toastIdRef = useRef(null);
   const newDate = new Date(selectedDate);
+ 
   const jsDayIndex = selectedDate?.getDay();
   const selectedDayIndex = (jsDayIndex + 6) % 7;;
   let dayDifference = index - selectedDayIndex;
@@ -68,13 +77,13 @@ const PatientPlanForm = ({
       // });
       toast.dismiss();
       // toast.error("Sorry, you can't edit past plans!");
-      showToast("Sorry, you can't edit past plans!","ERROR")
+      showToast("Sorry, you can't edit past plans!", "ERROR")
       setToastShown(true);
 
     }
 
     getCurrentDate(newDate); // Pass the date as before
-  
+
   }, [newDate, getCurrentDate]);
 
 
@@ -322,7 +331,8 @@ const PatientPlanForm = ({
     });
   };
 
-  const addNewFlexibilityToCardio = (i) => {
+  const addNewFlexibilityToCardio = (i,isDuplicateSet) => {
+    setIsClickedOnAddRowBtn(false)
     setDays((prevDays) => {
       if (!prevDays || !eventData || !prevDays[eventData]) {
         console.error("Invalid eventData or days structure");
@@ -348,17 +358,37 @@ const PatientPlanForm = ({
       });
 
       if (hasEmptySet) {
-        toast.error("Cannot add new set, some values are missing in the previous fields.");
+        showToast("Cannot add new set, some values are missing in the previous fields.","ERROR")
+        // toast.error("Cannot add new set, some values are missing in the previous fields.");
         return prevDays;
       }
-      currentExercise.sets = [
-        ...currentExercise.sets,
-        {
-          reps: 0,
-          time: { value: 0, unit: "sec" },
-          weight: { value: 0, unit: "kg" },
-        },
-      ];
+      const lastSet=currentExercise.sets[currentExercise.sets.length-1]
+      console.log("currentExercise Sets--",currentExercise,"lastSet--",lastSet,"length--",currentExercise.sets.length)
+
+      if(isDuplicateSet)
+      {
+        currentExercise.sets.push(lastSet)
+      }
+      else
+      {
+        currentExercise.sets = [
+          ...currentExercise.sets,
+          {
+            reps: 0,
+            time: { value: 0, unit: "sec" },
+            weight: { value: 0, unit: "kg" },
+          },
+        ];
+      }
+
+      // currentExercise.sets = [
+      //   ...currentExercise.sets,
+      //   {
+      //     reps: 0,
+      //     time: { value: 0, unit: "sec" },
+      //     weight: { value: 0, unit: "kg" },
+      //   },
+      // ];
 
       updatedDays[eventData] = currentDayExercises;
       return updatedDays;
@@ -767,12 +797,21 @@ const PatientPlanForm = ({
                       <div className="d-flex align-items-center mb-2">
                         <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                         <button
-                          onClick={() => addNewFlexibilityToCardio(i)}
+                          // onClick={() => addNewFlexibilityToCardio(i)}
+                          onClick={()=>setIsClickedOnAddRowBtn(true)}
                           className="cmn_btn add_row"
                           disabled={isDisabled}
                         >
                           Add Row
                         </button>
+                        {
+                          isClickedOnAddRowBtn && (
+                            <>
+                              <button onClick={()=>addNewFlexibilityToCardio(i,true)}>Duplicate prev Set</button>
+                              <button onClick={() => addNewFlexibilityToCardio(i,false)}>Create new set</button>
+                            </>
+                          )
+                        }
                       </div>
                       {day?.sets?.map((cardio, index) => (
                         <Form.Group className="mb-2">
