@@ -9,12 +9,15 @@ import Logo from "../../../Images/juviveLogo.svg";
 import Spinner from "react-bootstrap/Spinner";
 import "./ResetPassword.css";
 import { user_validate_token, clear_user_validate_token_state } from "../../../redux/slices/authSlice/userValidatePasswordToken";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
   const [data, setData] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const resetPasswordState = useSelector((store) => store.RESET_PASSWORD);
   const is_token_valid = useSelector((store) => store.USER_VALIDATE_TOKEN);
@@ -47,16 +50,24 @@ const ResetPassword = () => {
   useEffect(() => {
     if (is_token_valid?.isSuccess) {
       setData(is_token_valid?.message?.data)
-      if(!is_token_valid?.message?.data){
+      if (!is_token_valid?.message?.data) {
         toast.error("Your token has been expired")
       }
       dispatch(clear_user_validate_token_state())
     }
-    if(is_token_valid?.isError){
+    if (is_token_valid?.isError) {
       toast.error("This Link has been expired")
     }
-   
+
   }, [is_token_valid])
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <div className="reset_wrapper min-vh-100 d-flex align-items-center justify-content-center">
@@ -80,12 +91,15 @@ const ResetPassword = () => {
                 <label htmlFor="password">Create new password</label>
                 <div className="position-relative password_icon">
                   <Field
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Enter your new password"
                     className="form-control"
                     disabled={!data}
                   />
+                  <span onClick={togglePasswordVisibility}>
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  </span>
                   <ErrorMessage
                     name="password"
                     component="div"
@@ -98,12 +112,15 @@ const ResetPassword = () => {
                 <label htmlFor="confirmPassword">Confirm password</label>
                 <div className="position-relative password_icon">
                   <Field
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     placeholder="Confirm your password"
                     className="form-control"
                     disabled={!data}
                   />
+                  <span onClick={toggleConfirmPasswordVisibility}>
+                    {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                  </span>
                   <ErrorMessage
                     name="confirmPassword"
                     component="div"
@@ -118,8 +135,8 @@ const ResetPassword = () => {
                   className="cmn_btn w-100"
                   disabled={!data}
                 > Create Password  {resetPasswordState?.isLoading && <Spinner animation="border" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>}
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>}
                 </button>
               </div>
             </Form>
