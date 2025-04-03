@@ -796,6 +796,7 @@ const PatientPlanForm = ({
                     <div className="mt-3">
                       <div className="d-flex align-items-center mb-2">
                         <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
+                        <div className="add_row_drop">
                         <button
                           // onClick={() => addNewFlexibilityToCardio(i)}
                           onClick={()=>setIsClickedOnAddRowBtn((prev)=>!prev)}
@@ -806,12 +807,13 @@ const PatientPlanForm = ({
                         </button>
                         {
                           isClickedOnAddRowBtn && (
-                            <>
+                            <div className="row_submenu">
                               <button onClick={()=>addNewFlexibilityToCardio(i,true)}>Duplicate prev Set</button>
                               <button onClick={() => addNewFlexibilityToCardio(i,false)}>Create new set</button>
-                            </>
+                            </div>
                           )
                         }
+                        </div>
                       </div>
                       {day?.sets?.map((cardio, index) => (
                         <Form.Group className="mb-2">

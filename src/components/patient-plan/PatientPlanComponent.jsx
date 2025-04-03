@@ -340,8 +340,18 @@ const PatientPlanComponent = () => {
   return (
     <div className="wrapper">
       <div className="inner_wrapper">
-        <div className="d-flex justify-content-between mb-2">
-          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className="mb-2 pointer_cur" />
+        <div className="d-flex justify-content-between mb-2 align-items-center">
+          <img onClick={() => navigate(-1)} src="/previous.png" alt="back" height={30} width={30} className=" pointer_cur" />
+
+         <div className="user_availability flex-grow-1">
+          <h5 className="m-0">Patient Availability</h5>
+          {Object.keys(days)?.map((day, i) => {
+            const isHighlighted = GetSelectedExerciseDays?.includes(day);
+            return <span key={i} className={isHighlighted ? "day_available" : ""}>
+                {day.slice(0,1)}
+            </span>
+          })}
+         </div>
           {plan_message?.isSuccess && <div className="message_class">
             <p>{planMessage}</p>
           </div>}
@@ -354,7 +364,7 @@ const PatientPlanComponent = () => {
             activeKey={activeTab}
             onSelect={(k) => { setActiveTab(k); }}
             id="controlled-tab-example"
-            className="mb-3 cmn_tabs exercise_add_tabs"
+            className="mb-3 cmn_tabs"
           >
             {Object.keys(days)?.map((day, i) => {
               const newDate = new Date(selectedDate);
@@ -366,11 +376,10 @@ const PatientPlanComponent = () => {
               const todayDate = new Date();
               todayDate?.setHours(0, 0, 0, 0);
               newDate?.setHours(0, 0, 0, 0);
-              const isHighlighted = GetSelectedExerciseDays?.includes(day);
 
               // Check if this tab should be disabled
               const isDisabled = newDate?.getTime() < todayDate?.getTime();
-              return (<Tab eventKey={day} title={<span className={isHighlighted ? "exerciseday custom-tab-header" : " custom-tab-header"}>{day}</span>} key={i} className={i} >
+              return (<Tab eventKey={day} title={day} key={i} className={i} >
                 {activeTab === day && (
                   <PatientPlanForm
                     isDisabled={isDisabled}
