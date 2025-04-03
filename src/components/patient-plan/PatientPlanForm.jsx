@@ -44,7 +44,25 @@ const PatientPlanForm = ({
 
   const [isClickedOnAddRowBtn, setIsClickedOnAddRowBtn] = useState(false)
   // const [isDuplicateSet,setIsDuplicateSet]=useState(false)
+  const buttonRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+        setIsClickedOnAddRowBtn(false);
+      }
+    };
+
+    if (isClickedOnAddRowBtn) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isClickedOnAddRowBtn]);
 
 
 
@@ -53,7 +71,7 @@ const PatientPlanForm = ({
   console.log("Days====>", days, "Day===>", eventData, "Date--", selectedDate, "formattedDate--", formattedDate);
   const toastIdRef = useRef(null);
   const newDate = new Date(selectedDate);
- 
+
   const jsDayIndex = selectedDate?.getDay();
   const selectedDayIndex = (jsDayIndex + 6) % 7;;
   let dayDifference = index - selectedDayIndex;
@@ -331,7 +349,7 @@ const PatientPlanForm = ({
     });
   };
 
-  const addNewFlexibilityToCardio = (i,isDuplicateSet) => {
+  const addNewFlexibilityToCardio = (i, isDuplicateSet) => {
     setIsClickedOnAddRowBtn(false)
     setDays((prevDays) => {
       if (!prevDays || !eventData || !prevDays[eventData]) {
@@ -358,19 +376,17 @@ const PatientPlanForm = ({
       });
 
       if (hasEmptySet) {
-        showToast("Cannot add new set, some values are missing in the previous fields.","ERROR")
+        showToast("Cannot add new set, some values are missing in the previous fields.", "ERROR")
         // toast.error("Cannot add new set, some values are missing in the previous fields.");
         return prevDays;
       }
-      const lastSet=currentExercise.sets[currentExercise.sets.length-1]
-      console.log("currentExercise Sets--",currentExercise,"lastSet--",lastSet,"length--",currentExercise.sets.length)
+      const lastSet = currentExercise.sets[currentExercise.sets.length - 1]
+      console.log("currentExercise Sets--", currentExercise, "lastSet--", lastSet, "length--", currentExercise.sets.length)
 
-      if(isDuplicateSet)
-      {
+      if (isDuplicateSet) {
         currentExercise.sets.push(lastSet)
       }
-      else
-      {
+      else {
         currentExercise.sets = [
           ...currentExercise.sets,
           {
@@ -796,22 +812,24 @@ const PatientPlanForm = ({
                     <div className="mt-3">
                       <div className="d-flex align-items-center mb-2">
                         <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
-                        <button
-                          // onClick={() => addNewFlexibilityToCardio(i)}
-                          onClick={()=>setIsClickedOnAddRowBtn((prev)=>!prev)}
-                          className="cmn_btn add_row"
-                          disabled={isDisabled}
-                        >
-                          Add Row
-                        </button>
-                        {
-                          isClickedOnAddRowBtn && (
-                            <>
-                              <button onClick={()=>addNewFlexibilityToCardio(i,true)}>Duplicate prev Set</button>
-                              <button onClick={() => addNewFlexibilityToCardio(i,false)}>Create new set</button>
-                            </>
-                          )
-                        }
+                        <div ref={buttonRef}>
+                          <button
+                            // onClick={() => addNewFlexibilityToCardio(i)}
+                            onClick={() => setIsClickedOnAddRowBtn((prev) => !prev)}
+                            className="cmn_btn add_row"
+                            disabled={isDisabled}
+                          >
+                            Add Row
+                          </button>
+                          {
+                            isClickedOnAddRowBtn && (
+                              <>
+                                <button onClick={() => addNewFlexibilityToCardio(i, true)}>Duplicate prev Set</button>
+                                <button onClick={() => addNewFlexibilityToCardio(i, false)}>Create new set</button>
+                              </>
+                            )
+                          }
+                        </div>
                       </div>
                       {day?.sets?.map((cardio, index) => (
                         <Form.Group className="mb-2">
