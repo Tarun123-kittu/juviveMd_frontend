@@ -163,13 +163,14 @@ console.log("hashDate==>",hashDate)
 
     return targetDate;
   };
-
+  
   const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const currentDate = new Date();
   const currentDay = dayOfWeek[currentDate.getDay()];
   const [activeTab, setActiveTab] = useState(currentDay);
   const [selectedDate, setSelectedDate] = useState(getDateForDay(currentDay));
   const [formattedDate, setFormattedDate] = useState("");
+  const [selectedExerciseDays,setSelectedExerciseDays] = useState([])
   const options = { weekday: 'long', day: 'numeric', month: 'long' };
   const current = new Date();
 
@@ -234,6 +235,7 @@ console.log("hashDate==>",hashDate)
 
   useEffect(() => {
     if (patient_details?.isSuccess) {
+      setSelectedExerciseDays(patient_details?.data?.data?.exercise_perweek)
       setPatient_data(patient_details?.data?.data)
       setHasPlan(patient_details?.data?.data?.has_plan)
       const bmi = calculateBMI(patient_details?.data?.data?.height?.value, patient_details?.data?.data?.weight?.value, patient_details?.data?.data?.height?.unit, patient_details?.data?.data?.weight?.unit)
@@ -467,8 +469,8 @@ console.log("hashDate==>",hashDate)
             />
           </h4>
           <div className="d-flex gap-2  position-absolute end-0 bg-white ps-3">
-            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category, selectedDate, formattedDate } })}>Edit Plan</button>}
-            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category,latestPlanStartDate,latestPlanEndDate } }) }}>+Create Plan</button>}
+            {(patientPlanPermissions?.canUpdate && !hideItems && canEditPatientPlan) && <button className="cmn_btn filter_btn mt-3" onClick={() => navigate("/patient-plan", { state: { patientId: patientId, editable: true, planStartAt, planEndAt, exercisePlanId, patient_category, selectedDate, formattedDate,selectedExerciseDays } })}>Edit Plan</button>}
+            {patientPlanPermissions?.canCreate && !hideItems && <button className="cmn_btn filter_btn mt-3" onClick={() => { dispatch(fetchPlanSuggestions({ patientId })); navigate("/patient-plan", { state: { patientId: patientId, editable: false, planStartAt, planEndAt, hasPlan, patient_category,latestPlanStartDate,latestPlanEndDate,selectedExerciseDays } }) }}>+Create Plan</button>}
           </div>
         </div>
         <Tabs

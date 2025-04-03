@@ -14,7 +14,7 @@ import { permission_constants } from "../../../constants/permissionConstants";
 import ImagePreview from "../../../common/imagePreview/ImagePreviewer";
 import { EyeSvg } from "../../SvgIcons/EyeSvg";
 import PatientLogsModal from "./PatientLogsModal";
-
+import Rating from "../../../common/ratings/Rating";
 const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_parts, exerciseDifficuilty, setLoading, hideItems, formattedDate, exercisePlanId, setExercisePlanId }) => {
   const dispatch = useDispatch()
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -158,9 +158,20 @@ const PatientInfoTab = ({ patientId, weekday, exercise_category, weekdays, body_
                     .join(' - ')
                   : "--------"}
               </td>
-              <td onClick={() => { feedbacks?.length > 0 && setShowReviewModal(true); setFeedbackValue(feedbacks[0]) }} className="text-decoration-underline cursor-pointer">
-                {feedbacks?.map((data) => feedbackData[data?.enjoyment]).filter(Boolean).join(', ')}
-              </td>
+                    {console.log(feedbacks, "feedbacks")}
+                  <td
+                    onClick={() => {
+                      if (feedbacks && feedbacks.length > 0) {
+                        setShowReviewModal(true);
+                        setFeedbackValue(feedbacks[0]);
+                      }
+                    }}
+                    className="text-decoration-underline cursor-pointer"
+                  >
+                    {feedbacks?.map((data, index) => (
+                        <Rating key={index} value={data?.rating || 0} readOnly />
+                      ))}
+                  </td>
 
               <td>
                 <div className="d-flex gap-2">

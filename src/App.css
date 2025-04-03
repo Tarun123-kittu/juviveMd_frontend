@@ -418,6 +418,18 @@ button.disable_opacity {
 h6.user_account a {
   font-size: 18px;
 }
+
+.exercise_add_tabs.cmn_tabs.nav-tabs .nav-link{
+    padding:0
+}
+.exercise_add_tabs.cmn_tabs.nav-tabs .nav-link span{
+    padding:9px 15px;
+    display:inline-block;
+}
+.exercise_add_tabs.cmn_tabs.nav-tabs .nav-link span.exerciseday{
+    background:#0c5e62;
+    color:#fff;
+}
 @media(max-width:1440px){
   .cmn_btn {
 height: 40px;
