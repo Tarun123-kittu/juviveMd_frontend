@@ -43,6 +43,7 @@ const PatientPlanForm = ({
 
 
   const [isClickedOnAddRowBtn, setIsClickedOnAddRowBtn] = useState(false)
+  const [isEmptySetValues, setIsEmptySetValues] = useState(false)
   // const [isDuplicateSet,setIsDuplicateSet]=useState(false)
   const buttonRef = useRef(null);
 
@@ -376,10 +377,13 @@ const PatientPlanForm = ({
       });
 
       if (hasEmptySet) {
-        showToast("Cannot add new set, some values are missing in the previous fields.", "ERROR")
+        setIsEmptySetValues(true)
+        // showToast("Cannot add new set, some values are missing in the previous fields.", "ERROR")
         // toast.error("Cannot add new set, some values are missing in the previous fields.");
         return prevDays;
       }
+
+      setIsEmptySetValues(false)
       const lastSet = currentExercise.sets[currentExercise.sets.length - 1]
       console.log("currentExercise Sets--", currentExercise, "lastSet--", lastSet, "length--", currentExercise.sets.length)
 
@@ -486,6 +490,7 @@ const PatientPlanForm = ({
   };
 
   const handleRemoveCardioFields = (i, index) => {
+    
     setDays((prevDays) => {
       const updatedDays = { ...prevDays };
       const currentDayExercises = [...updatedDays[eventData]];
@@ -498,6 +503,7 @@ const PatientPlanForm = ({
 
       return updatedDays;
     });
+    setIsEmptySetValues(false)
   };
 
   const handleRemoveFlexibilityFields = (i, index) => {
@@ -812,7 +818,7 @@ const PatientPlanForm = ({
                     <div className="mt-3">
                       <div className="d-flex align-items-center mb-2">
                         <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
-                        <div ref={buttonRef}>
+                        <div className="add_row_drop" ref={buttonRef}>
                           <button
                             // onClick={() => addNewFlexibilityToCardio(i)}
                             onClick={() => setIsClickedOnAddRowBtn((prev) => !prev)}
@@ -823,10 +829,10 @@ const PatientPlanForm = ({
                           </button>
                           {
                             isClickedOnAddRowBtn && (
-                              <>
+                              <div className="row_submenu">
                                 <button onClick={() => addNewFlexibilityToCardio(i, true)}>Duplicate prev Set</button>
                                 <button onClick={() => addNewFlexibilityToCardio(i, false)}>Create new set</button>
-                              </>
+                              </div>
                             )
                           }
                         </div>
@@ -982,7 +988,12 @@ const PatientPlanForm = ({
                             )}
                           </div>
                         </Form.Group>
+
                       ))}
+                      {
+                        isEmptySetValues && (<div className="error text-danger">Please enter Time duration, reps and weight before adding a new set</div>)
+                      }
+
                     </div>
                     <Col lg={12} className="pt-3">
                       <div className="d-flex justify-content-end gap-2">
