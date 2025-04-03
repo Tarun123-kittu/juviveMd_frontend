@@ -798,7 +798,7 @@ const PatientPlanForm = ({
                         <h5 className="flex-grow-1 mb-0">Sets and Reps</h5>{" "}
                         <button
                           // onClick={() => addNewFlexibilityToCardio(i)}
-                          onClick={()=>setIsClickedOnAddRowBtn(true)}
+                          onClick={()=>setIsClickedOnAddRowBtn((prev)=>!prev)}
                           className="cmn_btn add_row"
                           disabled={isDisabled}
                         >
