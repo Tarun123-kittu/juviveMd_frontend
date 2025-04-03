@@ -401,7 +401,7 @@ const PatientData = () => {
                 </div>
               </div>
               <div className="bmi_report d-flex flex-column">
-                <h5 className="mb-0">BMI / Reports</h5>
+                <h5 className="mb-0"> Reports</h5>
                 <div className="bmi_data ">
 
                   <ul className="align-items-center d-flex gap-2 h-100">
@@ -427,7 +427,7 @@ const PatientData = () => {
                       {/* <p className="mb-0">{currentBmi}</p>
                        */}
                        <span>Body Fat</span>
-                        <p className="mb-0">{patient_data?.fat_percentage?.value > 0 && patient_data?.fat_percentage?.value } %</p>
+                        <p className="mb-0">{patient_data?.fat_percentage?.value && patient_data?.fat_percentage?.value } %</p>
                       {/* {patient_data?.fat_percentage?.value > 0 && <li>
                         <span>{patient_data?.fat_percentage?.value}%</span>
                       </li>} */}
