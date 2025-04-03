@@ -16,7 +16,10 @@ const MessagesComponent = () => {
   const dispatch = useDispatch()
   const chatRef = useRef(null);
   const [chats, setChats] = useState([])
+  const [chatReceiverImage,setChatReceiverImage]=useState('')
+  console.log(chatReceiverImage,"img--")
   const [chatData, setChatData] = useState([])
+  
   const [openChat, setOpenChat] = useState(true)
   const [page, setPage] = useState(1)
   const [openChatName, setOpenChatName] = useState('')
@@ -39,6 +42,7 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (all_chats?.isSuccess) {
       setChats(all_chats?.data?.data?.items)
+      setChatReceiverImage(all_chats?.data?.data?.items[0]?.receiver?.image)
     }
   }, [all_chats])
 
@@ -193,7 +197,7 @@ const MessagesComponent = () => {
       dispatch(clear_read_message_state())
     }
   }, [is_message_read])
-  
+
   return (
     <div className='wrapper'>
       <div className='inner_wrapper'>
@@ -223,7 +227,7 @@ const MessagesComponent = () => {
                         </span>
                       </div>
                       <div className="message_text"><span className="user_message">{all_chats?.isLoading && chatIndex === i ? lastMessage : chat?.message?.length > 40 ? chat?.message?.slice(0, 40) + "..." : chat?.message}</span>{chat?.unreadCount > 0 && <span className="messsage_count">{chat?.unreadCount}</span>}</div>
-                   
+
                     </div>
                   </li>
                 )
@@ -232,7 +236,7 @@ const MessagesComponent = () => {
           </div>
           {(openChat && openChatId) ? <div className='messages_content flex-grow-1'>
             <div>
-              <div className='d-flex gap-2 align-items-center message_head '><img src={DefaultImage} alt="user image" />
+              <div className='d-flex gap-2 align-items-center message_head '><img src={chatReceiverImage?chatReceiverImage:DefaultImage} alt="user image" />
                 <div className='message_user flex-grow-1 '>
                   <h6>{openChatName}</h6>
                 </div>
@@ -242,87 +246,87 @@ const MessagesComponent = () => {
                 onScroll={handleScroll}
                 ref={chatRef}
               >
-              {Array.isArray(chatData) && chatData.length > 0 ? (
-  chatData?.map((item, index) => {
-    const myId = localStorage.getItem('user_id');
-    const isSentByMe = item.senderId === myId;
-    const createdAt = new Date(item.createdAt);
-    
-    // Calculate today's date and yesterday's date
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+                {Array.isArray(chatData) && chatData.length > 0 ? (
+                  chatData?.map((item, index) => {
+                    const myId = localStorage.getItem('user_id');
+                    const isSentByMe = item.senderId === myId;
+                    const createdAt = new Date(item.createdAt);
 
-    let displayDate;
-    if (createdAt.toDateString() === today.toDateString()) {
-      displayDate = "Today";
-    } else if (createdAt.toDateString() === yesterday.toDateString()) {
-      displayDate = "Yesterday";
-    } else {
-      displayDate = createdAt.toLocaleString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
-    }
+                    // Calculate today's date and yesterday's date
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
 
-    // Create a time string to display alongside the message
-    const timeString = createdAt.toLocaleString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
+                    let displayDate;
+                    if (createdAt.toDateString() === today.toDateString()) {
+                      displayDate = "Today";
+                    } else if (createdAt.toDateString() === yesterday.toDateString()) {
+                      displayDate = "Yesterday";
+                    } else {
+                      displayDate = createdAt.toLocaleString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      });
+                    }
 
-    return (
-      <div key={item.id}>
-        {/* Show the date only if it's the first message or different date from the previous message */}
-        {index === 0 || 
-         new Date(chatData[index - 1].createdAt).toLocaleDateString() !== createdAt.toLocaleDateString() ? (
-          <div className='message_date text-center'>{displayDate}</div>
-        ) : null}
+                    // Create a time string to display alongside the message
+                    const timeString = createdAt.toLocaleString('en-GB', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true
+                    });
 
-        {isSentByMe ? (
-          <ul className='conversation_list right_conversation ps-5 pe-3 w-50 ms-auto'>
-            <li className='d-flex gap-2 align-items-start conversation_item '>
-              <div className='message_user flex-grow-1'>
-                <div className='d-flex gap-2 justify-content-end'>
-                  <span className='message_time'>{timeString}</span>
-                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
-                </div>
-                <p className='message_dialogue'>{item.message}</p>
-              </div>
-              <img
-                src={item.sender?.image || localStorage.getItem('juvive_image_url')}
-                alt='Your'
-                width={35}
-                height={35}
-                className='round_image'
-              />
-            </li>
-          </ul>
-        ) : (
-          <ul className='conversation_list pe-5 ps-3 w-50'>
-            <li className='d-flex gap-2 align-items-start conversation_item'>
-              <img
-                src={item.sender?.image || DefaultImage}
-                alt='Sender'
-              />
-              <div className='message_user flex-grow-1'>
-                <div className='d-flex gap-2'>
-                  <h6>{item.sender?.firstName || 'Sender'}</h6>
-                  <span className='message_time'>{timeString}</span>
-                </div>
-                <p className='message_dialogue'>{item.message}</p>
-              </div>
-            </li>
-          </ul>
-        )}
-      </div>
-    );
-  })
-) : (
-  <h3 className='p-5 text-center'> <Loader /></h3>
-)}
+                    return (
+                      <div key={item.id}>
+                        {/* Show the date only if it's the first message or different date from the previous message */}
+                        {index === 0 ||
+                          new Date(chatData[index - 1].createdAt).toLocaleDateString() !== createdAt.toLocaleDateString() ? (
+                          <div className='message_date text-center'>{displayDate}</div>
+                        ) : null}
+
+                        {isSentByMe ? (
+                          <ul className='conversation_list right_conversation ps-5 pe-3 w-50 ms-auto'>
+                            <li className='d-flex gap-2 align-items-start conversation_item '>
+                              <div className='message_user flex-grow-1'>
+                                <div className='d-flex gap-2 justify-content-end'>
+                                  <span className='message_time'>{timeString}</span>
+                                  <h6>{item.sender?.firstName || localStorage.getItem('user_name')}</h6>
+                                </div>
+                                <p className='message_dialogue'>{item.message}</p>
+                              </div>
+                              <img
+                                src={item.sender?.image || localStorage.getItem('juvive_image_url')}
+                                alt='Your'
+                                width={35}
+                                height={35}
+                                className='round_image'
+                              />
+                            </li>
+                          </ul>
+                        ) : (
+                          <ul className='conversation_list pe-5 ps-3 w-50'>
+                            <li className='d-flex gap-2 align-items-start conversation_item'>
+                              <img
+                                src={item.sender?.image || DefaultImage}
+                                alt='Sender'
+                              />
+                              <div className='message_user flex-grow-1'>
+                                <div className='d-flex gap-2'>
+                                  <h6>{item.sender?.firstName || 'Sender'}</h6>
+                                  <span className='message_time'>{timeString}</span>
+                                </div>
+                                <p className='message_dialogue'>{item.message}</p>
+                              </div>
+                            </li>
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <h3 className='p-5 text-center'> <Loader /></h3>
+                )}
               </div>
             </div>
             {messageError && <span className='message_errors'>{messageError}</span>}
@@ -335,9 +339,9 @@ const MessagesComponent = () => {
             </div>}
 
           </div> : <div className='no_cahts'>
-                <img src={NoChats} alt="noChats" className='img-fluid'/>
-          <h5>No chat selected</h5>
-            </div>}
+            <img src={NoChats} alt="noChats" className='img-fluid' />
+            <h5>No chat selected</h5>
+          </div>}
         </div>
         {chats?.length === 0 && <div className='no_messages'>
           <Nodata />

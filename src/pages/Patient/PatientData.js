@@ -421,7 +421,7 @@ const PatientData = () => {
                     </li>
                     <li className="bmi_card flex-grow-1">
                       <div className="link_image d-flex justify-content-center align-items-center">
-                        <img src="/bmi_image.png" alt="email" />
+                        <img src="/body_fat.jpg" alt="body_fat" />
                       </div>
                       {/* <span>BMI</span> */}
                       {/* <p className="mb-0">{currentBmi}</p>
