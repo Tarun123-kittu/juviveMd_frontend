@@ -65,6 +65,8 @@ const PatientPlanComponent = () => {
   const hasPlan = location.state.hasPlan
   const planStartAt = location.state.planStartAt
   const planEndAt = location.state.planEndAt
+  const GetSelectedExerciseDays = location.state.selectedExerciseDays
+  console.log(GetSelectedExerciseDays,"GetSelectedExerciseDays")
   console.log("planStartCompAt--", planStartAt, "planEndAt--", planEndAt)
   const exercisePlanId = location.state.exercisePlanId
   console.log("exercisePlanId--", exercisePlanId)
@@ -352,7 +354,7 @@ const PatientPlanComponent = () => {
             activeKey={activeTab}
             onSelect={(k) => { setActiveTab(k); }}
             id="controlled-tab-example"
-            className="mb-3 cmn_tabs"
+            className="mb-3 cmn_tabs exercise_add_tabs"
           >
             {Object.keys(days)?.map((day, i) => {
               const newDate = new Date(selectedDate);
@@ -364,9 +366,11 @@ const PatientPlanComponent = () => {
               const todayDate = new Date();
               todayDate?.setHours(0, 0, 0, 0);
               newDate?.setHours(0, 0, 0, 0);
+              const isHighlighted = GetSelectedExerciseDays?.includes(day);
+
               // Check if this tab should be disabled
               const isDisabled = newDate?.getTime() < todayDate?.getTime();
-              return (<Tab eventKey={day} title={day} key={i} >
+              return (<Tab eventKey={day} title={<span className={isHighlighted ? "exerciseday custom-tab-header" : " custom-tab-header"}>{day}</span>} key={i} className={i} >
                 {activeTab === day && (
                   <PatientPlanForm
                     isDisabled={isDisabled}
