@@ -132,7 +132,7 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (is_message_sent?.isSuccess) {
       dispatch(get_whole_chat({ page, receiverId: openChatId }));
-      dispatch(recent_chats({ page: 1 }));
+      // dispatch(recent_chats({ page: 1 }));
       dispatch(read_message({ receiverId: openChatId }));
       dispatch(clear_send_message_state());
     }

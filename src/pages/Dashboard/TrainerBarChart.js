@@ -12,7 +12,7 @@ const TrainerBarChart = ({ trainerChatResponseReportData }) => {
   }) || [];
   
   // Log trainer response times for debugging
-  console.log(trainerResponseTimes, "trainerResponseTimes");
+  console.log(trainerResponseTimes, "trainerResponseTimes",trainerNames);
 
   // Chart options
   const options = {
