@@ -134,7 +134,7 @@ const PatientResetPassword = () => {
                                             </div>
                                         </div>
 
-                                        <div className="mt-3">
+                                        <div className="mt-3"> 
                                             <button
                                                 type="submit"
                                                 className="cmn_btn w-100"
