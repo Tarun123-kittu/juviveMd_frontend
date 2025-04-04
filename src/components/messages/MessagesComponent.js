@@ -42,7 +42,6 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (all_chats?.isSuccess) {
       setChats(all_chats?.data?.data?.items)
-      setChatReceiverImage(all_chats?.data?.data?.items[0]?.receiver?.image)
     }
   }, [all_chats])
 
@@ -61,6 +60,7 @@ const MessagesComponent = () => {
   useEffect(() => {
     if (wholeChat?.isSuccess) {
       const apiMessages = wholeChat?.data?.data?.items || [];
+      setChatReceiverImage(wholeChat?.data?.data?.items[0]?.receiver?.image)
 
       setChatData((prevChatData) => {
 
@@ -198,6 +198,8 @@ const MessagesComponent = () => {
     }
   }, [is_message_read])
 
+  console.log("chatsData", chatData)
+
   return (
     <div className='wrapper'>
       <div className='inner_wrapper'>
@@ -236,12 +238,12 @@ const MessagesComponent = () => {
           </div>
           {(openChat && openChatId) ? <div className='messages_content flex-grow-1'>
             <div>
-              <div className='d-flex gap-2 align-items-center message_head '><img src={chatReceiverImage?chatReceiverImage:DefaultImage} alt="user image" />
+              <div className='d-flex gap-2 align-items-center message_head '><img src={chatReceiverImage || DefaultImage} alt="user image" />
                 <div className='message_user flex-grow-1 '>
                   <h6>{openChatName}</h6>
                 </div>
               </div>
-              <div
+              <div       
                 className='user_chat'
                 onScroll={handleScroll}
                 ref={chatRef}
