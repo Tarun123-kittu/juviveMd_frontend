@@ -154,7 +154,7 @@ const SavePlanModal = ({ savePlanModal, setSavePlanModal, setPlanValidFrom, setP
                 placeholder="name@example.com"
                 value={planValidFrom}
                 onChange={handleStartDateChange}
-                // disabled={editable}
+                disabled={editable}
                 min={hasPlan? minDate:initialDate()}
                 // max={getMaxStartDate(minDate)}
               />
