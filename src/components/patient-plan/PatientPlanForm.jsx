@@ -66,7 +66,7 @@ const PatientPlanForm = ({
       //   duration: 3000, // Toast duration in milliseconds
       // });
       toast.dismiss();
-      toast.error("Sorry, you can't edit past dates!");
+      toast.error("Sorry, you can't edit past plans!");
       setToastShown(true);
 
     }
