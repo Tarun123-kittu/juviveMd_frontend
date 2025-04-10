@@ -195,6 +195,7 @@ const Reception_patient_list = ({ showButtons }) => {
 
     const handleUpdatePaymentStatus = (id) => {
         let payment_status = payment_status_received
+        if(payment_status_received)
         dispatch(update_patient_payment_api({ id, payment_status }))
     }
 
