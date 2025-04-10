@@ -55,7 +55,7 @@ const PatientPlanForm = ({
   const todayDate = new Date();
   todayDate.setHours(0, 0, 0, 0);
   newDate.setHours(0, 0, 0, 0);
-  console.log("Sorry, you can't edit past dates--", todayDate)
+  console.log("Sorry, you can't edit past plans--", todayDate)
   useEffect(() => {
     if (newDate?.getTime() < todayDate?.getTime() && !toastShown) {
       // if (toastIdRef.current) {
@@ -66,7 +66,7 @@ const PatientPlanForm = ({
       //   duration: 3000, // Toast duration in milliseconds
       // });
       toast.dismiss();
-      toast.error("Sorry, you can't edit past dates!");
+      toast.error("Sorry, you can't edit past plans!");
       setToastShown(true);
 
     }
