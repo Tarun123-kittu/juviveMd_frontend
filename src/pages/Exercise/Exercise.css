@@ -59,9 +59,10 @@ h4.ex_heading {
     outline: unset;
 }
 
-.status_dropdown_wrapper select option:checked {
+/* .status_dropdown_wrapper select option:checked, .status_dropdown_wrapper select option {
     background: var(--primary-color);
-}
+    color: #fff;
+} */
 
 ul.exercise_status button.btn {
     padding-top: 0;
