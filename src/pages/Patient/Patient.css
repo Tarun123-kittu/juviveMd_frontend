@@ -331,6 +331,13 @@ h4.report_title {
   border-radius: 5px;
   height: 100%;
   box-shadow: 0px 0px 11px rgba(0, 0, 0, 10%);
+  position: relative;
+}
+.blank_chart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .heart_headt {

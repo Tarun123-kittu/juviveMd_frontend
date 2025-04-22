@@ -9,6 +9,8 @@ const WeightProgressChart = ({ weightProgressData, patientId }) => {
     const dispatch = useDispatch();
     const hasData = weightProgressData && weightProgressData.series && weightProgressData.series.length > 0;
     const [selectedOption, setSelectedOption] = React.useState('');
+    const [showDropdown, setShowDropdown] = React.useState(false);
+
     const isLoading = useSelector((state) => state.GET_WEIGHT_REPORT.isLoading);
 
    // Safely map exercises and data
@@ -32,11 +34,13 @@ if (weightProgressData && weightProgressData.series) {
 
     const handleSubmit = () => {
         dispatch(fetch_weight_progress({ patientId, monthsToCompare: selectedOption }));
+        setShowDropdown(false)
     };
 
     const handleClear = () => {
         dispatch(fetch_weight_progress({ patientId }));
         setSelectedOption('');
+        setShowDropdown(false)
     };
     const chartOptions = {
         chart: {
@@ -87,7 +91,10 @@ if (weightProgressData && weightProgressData.series) {
     return (
         <div>
             <div className="filter_wrapper d-flex justify-content-end gap-2 align-items-center">
-                <Dropdown className="filter_dropdown_toggle">
+                <Dropdown 
+                 show={showDropdown}
+                 onToggle={() => setShowDropdown(!showDropdown)}
+                className="filter_dropdown_toggle">
                     <Dropdown.Toggle variant="null" id="dropdown-basic">
                       Filter <CiFilter size={20}/>
                     </Dropdown.Toggle>
@@ -115,13 +122,13 @@ if (weightProgressData && weightProgressData.series) {
 
             </div>
             {isLoading ? (
-                <p style={{ textAlign: "center", marginTop: "2rem" }}>
+                <p className="text-center ">
                     Loading data...
                 </p>
             ) : hasData ? (
                 <HighchartsReact highcharts={Highcharts} options={chartOptions} />
             ) : (
-                <p style={{ textAlign: "center", marginTop: "2rem" }}>
+                <p className="text-center blank_chart">
                     No weight progress data available for the selected duration.
                 </p>
             )}

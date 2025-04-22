@@ -11,7 +11,7 @@ export const fetchTrainingTypeDistribution = createAsyncThunk(
       const now = new Date();
       const defaultStartDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0]; // 1st of the month
       const defaultEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0]; // Last day of month
-  
+      console.log(defaultEndDate,"defaultEndDate")
       const finalStartDate = startDate || defaultStartDate;
       const finalEndDate = endDate || defaultEndDate;
   
