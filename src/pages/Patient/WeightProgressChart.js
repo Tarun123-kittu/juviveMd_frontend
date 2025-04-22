@@ -47,7 +47,7 @@ if (weightProgressData && weightProgressData.series) {
             type: "bar",
         },
         title: {
-            text: "Weight Progress by Exercise",
+            text: "Weight Progress",
         },
         xAxis: {
             categories: exercises,
