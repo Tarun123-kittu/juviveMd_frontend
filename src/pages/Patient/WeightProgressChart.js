@@ -11,26 +11,24 @@ const WeightProgressChart = ({ weightProgressData, patientId }) => {
     const [selectedOption, setSelectedOption] = React.useState('');
     const isLoading = useSelector((state) => state.GET_WEIGHT_REPORT.isLoading);
 
-    // Safely map exercises and data
-    const exercises = weightProgressData?.series?.map(item => item.name) || [];
-    const sessionCount = weightProgressData?.series?.length > 0
-        ? Math.max(0, ...weightProgressData.series.map(item => item.data.length))
-        : 0;
+   // Safely map exercises and data
+const exercises = weightProgressData?.series?.map(item => item.name) || [];
+// Use month labels from categories as series names
+const sessionSeries = weightProgressData?.categories?.map((month, i) => ({
+    name: month,
+    data: Array(weightProgressData.series.length).fill(null)
+})) || [];
 
-    // Initialize default session series, if necessary
-    const sessionSeries = Array.from({ length: sessionCount }, (_, i) => ({
-        name: `Session ${i + 1}`,
-        data: Array(weightProgressData.series.length).fill(null)
-    }));
-
-    // Populate sessionSeries if weightProgressData is defined
-    if (weightProgressData && weightProgressData.series) {
-        weightProgressData.series.forEach((exercise, exerciseIndex) => {
-            exercise.data.forEach((val, i) => {
+// Populate sessionSeries if weightProgressData is defined
+if (weightProgressData && weightProgressData.series) {
+    weightProgressData.series.forEach((exercise, exerciseIndex) => {
+        exercise.data.forEach((val, i) => {
+            if (sessionSeries[i]) {
                 sessionSeries[i].data[exerciseIndex] = val ?? null;
-            });
+            }
         });
-    }
+    });
+}
 
     const handleSubmit = () => {
         dispatch(fetch_weight_progress({ patientId, monthsToCompare: selectedOption }));
@@ -40,7 +38,6 @@ const WeightProgressChart = ({ weightProgressData, patientId }) => {
         dispatch(fetch_weight_progress({ patientId }));
         setSelectedOption('');
     };
-
     const chartOptions = {
         chart: {
             type: "bar",
@@ -68,12 +65,21 @@ const WeightProgressChart = ({ weightProgressData, patientId }) => {
                 dataLabels: {
                     enabled: true,
                 },
-                groupPadding: 0.1,
+                groupPadding: 0.2,
+                pointPadding: 0.2,
+                pointWidth: 10, // Lock bar width (adjust value as needed)
+                borderRadius: 10,
+
             },
         },
         credits: { enabled: false },
         legend: {
-            enabled: false,
+            enabled: true,
+            symbolRadius: 4,
+            itemStyle: {
+                fontSize: '14px', // Increase or customize as needed
+                fontWeight: 'bold' // Optional for better visibility
+            }
         },
         series: sessionSeries
     };
