@@ -3,7 +3,6 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const ProgressChart = ({months,strengthData,weightLiftedData,cardioData,reportType}) => {
-  console.log("ProgressChartAllData--",months,"strength--",strengthData,"weightLifted--",weightLiftedData,"cardioData--",cardioData,"reportType",reportType)
 
 
   const formatCategories = (categories, reportType) => {

@@ -1,413 +1,456 @@
 .user-data {
-    width: 100%;
-    padding-left:1.2rem;
-    border-left: 2px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding-left: 1.2rem;
+  border-left: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .bmi_report {
-    flex: 0 0 284px;
-    background: rgba(172, 201, 203, 0.2);
-    border: 1px solid rgba(172, 201, 203, 0.4);
-    border-radius: 13px;
-    overflow: hidden;
+  flex: 0 0 284px;
+  background: rgba(172, 201, 203, 0.2);
+  border: 1px solid rgba(172, 201, 203, 0.4);
+  border-radius: 13px;
+  overflow: hidden;
 }
 .report_info {
-    display: flex;
-        justify-content: space-between;
-        border: 1px solid rgba(172, 201, 203, 0.4);
-        padding: 20px;
-        border-radius: 13px;
-        background: rgba(172, 201, 203, 0.2);
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid rgba(172, 201, 203, 0.4);
+  padding: 20px;
+  border-radius: 13px;
+  background: rgba(172, 201, 203, 0.2);
 }
 .footer_bmi {
-    text-align: center;
-    border-top: 2px solid rgba(0, 0, 0, 0.1);
-    margin-top: 25px;
-    padding-top: 20px;
-    padding-bottom: 5px;
+  text-align: center;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  margin-top: 25px;
+  padding-top: 20px;
+  padding-bottom: 5px;
 }
 .pointer_cur {
-    cursor : "pointer"
+  cursor: "pointer";
 }
 ul.user_select_weeks {
-    display: flex;
-    gap: 9px;
+  display: flex;
+  gap: 9px;
 }
 h4.info_heading {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 13px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 13px;
 }
 ul.user_select_weeks li {
-    flex-grow: 1;
-    text-align: center;
-    padding: 8px 13px;
-    color: #000;
-    border-radius: 8px;
-    font-size: 14px;
-    width: 100%;
-    background: #E1E1E1;
+  flex-grow: 1;
+  text-align: center;
+  padding: 8px 13px;
+  color: #000;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  background: #e1e1e1;
 }
 
 ul.user_select_weeks li.selected_day {
-    color: #fff;
-    background: var(--primary-color);
+  color: #fff;
+  background: var(--primary-color);
 }
 
 .execise_days {
-    border-top: 2px solid rgba(0, 0, 0, 0.1);
-    padding-top: 19px;
-    margin-top: 19px;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  padding-top: 19px;
+  margin-top: 19px;
 }
-.table_user_data{
-    padding-right: 1.2rem;
+.table_user_data {
+  padding-right: 1.2rem;
 }
-.user-data li{
-    margin-bottom:10px;
+.user-data li {
+  margin-bottom: 10px;
 }
 .cmn_head h4 {
-    font-size: 18px;
-    margin: 0;
+  font-size: 18px;
+  margin: 0;
 }
 .report_info ul strong {
-    display: block;
-    font-size: 13px;
-    font-weight: 400;
-    padding-right: 10px;
-    color: rgba(0, 0, 0, 1);
-    white-space: nowrap;
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  padding-right: 10px;
+  color: rgba(0, 0, 0, 1);
+  white-space: nowrap;
 }
 .info_flex_grid span {
-    font-size: 14px;
-    color: rgba(107, 110, 123, 1);
+  font-size: 14px;
+  color: rgba(107, 110, 123, 1);
 }
 
 .info_flex_grid p {
-    font-size: 14px;
-    font-weight: 500;
-    word-break:break-all
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-all;
 }
 .bmi_report {
-    flex: 0 0 284px;
-    background: rgba(172, 201, 203, 0.2);
-    border: 1px solid rgba(172, 201, 203, 0.4);
-    border-radius: 13px;
+  flex: 0 0 284px;
+  background: rgba(172, 201, 203, 0.2);
+  border: 1px solid rgba(172, 201, 203, 0.4);
+  border-radius: 13px;
 }
 
 .bmi_report h5 {
-    padding: 37px 0px;
-    text-align: center;
-    background: rgba(212, 231, 233, 1);
-    font-size: 24px;
-    font-weight: 700;
+  padding: 37px 0px;
+  text-align: center;
+  background: rgba(212, 231, 233, 1);
+  font-size: 24px;
+  font-weight: 700;
 }
 .report_info ul span {
-    font-weight: 600;
-    color: rgba(0, 0, 0, 1);
-    font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 1);
+  font-size: 13px;
 }
 li.bmi_card {
-    background: rgba(255, 255, 255, 1);
-    border-radius: 15px;
-    padding: 12px;
-    text-align: center;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 15px;
+  padding: 12px;
+  text-align: center;
 }
 
 li.bmi_card img {
-    margin: auto;
+  margin: auto;
 }
 
 .bmi_data {
-    padding: 15px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  padding: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 li.bmi_card .link_image {
-    margin: auto;
-    margin-bottom: 6px;
+  margin: auto;
+  margin-bottom: 6px;
 }
 
 li.bmi_card span {
-    font-size: 12px;
-    margin-bottom: 5px;
-    display: inline-block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  display: inline-block;
 }
 
 li.bmi_card p {
-    font-size: 18px;
-    line-height: 24px;
-    font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+.filter_wrapper button.cmn_btn {
+  height: 36px;
+  padding: 0px 15px;
+}
+.filter_wrapper {
+  margin-bottom: 10px;
+}
+
+.filter_dropdown_toggle .dropdown-menu {
+  padding: 14px;
+  border: unset;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 10%);
+  min-width: 288px;
+  right: 0 !important;
+  left: unset !important;
+}
+.filter_dropdown_toggle button:after {
+  display: none;
+  font-weight: 700;
+}
+.filter_dropdown_toggle label,
+.filter_dropdown_toggle input,
+.filter_dropdown_toggle select {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+.filter_dropdown_toggle input:focus,
+.filter_dropdown_toggle select:focus {
+  box-shadow: unset;
+  border: 1px solid var(--primary-color);
 }
 /*patient data css ends here */
 
 .patient_filter {
-    position: absolute;
-   z-index: 9999;
-    top: 64px;
-    padding: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
-    border-radius: 5px;background: #fff;
-    right: 0;
-    min-width: 270px;
+  position: absolute;
+  z-index: 9999;
+  top: 64px;
+  padding: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
+  border-radius: 5px;
+  background: #fff;
+  right: 0;
+  min-width: 270px;
 }
 .patient_filter button.cmn_btn {
-    height: 37px;
+  height: 37px;
 }
 
 .filter_list {
-   display: flex;
-   border: 1px solid #D9D9D9;
-   border-radius: 3px;
-   margin-bottom: 10px;
+  display: flex;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  margin-bottom: 10px;
 }
 .patient_filter .patient_dropdown {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
-
-
 .patient_dropdown button.btn {
-    background: transparent;
-    width: 100%;
-    color: #000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border:1px solid #D9D9D9 !important;
+  background: transparent;
+  width: 100%;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d9d9d9 !important;
 }
 
 .patient_dropdown button.dropdown-toggle:hover {
-    background: unset;
-    color: #000;
+  background: unset;
+  color: #000;
   border: unset;
 }
 
-.patient_dropdown 
- button:active {
-    background: unset;
+.patient_dropdown button:active {
+  background: unset;
 }
 
 .patient_dropdown button:active {
-    border: unset;
+  border: unset;
 }
 
 .patient_dropdown button:focus {
-    box-shadow: unset;
-    outline: unset;
+  box-shadow: unset;
+  outline: unset;
 }
 
 .patient_filter .dropdown button::after {
-    display: none;
+  display: none;
 }
 .filter_list input:focus {
-box-shadow: unset;
+  box-shadow: unset;
 }
 span.react-loading-skeleton.skeleton {
-    height: 350px;
+  height: 350px;
 }
 .patient_dropdown .dropdown-menu {
-    padding: 0;
-    width: 100%;
+  padding: 0;
+  width: 100%;
 }
-.patient_dropdown .dropdown-toggle::after{
-    display: none;
+.patient_dropdown .dropdown-toggle::after {
+  display: none;
 }
 .table .patient_dropdown button.btn {
-    /* border: unset !important; */
-    width: unset;
-    gap: 9px;
-    min-width: 157px;
+  /* border: unset !important; */
+  width: unset;
+  gap: 9px;
+  min-width: 157px;
 }
-.patient_dropdown .dropdown-menu a.dropdown-item, .patient_dropdown .dropdown-menu .dropdown-item:active {
-    font-size: 13px;
-    padding: 8px 15px;
-    border-bottom: 1px solid #CCCCCC;
-    background-color: transparent;
-    color: #000;
-    text-transform: capitalize;
+.patient_dropdown .dropdown-menu a.dropdown-item,
+.patient_dropdown .dropdown-menu .dropdown-item:active {
+  font-size: 13px;
+  padding: 8px 15px;
+  border-bottom: 1px solid #cccccc;
+  background-color: transparent;
+  color: #000;
+  text-transform: capitalize;
 }
-.patient_filter .patient_dropdown button.btn{
-    color: #00000080;
-}
-
-.patient_filter .patient_dropdown  .dropdown {
-    position: unset;
+.patient_filter .patient_dropdown button.btn {
+  color: #00000080;
 }
 
-.patient_filter .patient_dropdown  .dropdown-menu {
-    position: unset !important;
-    inset: unset !important;
-    transform: unset !important;
-    overflow: auto;
-    max-height: 198px;
+.patient_filter .patient_dropdown .dropdown {
+  position: unset;
+}
+
+.patient_filter .patient_dropdown .dropdown-menu {
+  position: unset !important;
+  inset: unset !important;
+  transform: unset !important;
+  overflow: auto;
+  max-height: 198px;
 }
 .patient_dropdown .dropdown-menu a.dropdown-item:last-child {
-    border: unset;
+  border: unset;
 }
 .filter_list input {
-    border: unset;
-    font-size: 15px;
-    color: #00000080;
+  border: unset;
+  font-size: 15px;
+  color: #00000080;
 }
 
 .label {
-    padding: 6px 9px;
-    border-right: 1px solid #ddd;
-    background: #FAFAFA;
-    color: #000;
-    font-size: 15px;
+  padding: 6px 9px;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+  color: #000;
+  font-size: 15px;
 }
 
 .patient_filter::after {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 15px solid #ffffff;
-    top: -15px;
-    right: 30px;
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  top: -15px;
+  right: 30px;
 }
 
 .patient_filter::before {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 15px solid #00000059;
-    top: -16px;
-    right: 30px;
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid #00000059;
+  top: -16px;
+  right: 30px;
 }
 /* patient-report */
 h4.report_title {
-    font-size: 18px;
-    font-weight: 500;
+  font-size: 18px;
+  font-weight: 500;
 }
-
+.filter_dropdown_toggle button {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
+}
+.filter_dropdown_toggle button:focus {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
+  outline: unset;
+}
 .cmn_card {
-    padding: 1.2rem;
-    border: 1px solid rgba(232, 231, 231, 1);
-    border-radius: 5px;
+  padding: 1.2rem;
+  border-radius: 5px;
+  height: 100%;
+  box-shadow: 0px 0px 11px rgba(0, 0, 0, 10%);
 }
 
 .heart_headt {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .hear_logo {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: #fff;
-    box-shadow: 0px 0px 5px rgba(0,0,0,10%);
-    text-align: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 10%);
+  text-align: center;
 }
 
 .heart_head h5 {
-    margin: 0;
-    font-weight: 600;
-    font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 .progres_head ul {
-    margin: 0;
-    display: flex;
-    gap: 10px;
-    border: 1px solid rgba(172, 201, 203, 0.5);
-    border-radius: 22px;
-    padding: 5px 9px;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  border: 1px solid rgba(172, 201, 203, 0.5);
+  border-radius: 22px;
+  padding: 5px 9px;
 }
 
-.progres_head ul li {font-size: 14px;padding: 4px 1.5rem;font-weight: 500;cursor: pointer;}
+.progres_head ul li {
+  font-size: 14px;
+  padding: 4px 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
 
 li.primary {
-    background: var(--primary-color);
-    border-radius: 35px;
-    color: var(--bs-white);
+  background: var(--primary-color);
+  border-radius: 35px;
+  color: var(--bs-white);
 }
 .cmn_card .highcharts-container {
-    height: 320px !important;
+  height: 320px !important;
 }
 .progres_head h6 {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 h4.heart_rate {
-    color: rgba(232, 57, 75, 1);
-    font-size: 50px;
-    font-weight: 400;
+  color: rgba(232, 57, 75, 1);
+  font-size: 50px;
+  font-weight: 400;
 }
 p.bpm_status {
-    font-weight: 600;
-font-size: 18px;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 h4.heart_rate span {
-    font-size: 28px;
-    font-weight: 700;
-    color: rgba(0, 0, 0, 1);
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 1);
 }
 .info_flex_grid {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .link_image {
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    flex: 0 0 40px;
-    border-radius: 50%;
-    background: rgba(172, 201, 203, 1);
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  background: rgba(172, 201, 203, 1);
 }
 .table_user_data p.patien_name {
-    font-size: 22px;
-    font-weight: 700;
-    text-transform: capitalize;
-    padding-bottom: 11px;
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: capitalize;
+  padding-bottom: 11px;
 }
 
 .table_user_data img.user_profile {
-    flex: 0 0 130px;
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
+  flex: 0 0 130px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
 }
-@media(min-width:1599px){
-    .info_flex_grid p {
-        word-break:unset;
-    }
+@media (min-width: 1599px) {
+  .info_flex_grid p {
+    word-break: unset;
+  }
 }
-@media(max-width:1440px){
-    .filter_list input, .label,.patient_dropdown button.btn{
-        font-size: 13px;
-    }
-    .patient_filter button.cmn_btn {
-        height: 33px;
-    }
- 
+@media (max-width: 1440px) {
+  .filter_list input,
+  .label,
+  .patient_dropdown button.btn {
+    font-size: 13px;
+  }
+  .patient_filter button.cmn_btn {
+    height: 33px;
+  }
 }
 
-@media(min-width:1440px){
-    .bmi_report {
-        flex: 0 0 310px;
-    }
+@media (min-width: 1440px) {
+  .bmi_report {
+    flex: 0 0 310px;
+  }
 }
-@media(min-width:1599px){
-    .bmi_report {
-        flex: 0 0 340px;
-    }
-      
-    .table_user_data img.user_profile {
-        flex: 0 0 200px;
-        width: 200px;
-        height: 200px;
-    }
+@media (min-width: 1599px) {
+  .bmi_report {
+    flex: 0 0 340px;
+  }
+
+  .table_user_data img.user_profile {
+    flex: 0 0 200px;
+    width: 200px;
+    height: 200px;
+  }
 }

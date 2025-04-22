@@ -52,9 +52,11 @@ import GetExerciseHistory from "./slices/patientPlan/getExerciseHistory"
 import GetPatientPlanMessage from "./slices/patientPlan/getPatientPlanMessage"
 import getPatientWeightReportSlice from './slices/getPatientReportSlice/getPatientWeightReportSlice'
 import getPatientProgressReportSlice from './slices/getPatientReportSlice/getPatientProgressReportSlice'
+import trainingTypeSlice from './slices/getPatientReportSlice/trainingTypeSlice'
+import weightProgressSlice from './slices/getPatientReportSlice/weightProgressSlice'
+import progressFactorSlice from './slices/getPatientReportSlice/progressFactorSlice'
 import GetUserActivityReport from './slices/dashboardSlice/getUserActivityReport'
 import GetTrainerChatResponseReport from './slices/dashboardSlice/getTrainerChatResponseReport'
-
 const AppStore = configureStore({
   reducer: {
     LOGIN_STATE: UserLoginAPI,
@@ -111,7 +113,10 @@ const AppStore = configureStore({
     GET_PATIENT_WEIGHT_REPORT:getPatientWeightReportSlice,
     GET_PATIENT_PROGRESS_REPORT:getPatientProgressReportSlice,
     GET_USER_ACTIVITY_REPORT:GetUserActivityReport,
-    GET_TRAINER_CHAT_RESPONSE_REPORT:GetTrainerChatResponseReport 
+    GET_TRAINER_CHAT_RESPONSE_REPORT:GetTrainerChatResponseReport, 
+    GET_TRAINER_TYPE_REPORT:trainingTypeSlice, 
+    GET_WEIGHT_REPORT:weightProgressSlice, 
+    GET_PROGRESS_FACTOR:progressFactorSlice, 
   },
 })
 
