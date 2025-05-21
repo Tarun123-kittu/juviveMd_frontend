@@ -18,7 +18,7 @@ import NotFound from "../../common/notFound/NotFound";
 import PatientReport from "../../pages/Patient/PatientReport";
 import Requests from "../../pages/requests/Requests";
 import PatientPlan from "../../pages/patient-plan/PatientPlan";
-
+import RequestComponent from "../requests/RequestsComponent";
 const AppRouter = () => {
     const routes = createBrowserRouter([
         {
@@ -66,6 +66,14 @@ const AppRouter = () => {
                     element: (
                         <ProtectedRoute requiredRole="Admin">
                             <Staff />
+                        </ProtectedRoute>
+                    ),
+                },
+                {
+                    path: "/delete-request",
+                    element: (
+                        <ProtectedRoute requiredRole="Admin">
+                            <RequestComponent />
                         </ProtectedRoute>
                     ),
                 },

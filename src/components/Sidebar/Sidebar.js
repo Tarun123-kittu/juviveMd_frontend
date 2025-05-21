@@ -179,6 +179,15 @@ const Sidebar = () => {
                               </li>
                           );
                       }
+                      if (menus?.name === "Requests" && firstPermissionStaff?.canRead) {
+                          return (
+                              <li key={`${index}-request`} onClick={() => { setToggle(!toggle); setChats(true) }} className={isActive ? "active_menu" : ""}>
+                                  <Link className={isActive ? "sidebar_active" : ""} to={menus.path}>
+                                      {menus.icon} <span>{menus.name}</span>
+                                  </Link>
+                              </li>
+                          );
+                      }
 
                       if (menus?.name === "Exercise" && firstPermissionExercise?.canRead) {
                           return (
