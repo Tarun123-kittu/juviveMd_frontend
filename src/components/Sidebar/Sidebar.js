@@ -187,7 +187,7 @@ const Sidebar = () => {
                                   </Link>
                               </li>
                           );
-                      }
+                      } 
 
                       if (menus?.name === "Exercise" && firstPermissionExercise?.canRead) {
                           return (
